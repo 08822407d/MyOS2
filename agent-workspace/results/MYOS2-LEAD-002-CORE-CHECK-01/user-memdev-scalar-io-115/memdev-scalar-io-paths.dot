@@ -1,0 +1,139 @@
+digraph MD115 {
+ graph [rankdir=LR,label="MyOS2 115 scalar memdev | fixed time@a039d9803ade",labelloc=t];
+ node [shape=box,fontname="Helvetica",fontsize=9];
+ edge [fontname="Helvetica",fontsize=8];
+ subgraph cluster_D00 {
+  label="D00";
+  cfg [label="CONFIG wrapper switch L65"];
+  include [label="syscalls.h include gate"];
+  define3 [label="MYOS_SYSCALL_DEFINE3"];
+  gen [label="generated syscall macro"];
+  stub [label="x64 stub returns se"];
+  se [label="__se_sys_lseek calls do"];
+  do [label="__do_sys_lseek"];
+  map [label="syscalls_64.h:11 invocation"];
+  swdef [label="active __SYSCALL def"];
+  sw [label="x64_sys_call switch"];
+ }
+ subgraph cluster_A {
+  label="A";
+  read [label="read syscall"];
+  write [label="write syscall"];
+  myget [label="myos_fdget_pos"];
+  fdget [label="fdget_pos -> __to_fd"];
+  ppos [label="file_ppos"];
+  stack [label="local pos"];
+  stream [label="STREAM -> NULL"];
+  vr [label="vfs_read"];
+  vw [label="vfs_write"];
+  rm [label="READ gate"];
+  wm [label="WRITE and CAN_WRITE gates"];
+  access [label="access_ok"];
+  verify [label="rw_verify_area returns0"];
+  cap [label="MAX_RW_COUNT cap"];
+  rmethod [label="read_iter else read"];
+  wmethod [label="write else write_iter"];
+  missing [label="-EINVAL missing method"];
+  ret [label="callback ssize_t"];
+  check [label="ret>=0 and ppos nonNULL"];
+  commit [label="file f_pos=local pos"];
+  skip [label="skip outer commit"];
+ }
+ subgraph cluster_B {
+  label="B";
+  zero [label="read_zero"];
+  init [label="cleared=0"];
+  loop [label="while count"];
+  chunk [label="min count PAGE_SIZE"];
+  memset [label="memset buf+cleared"];
+  decr [label="count -= chunk"];
+  test [label="if count ==0"];
+  break [label="break before accumulate"];
+  accum [label="cleared += chunk"];
+  rtn [label="return cleared"];
+  bytes [label="all n bytes zeroed"];
+  formula [label="returned n-last chunk"];
+  sentinel [label="buf[n] unchanged"];
+ }
+ subgraph cluster_C {
+  label="C";
+  dev [label="devlist 3/5/7"];
+  nullf [label="null_fops"];
+  zerof [label="zero_fops"];
+  fullf [label="full_fops methods absent"];
+  initdev [label="cdev_init fops"];
+  adddev [label="cdev_add attempt"];
+  chr [label="chrdev_open"];
+  install [label="filp f_op=p ops"];
+  readnull [label="read_null returns0"];
+  writenull [label="write_null returns count"];
+  readzero [label="read_zero"];
+  writezero [label="write_zero alias"];
+  nomethod [label="VFS method missing"];
+  mode [label="CAN_WRITE not from 0666"];
+ }
+ cfg -> include [label="BUILD_DEFINE_TO_INCLUDE | MD115-E001 MD115-P02"];
+ include -> define3 [label="CONDITIONAL_MACRO_PROVENANCE | MD115-P02 MD115-E004"];
+ define3 -> gen [label="MACRO_EXPANSION | MD115-E004"];
+ gen -> stub [label="MACRO_USE | MD115-E005"];
+ stub -> se [label="DIRECT_CALL_RETURN | MD115-E006"];
+ se -> do [label="DIRECT_CALL_DO_SYS_AND_RETURN | MD115-E007"];
+ map -> swdef [label="MACRO_INVOCATION_POSITION_ONLY | MD115-P01 MD115-E002"];
+ swdef -> sw [label="MACRO_EXPANSION_IN_SWITCH | MD115-E002 MD115-E003"];
+ sw -> stub [label="DISPATCH_TO_STUB | MD115-E003 MD115-E006"];
+ read -> myget [label="DIRECT_CALL | MD115-E009 MD115-E011"];
+ write -> fdget [label="DIRECT_CALL | MD115-E010 MD115-E012 MD115-E013"];
+ myget -> vr [label="KSYS_TO_VFS | MD115-E015 MD115-E017"];
+ fdget -> vw [label="KSYS_TO_VFS | MD115-E019 MD115-E021"];
+ read -> ppos [label="FILE_PPOS_USE | MD115-E014 MD115-E016"];
+ write -> ppos [label="FILE_PPOS_USE | MD115-E014 MD115-E020"];
+ ppos -> stack [label="IF_NONSTREAM_LOCAL_COPY | MD115-E016 MD115-E020"];
+ ppos -> stream [label="IF_STREAM_NULL | MD115-E014"];
+ vr -> rm [label="CONTROL_GATE | MD115-E023"];
+ vw -> wm [label="CONTROL_TWO_MODE_GATES | MD115-E028"];
+ rm -> access [label="AFTER_MODE_GATE | MD115-E024"];
+ wm -> access [label="AFTER_MODE_GATES | MD115-E029"];
+ access -> verify [label="CALL_VERIFY | MD115-E025 MD115-E030"];
+ verify -> cap [label="RETURN_ZERO_BEFORE_CAP | MD115-E033 MD115-E043"];
+ cap -> rmethod [label="READ_ITER_PRIORITY | MD115-E026"];
+ cap -> wmethod [label="SCALAR_WRITE_PRIORITY | MD115-E031"];
+ cap -> missing [label="METHODS_ABSENT | MD115-E027 MD115-E032"];
+ rmethod -> ret [label="CALLBACK_RETURN | MD115-E026"];
+ wmethod -> ret [label="CALLBACK_RETURN | MD115-E031"];
+ missing -> ret [label="NEGATIVE_EINVAL | MD115-E027 MD115-E032"];
+ ret -> check [label="RETURN_VALUE_CHECK | MD115-E017 MD115-E021"];
+ check -> commit [label="IF_NONNEG_AND_PPOS | MD115-E017 MD115-E021"];
+ check -> skip [label="IF_NEG_OR_STREAM | MD115-E017 MD115-E021"];
+ stack -> commit [label="FIELD_WRITE_VALUE | MD115-E016 MD115-E020"];
+ zero -> init [label="INITIALIZE | MD115-E051"];
+ zero -> loop [label="CONTROL_LOOP | MD115-E052"];
+ loop -> chunk [label="MIN_PAGE | MD115-E050 MD115-E052"];
+ chunk -> memset [label="MEMORY_WRITE | MD115-E053"];
+ memset -> bytes [label="ZEROED_BYTES | MD115-E053"];
+ bytes -> sentinel [label="DOES_NOT_TOUCH_END_SENTINEL | MD115-E053"];
+ memset -> decr [label="SEQUENCE | MD115-E053"];
+ decr -> test [label="CHECK_AFTER_DECREMENT | MD115-E054"];
+ test -> break [label="IF_ZERO_BREAK | MD115-E054"];
+ test -> accum [label="IF_NONZERO_ONLY | MD115-E055"];
+ accum -> loop [label="NEXT_ITERATION | MD115-E055"];
+ break -> rtn [label="RETURN_WITHOUT_LAST_INCREMENT | MD115-E056"];
+ rtn -> formula [label="DATA_COUNT_FORMULA | MD115-E056"];
+ dev -> nullf [label="INITIALIZER_POINTER | MD115-E063 MD115-E061"];
+ dev -> zerof [label="INITIALIZER_POINTER | MD115-E064 MD115-E062"];
+ dev -> fullf [label="INITIALIZER_POINTER | MD115-E065 MD115-P34"];
+ dev -> initdev [label="DATA_TO_CDEV_INIT | MD115-E066"];
+ initdev -> adddev [label="CALL_REGISTRATION_ATTEMPT | MD115-E067"];
+ chr -> install [label="FOPS_FIELD_WRITE | MD115-E068 MD115-E069"];
+ nullf -> readnull [label="METHOD_BINDING | MD115-E061 MD115-E057"];
+ nullf -> writenull [label="METHOD_BINDING | MD115-E061 MD115-E058"];
+ zerof -> readzero [label="METHOD_BINDING | MD115-E062"];
+ zerof -> writezero [label="METHOD_BINDING | MD115-E062 MD115-E060"];
+ writezero -> writenull [label="MACRO_REPLACEMENT | MD115-E059 MD115-E060"];
+ readzero -> zero [label="DIRECT_CALLBACK_BODY | MD115-E062 MD115-E051"];
+ fullf -> nomethod [label="ANNOTATION_FULL_BODY_NO_METHOD | MD115-P34"];
+ mode -> wm [label="NO_IMPLICIT_CAN_WRITE_GRANT | MD115-E038 MD115-E070"];
+ // Original FS114-E003 is a macro invocation position, not a macro definition.
+ // B: final memset precedes zero break; no cleared increment for the final chunk.
+ // A: ret>=0 and ppos nonNULL triggers assignment even if numerical f_pos unchanged.
+ // Static DOT only; Graphviz and runtime NOT_RUN.
+}

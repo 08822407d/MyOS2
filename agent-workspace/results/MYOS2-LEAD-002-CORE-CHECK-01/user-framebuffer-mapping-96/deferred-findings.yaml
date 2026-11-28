@@ -1,0 +1,464 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FRAMEBUFFER-MAPPING-96",
+  "record_type": "batch96_incremental_source_candidates_gaps_and_D00_correction_dependency",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-13",
+  "produced_by": "GPT-6（visible family; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-17",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PENDING_MAINLINE_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "D00_R95_01_R95_02": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+  "runtime_evidence": "NOT_RUN",
+  "new_candidates": [
+    {
+      "id": "FM96-F01",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F01",
+      "topic": "64位FB_size目的字段前的32位中间乘积",
+      "kind": "STATIC_CONDITIONAL_SIZE_DOMAIN_CANDIDATE",
+      "status": "needs_evidence",
+      "statement": "kernel get_framebuffer_info把uint32 width*uint32 height*uint8 bpp/8的表达式赋到uint64 FB_size；在明确u32乘积计算模型中先模2^32回绕再扩宽目标。比如16384×8192×32=2^32，表达式中间0但数学字节数536870912。",
+      "preconditions": [
+        "相关字段真实按仓库所列整数别名和目标ABI大小生效",
+        "loader/固件能生产满足该隔离输入的完整tag",
+        "乘法按unsigned32计算，没有先行tag或内存访问错误"
+      ],
+      "first_proof_gate": "旧BM80标签、Loader FrameBufferSize和实际编译/ABI未认证；既不宣称硬件有此配置，也不证明出现真实零长映射",
+      "distinct_root": "独立kernel元数据中间算术，而非旧CN95-F05像素行距误配",
+      "evidence_ids": [
+        "FM96-E031",
+        "FM96-E035",
+        "FM96-E040",
+        "FM96-E044",
+        "FM96-E046"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F05",
+        "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U05"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-F02",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F02",
+      "topic": "非对齐FB起点与只对长度向上取整的尾部覆盖缺口",
+      "kind": "STATIC_CONDITIONAL_MAPPING_REQUEST_RANGE_CANDIDATE",
+      "status": "needs_evidence",
+      "statement": "myos_init_VBE_mapping把A向下对齐成B，单独把L向上取整为S，myos_ioremap请求[B,B+S)。若o=A-B且o+L>S，原要求[A,A+L)末段在本次请求之外；例如A=0x1003,L=4096漏3B。",
+      "preconditions": [
+        "A,L来自有效framebuffer对象",
+        "64位算术与PFN宏运算在可表示域内",
+        "请求映射路径并且前序分配/页表/权限有效"
+      ],
+      "first_proof_gate": "实际先已有映射可能覆盖尾页；本次只证明请求范围的包含关系，不认证真实PTE覆盖或硬件故障",
+      "distinct_root": "本96 VBE参数/页偏移新根因，和旧TI83已有页表返回不变量分开",
+      "evidence_ids": [
+        "FM96-E049",
+        "FM96-E050",
+        "FM96-E079",
+        "FM96-E084",
+        "FM96-E085",
+        "FM96-E086"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F03",
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-F03",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+      "topic": "myos_ioremap把物理终点强制转换为I/O指针返回",
+      "kind": "STATIC_CONDITIONAL_RETURN_TYPE_CONSUMER_MISMATCH",
+      "status": "needs_evidence",
+      "statement": "__kernel_physical_mapping_init返回ulong paddr_last（物理端点），myos_ioremap直接(void*)cast并以void __iomem*签名暴露；VBE忽略该值，而另一HPET固定源码调用者把值当hpet_virt_address保存并继续用readl/writel等。返回值没有做__va或保存虚拟映射起点。",
+      "preconditions": [
+        "下级有定义良好的返回值及数值转换",
+        "hpet_set_mapping调用者实际选择该固定代码",
+        "实际返回端点可能恰可在某特殊映射下指向有效虚拟地址，但本包未证"
+      ],
+      "first_proof_gate": "真实HPET调用、CR3、地址别名/硬件访问未证；不能把类型不一致直接签崩溃，旧TI83物理return问题仅追加下游消费者证据",
+      "distinct_root": "包装层返回单位与类型的独立消费者契约",
+      "evidence_ids": [
+        "FM96-E069",
+        "FM96-E070",
+        "FM96-E075",
+        "FM96-E078",
+        "FM96-E079",
+        "FM96-E087",
+        "FM96-E104",
+        "FM96-E105"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F03",
+        "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U07"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-F04",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F04",
+      "topic": "framebuffer_type写入模式序号而非像素格式",
+      "kind": "STATIC_SEMANTIC_INPUT_PROVENANCE_CANDIDATE",
+      "status": "needs_evidence",
+      "statement": "loader fill_framebuffer_info写 common->framebuffer_type=Mode->Mode，而set_video_mode筛选条件引用Info->PixelFormat；结构同时声明FRAMEBUFFER_TYPE_RGB=1等枚举常量。模式索引与像素格式类型不是同一源码变量，还会存入u8目标。",
+      "preconditions": [
+        "UEFI Mode->Mode/Info->PixelFormat具有实际不同域或值",
+        "外部/下游需把framebuffer_type解释为像素布局枚举，这一点本包尚无需求或消费者证明"
+      ],
+      "first_proof_gate": "没有实际GOP类型值/全局合约/使用端，先作needs_evidence，不从命名推断硬件模式错误",
+      "distinct_root": "Loader framebuffer_type独立字段语义，与旧CN95-F05实体地址/行距不同",
+      "evidence_ids": [
+        "FM96-E023",
+        "FM96-E024",
+        "FM96-E028",
+        "FM96-E036"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-F05",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F05",
+      "topic": "bpp小于8时Kernel PixperScanline分母为零",
+      "kind": "STATIC_CONDITIONAL_INPUT_DOMAIN_CANDIDATE",
+      "status": "needs_evidence",
+      "statement": "get_framebuffer_info的framebuffer_pitch/(framebuffer_bpp/8)在bpp<8时先计算整数零除数。结构使用uint8 bpp但所读函数没有该本地输入拒绝分支。",
+      "preconditions": [
+        "实际tag可读且bpp属于0..7",
+        "此前其它字段读取与FB_size表达式已合法到达此语句"
+      ],
+      "first_proof_gate": "没有loader产生这种bpp值的观测，不签已有UB发生；和旧CN95-F05行距/物理步长区分为输入域问题",
+      "distinct_root": [
+        35,
+        41,
+        44
+      ],
+      "evidence_ids": [
+        "FM96-ECORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "FM96-U01",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U01",
+      "topic": "真实EFI/GOP模式及状态返回",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "UefiMain/set_video_mode/fill_framebuffer_info的LocateProtocol、SetMode、QueryMode返回和外部EFI结构语义未在本包运行或由仓库定义完备核证；不能把当前模式视为已确认PixelFormat1。",
+      "first_proof_gate": "只有有效的Mode/Info及实际填充对象才可进行具体硬件模式判断",
+      "evidence_ids": [
+        "FM96-E019",
+        "FM96-E022",
+        "FM96-E023",
+        "FM96-E024",
+        "FM96-E025",
+        "FM96-E026"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U02",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U02",
+      "topic": "boot tag真实范围、类型布局和total_size",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "parse_tag读取MBI tag前置magic/地址、tag.size和每个结构对象能否线性可读，尚未取得真实handoff bytes；size字段与total_size遍历界不等于合法对象证明。",
+      "first_proof_gate": "按BM80-U02/U03在实际读取前停止，不重报已有输入根因",
+      "evidence_ids": [
+        "FM96-E029",
+        "FM96-E033",
+        "FM96-E037",
+        "FM96-E043",
+        "FM96-E045",
+        "FM96-E046"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02",
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U03"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U03",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U03",
+      "topic": "乘积类型与物理长度实际覆盖",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "EFI UINTN具体宽度与Mode->FrameBufferSize/PixelsPerScanLine类型、kernel uint32乘积策略、bpp目标窄化的真实编译路径均未预处理/编译，机器返回值也未测量。",
+      "first_proof_gate": "不能由u64目标字段自动证明前序计算使用64位，也不能把纯数学例作为真实设备数据",
+      "evidence_ids": [
+        "FM96-E028",
+        "FM96-E031",
+        "FM96-E035",
+        "FM96-E040",
+        "FM96-E044"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U05"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U04",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U04",
+      "topic": "framebuffer模式、像素布局和行距消费者",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "未获得真实GOP颜色格式、pitch是否含padding、每像素字节数及内核绘字函数是否对应硬件帧缓冲像素布局；现有Pos向u32*转换仍按旧95未证。",
+      "first_proof_gate": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F05/U05/U06保留，不能重复编号为新96像素stride问题",
+      "evidence_ids": [
+        "FM96-E027",
+        "FM96-E028",
+        "FM96-E034",
+        "FM96-E041",
+        "FM96-E044",
+        "FM96-E047"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F05",
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05",
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U06"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U05",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U05",
+      "topic": "映射请求覆盖与真实PTE构成的区间差异",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "仅从A/L得到页请求数学范围；既存页项、非叶/叶拆分、页表分配、paddr_last和active root未做运行验证。",
+      "first_proof_gate": "必须保留PT81、DM82、TI83的old qualified_id停止门；请求正确仍不构成真实MMIO可用",
+      "evidence_ids": [
+        "FM96-E056",
+        "FM96-E057",
+        "FM96-E058",
+        "FM96-E059",
+        "FM96-E060",
+        "FM96-E061",
+        "FM96-E062",
+        "FM96-E063",
+        "FM96-E064",
+        "FM96-E068",
+        "FM96-E069",
+        "FM96-E070",
+        "FM96-E071",
+        "FM96-E072",
+        "FM96-E073",
+        "FM96-E074"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U03",
+        "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U07",
+        "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F03"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U06",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U06",
+      "topic": "页表属性编码与硬件缓存/设备语义",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "fixed time选择PAGE_KERNEL_NOENC而不是注释NOCACHE；暂未取得PAT/MTRR/CPU实际缓存属性、PGE/PCID状态和已有映射的旧保护真实值。",
+      "first_proof_gate": "记录源码属性选择与过滤，不认证真正UC/WC/WB，也不假设设备MMIO访问安全",
+      "evidence_ids": [
+        "FM96-E079",
+        "FM96-E089",
+        "FM96-E090",
+        "FM96-E091",
+        "FM96-E092",
+        "FM96-E093",
+        "FM96-E094",
+        "FM96-E095",
+        "FM96-E096",
+        "FM96-E097",
+        "FM96-E098",
+        "FM96-E099"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F08"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U07",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U07",
+      "topic": "flush作用根、其它CPU与后继load_cr3",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "VBE调用flush_tlb_local的当前CR3具体指向、与随后的swapper_pg_dir根是否相同以及其它CPU/TLB全局效果未知；后续load_cr3和__flush_tlb_all仅是静态调用。",
+      "first_proof_gate": "本CPU重新写入CR3文本不等于全CPU可见，继续按PT81-U03、DM82-U10及TI83限定",
+      "evidence_ids": [
+        "FM96-E050",
+        "FM96-E055",
+        "FM96-E101",
+        "FM96-E102",
+        "FM96-E103",
+        "FM96-E106",
+        "FM96-E107"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U03",
+        "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U10"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U08",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08",
+      "topic": "返回值和iounmap的真实消费效果",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "myos_ioremap返回底层paddr_last cast pointer，VBE未检查该指针；另一个HPET caller存成hpet_virt_address，未审HPET实际运行/硬件；iounmap为空活动体且真实调用者对照范围未扩展。",
+      "first_proof_gate": "不能将函数名或形参void __iomem*误当有效虚拟映射的保证",
+      "evidence_ids": [
+        "FM96-E049",
+        "FM96-E050",
+        "FM96-E069",
+        "FM96-E070",
+        "FM96-E075",
+        "FM96-E078",
+        "FM96-E079",
+        "FM96-E080",
+        "FM96-E105"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FM96-U09",
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U09",
+      "topic": "R95-01/02纠正等待原主线判定",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "已用96新锚、矩阵、模型、图和相关历史消费映射订正；旧95原六件70/70/0未改且原RETURN仍有效。",
+      "first_proof_gate": "只有原C06主线独立复核后方可把R95-01/02写为closed；本执行者不自签",
+      "evidence_ids": [
+        "FM96-E001",
+        "FM96-E002",
+        "FM96-E003",
+        "FM96-E004",
+        "FM96-E005",
+        "FM96-E006",
+        "FM96-E013",
+        "FM96-E014",
+        "FM96-E015",
+        "FM96-E016",
+        "FM96-E017",
+        "FM96-E018"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U02",
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U07"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F05",
+      "disposition": "retain_pixel_pitch_source_provenance_extended_no_new_same_root"
+    },
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05",
+      "disposition": "retain_mapping_geometry_and_real_memory_unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U06",
+      "disposition": "retain_actual_glyph_memory_and_font_object_contract"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F04",
+      "disposition": "retain_non_LF_registered_flush_case"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F05",
+      "disposition": "retain_ring_equal_mask_linear_span_first_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F06",
+      "disposition": "retain_ring_tail_prefix_first_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02",
+      "disposition": "retain_tag_real_byte_extent"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U03",
+      "disposition": "retain_valid_tag_total_size"
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F05",
+      "disposition": "retain_buffer_allocation_counter_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U03",
+      "disposition": "retain_real_active_CR3_root"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U05",
+      "disposition": "retain_integer_overflow_and_ABI"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U07",
+      "disposition": "retain_actual_lower_mapping_outcome"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F03",
+      "disposition": "retain_overshoot_physical_endpoint"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F06",
+      "disposition": "retain_PTE_early_pointer_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F08",
+      "disposition": "retain_attribute_page_frame_condition"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01",
+      "disposition": "retain_percent_p_prior"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "disposition": "retain_C_pointer_first_gate"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 5,
+    "new_gaps": 9,
+    "confirmed_runtime_bugs": 0,
+    "old_qualified_roots_reissued": 0,
+    "patches_created": 0,
+    "kernel_files_changed": 0,
+    "Owner_operations_now": 0
+  },
+  "limits": [
+    "无真实GOP/多核/内核运行或完整P9",
+    "不改变旧95的正式RETURN，D00提交≠主线独立闭合",
+    "新的数值模型前提来自固定time表达式而非编译器或硬件观测",
+    "所有路径禁止跨出授权results第96批六件/PR17单条评论；不启动97"
+  ]
+}

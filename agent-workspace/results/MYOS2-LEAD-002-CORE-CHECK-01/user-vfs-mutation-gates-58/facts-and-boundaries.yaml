@@ -1,0 +1,1634 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-VFS-MUTATION-GATES-58",
+  "record_type": "bounded_VFS_mutation_facts_and_D00",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "776297f1904b",
+  "fixed_task88_short12": "8f53653ac34a",
+  "base_snapshot": "time",
+  "read_channel": "GitHub_connector",
+  "runtime_evidence": "NOT_RUN",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "source_ledger": [
+    {
+      "path": "mykernel/fs/vfs/namei.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "99eb1fabe735",
+      "ranges": "58-176; 266-381; 478-648; 770-850; 899-1002; 1021-1199",
+      "classification": "main_direct",
+      "symbols": [
+        "getname",
+        "getname_kernel",
+        "putname",
+        "set_nameidata",
+        "restore_nameidata",
+        "link_path_walk",
+        "path_init",
+        "path_parentat",
+        "filename_parentat",
+        "filename_create",
+        "__lookup_hash",
+        "do_creatat",
+        "do_mkdirat",
+        "vfs_mkdir",
+        "done_path_create",
+        "do_rmdir",
+        "vfs_rmdir",
+        "do_unlinkat",
+        "vfs_unlink",
+        "path_put"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/dcache.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "eca8e13627fa",
+      "ranges": "108-191; 203-215; 287-359",
+      "classification": "main_direct",
+      "symbols": [
+        "__d_lookup",
+        "__myos_d_alloc",
+        "dput"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/linux/msdos_fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "bab4f2fcbc97",
+      "ranges": "171-214",
+      "classification": "D00_mandatory",
+      "symbols": [
+        "msdos_dirslot_s",
+        "msdos_dirent_s"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/namei_vfat.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ab8f748f3b82",
+      "ranges": "46-53; 93-124; 136-194; 199-223; 288-295",
+      "classification": "D00_mandatory_same_pin_recheck",
+      "symbols": [
+        "setup",
+        "myos_vfat_create_shortname",
+        "vfat_add_entry",
+        "vfat_striptail_len"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32_namei.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "9b834043d7c7",
+      "ranges": "137-149; 199-209",
+      "classification": "D00_mandatory_same_pin_recheck",
+      "symbols": [
+        "FAT32_mark_entry_romoved",
+        "vfat_dir_inode_operations"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32_iobuf.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "f577b7f65786",
+      "ranges": "86-113",
+      "classification": "D00_mandatory_same_pin_recheck",
+      "symbols": [
+        "FAT32_iobuf_write"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/init.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "29996a104297",
+      "ranges": "113-125",
+      "classification": "direct_B_contrast",
+      "symbols": [
+        "init_mkdir"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/dcache.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "72fdb5b01968",
+      "ranges": "47-87; 266-285",
+      "classification": "extra_dependency",
+      "symbols": [
+        "qstr_s",
+        "dentry_s",
+        "dget"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/namei.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "42d98f742755",
+      "ranges": "31-56",
+      "classification": "extra_dependency",
+      "symbols": [
+        "LAST_NORM",
+        "LOOKUP_DIRECTORY",
+        "LOOKUP_CREATE",
+        "LOOKUP_EXCL",
+        "LOOKUP_REVAL"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "fe527991618b",
+      "ranges": "545-659; 1910-1940; 2079; 2517-2524",
+      "classification": "extra_dependency",
+      "symbols": [
+        "inode_s",
+        "inode_ops_s",
+        "IS_DEADDIR",
+        "filename_s"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/inode.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "a8dd59c50412",
+      "ranges": "323-349",
+      "classification": "extra_dependency",
+      "symbols": [
+        "iput"
+      ]
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "b07c81bfc978",
+      "ranges": "164-172",
+      "classification": "extra_dependency",
+      "symbols": [
+        "kzalloc"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/err.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "7cef4a3857f9",
+      "ranges": "15-48",
+      "classification": "extra_dependency",
+      "symbols": [
+        "ERR_PTR",
+        "IS_ERR",
+        "PTR_ERR"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ef531baa8317",
+      "ranges": "45-80",
+      "classification": "extra_dependency",
+      "symbols": [
+        "loff_t",
+        "size_t"
+      ]
+    },
+    {
+      "path": "mykernel/lib/string/string.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "cbb2752bc8b2",
+      "ranges": "354-376; 432-448",
+      "classification": "extra_dependency",
+      "symbols": [
+        "strncmp",
+        "strrchr"
+      ]
+    }
+  ],
+  "prior57_disposition": {
+    "prior_source_ref": "claude/dazzling-cori-q0dnyt@776297f1904b",
+    "prior_review_ref": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-FAT-DIRECTORY-MUTATION-57-review.md@8f53653ac34a",
+    "original_acceptance": "RETURN",
+    "return_kind": "DOCUMENTATION_ONLY",
+    "returned_items": [
+      "R57-01",
+      "R57-02"
+    ],
+    "mandatory_supplements": [
+      "R57-S01",
+      "R57-S02"
+    ],
+    "correction_status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+    "executor_cannot_close": true,
+    "old_artifacts_modified": false,
+    "historical_evidence_labels": 77,
+    "historical_kept_not_reasserted": 76,
+    "original_A32": "superseded_for_definition_scope",
+    "original_77_byte_matching": "author_report_only_not_independent_definition_scope_verification",
+    "correction_direct_evidence_labels": 8,
+    "new_batch58_source_evidence_labels": 79,
+    "total_new_labels": 87,
+    "R57_01": {
+      "replacement": "D01-D03 use exact msdos_dirslot_s definition starting at typedef; leading comment L196 is CONTEXT only; full 32B byte-sum needs whole packed definitions and type widths",
+      "original_bad_A32_first_line": "/* Up to 13 characters of the name */",
+      "legacy_symbol": {
+        "original_path": "mykernel/fs/fat/namei_vfat.c",
+        "original_symbol": "vfat_dir_inode_operations_legacy_B",
+        "disposition": "analysis_alias_only_not_real_symbol",
+        "real_definition": "mykernel/fs/fat/myos_fat32_namei.c::vfat_dir_inode_operations",
+        "real_reference": "mykernel/fs/fat/namei_vfat.c::setup",
+        "evidence": [
+          "D04",
+          "D05"
+        ]
+      },
+      "bad_iobuf_blob_short": "f577b7f657",
+      "correct_iobuf_blob_short12": "f577b7f65786",
+      "old_evidence_model_label": "model/Owner reported GPT-6, not a provider-attested backend identity"
+    },
+    "R57_02": {
+      "preserved_real_source_statuses": [
+        {
+          "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F01",
+          "source_field": "status",
+          "source_value": "needs_evidence",
+          "consumption_notes": [
+            "R35-S01",
+            "R35-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02",
+          "source_field": "status",
+          "source_value": "needs_evidence",
+          "consumption_notes": [
+            "R35-S01",
+            "R35-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F03",
+          "source_field": "disposition",
+          "source_value": "source_only_conditional",
+          "consumption_notes": [
+            "R55-S01",
+            "R55-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F04",
+          "source_field": "disposition",
+          "source_value": "source_only_conditional",
+          "consumption_notes": [
+            "R55-S01",
+            "R55-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F05",
+          "source_field": "disposition",
+          "source_value": "source_only_conditional",
+          "consumption_notes": [
+            "R55-S01",
+            "R55-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-FAT-ALLOCATION-GEOMETRY-56::AG56-F02",
+          "source_field": "status",
+          "source_value": "source_conditional_only",
+          "consumption_notes": [
+            "R56-S01",
+            "R56-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F01",
+          "source_field": "status",
+          "source_value": "needs_evidence",
+          "consumption_notes": [
+            "R38-S01",
+            "R38-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F02",
+          "source_field": "status",
+          "source_value": "needs_evidence",
+          "consumption_notes": [
+            "R38-S01",
+            "R38-S02"
+          ],
+          "status_unchanged": true
+        },
+        {
+          "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F04",
+          "source_field": "status",
+          "source_value": "needs_evidence",
+          "consumption_notes": [
+            "R38-S01",
+            "R38-S02"
+          ],
+          "status_unchanged": true
+        }
+      ],
+      "wrong_prior_link": {
+        "from": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F04",
+        "old": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F01",
+        "correct": [
+          {
+            "id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F02",
+            "relation": "conditional standalone inode/MSDOS_I container upstream boundary"
+          },
+          {
+            "id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F04",
+            "relation": "conditional private_sb_info vs s_fs_info split"
+          }
+        ],
+        "F01_actual": "alloc_super ERR_PTR vs NULL guard; not a general private object alias"
+      },
+      "length33": {
+        "length": 33,
+        "entry_width_model": 32,
+        "marked_relative_start_offsets": [
+          0,
+          32
+        ],
+        "in_range_when_valid": true,
+        "correction": "2 calls, both start offsets less than length; do not assert second starts after length",
+        "notes": [
+          "partial-slot interpretation and parent range remain conditional",
+          "no media or valid metadata guaranteed"
+        ]
+      },
+      "negative_off": {
+        "source": "FAT32_iobuf_write",
+        "valid_iobuf_premise": true,
+        "evaluation_prefix": [
+          "read iobuf->nr_clus and iobuf->bufsize to compute bufend",
+          "off <0 leads -ENOENT before buffers[bufidx]"
+        ],
+        "classification": "API_REJECTION_NOT_INVALID_WRITE",
+        "incorrect_model_field": "first_invalid:0",
+        "corrected_value": "null/not_applicable",
+        "invalid_iobuf_stop": "earlier iobuf field dereference; no safe return"
+      },
+      "slot_count": {
+        "N_unit": "directory_entries",
+        "byte_count": "N*sizeof(msdos_dirent_s)",
+        "entry_width_model": 32,
+        "corrected": "never label N slots as N bytes",
+        "N1_scope": "fat_add_entries helper-only; normal vfat_add_entry positive name and current shortname producer has at least 2 slots",
+        "N2_first_valid_break": "third consecutive E under valid iterator/early gates",
+        "nonzero_base": "suffix after legal occupied-prefix scan, not iter_init at L-32",
+        "end_gate": "bufend must strictly exceed last shown post-next cursor; else end->expand->next interposes"
+      },
+      "tail_strip": {
+        "condition_name": "ABCDEFGHI.",
+        "original_qstr_len": 10,
+        "stripped_len": 9,
+        "last_dot_end_index": 10,
+        "extlen_signed_candidate": -1,
+        "earliest_stop": "negative extlen converted to size_t for memcpy may invalidate before slot overflow; not user reachability proof"
+      }
+    },
+    "prior_artifact_consumption": [
+      {
+        "old": "MANIFEST.md",
+        "problem": "77/77 blanket definition-boundary correctness assertion",
+        "replacement": "77 historical labels; one A32 definition-scope failure; 76 remaining historical, not rechecked now; 8 D00 new vs 79 new58; original report stays frozen"
+      },
+      {
+        "old": "fat-directory-mutation.md",
+        "problem": "C2 length non-multiple may mark start past length, plus source linkage/SB38 overgeneralization",
+        "replacement": "length33=0,32 in [0,33); helper extlen and valid-prefix conditions; SB38 F02/F04 only where applicable"
+      },
+      {
+        "old": "facts-and-boundaries.yaml",
+        "problem": "wrong canonical_status values, alias vfat symbol, iobuf 10-digit blob, negative offset first_invalid0",
+        "replacement": "keep source_field/source_value and independent consumption_notes; correct real symbol and sha; null invalid-write for rejected off"
+      },
+      {
+        "old": "deferred-findings.yaml",
+        "problem": "DM57-F04 generic SB38-F01 link, F08 range conclusion ambiguous",
+        "replacement": "F04 consumes F02/F04 conditionally; F08 retains source record but disproves out-of-length-start inference; prior statuses unchanged"
+      },
+      {
+        "old": "evidence.md",
+        "problem": "A32 leading comment outside struct",
+        "replacement": "D01-D03 in-definition source anchors; 76 historical labels not reissued"
+      },
+      {
+        "old": "fat-directory-mutation-paths.dot",
+        "problem": "iter->expand attributed as iterator call; pubgap visual STOP; ret0 S_DEAD too broad",
+        "replacement": "iter/expand local control belongs fat_add_entries; pubgap interpret no-local-publication, not runtime stop; S_DEAD only successful vfs_rmdir; no full graph redrawing"
+      },
+      {
+        "old": "PR17 issuecomment-6717903727",
+        "problem": "author 77/77 verification and READY claim not authoritative after RETURN",
+        "replacement": "preserve comment; read with mainline RETURN and D00 new appendix; mainline still adjudicates R57-01/02"
+      }
+    ]
+  },
+  "name_provenance_matrix": {
+    "examples": [
+      {
+        "input": "",
+        "last": "",
+        "last_type": "LAST_ROOT",
+        "last_len": null,
+        "after": null
+      },
+      {
+        "input": "/",
+        "last": "",
+        "last_type": "LAST_ROOT",
+        "last_len": null,
+        "after": null
+      },
+      {
+        "input": "foo",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "\u0000",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "foo.",
+        "last": "foo.",
+        "last_type": "LAST_NORM",
+        "last_len": 4,
+        "last_after_char": "\u0000",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 4,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "foo/",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "/",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "foo//",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "/",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "/tmp/foo/",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "/",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "abc.def",
+        "last": "abc.def",
+        "last_type": "LAST_NORM",
+        "last_len": 7,
+        "last_after_char": "\u0000",
+        "trimmed_len": 7,
+        "shortname_ext_idx": 4,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "ABCDEFGH.",
+        "last": "ABCDEFGH.",
+        "last_type": "LAST_NORM",
+        "last_len": 9,
+        "last_after_char": "\u0000",
+        "trimmed_len": 8,
+        "shortname_ext_idx": 9,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "ABCDEFGHI.",
+        "last": "ABCDEFGHI.",
+        "last_type": "LAST_NORM",
+        "last_len": 10,
+        "last_after_char": "\u0000",
+        "trimmed_len": 9,
+        "shortname_ext_idx": 10,
+        "extlen_if_long_branch": -1,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "ABCDEFGHI..",
+        "last": "ABCDEFGHI..",
+        "last_type": "LAST_NORM",
+        "last_len": 11,
+        "last_after_char": "\u0000",
+        "trimmed_len": 9,
+        "shortname_ext_idx": 11,
+        "extlen_if_long_branch": -2,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": ".",
+        "last": ".",
+        "last_type": "LAST_DOT",
+        "last_len": 1,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 1,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "..",
+        "last": "..",
+        "last_type": "LAST_DOTDOT",
+        "last_len": 2,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 2,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "...",
+        "last": "...",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "foo/bar",
+        "last": "bar",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "\u0000",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "a/b/..",
+        "last": "..",
+        "last_type": "LAST_DOTDOT",
+        "last_len": 2,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 2,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      {
+        "input": "a/b/.",
+        "last": ".",
+        "last_type": "LAST_DOT",
+        "last_len": 1,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 1,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      }
+    ],
+    "source_objects": [
+      {
+        "object": "filename_s",
+        "producer": "getname/getname_kernel",
+        "type": "int len, const char* name",
+        "lifetime": "until putname; valid-only; getname allocation failure may instead yield ERR_PTR"
+      },
+      {
+        "object": "nd.last",
+        "producer": "link_path_walk",
+        "type": "qstr_s len=size_t, name points into original filename",
+        "lifetime": "borrowed; still a sliced string; last.name[last.len] can be '/' not NUL"
+      },
+      {
+        "object": "dentry.d_name",
+        "producer": "__myos_d_alloc",
+        "type": "kzalloc(len+1) separate copied bytes",
+        "lifetime": "owned buffer; zero terminator conditional on successful __GFP_ZERO allocation; cache-hit path reuses preexisting object"
+      }
+    ],
+    "hash_outcomes": [
+      {
+        "case": "cached_positive",
+        "conditional": "__d_lookup returns valid existing dentry",
+        "effect": "__lookup_hash returns immediately, bypasses LOOKUP_CREATE/EXCL consumption by filesystem lookup; filename_create has no explicit d_inode positivity rejection",
+        "boundaries": "__d_lookup matching preconditions incl DL33-F01"
+      },
+      {
+        "case": "cached_negative",
+        "conditional": "__d_lookup returns valid dentry with d_inode==NULL",
+        "effect": "same immediate return; later do_creatat/do_mkdirat can call create/mkdir if callback exists",
+        "boundaries": "negative object valid, no automatic binding"
+      },
+      {
+        "case": "miss_lookup_null",
+        "conditional": "__d_lookup NULL; __myos_d_alloc valid; dir->i_op->lookup returns NULL",
+        "effect": "__lookup_hash returns new dentry initialized with d_inode=NULL",
+        "boundaries": "list state and callback normal completion"
+      },
+      {
+        "case": "miss_lookup_other",
+        "conditional": "lookup returns nonNULL valid other dentry",
+        "effect": "dput(new) (no-op in selected code); return old",
+        "boundaries": "other dentry validity/ownership not certified"
+      },
+      {
+        "case": "miss_alloc_ERR_PTR",
+        "conditional": "__myos_d_alloc returns ERR_PTR(-ENOMEM)",
+        "effect": "__lookup_hash checks only !dentry, then may store dentry->d_parent through error pointer",
+        "boundaries": "do not infer filename_create IS_ERR receives that failure; stop before store"
+      },
+      {
+        "case": "miss_lookup_NULL_fn",
+        "conditional": "dir->i_op or lookup callback absent",
+        "effect": "__lookup_hash performs indirect ->lookup() without selected guard",
+        "boundaries": "first invalid indirect call, no safe errno"
+      }
+    ]
+  },
+  "create_gate_cleanup_matrix": {
+    "flag_cases": [
+      {
+        "input_flags": 0,
+        "is_dir_pre_mask": false,
+        "flags_to_parent": 0,
+        "flags_to_hash": 1536,
+        "trailing_slash_gate_enabled": true,
+        "scope": "filename_create local bit model, no compiled preprocessing"
+      },
+      {
+        "input_flags": 2,
+        "is_dir_pre_mask": true,
+        "flags_to_parent": 0,
+        "flags_to_hash": 1536,
+        "trailing_slash_gate_enabled": false,
+        "scope": "filename_create local bit model, no compiled preprocessing"
+      },
+      {
+        "input_flags": 32,
+        "is_dir_pre_mask": false,
+        "flags_to_parent": 32,
+        "flags_to_hash": 1568,
+        "trailing_slash_gate_enabled": true,
+        "scope": "filename_create local bit model, no compiled preprocessing"
+      },
+      {
+        "input_flags": 34,
+        "is_dir_pre_mask": true,
+        "flags_to_parent": 32,
+        "flags_to_hash": 1568,
+        "trailing_slash_gate_enabled": false,
+        "scope": "filename_create local bit model, no compiled preprocessing"
+      },
+      {
+        "input_flags": 1,
+        "is_dir_pre_mask": false,
+        "flags_to_parent": 0,
+        "flags_to_hash": 1536,
+        "trailing_slash_gate_enabled": true,
+        "scope": "filename_create local bit model, no compiled preprocessing"
+      },
+      {
+        "input_flags": 514,
+        "is_dir_pre_mask": true,
+        "flags_to_parent": 0,
+        "flags_to_hash": 1536,
+        "trailing_slash_gate_enabled": false,
+        "scope": "filename_create local bit model, no compiled preprocessing"
+      }
+    ],
+    "create_cases": [
+      {
+        "case": "creat_LookupDirectory",
+        "entry": "do_creatat",
+        "flags": 2,
+        "conclusion": "is_dir=true; filename_create slash-check guarded by !is_dir cannot reject on this basis",
+        "anchors": [
+          "B01",
+          "B02",
+          "B06",
+          "B08"
+        ]
+      },
+      {
+        "case": "mkdir_LookupDirectory",
+        "entry": "do_mkdirat",
+        "flags": 2,
+        "conclusion": "is_dir=true; same local tail check suppressed; calls i_op->mkdir directly",
+        "anchors": [
+          "B01",
+          "B02",
+          "B12",
+          "B13"
+        ]
+      },
+      {
+        "case": "helper_noDirectory",
+        "entry": "filename_create helper",
+        "flags": 0,
+        "conclusion": "is_dir=false; LAST_NORM slash suffix prompts -ENOENT after __lookup_hash succeeded",
+        "anchors": [
+          "B01",
+          "B06",
+          "B07"
+        ]
+      },
+      {
+        "case": "special_last",
+        "entry": "filename_create helper",
+        "flags": 2,
+        "conclusion": "LAST_DOT/ROOT/DOTDOT exits with initial ERR_PTR(-EEXIST) after parent path_put, not an actual positive-name proof",
+        "anchors": [
+          "B01",
+          "B04",
+          "B07"
+        ]
+      },
+      {
+        "case": "callback_missing_create",
+        "entry": "do_creatat",
+        "flags": 2,
+        "conclusion": "returns -EPERM before done_path_create and putname",
+        "anchors": [
+          "B09",
+          "B10",
+          "B11"
+        ]
+      },
+      {
+        "case": "callback_missing_mkdir",
+        "entry": "do_mkdirat",
+        "flags": 2,
+        "conclusion": "returns -EPERM before done_path_create and putname; vfs_mkdir not called in this path",
+        "anchors": [
+          "B13",
+          "B14",
+          "B15",
+          "B16"
+        ]
+      },
+      {
+        "case": "callback_negative",
+        "entry": "do_creatat/do_mkdirat",
+        "flags": 2,
+        "conclusion": "assign negative err then call done_path_create, putname, return err (if cleanup normal)",
+        "anchors": [
+          "B10",
+          "B13",
+          "B14",
+          "B21"
+        ]
+      },
+      {
+        "case": "callback_zero",
+        "entry": "do_creatat/do_mkdirat",
+        "flags": 2,
+        "conclusion": "same cleanup, return0; no file descriptor installed in these direct bodies",
+        "anchors": [
+          "B10",
+          "B13",
+          "B18",
+          "B21"
+        ]
+      },
+      {
+        "case": "name_ERR_PTR",
+        "entry": "getname->do_* or kern_path_create",
+        "flags": 2,
+        "conclusion": "filename_parentat recognizes ERR_PTR but higher function still calls putname(ERR_PTR) on returned error; earliest invalid deref inside putname",
+        "anchors": [
+          "A14",
+          "B03",
+          "B11",
+          "B18",
+          "B19",
+          "B21"
+        ]
+      }
+    ],
+    "mode_mask": "S_IRWXUGO|S_ISVTX applied in both do_* and vfs_mkdir, no numeric value assumed",
+    "cleanup_types": [
+      {
+        "object": "filename",
+        "acquired": "getname/getname_kernel",
+        "normal": "putname",
+        "bypass": "direct -EPERM return when i_op method absent; ERR_PTR passed to putname is unsafe"
+      },
+      {
+        "object": "parent_path",
+        "acquired": "path_parentat transferred from nd.path",
+        "normal": "done_path_create -> path_put",
+        "bypass": "direct -EPERM return; path_put current body calls no-op dput, not verified actual reference decrement"
+      },
+      {
+        "object": "target_dentry",
+        "acquired": "__d_lookup or __myos_d_alloc",
+        "normal": "done_path_create -> dput",
+        "bypass": "direct -EPERM return and dput no-op; no proof of physical free"
+      }
+    ],
+    "syscall_wrapper_context": "source invocation MYOS_SYSCALL_DEFINE2 for creat/mkdir; macro expansion, fd install and syscall table not audited"
+  },
+  "delete_gate_reference_matrix": {
+    "cases": [
+      {
+        "kind": "rmdir_type",
+        "name": "LAST_ROOT",
+        "outcome": "-EBUSY",
+        "cleanup": "path_put then putname",
+        "validity": "filename_parentat success and valid path"
+      },
+      {
+        "kind": "rmdir_type",
+        "name": "LAST_DOT",
+        "outcome": "-EINVAL",
+        "cleanup": "path_put then putname",
+        "validity": "same"
+      },
+      {
+        "kind": "rmdir_type",
+        "name": "LAST_DOTDOT",
+        "outcome": "-ENOTEMPTY",
+        "cleanup": "path_put then putname",
+        "validity": "same"
+      },
+      {
+        "kind": "unlink_type",
+        "name": "LAST_ROOT",
+        "outcome": "-EISDIR",
+        "cleanup": "path_put then putname",
+        "validity": "same"
+      },
+      {
+        "kind": "unlink_type",
+        "name": "LAST_DOT",
+        "outcome": "-EISDIR",
+        "cleanup": "path_put then putname",
+        "validity": "same"
+      },
+      {
+        "kind": "unlink_type",
+        "name": "LAST_DOTDOT",
+        "outcome": "-EISDIR",
+        "cleanup": "path_put then putname",
+        "validity": "same"
+      },
+      {
+        "kind": "rmdir_lookup",
+        "name": "ERR_PTR",
+        "outcome": "PTR_ERR(dentry) returned after cleanup",
+        "cleanup": "skip dput(dentry), path_put, putname",
+        "validity": "valid name"
+      },
+      {
+        "kind": "rmdir_lookup",
+        "name": "negative dentry",
+        "outcome": "-ENOENT",
+        "cleanup": "dput, path_put, putname",
+        "validity": "valid dentry with d_inode=NULL"
+      },
+      {
+        "kind": "rmdir_lookup",
+        "name": "positive non-dir",
+        "outcome": "-ENOTDIR",
+        "cleanup": "dput, path_put, putname",
+        "validity": "S_ISDIR has valid inode/mode"
+      },
+      {
+        "kind": "rmdir_callback",
+        "name": "absent",
+        "outcome": "-EPERM",
+        "cleanup": "vfs_rmdir skips dget/dput, outer do_rmdir performs dput/path_put/putname",
+        "validity": "valid inode"
+      },
+      {
+        "kind": "rmdir_callback",
+        "name": "returns nonzero",
+        "outcome": "error",
+        "cleanup": "vfs_rmdir dget,dput; outer dput/path_put/putname",
+        "validity": "valid objects"
+      },
+      {
+        "kind": "rmdir_callback",
+        "name": "returns0",
+        "outcome": "0",
+        "cleanup": "dget,dput and S_DEAD request; outer dput/path_put/putname",
+        "validity": "dentry->d_inode valid after callback"
+      },
+      {
+        "kind": "unlink_lookup",
+        "name": "ERR_PTR",
+        "outcome": "PTR_ERR(dentry) if no prior invalidity",
+        "cleanup": "path_put/putname, no iput",
+        "validity": "valid name"
+      },
+      {
+        "kind": "unlink_lookup",
+        "name": "negative dentry",
+        "outcome": "FIRST_INVALID: S_ISDIR(inode->i_mode) on NULL",
+        "cleanup": "no safe completed exit after invalid access",
+        "validity": "valid dentry but d_inode=NULL"
+      },
+      {
+        "kind": "unlink_lookup",
+        "name": "positive dir",
+        "outcome": "-EISDIR",
+        "cleanup": "dput, conditional iput, path_put, putname",
+        "validity": "valid inode"
+      },
+      {
+        "kind": "unlink_callback",
+        "name": "absent",
+        "outcome": "-EPERM",
+        "cleanup": "outer do_unlinkat calls dput and iput when inode valid",
+        "validity": "valid positive non-dir"
+      },
+      {
+        "kind": "unlink_callback",
+        "name": "returns negative",
+        "outcome": "error",
+        "cleanup": "same outer dput/iput/path_put/putname",
+        "validity": "valid positive non-dir"
+      },
+      {
+        "kind": "unlink_callback",
+        "name": "returns0",
+        "outcome": "0",
+        "cleanup": "same outer calls, no vfs_unlink S_DEAD",
+        "validity": "valid positive non-dir"
+      }
+    ],
+    "helper_actual_behaviors": [
+      {
+        "actor": "dget",
+        "impl": "static inline returns same pointer; reference-increment lines commented",
+        "source": "mykernel/include/linux/fs/dcache.h::dget",
+        "return_effect": "no visible counter increment"
+      },
+      {
+        "actor": "dput",
+        "impl": "body contains only commented old Linux logic",
+        "source": "mykernel/fs/vfs/dcache.c::dput",
+        "return_effect": "no visible free or decrement"
+      },
+      {
+        "actor": "path_put",
+        "impl": "calls dput(path->dentry), mntput commented",
+        "source": "mykernel/fs/vfs/namei.c::path_put",
+        "return_effect": "no proven dentry/mount release"
+      },
+      {
+        "actor": "iput",
+        "impl": "if NULL return; otherwise only commented lifetime routine",
+        "source": "mykernel/fs/vfs/inode.c::iput",
+        "return_effect": "no visible decrement/free"
+      },
+      {
+        "actor": "putname",
+        "impl": "two kfree requests for name->name and name; no ERR_PTR gate",
+        "source": "mykernel/fs/vfs/namei.c::putname",
+        "return_effect": "valid filename object prerequisite"
+      }
+    ],
+    "trailing_slash": "in do_unlinkat last.name[last.len] check is commented; no active rejection from that text",
+    "prior_fat_delete": "DM57-F07 and R57-S01/S02 retain conditional release-before-parent-mark order; this batch does not revalidate disk effects"
+  },
+  "finite_model_cases": [
+    {
+      "id": "NAME-1",
+      "group": "A",
+      "input": "",
+      "result": {
+        "input": "",
+        "last": "",
+        "last_type": "LAST_ROOT",
+        "last_len": null,
+        "after": null
+      },
+      "last_type": "LAST_ROOT"
+    },
+    {
+      "id": "NAME-2",
+      "group": "A",
+      "input": "/",
+      "result": {
+        "input": "/",
+        "last": "",
+        "last_type": "LAST_ROOT",
+        "last_len": null,
+        "after": null
+      },
+      "last_type": "LAST_ROOT"
+    },
+    {
+      "id": "NAME-3",
+      "group": "A",
+      "input": "foo",
+      "result": {
+        "input": "foo",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "\u0000",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-4",
+      "group": "A",
+      "input": "foo.",
+      "result": {
+        "input": "foo.",
+        "last": "foo.",
+        "last_type": "LAST_NORM",
+        "last_len": 4,
+        "last_after_char": "\u0000",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 4,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-5",
+      "group": "A",
+      "input": "foo/",
+      "result": {
+        "input": "foo/",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "/",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-6",
+      "group": "A",
+      "input": "foo//",
+      "result": {
+        "input": "foo//",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "/",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-7",
+      "group": "A",
+      "input": "/tmp/foo/",
+      "result": {
+        "input": "/tmp/foo/",
+        "last": "foo",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "/",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-8",
+      "group": "A",
+      "input": "abc.def",
+      "result": {
+        "input": "abc.def",
+        "last": "abc.def",
+        "last_type": "LAST_NORM",
+        "last_len": 7,
+        "last_after_char": "\u0000",
+        "trimmed_len": 7,
+        "shortname_ext_idx": 4,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-9",
+      "group": "A",
+      "input": "ABCDEFGH.",
+      "result": {
+        "input": "ABCDEFGH.",
+        "last": "ABCDEFGH.",
+        "last_type": "LAST_NORM",
+        "last_len": 9,
+        "last_after_char": "\u0000",
+        "trimmed_len": 8,
+        "shortname_ext_idx": 9,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-10",
+      "group": "A",
+      "input": "ABCDEFGHI.",
+      "result": {
+        "input": "ABCDEFGHI.",
+        "last": "ABCDEFGHI.",
+        "last_type": "LAST_NORM",
+        "last_len": 10,
+        "last_after_char": "\u0000",
+        "trimmed_len": 9,
+        "shortname_ext_idx": 10,
+        "extlen_if_long_branch": -1,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-11",
+      "group": "A",
+      "input": "ABCDEFGHI..",
+      "result": {
+        "input": "ABCDEFGHI..",
+        "last": "ABCDEFGHI..",
+        "last_type": "LAST_NORM",
+        "last_len": 11,
+        "last_after_char": "\u0000",
+        "trimmed_len": 9,
+        "shortname_ext_idx": 11,
+        "extlen_if_long_branch": -2,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-12",
+      "group": "A",
+      "input": ".",
+      "result": {
+        "input": ".",
+        "last": ".",
+        "last_type": "LAST_DOT",
+        "last_len": 1,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 1,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_DOT"
+    },
+    {
+      "id": "NAME-13",
+      "group": "A",
+      "input": "..",
+      "result": {
+        "input": "..",
+        "last": "..",
+        "last_type": "LAST_DOTDOT",
+        "last_len": 2,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 2,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_DOTDOT"
+    },
+    {
+      "id": "NAME-14",
+      "group": "A",
+      "input": "...",
+      "result": {
+        "input": "...",
+        "last": "...",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-15",
+      "group": "A",
+      "input": "foo/bar",
+      "result": {
+        "input": "foo/bar",
+        "last": "bar",
+        "last_type": "LAST_NORM",
+        "last_len": 3,
+        "last_after_char": "\u0000",
+        "trimmed_len": 3,
+        "shortname_ext_idx": 3,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_NORM"
+    },
+    {
+      "id": "NAME-16",
+      "group": "A",
+      "input": "a/b/..",
+      "result": {
+        "input": "a/b/..",
+        "last": "..",
+        "last_type": "LAST_DOTDOT",
+        "last_len": 2,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 2,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_DOTDOT"
+    },
+    {
+      "id": "NAME-17",
+      "group": "A",
+      "input": "a/b/.",
+      "result": {
+        "input": "a/b/.",
+        "last": ".",
+        "last_type": "LAST_DOT",
+        "last_len": 1,
+        "last_after_char": "\u0000",
+        "trimmed_len": 0,
+        "shortname_ext_idx": 1,
+        "extlen_if_long_branch": null,
+        "scope": "valid finite NUL-terminated input; lexical-only, callback reachability not asserted"
+      },
+      "last_type": "LAST_DOT"
+    },
+    {
+      "id": "FLAG-1",
+      "group": "B",
+      "input": 0,
+      "result": 1536,
+      "gate": true
+    },
+    {
+      "id": "FLAG-2",
+      "group": "B",
+      "input": 2,
+      "result": 1536,
+      "gate": false
+    },
+    {
+      "id": "FLAG-3",
+      "group": "B",
+      "input": 32,
+      "result": 1568,
+      "gate": true
+    },
+    {
+      "id": "FLAG-4",
+      "group": "B",
+      "input": 34,
+      "result": 1568,
+      "gate": false
+    },
+    {
+      "id": "FLAG-5",
+      "group": "B",
+      "input": 1,
+      "result": 1536,
+      "gate": true
+    },
+    {
+      "id": "FLAG-6",
+      "group": "B",
+      "input": 514,
+      "result": 1536,
+      "gate": false
+    },
+    {
+      "id": "HASH-1",
+      "group": "A",
+      "input": "cached_positive",
+      "result": "__lookup_hash returns immediately, bypasses LOOKUP_CREATE/EXCL consumption by filesystem lookup; filename_create has no explicit d_inode positivity rejection"
+    },
+    {
+      "id": "HASH-2",
+      "group": "A",
+      "input": "cached_negative",
+      "result": "same immediate return; later do_creatat/do_mkdirat can call create/mkdir if callback exists"
+    },
+    {
+      "id": "HASH-3",
+      "group": "A",
+      "input": "miss_lookup_null",
+      "result": "__lookup_hash returns new dentry initialized with d_inode=NULL"
+    },
+    {
+      "id": "HASH-4",
+      "group": "A",
+      "input": "miss_lookup_other",
+      "result": "dput(new) (no-op in selected code); return old"
+    },
+    {
+      "id": "HASH-5",
+      "group": "A",
+      "input": "miss_alloc_ERR_PTR",
+      "result": "__lookup_hash checks only !dentry, then may store dentry->d_parent through error pointer"
+    },
+    {
+      "id": "HASH-6",
+      "group": "A",
+      "input": "miss_lookup_NULL_fn",
+      "result": "__lookup_hash performs indirect ->lookup() without selected guard"
+    },
+    {
+      "id": "CREATE-1",
+      "group": "B",
+      "input": "creat_LookupDirectory",
+      "result": "is_dir=true; filename_create slash-check guarded by !is_dir cannot reject on this basis"
+    },
+    {
+      "id": "CREATE-2",
+      "group": "B",
+      "input": "mkdir_LookupDirectory",
+      "result": "is_dir=true; same local tail check suppressed; calls i_op->mkdir directly"
+    },
+    {
+      "id": "CREATE-3",
+      "group": "B",
+      "input": "helper_noDirectory",
+      "result": "is_dir=false; LAST_NORM slash suffix prompts -ENOENT after __lookup_hash succeeded"
+    },
+    {
+      "id": "CREATE-4",
+      "group": "B",
+      "input": "special_last",
+      "result": "LAST_DOT/ROOT/DOTDOT exits with initial ERR_PTR(-EEXIST) after parent path_put, not an actual positive-name proof"
+    },
+    {
+      "id": "CREATE-5",
+      "group": "B",
+      "input": "callback_missing_create",
+      "result": "returns -EPERM before done_path_create and putname"
+    },
+    {
+      "id": "CREATE-6",
+      "group": "B",
+      "input": "callback_missing_mkdir",
+      "result": "returns -EPERM before done_path_create and putname; vfs_mkdir not called in this path"
+    },
+    {
+      "id": "CREATE-7",
+      "group": "B",
+      "input": "callback_negative",
+      "result": "assign negative err then call done_path_create, putname, return err (if cleanup normal)"
+    },
+    {
+      "id": "CREATE-8",
+      "group": "B",
+      "input": "callback_zero",
+      "result": "same cleanup, return0; no file descriptor installed in these direct bodies"
+    },
+    {
+      "id": "CREATE-9",
+      "group": "B",
+      "input": "name_ERR_PTR",
+      "result": "filename_parentat recognizes ERR_PTR but higher function still calls putname(ERR_PTR) on returned error; earliest invalid deref inside putname"
+    },
+    {
+      "id": "DELETE-1",
+      "group": "C",
+      "input": "LAST_ROOT",
+      "kind": "rmdir_type",
+      "result": "-EBUSY"
+    },
+    {
+      "id": "DELETE-2",
+      "group": "C",
+      "input": "LAST_DOT",
+      "kind": "rmdir_type",
+      "result": "-EINVAL"
+    },
+    {
+      "id": "DELETE-3",
+      "group": "C",
+      "input": "LAST_DOTDOT",
+      "kind": "rmdir_type",
+      "result": "-ENOTEMPTY"
+    },
+    {
+      "id": "DELETE-4",
+      "group": "C",
+      "input": "LAST_ROOT",
+      "kind": "unlink_type",
+      "result": "-EISDIR"
+    },
+    {
+      "id": "DELETE-5",
+      "group": "C",
+      "input": "LAST_DOT",
+      "kind": "unlink_type",
+      "result": "-EISDIR"
+    },
+    {
+      "id": "DELETE-6",
+      "group": "C",
+      "input": "LAST_DOTDOT",
+      "kind": "unlink_type",
+      "result": "-EISDIR"
+    },
+    {
+      "id": "DELETE-7",
+      "group": "C",
+      "input": "ERR_PTR",
+      "kind": "rmdir_lookup",
+      "result": "PTR_ERR(dentry) returned after cleanup"
+    },
+    {
+      "id": "DELETE-8",
+      "group": "C",
+      "input": "negative dentry",
+      "kind": "rmdir_lookup",
+      "result": "-ENOENT"
+    },
+    {
+      "id": "DELETE-9",
+      "group": "C",
+      "input": "positive non-dir",
+      "kind": "rmdir_lookup",
+      "result": "-ENOTDIR"
+    },
+    {
+      "id": "DELETE-10",
+      "group": "C",
+      "input": "absent",
+      "kind": "rmdir_callback",
+      "result": "-EPERM"
+    },
+    {
+      "id": "DELETE-11",
+      "group": "C",
+      "input": "returns nonzero",
+      "kind": "rmdir_callback",
+      "result": "error"
+    },
+    {
+      "id": "DELETE-12",
+      "group": "C",
+      "input": "returns0",
+      "kind": "rmdir_callback",
+      "result": "0"
+    },
+    {
+      "id": "DELETE-13",
+      "group": "C",
+      "input": "ERR_PTR",
+      "kind": "unlink_lookup",
+      "result": "PTR_ERR(dentry) if no prior invalidity"
+    },
+    {
+      "id": "DELETE-14",
+      "group": "C",
+      "input": "negative dentry",
+      "kind": "unlink_lookup",
+      "result": "FIRST_INVALID: S_ISDIR(inode->i_mode) on NULL"
+    },
+    {
+      "id": "DELETE-15",
+      "group": "C",
+      "input": "positive dir",
+      "kind": "unlink_lookup",
+      "result": "-EISDIR"
+    },
+    {
+      "id": "DELETE-16",
+      "group": "C",
+      "input": "absent",
+      "kind": "unlink_callback",
+      "result": "-EPERM"
+    },
+    {
+      "id": "DELETE-17",
+      "group": "C",
+      "input": "returns negative",
+      "kind": "unlink_callback",
+      "result": "error"
+    },
+    {
+      "id": "DELETE-18",
+      "group": "C",
+      "input": "returns0",
+      "kind": "unlink_callback",
+      "result": "0"
+    }
+  ],
+  "finite_model_count": 56,
+  "model_description": "pure JS finite string slicing, bit masks and branch tables transcribed from fixed source; no repository code, script, compile, or runtime called",
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R33-S01",
+        "R33-S02"
+      ],
+      "relation": "__d_lookup query len vs cached candidate len; no new same-root finding"
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R33-S01",
+        "R33-S02"
+      ],
+      "relation": "ERR_PTR vs NULL handling in d_alloc; NG58 new __lookup_hash consumer is analogous but not historical closure"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R34-S01",
+        "R34-S02"
+      ],
+      "relation": "FAT/lookup callback object validity; different from VFS flag checking"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F04",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": [
+        "R57-01",
+        "R57-02",
+        "R57-S01",
+        "R57-S02"
+      ],
+      "relation": "create lacks local inode publish; D00 correct prior link to SB38-F02/F04"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F08",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": [
+        "R57-02",
+        "R57-S01"
+      ],
+      "relation": "length33 offsets0,32 are inside byte span; only incomplete slot/metadata issues remain"
+    }
+  ],
+  "unproven": [
+    "user memory copy helper semantics and errno conversion",
+    "full syscall macro expansion and fd installation",
+    "real mount path and callback table availability",
+    "actual cache hit/miss or filesystem inode state",
+    "allocation zeroing at runtime and all C integer conversions",
+    "full ownership/refcount, concurrency, opened-file lifecycle",
+    "POSIX compliance and disk persistence"
+  ]
+}

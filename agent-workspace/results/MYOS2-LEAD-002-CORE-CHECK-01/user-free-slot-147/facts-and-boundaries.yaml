@@ -1,0 +1,5891 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "batch147_free_slot_conditional_models",
+  "batch_id": "CORE-USER-FREE-SLOT-147",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-23",
+  "produced_by": "GPT-6.2 (system model identifier, backend/effort unattested)",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested",
+  "date": "2026-11-25",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_PENDING_MAINLINE_REVIEW",
+  "D00": [],
+  "prior": {
+    "146": "PASS_PENDING_LOCAL_WITH_MAINLINE_CONSUMPTION_NOTE",
+    "combined145": "PASS_PENDING_LOCAL",
+    "R145_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R145_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R145_03": "CLOSED_BY_CORRECTED_CONSUMPTION",
+    "R146_N01": "CLOSED_BY_THIS_MAINLINE_METADATA_CORRECTION",
+    "prior145_facts_actual_blob_short12": "387b9eb01d02",
+    "source": "146 review §4 @00a7ead0ddcd; do not reopen closed D00"
+  },
+  "given_model": {
+    "byte_bits": 8,
+    "bitmap_t_bits": 64,
+    "bitmap_sizeof_bytes": 8,
+    "bitmap_unsigned": true,
+    "BITMAP_UNITSIZE": 64,
+    "unsigned_long_long_bits": 64,
+    "size_t_unsigned_long_address_bits": 64,
+    "int_bits": 32,
+    "unsigned_bits": 32,
+    "INT_MAX": 2147483647,
+    "H_user_bytes": 2097152,
+    "round_mask": "0x00000000001fffff",
+    "H_distinct_from_kernel_page_size": true,
+    "no_wrap_concurrency_or_runtime": true,
+    "DEBUG_defined": false,
+    "DEBUG_status": "GIVEN_NOT_ACTUAL_PREPROCESSOR_RESULT",
+    "C_void_pointer_difference": "GIVEN_byte_difference_projection; not ISO C valid-object proof",
+    "C_valid_owners_list_helpers": "GIVEN",
+    "actual_payload_initialization": "UNKNOWN_INHERITED"
+  },
+  "external_basis": [
+    {
+      "id": "EXT147-ISO",
+      "title": "ISO/IEC 9899:201x Committee Draft N1547",
+      "version": "2010-12-02 (contract identification)",
+      "url": "https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1547.pdf",
+      "access_date": "2026-11-25",
+      "status": "UNKNOWN_INDEPENDENT_SOURCE",
+      "attempts": "direct official URL twice timeout; official www9 variant inaccessible; official search did not recover target exact document clauses",
+      "requested_clauses": [
+        "6.4.4.1 p5 and table",
+        "6.5.7 p3–4",
+        "6.2.5 p19",
+        "6.5.6 p3,9"
+      ],
+      "model_basis": "GIVEN under fixed contract204; not independently read/quoted",
+      "scope": "int32 left shift t=31 signed not representable, t>=32 width boundary; standard object/pointer subtraction constraints as contract given; no actual compiler/runtime claim"
+    },
+    {
+      "id": "EXT147-GCC-PTR",
+      "title": "Arithmetic on void- and Function-Pointers (Using the GNU Compiler Collection)",
+      "version": "GCC online manual §6.13.2 (specific release not established)",
+      "url": "https://gcc.gnu.org/onlinedocs/gcc/Pointer-Arith.html",
+      "access_date": "2026-11-25",
+      "status": "OFFICIAL_TEXT_READ",
+      "clause": "§6.13.2, GNU C extension treats void/function size as 1 for pointer arithmetic",
+      "scope": "supports distinguishing GNU byte-unit extension from ISO object/pointer conditions; no MyOS2 toolchain assertion"
+    },
+    {
+      "id": "EXT147-GCC-SHIFT",
+      "title": "Integers implementation (Using the GNU Compiler Collection)",
+      "version": "GCC online manual §4.5 (specific release not established)",
+      "url": "https://gcc.gnu.org/onlinedocs/gcc/Integers-implementation.html",
+      "access_date": "2026-11-25",
+      "status": "OFFICIAL_TEXT_READ",
+      "clause": "§4.5 bitwise signed integer operations; GCC extension treats certain signed left-shift cases differently from ISO latitude; diagnostics mentioned",
+      "scope": "prevents asserting ISO analysis boundaries determine actual GCC behavior; no concrete GCC outcome/flags/instructions or sanitizer result"
+    }
+  ],
+  "page_lookup": [
+    {
+      "id": "A_FIRST",
+      "evidence_class": "CONDITIONAL_ARITHMETIC_MODEL",
+      "input_address": "0x60601234",
+      "H_bytes": 2097152,
+      "round_mask": "0x00000000001fffff",
+      "inverted_mask": "0xffffffffffe00000",
+      "rounded_key": "0x60600000",
+      "chain_order": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "initial_count": 3,
+      "compared_descriptors": [
+        "D2"
+      ],
+      "comparisons": [
+        {
+          "descriptor": "D2",
+          "descriptor_vaddr": "0x60600000",
+          "key": "0x60600000",
+          "equal": true
+        }
+      ],
+      "comparison_count": 1,
+      "matching_branch": "D2",
+      "return_descriptor": "D2",
+      "return_kind": "U_PAGE_DESCRIPTOR_POINTER_NOT_KEY",
+      "termination": "BREAK_ON_EQUAL",
+      "loop_count_source": "anchor, not count",
+      "metadata_before_after": {
+        "count": 3,
+        "chain_order": [
+          "D2",
+          "D0",
+          "D1"
+        ],
+        "descriptor_vaddr_unchanged": true,
+        "descriptor_owner_and_links_unchanged": true,
+        "other_metadata_not_written_by_search": true
+      },
+      "next_free_consumption_boundary": "nonNULL descriptor under given conditions",
+      "source_evidence": [
+        "E147-023",
+        "E147-024",
+        "E147-025",
+        "E147-026",
+        "E147-027",
+        "E147-029",
+        "E147-030",
+        "E147-031",
+        "E147-032",
+        "E147-052"
+      ]
+    },
+    {
+      "id": "A_BASE",
+      "evidence_class": "CONDITIONAL_ARITHMETIC_MODEL",
+      "input_address": "0x60000000",
+      "H_bytes": 2097152,
+      "round_mask": "0x00000000001fffff",
+      "inverted_mask": "0xffffffffffe00000",
+      "rounded_key": "0x60000000",
+      "chain_order": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "initial_count": 3,
+      "compared_descriptors": [
+        "D2",
+        "D0"
+      ],
+      "comparisons": [
+        {
+          "descriptor": "D2",
+          "descriptor_vaddr": "0x60600000",
+          "key": "0x60000000",
+          "equal": false
+        },
+        {
+          "descriptor": "D0",
+          "descriptor_vaddr": "0x60000000",
+          "key": "0x60000000",
+          "equal": true
+        }
+      ],
+      "comparison_count": 2,
+      "matching_branch": "D0",
+      "return_descriptor": "D0",
+      "return_kind": "U_PAGE_DESCRIPTOR_POINTER_NOT_KEY",
+      "termination": "BREAK_ON_EQUAL",
+      "loop_count_source": "anchor, not count",
+      "metadata_before_after": {
+        "count": 3,
+        "chain_order": [
+          "D2",
+          "D0",
+          "D1"
+        ],
+        "descriptor_vaddr_unchanged": true,
+        "descriptor_owner_and_links_unchanged": true,
+        "other_metadata_not_written_by_search": true
+      },
+      "next_free_consumption_boundary": "nonNULL descriptor under given conditions",
+      "source_evidence": [
+        "E147-023",
+        "E147-024",
+        "E147-025",
+        "E147-026",
+        "E147-027",
+        "E147-029",
+        "E147-030",
+        "E147-031",
+        "E147-032",
+        "E147-052"
+      ]
+    },
+    {
+      "id": "A_LASTBYTE",
+      "evidence_class": "CONDITIONAL_ARITHMETIC_MODEL",
+      "input_address": "0x601fffff",
+      "H_bytes": 2097152,
+      "round_mask": "0x00000000001fffff",
+      "inverted_mask": "0xffffffffffe00000",
+      "rounded_key": "0x60000000",
+      "chain_order": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "initial_count": 3,
+      "compared_descriptors": [
+        "D2",
+        "D0"
+      ],
+      "comparisons": [
+        {
+          "descriptor": "D2",
+          "descriptor_vaddr": "0x60600000",
+          "key": "0x60000000",
+          "equal": false
+        },
+        {
+          "descriptor": "D0",
+          "descriptor_vaddr": "0x60000000",
+          "key": "0x60000000",
+          "equal": true
+        }
+      ],
+      "comparison_count": 2,
+      "matching_branch": "D0",
+      "return_descriptor": "D0",
+      "return_kind": "U_PAGE_DESCRIPTOR_POINTER_NOT_KEY",
+      "termination": "BREAK_ON_EQUAL",
+      "loop_count_source": "anchor, not count",
+      "metadata_before_after": {
+        "count": 3,
+        "chain_order": [
+          "D2",
+          "D0",
+          "D1"
+        ],
+        "descriptor_vaddr_unchanged": true,
+        "descriptor_owner_and_links_unchanged": true,
+        "other_metadata_not_written_by_search": true
+      },
+      "next_free_consumption_boundary": "nonNULL descriptor under given conditions",
+      "source_evidence": [
+        "E147-023",
+        "E147-024",
+        "E147-025",
+        "E147-026",
+        "E147-027",
+        "E147-029",
+        "E147-030",
+        "E147-031",
+        "E147-032",
+        "E147-052"
+      ]
+    },
+    {
+      "id": "A_NEXT",
+      "evidence_class": "CONDITIONAL_ARITHMETIC_MODEL",
+      "input_address": "0x60200000",
+      "H_bytes": 2097152,
+      "round_mask": "0x00000000001fffff",
+      "inverted_mask": "0xffffffffffe00000",
+      "rounded_key": "0x60200000",
+      "chain_order": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "initial_count": 3,
+      "compared_descriptors": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "comparisons": [
+        {
+          "descriptor": "D2",
+          "descriptor_vaddr": "0x60600000",
+          "key": "0x60200000",
+          "equal": false
+        },
+        {
+          "descriptor": "D0",
+          "descriptor_vaddr": "0x60000000",
+          "key": "0x60200000",
+          "equal": false
+        },
+        {
+          "descriptor": "D1",
+          "descriptor_vaddr": "0x60200000",
+          "key": "0x60200000",
+          "equal": true
+        }
+      ],
+      "comparison_count": 3,
+      "matching_branch": "D1",
+      "return_descriptor": "D1",
+      "return_kind": "U_PAGE_DESCRIPTOR_POINTER_NOT_KEY",
+      "termination": "BREAK_ON_EQUAL",
+      "loop_count_source": "anchor, not count",
+      "metadata_before_after": {
+        "count": 3,
+        "chain_order": [
+          "D2",
+          "D0",
+          "D1"
+        ],
+        "descriptor_vaddr_unchanged": true,
+        "descriptor_owner_and_links_unchanged": true,
+        "other_metadata_not_written_by_search": true
+      },
+      "next_free_consumption_boundary": "nonNULL descriptor under given conditions",
+      "source_evidence": [
+        "E147-023",
+        "E147-024",
+        "E147-025",
+        "E147-026",
+        "E147-027",
+        "E147-029",
+        "E147-030",
+        "E147-031",
+        "E147-032",
+        "E147-052"
+      ]
+    },
+    {
+      "id": "A_NEXTLAST",
+      "evidence_class": "CONDITIONAL_ARITHMETIC_MODEL",
+      "input_address": "0x603fffff",
+      "H_bytes": 2097152,
+      "round_mask": "0x00000000001fffff",
+      "inverted_mask": "0xffffffffffe00000",
+      "rounded_key": "0x60200000",
+      "chain_order": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "initial_count": 3,
+      "compared_descriptors": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "comparisons": [
+        {
+          "descriptor": "D2",
+          "descriptor_vaddr": "0x60600000",
+          "key": "0x60200000",
+          "equal": false
+        },
+        {
+          "descriptor": "D0",
+          "descriptor_vaddr": "0x60000000",
+          "key": "0x60200000",
+          "equal": false
+        },
+        {
+          "descriptor": "D1",
+          "descriptor_vaddr": "0x60200000",
+          "key": "0x60200000",
+          "equal": true
+        }
+      ],
+      "comparison_count": 3,
+      "matching_branch": "D1",
+      "return_descriptor": "D1",
+      "return_kind": "U_PAGE_DESCRIPTOR_POINTER_NOT_KEY",
+      "termination": "BREAK_ON_EQUAL",
+      "loop_count_source": "anchor, not count",
+      "metadata_before_after": {
+        "count": 3,
+        "chain_order": [
+          "D2",
+          "D0",
+          "D1"
+        ],
+        "descriptor_vaddr_unchanged": true,
+        "descriptor_owner_and_links_unchanged": true,
+        "other_metadata_not_written_by_search": true
+      },
+      "next_free_consumption_boundary": "nonNULL descriptor under given conditions",
+      "source_evidence": [
+        "E147-023",
+        "E147-024",
+        "E147-025",
+        "E147-026",
+        "E147-027",
+        "E147-029",
+        "E147-030",
+        "E147-031",
+        "E147-032",
+        "E147-052"
+      ]
+    },
+    {
+      "id": "A_MISS",
+      "evidence_class": "CONDITIONAL_ARITHMETIC_MODEL",
+      "input_address": "0x60400000",
+      "H_bytes": 2097152,
+      "round_mask": "0x00000000001fffff",
+      "inverted_mask": "0xffffffffffe00000",
+      "rounded_key": "0x60400000",
+      "chain_order": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "initial_count": 3,
+      "compared_descriptors": [
+        "D2",
+        "D0",
+        "D1"
+      ],
+      "comparisons": [
+        {
+          "descriptor": "D2",
+          "descriptor_vaddr": "0x60600000",
+          "key": "0x60400000",
+          "equal": false
+        },
+        {
+          "descriptor": "D0",
+          "descriptor_vaddr": "0x60000000",
+          "key": "0x60400000",
+          "equal": false
+        },
+        {
+          "descriptor": "D1",
+          "descriptor_vaddr": "0x60200000",
+          "key": "0x60400000",
+          "equal": false
+        }
+      ],
+      "comparison_count": 3,
+      "matching_branch": "NO_EQUAL_BRANCH",
+      "return_descriptor": "NULL",
+      "return_kind": "NULL_POINTER",
+      "termination": "ANCHOR_REACHED",
+      "loop_count_source": "anchor, not count",
+      "metadata_before_after": {
+        "count": 3,
+        "chain_order": [
+          "D2",
+          "D0",
+          "D1"
+        ],
+        "descriptor_vaddr_unchanged": true,
+        "descriptor_owner_and_links_unchanged": true,
+        "other_metadata_not_written_by_search": true
+      },
+      "next_free_consumption_boundary": "return NULL only; free's next source line dereferences returned upgp without an intervening test; not modeled as access",
+      "source_evidence": [
+        "E147-023",
+        "E147-024",
+        "E147-025",
+        "E147-026",
+        "E147-027",
+        "E147-029",
+        "E147-030",
+        "E147-031",
+        "E147-032",
+        "E147-052"
+      ]
+    },
+    {
+      "id": "A_EMPTY",
+      "evidence_class": "CONDITIONAL_ARITHMETIC_MODEL",
+      "input_address": "0x60000000",
+      "H_bytes": 2097152,
+      "round_mask": "0x00000000001fffff",
+      "inverted_mask": "0xffffffffffe00000",
+      "rounded_key": "0x60000000",
+      "chain_order": [],
+      "initial_count": 0,
+      "compared_descriptors": [],
+      "comparisons": [],
+      "comparison_count": 0,
+      "matching_branch": "NO_EQUAL_BRANCH",
+      "return_descriptor": "NULL",
+      "return_kind": "NULL_POINTER",
+      "termination": "ANCHOR_REACHED",
+      "loop_count_source": "anchor, not count",
+      "metadata_before_after": {
+        "count": 0,
+        "chain_order": [],
+        "descriptor_vaddr_unchanged": true,
+        "descriptor_owner_and_links_unchanged": true,
+        "other_metadata_not_written_by_search": true
+      },
+      "next_free_consumption_boundary": "return NULL only; free's next source line dereferences returned upgp without an intervening test; not modeled as access",
+      "source_evidence": [
+        "E147-023",
+        "E147-024",
+        "E147-025",
+        "E147-026",
+        "E147-027",
+        "E147-029",
+        "E147-030",
+        "E147-031",
+        "E147-032",
+        "E147-052"
+      ]
+    }
+  ],
+  "bit_helpers": [
+    {
+      "id": "B_0",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 0,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 0,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 1,
+        "mask_after_assignment": "0x0000000000000001",
+        "word_read": 0,
+        "unit_value": "0xffffffffffffffff",
+        "bitwise_and_value": "0x0000000000000001",
+        "returned_unsigned32": 1,
+        "returned_nonzero": true,
+        "word_after_assigned": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 0,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000000000001",
+        "complement_64": "0xfffffffffffffffe",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xfffffffffffffffe",
+          "0xffffffffffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_UNSET",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 2,
+      "initial_words": [
+        "0x0000000000000003",
+        "0x0000000000000000"
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 2,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 4,
+        "mask_after_assignment": "0x0000000000000004",
+        "word_read": 0,
+        "unit_value": "0x0000000000000003",
+        "bitwise_and_value": "0x0000000000000000",
+        "returned_unsigned32": 0,
+        "returned_nonzero": false,
+        "word_after_assigned": [
+          "0x0000000000000003",
+          "0x0000000000000000"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 2,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000000000004",
+        "complement_64": "0xfffffffffffffffb",
+        "original_words": [
+          "0x0000000000000003",
+          "0x0000000000000000"
+        ],
+        "words_after": [
+          "0x0000000000000003",
+          "0x0000000000000000"
+        ],
+        "changed_bits": 0,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_30",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 30,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 30,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 1073741824,
+        "mask_after_assignment": "0x0000000040000000",
+        "word_read": 0,
+        "unit_value": "0xffffffffffffffff",
+        "bitwise_and_value": "0x0000000040000000",
+        "returned_unsigned32": 1073741824,
+        "returned_nonzero": true,
+        "word_after_assigned": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 30,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000040000000",
+        "complement_64": "0xffffffffbfffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xffffffffbfffffff",
+          "0xffffffffffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_31",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 31,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 31,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "ANALYSIS_STOP_SIGNED_RESULT_NOT_REPRESENTABLE",
+        "stop_kind": "ANALYSIS_STOP_NOT_SOURCE_BRANCH_OR_ACTUAL_RETURN",
+        "mask_expression_value": "NOT_DERIVED",
+        "mask_after_assignment": "NOT_DERIVED",
+        "word_read": "NOT_DERIVED",
+        "unit_value": "NOT_DERIVED",
+        "bitwise_and_value": "NOT_DERIVED",
+        "returned_unsigned32": "NOT_DERIVED",
+        "returned_nonzero": "NOT_DERIVED",
+        "word_after_assigned": "NOT_DERIVED",
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 31,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000080000000",
+        "complement_64": "0xffffffff7fffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xffffffff7fffffff",
+          "0xffffffffffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_32",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 32,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 32,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH",
+        "stop_kind": "ANALYSIS_STOP_NOT_SOURCE_BRANCH_OR_ACTUAL_RETURN",
+        "mask_expression_value": "NOT_DERIVED",
+        "mask_after_assignment": "NOT_DERIVED",
+        "word_read": "NOT_DERIVED",
+        "unit_value": "NOT_DERIVED",
+        "bitwise_and_value": "NOT_DERIVED",
+        "returned_unsigned32": "NOT_DERIVED",
+        "returned_nonzero": "NOT_DERIVED",
+        "word_after_assigned": "NOT_DERIVED",
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 32,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000100000000",
+        "complement_64": "0xfffffffeffffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xfffffffeffffffff",
+          "0xffffffffffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_63",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 63,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 63,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH",
+        "stop_kind": "ANALYSIS_STOP_NOT_SOURCE_BRANCH_OR_ACTUAL_RETURN",
+        "mask_expression_value": "NOT_DERIVED",
+        "mask_after_assignment": "NOT_DERIVED",
+        "word_read": "NOT_DERIVED",
+        "unit_value": "NOT_DERIVED",
+        "bitwise_and_value": "NOT_DERIVED",
+        "returned_unsigned32": "NOT_DERIVED",
+        "returned_nonzero": "NOT_DERIVED",
+        "word_after_assigned": "NOT_DERIVED",
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 63,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x8000000000000000",
+        "complement_64": "0x7fffffffffffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0x7fffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_64",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 64,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 1,
+        "shift_count": 0,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 1,
+        "mask_after_assignment": "0x0000000000000001",
+        "word_read": 1,
+        "unit_value": "0xffffffffffffffff",
+        "bitwise_and_value": "0x0000000000000001",
+        "returned_unsigned32": 1,
+        "returned_nonzero": true,
+        "word_after_assigned": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 1,
+        "shift_count": 0,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000000000001",
+        "complement_64": "0xfffffffffffffffe",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xffffffffffffffff",
+          "0xfffffffffffffffe"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          1
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_94",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 94,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 1,
+        "shift_count": 30,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 1073741824,
+        "mask_after_assignment": "0x0000000040000000",
+        "word_read": 1,
+        "unit_value": "0xffffffffffffffff",
+        "bitwise_and_value": "0x0000000040000000",
+        "returned_unsigned32": 1073741824,
+        "returned_nonzero": true,
+        "word_after_assigned": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 1,
+        "shift_count": 30,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000040000000",
+        "complement_64": "0xffffffffbfffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xffffffffffffffff",
+          "0xffffffffbfffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          1
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_95",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 95,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 1,
+        "shift_count": 31,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "ANALYSIS_STOP_SIGNED_RESULT_NOT_REPRESENTABLE",
+        "stop_kind": "ANALYSIS_STOP_NOT_SOURCE_BRANCH_OR_ACTUAL_RETURN",
+        "mask_expression_value": "NOT_DERIVED",
+        "mask_after_assignment": "NOT_DERIVED",
+        "word_read": "NOT_DERIVED",
+        "unit_value": "NOT_DERIVED",
+        "bitwise_and_value": "NOT_DERIVED",
+        "returned_unsigned32": "NOT_DERIVED",
+        "returned_nonzero": "NOT_DERIVED",
+        "word_after_assigned": "NOT_DERIVED",
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 1,
+        "shift_count": 31,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000080000000",
+        "complement_64": "0xffffffff7fffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xffffffffffffffff",
+          "0xffffffff7fffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          1
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_96",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 96,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 1,
+        "shift_count": 32,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH",
+        "stop_kind": "ANALYSIS_STOP_NOT_SOURCE_BRANCH_OR_ACTUAL_RETURN",
+        "mask_expression_value": "NOT_DERIVED",
+        "mask_after_assignment": "NOT_DERIVED",
+        "word_read": "NOT_DERIVED",
+        "unit_value": "NOT_DERIVED",
+        "bitwise_and_value": "NOT_DERIVED",
+        "returned_unsigned32": "NOT_DERIVED",
+        "returned_nonzero": "NOT_DERIVED",
+        "word_after_assigned": "NOT_DERIVED",
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 1,
+        "shift_count": 32,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000100000000",
+        "complement_64": "0xfffffffeffffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xffffffffffffffff",
+          "0xfffffffeffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          1
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    },
+    {
+      "id": "B_127",
+      "evidence_class": "GIVEN_ISO_SEMANTIC_MODEL_PLUS_SOURCE_ARITHMETIC",
+      "idx": 127,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "assigned": {
+        "unit_idx": 1,
+        "shift_count": 63,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH",
+        "stop_kind": "ANALYSIS_STOP_NOT_SOURCE_BRANCH_OR_ACTUAL_RETURN",
+        "mask_expression_value": "NOT_DERIVED",
+        "mask_after_assignment": "NOT_DERIVED",
+        "word_read": "NOT_DERIVED",
+        "unit_value": "NOT_DERIVED",
+        "bitwise_and_value": "NOT_DERIVED",
+        "returned_unsigned32": "NOT_DERIVED",
+        "returned_nonzero": "NOT_DERIVED",
+        "word_after_assigned": "NOT_DERIVED",
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 1,
+        "shift_count": 63,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x8000000000000000",
+        "complement_64": "0x7fffffffffffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xffffffffffffffff",
+          "0x7fffffffffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          1
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "source_evidence": [
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050"
+      ],
+      "iso_independent_source_status": "UNKNOWN_N1547_UNAVAILABLE; CONTRACT_204_GIVEN"
+    }
+  ],
+  "free_cases": [
+    {
+      "id": "C_NULL",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "obj_p": "NULL",
+      "given_idx": null,
+      "gates": {
+        "debug": {
+          "reached": "N/A",
+          "result": "N/A",
+          "body_entered": "N/A",
+          "preprocessor": "GIVEN_DEBUG_NOT_DEFINED"
+        },
+        "null": {
+          "reached": true,
+          "result": "TRUE",
+          "body_entered": true
+        },
+        "empty": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "assigned_zero": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "updated_free_eq_1": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "updated_free_eq_0": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "base_slab_test": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "reclaim": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        }
+      },
+      "stages": [
+        {
+          "stage": 1,
+          "kind": "GIVEN_ENTRY",
+          "detail": "DEBUG block excluded by given preprocessing premise; no runtime condition"
+        },
+        {
+          "stage": 2,
+          "kind": "SOURCE_GATE",
+          "detail": "obj_p==NULL TRUE"
+        },
+        {
+          "stage": 3,
+          "kind": "VOID_EARLY_RETURN",
+          "detail": "return; no lookup, pointer or slab read"
+        }
+      ],
+      "lookup": "NOT_REACHED",
+      "owners": "NOT_REACHED",
+      "obj_idx": "NOT_REACHED",
+      "assigned": "NOT_REACHED",
+      "clear": "NOT_REACHED",
+      "metadata": "NOT_CONSUMED_NO_SOURCE_MUTATION",
+      "terminal": "CONDITIONAL_VOID_EARLY_RETURN",
+      "source_evidence": [
+        "E147-033",
+        "E147-035"
+      ]
+    },
+    {
+      "id": "C_FULL",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "obj_p": "0x60000000",
+      "given_idx": 0,
+      "lookup": {
+        "status": "GIVEN_NORMAL_RETURN_VALID_PAGE",
+        "two_ownership_reads": [
+          "page.uslab_p=S",
+          "S.uslabcache_p=cache"
+        ],
+        "used_upage_chain_unchanged": true
+      },
+      "given_byte_diff": 0,
+      "obj_idx": 0,
+      "initial": {
+        "S": {
+          "total": 128,
+          "free": 0,
+          "words": [
+            "0xffffffffffffffff",
+            "0xffffffffffffffff"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [],
+          "L": [
+            "S"
+          ]
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 0,
+          "L": 1
+        },
+        "normal_slab_total": 2,
+        "CF": 128,
+        "CU": 128
+      },
+      "gates": {
+        "debug": {
+          "reached": "N/A",
+          "result": "N/A",
+          "body_entered": "N/A",
+          "preprocessor": "GIVEN_DEBUG_NOT_DEFINED"
+        },
+        "null": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "empty": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "assigned_zero": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "updated_free_eq_1": {
+          "reached": true,
+          "result": "TRUE",
+          "body_entered": true
+        },
+        "updated_free_eq_0": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "base_slab_test": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "reclaim": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        }
+      },
+      "stages": [
+        {
+          "stage": 1,
+          "kind": "GIVEN_ENTRY",
+          "detail": "DEBUG block excluded by given preprocessing premise; no runtime condition"
+        },
+        {
+          "stage": 2,
+          "kind": "SOURCE_GATE",
+          "detail": "obj_p==NULL FALSE"
+        },
+        {
+          "stage": 3,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache"
+        },
+        {
+          "stage": 4,
+          "kind": "SOURCE_GATE",
+          "detail": "S.free==S.total FALSE"
+        },
+        {
+          "stage": 5,
+          "kind": "SOURCE_GATE",
+          "detail": "given byte difference 0, obj_idx=0, assigned returns 1; !assigned FALSE"
+        },
+        {
+          "stage": 6,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "clear(0); S.free 0->1; CF 128->129; CU 128->127"
+        },
+        {
+          "stage": 7,
+          "kind": "SOURCE_GATE",
+          "detail": "updated S.free==1 TRUE"
+        },
+        {
+          "stage": 8,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "list_del_init S from full, full.count 1->0, add used head, used.count 0->1; else-if not evaluated"
+        },
+        {
+          "stage": 9,
+          "kind": "SOURCE_GATE",
+          "detail": "free-list count 1>2 FALSE; reclaim body not entered"
+        },
+        {
+          "stage": 10,
+          "kind": "VOID_COMPLETION",
+          "detail": "normal source end conditional void completion; no runtime execution"
+        }
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 0,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 1,
+        "mask_after_assignment": "0x0000000000000001",
+        "word_read": 0,
+        "unit_value": "0xffffffffffffffff",
+        "bitwise_and_value": "0x0000000000000001",
+        "returned_unsigned32": 1,
+        "returned_nonzero": true,
+        "word_after_assigned": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 0,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000000000001",
+        "complement_64": "0xfffffffffffffffe",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0xffffffffffffffff"
+        ],
+        "words_after": [
+          "0xfffffffffffffffe",
+          "0xffffffffffffffff"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "final": {
+        "S": {
+          "total": 128,
+          "free": 1,
+          "words": [
+            "0xfffffffffffffffe",
+            "0xffffffffffffffff"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [
+            "S"
+          ],
+          "L": []
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 1,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 129,
+        "CU": 127
+      },
+      "slab_links": {
+        "S": "full unlink and used-head insert; affected anchors and neighbors update",
+        "R": "UNCHANGED: R is in separate free list for C_FULL; no list mutation in other cases",
+        "R_payload": "total/free=128 and both zero words unchanged",
+        "normal_slab_total": "2 unchanged; recovery body not entered"
+      },
+      "invariants": {
+        "initial_object_sum": 256,
+        "final_object_sum": 256,
+        "capacity": 256,
+        "initial_S_occupied": 128,
+        "final_S_occupied": 127,
+        "S_total_minus_free_final": 127,
+        "object_counts_consistent": true,
+        "list_classification": "consistent with given membership/conditions"
+      },
+      "terminal": "CONDITIONAL_VOID_COMPLETION",
+      "source_evidence": [
+        "E147-033",
+        "E147-035",
+        "E147-036",
+        "E147-037",
+        "E147-038",
+        "E147-039",
+        "E147-040",
+        "E147-041",
+        "E147-042",
+        "E147-043",
+        "E147-044",
+        "E147-045",
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050",
+        "E147-071",
+        "E147-072",
+        "E147-062",
+        "E147-063",
+        "E147-064",
+        "E147-065",
+        "E147-066",
+        "E147-067",
+        "E147-068",
+        "E147-069",
+        "E147-070",
+        "E147-071",
+        "E147-072"
+      ]
+    },
+    {
+      "id": "C_USED",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "obj_p": "0x60078000",
+      "given_idx": 30,
+      "lookup": {
+        "status": "GIVEN_NORMAL_RETURN_VALID_PAGE",
+        "two_ownership_reads": [
+          "page.uslab_p=S",
+          "S.uslabcache_p=cache"
+        ],
+        "used_upage_chain_unchanged": true
+      },
+      "given_byte_diff": 491520,
+      "obj_idx": 30,
+      "initial": {
+        "S": {
+          "total": 128,
+          "free": 64,
+          "words": [
+            "0xffffffffffffffff",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [
+            "S"
+          ],
+          "L": []
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 1,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 192,
+        "CU": 64
+      },
+      "gates": {
+        "debug": {
+          "reached": "N/A",
+          "result": "N/A",
+          "body_entered": "N/A",
+          "preprocessor": "GIVEN_DEBUG_NOT_DEFINED"
+        },
+        "null": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "empty": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "assigned_zero": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "updated_free_eq_1": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "updated_free_eq_0": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "base_slab_test": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "reclaim": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        }
+      },
+      "stages": [
+        {
+          "stage": 1,
+          "kind": "GIVEN_ENTRY",
+          "detail": "DEBUG block excluded by given preprocessing premise; no runtime condition"
+        },
+        {
+          "stage": 2,
+          "kind": "SOURCE_GATE",
+          "detail": "obj_p==NULL FALSE"
+        },
+        {
+          "stage": 3,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache"
+        },
+        {
+          "stage": 4,
+          "kind": "SOURCE_GATE",
+          "detail": "S.free==S.total FALSE"
+        },
+        {
+          "stage": 5,
+          "kind": "SOURCE_GATE",
+          "detail": "given byte difference 491520, obj_idx=30, assigned returns 1073741824; !assigned FALSE"
+        },
+        {
+          "stage": 6,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "clear(30); S.free 64->65; CF 192->193; CU 64->63"
+        },
+        {
+          "stage": 7,
+          "kind": "SOURCE_GATE",
+          "detail": "updated S.free==1 FALSE"
+        },
+        {
+          "stage": 8,
+          "kind": "SOURCE_GATE",
+          "detail": "else-if updated free==0 FALSE (updated=65); no migration; S stays used"
+        },
+        {
+          "stage": 9,
+          "kind": "SOURCE_GATE",
+          "detail": "free-list count 1>2 FALSE; reclaim body not entered"
+        },
+        {
+          "stage": 10,
+          "kind": "VOID_COMPLETION",
+          "detail": "normal source end conditional void completion; no runtime execution"
+        }
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 30,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 1073741824,
+        "mask_after_assignment": "0x0000000040000000",
+        "word_read": 0,
+        "unit_value": "0xffffffffffffffff",
+        "bitwise_and_value": "0x0000000040000000",
+        "returned_unsigned32": 1073741824,
+        "returned_nonzero": true,
+        "word_after_assigned": [
+          "0xffffffffffffffff",
+          "0x0000000000000000"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 30,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000040000000",
+        "complement_64": "0xffffffffbfffffff",
+        "original_words": [
+          "0xffffffffffffffff",
+          "0x0000000000000000"
+        ],
+        "words_after": [
+          "0xffffffffbfffffff",
+          "0x0000000000000000"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "final": {
+        "S": {
+          "total": 128,
+          "free": 65,
+          "words": [
+            "0xffffffffbfffffff",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [
+            "S"
+          ],
+          "L": []
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 1,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 193,
+        "CU": 63
+      },
+      "slab_links": {
+        "S": "NO_SOURCE_LIST_MUTATION",
+        "R": "UNCHANGED: R is in separate free list for C_FULL; no list mutation in other cases",
+        "R_payload": "total/free=128 and both zero words unchanged",
+        "normal_slab_total": "2 unchanged; recovery body not entered"
+      },
+      "invariants": {
+        "initial_object_sum": 256,
+        "final_object_sum": 256,
+        "capacity": 256,
+        "initial_S_occupied": 64,
+        "final_S_occupied": 63,
+        "S_total_minus_free_final": 63,
+        "object_counts_consistent": true,
+        "list_classification": "consistent with given membership/conditions"
+      },
+      "terminal": "CONDITIONAL_VOID_COMPLETION",
+      "source_evidence": [
+        "E147-033",
+        "E147-035",
+        "E147-036",
+        "E147-037",
+        "E147-038",
+        "E147-039",
+        "E147-040",
+        "E147-041",
+        "E147-042",
+        "E147-043",
+        "E147-044",
+        "E147-045",
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050",
+        "E147-071",
+        "E147-072",
+        "E147-062",
+        "E147-063",
+        "E147-064",
+        "E147-065",
+        "E147-066",
+        "E147-067",
+        "E147-068",
+        "E147-069",
+        "E147-070",
+        "E147-071",
+        "E147-072"
+      ]
+    },
+    {
+      "id": "C_LAST",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "obj_p": "0x60000000",
+      "given_idx": 0,
+      "lookup": {
+        "status": "GIVEN_NORMAL_RETURN_VALID_PAGE",
+        "two_ownership_reads": [
+          "page.uslab_p=S",
+          "S.uslabcache_p=cache"
+        ],
+        "used_upage_chain_unchanged": true
+      },
+      "given_byte_diff": 0,
+      "obj_idx": 0,
+      "initial": {
+        "S": {
+          "total": 128,
+          "free": 127,
+          "words": [
+            "0x0000000000000001",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [
+            "S"
+          ],
+          "L": []
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 1,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 255,
+        "CU": 1
+      },
+      "gates": {
+        "debug": {
+          "reached": "N/A",
+          "result": "N/A",
+          "body_entered": "N/A",
+          "preprocessor": "GIVEN_DEBUG_NOT_DEFINED"
+        },
+        "null": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "empty": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "assigned_zero": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "updated_free_eq_1": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "updated_free_eq_0": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "base_slab_test": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "reclaim": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        }
+      },
+      "stages": [
+        {
+          "stage": 1,
+          "kind": "GIVEN_ENTRY",
+          "detail": "DEBUG block excluded by given preprocessing premise; no runtime condition"
+        },
+        {
+          "stage": 2,
+          "kind": "SOURCE_GATE",
+          "detail": "obj_p==NULL FALSE"
+        },
+        {
+          "stage": 3,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache"
+        },
+        {
+          "stage": 4,
+          "kind": "SOURCE_GATE",
+          "detail": "S.free==S.total FALSE"
+        },
+        {
+          "stage": 5,
+          "kind": "SOURCE_GATE",
+          "detail": "given byte difference 0, obj_idx=0, assigned returns 1; !assigned FALSE"
+        },
+        {
+          "stage": 6,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "clear(0); S.free 127->128; CF 255->256; CU 1->0"
+        },
+        {
+          "stage": 7,
+          "kind": "SOURCE_GATE",
+          "detail": "updated S.free==1 FALSE"
+        },
+        {
+          "stage": 8,
+          "kind": "SOURCE_GATE",
+          "detail": "else-if updated free==0 FALSE (updated=128); no migration; S stays used despite free==total"
+        },
+        {
+          "stage": 9,
+          "kind": "SOURCE_GATE",
+          "detail": "free-list count 1>2 FALSE; reclaim body not entered"
+        },
+        {
+          "stage": 10,
+          "kind": "VOID_COMPLETION",
+          "detail": "normal source end conditional void completion; no runtime execution"
+        }
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 0,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 1,
+        "mask_after_assignment": "0x0000000000000001",
+        "word_read": 0,
+        "unit_value": "0x0000000000000001",
+        "bitwise_and_value": "0x0000000000000001",
+        "returned_unsigned32": 1,
+        "returned_nonzero": true,
+        "word_after_assigned": [
+          "0x0000000000000001",
+          "0x0000000000000000"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": {
+        "independent_entry_from_original_words": true,
+        "word_idx": 0,
+        "shift_count": 0,
+        "shift_left_operand": "1ULL / unsigned long long64",
+        "mask": "0x0000000000000001",
+        "complement_64": "0xfffffffffffffffe",
+        "original_words": [
+          "0x0000000000000001",
+          "0x0000000000000000"
+        ],
+        "words_after": [
+          "0x0000000000000000",
+          "0x0000000000000000"
+        ],
+        "changed_bits": 1,
+        "accessed_word_indices": [
+          0
+        ],
+        "outside_word_0_1_access": false,
+        "return_type": "void",
+        "return_value": "NOT_APPLICABLE"
+      },
+      "final": {
+        "S": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [
+            "S"
+          ],
+          "L": []
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 1,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 256,
+        "CU": 0
+      },
+      "slab_links": {
+        "S": "NO_SOURCE_LIST_MUTATION",
+        "R": "UNCHANGED: R is in separate free list for C_FULL; no list mutation in other cases",
+        "R_payload": "total/free=128 and both zero words unchanged",
+        "normal_slab_total": "2 unchanged; recovery body not entered"
+      },
+      "invariants": {
+        "initial_object_sum": 256,
+        "final_object_sum": 256,
+        "capacity": 256,
+        "initial_S_occupied": 1,
+        "final_S_occupied": 0,
+        "S_total_minus_free_final": 0,
+        "object_counts_consistent": true,
+        "list_classification": "MISMATCH: empty by free==total but remains normal_slab_used; not repaired by count conservation"
+      },
+      "terminal": "CONDITIONAL_VOID_COMPLETION",
+      "source_evidence": [
+        "E147-033",
+        "E147-035",
+        "E147-036",
+        "E147-037",
+        "E147-038",
+        "E147-039",
+        "E147-040",
+        "E147-041",
+        "E147-042",
+        "E147-043",
+        "E147-044",
+        "E147-045",
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050",
+        "E147-071",
+        "E147-072",
+        "E147-062",
+        "E147-063",
+        "E147-064",
+        "E147-065",
+        "E147-066",
+        "E147-067",
+        "E147-068",
+        "E147-069",
+        "E147-070",
+        "E147-071",
+        "E147-072"
+      ]
+    },
+    {
+      "id": "C_EMPTY",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "obj_p": "0x60000000",
+      "given_idx": 0,
+      "lookup": {
+        "status": "GIVEN_NORMAL_RETURN_VALID_PAGE",
+        "two_ownership_reads": [
+          "page.uslab_p=S",
+          "S.uslabcache_p=cache"
+        ],
+        "used_upage_chain_unchanged": true
+      },
+      "given_byte_diff": "NOT_COMPUTED",
+      "obj_idx": "NOT_REACHED",
+      "initial": {
+        "S": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "S",
+            "R"
+          ],
+          "U": [],
+          "L": []
+        },
+        "list_counts": {
+          "F": 2,
+          "U": 0,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 256,
+        "CU": 0
+      },
+      "gates": {
+        "debug": {
+          "reached": "N/A",
+          "result": "N/A",
+          "body_entered": "N/A",
+          "preprocessor": "GIVEN_DEBUG_NOT_DEFINED"
+        },
+        "null": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "empty": {
+          "reached": true,
+          "result": "TRUE",
+          "body_entered": true
+        },
+        "assigned_zero": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "updated_free_eq_1": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "updated_free_eq_0": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "base_slab_test": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "reclaim": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        }
+      },
+      "stages": [
+        {
+          "stage": 1,
+          "kind": "GIVEN_ENTRY",
+          "detail": "DEBUG block excluded by given preprocessing premise; no runtime condition"
+        },
+        {
+          "stage": 2,
+          "kind": "SOURCE_GATE",
+          "detail": "obj_p==NULL FALSE"
+        },
+        {
+          "stage": 3,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache"
+        },
+        {
+          "stage": 4,
+          "kind": "SOURCE_GATE",
+          "detail": "S.free==S.total TRUE"
+        },
+        {
+          "stage": 5,
+          "kind": "SOURCE_LOOP_BOUNDARY",
+          "detail": "line348 while(1); no obj_idx or bitmap access; stop source-level path"
+        }
+      ],
+      "assigned": "NOT_REACHED",
+      "clear": "NOT_REACHED",
+      "final": {
+        "S": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "S",
+            "R"
+          ],
+          "U": [],
+          "L": []
+        },
+        "list_counts": {
+          "F": 2,
+          "U": 0,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 256,
+        "CU": 0
+      },
+      "slab_links": {
+        "S": "NO_SOURCE_LIST_MUTATION",
+        "R": "UNCHANGED: R is in separate free list for C_FULL; no list mutation in other cases",
+        "R_payload": "total/free=128 and both zero words unchanged",
+        "normal_slab_total": "2 unchanged; recovery body not entered"
+      },
+      "invariants": {
+        "initial_object_sum": 256,
+        "final_object_sum": 256,
+        "capacity": 256,
+        "initial_S_occupied": 0,
+        "final_S_occupied": 0,
+        "S_total_minus_free_final": 0,
+        "object_counts_consistent": true,
+        "list_classification": "consistent with given membership/conditions"
+      },
+      "terminal": "SOURCE_EXPLICIT_WHILE_1_EMPTY_SLAB",
+      "source_evidence": [
+        "E147-033",
+        "E147-035",
+        "E147-036",
+        "E147-037",
+        "E147-038",
+        "E147-039",
+        "E147-040",
+        "E147-041",
+        "E147-042",
+        "E147-043",
+        "E147-044",
+        "E147-045",
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050",
+        "E147-071",
+        "E147-072",
+        "E147-062",
+        "E147-063",
+        "E147-064",
+        "E147-065",
+        "E147-066",
+        "E147-067",
+        "E147-068",
+        "E147-069",
+        "E147-070",
+        "E147-071",
+        "E147-072"
+      ]
+    },
+    {
+      "id": "C_UNASSIGNED",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "obj_p": "0x60008000",
+      "given_idx": 2,
+      "lookup": {
+        "status": "GIVEN_NORMAL_RETURN_VALID_PAGE",
+        "two_ownership_reads": [
+          "page.uslab_p=S",
+          "S.uslabcache_p=cache"
+        ],
+        "used_upage_chain_unchanged": true
+      },
+      "given_byte_diff": 32768,
+      "obj_idx": 2,
+      "initial": {
+        "S": {
+          "total": 128,
+          "free": 126,
+          "words": [
+            "0x0000000000000003",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [
+            "S"
+          ],
+          "L": []
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 1,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 254,
+        "CU": 2
+      },
+      "gates": {
+        "debug": {
+          "reached": "N/A",
+          "result": "N/A",
+          "body_entered": "N/A",
+          "preprocessor": "GIVEN_DEBUG_NOT_DEFINED"
+        },
+        "null": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "empty": {
+          "reached": true,
+          "result": "FALSE",
+          "body_entered": false
+        },
+        "assigned_zero": {
+          "reached": true,
+          "result": "TRUE",
+          "body_entered": true
+        },
+        "updated_free_eq_1": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "updated_free_eq_0": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "base_slab_test": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        },
+        "reclaim": {
+          "reached": false,
+          "result": "NOT_REACHED",
+          "body_entered": false
+        }
+      },
+      "stages": [
+        {
+          "stage": 1,
+          "kind": "GIVEN_ENTRY",
+          "detail": "DEBUG block excluded by given preprocessing premise; no runtime condition"
+        },
+        {
+          "stage": 2,
+          "kind": "SOURCE_GATE",
+          "detail": "obj_p==NULL FALSE"
+        },
+        {
+          "stage": 3,
+          "kind": "SOURCE_SEQUENCE",
+          "detail": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache"
+        },
+        {
+          "stage": 4,
+          "kind": "SOURCE_GATE",
+          "detail": "S.free==S.total FALSE"
+        },
+        {
+          "stage": 5,
+          "kind": "SOURCE_GATE",
+          "detail": "given byte difference 32768, obj_idx=2, assigned returns 0; !assigned TRUE"
+        },
+        {
+          "stage": 6,
+          "kind": "SOURCE_LOOP_BOUNDARY",
+          "detail": "line355 while(1); no clear or counter/list mutation"
+        }
+      ],
+      "assigned": {
+        "unit_idx": 0,
+        "shift_count": 2,
+        "decimal_unsuffixed_left_operand": "int32 (GIVEN ISO model)",
+        "promoted_left": "int32",
+        "right_operand": "unsigned 64-bit remainder in given size model; does not widen left operand",
+        "shift_expression_type": "int32",
+        "mask_destination_type": "bitmap_t unsigned64",
+        "return_variable_type": "unsigned32",
+        "iso_model_status": "CONTINUE",
+        "stop_kind": "NONE",
+        "mask_expression_value": 4,
+        "mask_after_assignment": "0x0000000000000004",
+        "word_read": 0,
+        "unit_value": "0x0000000000000003",
+        "bitwise_and_value": "0x0000000000000000",
+        "returned_unsigned32": 0,
+        "returned_nonzero": false,
+        "word_after_assigned": [
+          "0x0000000000000003",
+          "0x0000000000000000"
+        ],
+        "actual_gcc_behavior": "NOT_DERIVED"
+      },
+      "clear": "NOT_REACHED",
+      "final": {
+        "S": {
+          "total": 128,
+          "free": 126,
+          "words": [
+            "0x0000000000000003",
+            "0x0000000000000000"
+          ],
+          "V": "0x60000000",
+          "obj_size": 16384
+        },
+        "R": {
+          "total": 128,
+          "free": 128,
+          "words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ]
+        },
+        "lists": {
+          "F": [
+            "R"
+          ],
+          "U": [
+            "S"
+          ],
+          "L": []
+        },
+        "list_counts": {
+          "F": 1,
+          "U": 1,
+          "L": 0
+        },
+        "normal_slab_total": 2,
+        "CF": 254,
+        "CU": 2
+      },
+      "slab_links": {
+        "S": "NO_SOURCE_LIST_MUTATION",
+        "R": "UNCHANGED: R is in separate free list for C_FULL; no list mutation in other cases",
+        "R_payload": "total/free=128 and both zero words unchanged",
+        "normal_slab_total": "2 unchanged; recovery body not entered"
+      },
+      "invariants": {
+        "initial_object_sum": 256,
+        "final_object_sum": 256,
+        "capacity": 256,
+        "initial_S_occupied": 2,
+        "final_S_occupied": 2,
+        "S_total_minus_free_final": 2,
+        "object_counts_consistent": true,
+        "list_classification": "consistent with given membership/conditions"
+      },
+      "terminal": "SOURCE_EXPLICIT_WHILE_1_UNASSIGNED_SLOT",
+      "source_evidence": [
+        "E147-033",
+        "E147-035",
+        "E147-036",
+        "E147-037",
+        "E147-038",
+        "E147-039",
+        "E147-040",
+        "E147-041",
+        "E147-042",
+        "E147-043",
+        "E147-044",
+        "E147-045",
+        "E147-046",
+        "E147-047",
+        "E147-048",
+        "E147-049",
+        "E147-050",
+        "E147-071",
+        "E147-072",
+        "E147-062",
+        "E147-063",
+        "E147-064",
+        "E147-065",
+        "E147-066",
+        "E147-067",
+        "E147-068",
+        "E147-069",
+        "E147-070",
+        "E147-071",
+        "E147-072"
+      ]
+    }
+  ],
+  "build_scope": {
+    "kernel_active_config_evidence": [
+      "E147-001",
+      "E147-002",
+      "E147-003",
+      "E147-004",
+      "E147-005",
+      "E147-006",
+      "E147-007",
+      "E147-008",
+      "E147-009"
+    ],
+    "user_DEBUG_condition_evidence": [
+      "E147-010",
+      "E147-011"
+    ],
+    "user_build_evidence": [
+      "E147-010",
+      "E147-011",
+      "E147-012",
+      "E147-013",
+      "E147-014",
+      "E147-015",
+      "E147-016",
+      "E147-017",
+      "E147-018",
+      "E147-019",
+      "E147-020",
+      "E147-021",
+      "E147-022"
+    ],
+    "external_musl_toolchain_path": "/home/cheyh/projs/musl/build",
+    "top_level_direct_subdirectories": [
+      "myinit",
+      "myshell"
+    ],
+    "standalone_mylibc_includes_malloc_util": true,
+    "actual_linked_to_sh": "UNKNOWN_INHERITED_UNCHANGED",
+    "actual_DEBUG_macro": "UNKNOWN",
+    "actual_C_standard_and_compiler": "UNKNOWN",
+    "preprocessing_compile_link": "NOT_RUN"
+  },
+  "source_index": [
+    {
+      "id": "E147-001",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "RELEASE_FLAG",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 16,
+      "end_line": 18,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel Debug condition sets release flag",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-002",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "RELEASE_FLAG",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 19,
+      "end_line": 23,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel other build-type flag",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-003",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 39,
+      "end_line": 43,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "active kernel C flags including m64 kernel model no PIE/PIC and freestanding",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-004",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 44,
+      "end_line": 48,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel C stack/unwind/static/sections/debug flags",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-005",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 49,
+      "end_line": 51,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "sysv ABI and no red zone",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-006",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 58,
+      "end_line": 62,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel C macros include CONFIG_64BIT",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-007",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 63,
+      "end_line": 67,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel zone/SLUB/syscall/BUG/GRUB configuration",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-008",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 68,
+      "end_line": 70,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel guest option macros",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-009",
+      "path": "mykernel/debug/panic.c",
+      "symbol": "panic",
+      "kind": "function_body",
+      "source_blob_short12": "2e9d5b195559",
+      "start_line": 79,
+      "end_line": 79,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "time panic CPU canary",
+      "coverage": [
+        "CONFIG"
+      ]
+    },
+    {
+      "id": "E147-010",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "RELEASE_FLAG",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 13,
+      "end_line": 15,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "user top-level Debug text sets -DDEBUG; actual configuration not known",
+      "coverage": [
+        "BUILD",
+        "DEBUG"
+      ]
+    },
+    {
+      "id": "E147-011",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "RELEASE_FLAG",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 16,
+      "end_line": 20,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "other conditional build-type text sets -DRELEASE and unused macro flag",
+      "coverage": [
+        "BUILD",
+        "DEBUG"
+      ]
+    },
+    {
+      "id": "E147-012",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 26,
+      "end_line": 29,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "top-level user C flags m64 and ggdb",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-013",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "LINK_TYPE",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 31,
+      "end_line": 33,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "conditional static flag",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-014",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "MUSL_PATH",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 40,
+      "end_line": 41,
+      "source_line_endings": [
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "external musl toolchain path and compiler expression",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-015",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "MUSL_INC_PATH",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 43,
+      "end_line": 46,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "external include/lib variable definitions and include_directories consumption",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-016",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "add_subdirectory",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 47,
+      "end_line": 48,
+      "source_line_endings": [
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "only direct subdirectories myinit and myshell in root file",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-017",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "install",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 50,
+      "end_line": 51,
+      "source_line_endings": [
+        "LF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "install init and sh",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-018",
+      "path": "myinitramfs/mylib/CMakeLists.txt",
+      "symbol": "add_subdirectory",
+      "kind": "build_directive",
+      "source_blob_short12": "8f6abc24095a",
+      "start_line": 1,
+      "end_line": 3,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "independent mylib enters myglibc/csu/util",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-019",
+      "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+      "symbol": "mylibc",
+      "kind": "build_directive",
+      "source_blob_short12": "b956957a602a",
+      "start_line": 1,
+      "end_line": 2,
+      "source_line_endings": [
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "standalone static target and C flag definitions",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-020",
+      "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+      "symbol": "add_subdirectory",
+      "kind": "build_directive",
+      "source_blob_short12": "b956957a602a",
+      "start_line": 18,
+      "end_line": 21,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "standalone mylibc enters malloc subdir",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-021",
+      "path": "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+      "symbol": "LIBC_STDLIB_C_SRCS",
+      "kind": "build_directive",
+      "source_blob_short12": "3b9f22dd9ab9",
+      "start_line": 1,
+      "end_line": 3,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "C GLOB definition to target_sources consumption; ASM separate",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-022",
+      "path": "myinitramfs/mylib/util/CMakeLists.txt",
+      "symbol": "UTIL_C_SRCS",
+      "kind": "build_directive",
+      "source_blob_short12": "5fd782a35629",
+      "start_line": 1,
+      "end_line": 3,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "C GLOB definition to target_sources consumption; ASM separate",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E147-023",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "CONST_2M",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 15,
+      "end_line": 15,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "local H numeric constant",
+      "coverage": [
+        "H",
+        "A"
+      ]
+    },
+    {
+      "id": "E147-024",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "__round_mask",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 36,
+      "end_line": 36,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "mask uses type of x and y-1",
+      "coverage": [
+        "H",
+        "A"
+      ]
+    },
+    {
+      "id": "E147-025",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "round_down",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 56,
+      "end_line": 56,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "round-down expression x & complement mask",
+      "coverage": [
+        "H",
+        "A"
+      ]
+    },
+    {
+      "id": "E147-026",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "PAGE_ROUND_DOWN",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 59,
+      "end_line": 59,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "PAGE_ROUND_DOWN expands using PAGE_SIZE",
+      "coverage": [
+        "H",
+        "A"
+      ]
+    },
+    {
+      "id": "E147-027",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "PAGE_SIZE",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 60,
+      "end_line": 60,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "local PAGE_SIZE maps to CONST_2M",
+      "coverage": [
+        "H",
+        "A"
+      ]
+    },
+    {
+      "id": "E147-028",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "used_upage_lhdr",
+      "kind": "global_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 70,
+      "end_line": 70,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "used upage list header declaration",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E147-029",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "upage_search",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 151,
+      "end_line": 155,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "return local initialized NULL; address round-down; list cursor",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E147-030",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "upage_search",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 156,
+      "end_line": 160,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "anchor-based for loop and container_of conversion",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E147-031",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "upage_search",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 161,
+      "end_line": 165,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "exact vaddr equality, pointer return candidate, break",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E147-032",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "upage_search",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 166,
+      "end_line": 169,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "loop end and return ret_val",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E147-033",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 330,
+      "end_line": 334,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "free declaration, DEBUG conditional and wait while not initiated",
+      "coverage": [
+        "DEBUG",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-034",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 335,
+      "end_line": 338,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "end preprocessor DEBUG block then NULL early void return",
+      "coverage": [
+        "DEBUG",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-035",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 337,
+      "end_line": 338,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "NULL condition then void return",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-036",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 340,
+      "end_line": 343,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "search call then direct two ownership reads (no NULL guard here)",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-037",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 345,
+      "end_line": 349,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "empty slab equality and explicit while(1)",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-038",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 351,
+      "end_line": 352,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "pointer-difference quotient and assigned nonzero decision",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-039",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 352,
+      "end_line": 356,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "false assigned value enters explicit while(1)",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-040",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 358,
+      "end_line": 361,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "clear then S.free++, CF++, CU-- in order",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-041",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 364,
+      "end_line": 368,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "updated free==1 branch: unlink full node, full.count-- and add used head",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-042",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 370,
+      "end_line": 374,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "else-if uses updated free==0, unlink used and decrement if entered",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-043",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 375,
+      "end_line": 379,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "nested base identity guard; head vs tail free insertion if reached",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-044",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 380,
+      "end_line": 382,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "free-list count>2 recovery gate; body not taken in any normal modeled C",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-045",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "free",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 389,
+      "end_line": 391,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "end of void function after recovery conditional",
+      "coverage": [
+        "C"
+      ]
+    },
+    {
+      "id": "E147-046",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "bitmap_t",
+      "kind": "typedef_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 19,
+      "end_line": 19,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "bitmap_t defined by __UINT64_TYPE__; given width separately",
+      "coverage": [
+        "B",
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-047",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "BITMAP_UNITSIZE",
+      "kind": "macro_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 20,
+      "end_line": 20,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "bitmap unit equals sizeof(bitmap_t)*8",
+      "coverage": [
+        "B",
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-048",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_get_assigned_bit",
+      "kind": "function_body",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 4,
+      "end_line": 8,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "unsigned return type, unsigned local, unit index and unsuffixed 1 shift into bitmap_t mask",
+      "coverage": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-049",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_get_assigned_bit",
+      "kind": "function_body",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 9,
+      "end_line": 12,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "load selected word, assign unit & mask to unsigned and return",
+      "coverage": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-050",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_clear_bit",
+      "kind": "function_body",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 19,
+      "end_line": 22,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "void helper uses 1ULL shift and complement, AND assignment",
+      "coverage": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-051",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_set_bit",
+      "kind": "function_body",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 14,
+      "end_line": 17,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "separate helper type contrast 1ULL; not an invoked free helper",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E147-052",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uPage",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 19,
+      "end_line": 23,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "page list, vaddr, uslab_p fields",
+      "coverage": [
+        "A",
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-053",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uPage",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 22,
+      "end_line": 24,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "vaddr, uslab_p and uPage_s alias",
+      "coverage": [
+        "A",
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-054",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 26,
+      "end_line": 30,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "slab list and owning cache pointer",
+      "coverage": [
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-055",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 31,
+      "end_line": 35,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "total/free and upage/virtual address fields",
+      "coverage": [
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-056",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 34,
+      "end_line": 37,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "virt_addr/colormap and uslab_s alias",
+      "coverage": [
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-057",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 39,
+      "end_line": 43,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "cache list and object size",
+      "coverage": [
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-058",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 45,
+      "end_line": 49,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "slab total, three list headers, nsobj_free_count",
+      "coverage": [
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-059",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 49,
+      "end_line": 53,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "object free/used counters and base-slab pointer",
+      "coverage": [
+        "C",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-060",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "container_of",
+      "kind": "macro_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 12,
+      "end_line": 16,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "active container_of expression through member offset",
+      "coverage": [
+        "A",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-061",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "container_of",
+      "kind": "macro_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 15,
+      "end_line": 17,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "container_of expression tail",
+      "coverage": [
+        "A",
+        "TYPE"
+      ]
+    },
+    {
+      "id": "E147-062",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "List",
+      "kind": "struct_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 35,
+      "end_line": 39,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "prev/next and List_s alias",
+      "coverage": [
+        "A",
+        "C",
+        "LIST"
+      ]
+    },
+    {
+      "id": "E147-063",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "List_hdr",
+      "kind": "struct_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 41,
+      "end_line": 45,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "anchor/count and List_hdr_s alias",
+      "coverage": [
+        "A",
+        "C",
+        "LIST"
+      ]
+    },
+    {
+      "id": "E147-064",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "INIT_LIST_S",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 10,
+      "end_line": 14,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "direct prev/next self-link",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-065",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_prev",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 17,
+      "end_line": 21,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual tail-side insertion: unlink then next assignment",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-066",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_prev",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 22,
+      "end_line": 26,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "prev assignment and neighbor updates",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-067",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_next",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 29,
+      "end_line": 33,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual head-side insertion: unlink then next assignment",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-068",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_next",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 34,
+      "end_line": 38,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "prev assignment and neighbor updates",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-069",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_del_init",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 40,
+      "end_line": 44,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "unlink via both neighbor pointers and self-initialize",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-070",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "INIT_LIST_HEADER_S",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 73,
+      "end_line": 77,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "count=0 and anchor self-init",
+      "coverage": [
+        "LIST",
+        "A"
+      ]
+    },
+    {
+      "id": "E147-071",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_add_to_head",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 79,
+      "end_line": 83,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "head insertion completes before count increment",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    },
+    {
+      "id": "E147-072",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_add_to_tail",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 98,
+      "end_line": 102,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "tail insertion completes before count increment",
+      "coverage": [
+        "LIST",
+        "C"
+      ]
+    }
+  ],
+  "required_anchor_coverage": {
+    "CONFIG": [
+      "E147-001",
+      "E147-002",
+      "E147-003",
+      "E147-004",
+      "E147-005",
+      "E147-006",
+      "E147-007",
+      "E147-008",
+      "E147-009"
+    ],
+    "BUILD": [
+      "E147-010",
+      "E147-011",
+      "E147-012",
+      "E147-013",
+      "E147-014",
+      "E147-015",
+      "E147-016",
+      "E147-017",
+      "E147-018",
+      "E147-019",
+      "E147-020",
+      "E147-021",
+      "E147-022"
+    ],
+    "DEBUG": [
+      "E147-010",
+      "E147-011",
+      "E147-033",
+      "E147-034"
+    ],
+    "H": [
+      "E147-023",
+      "E147-024",
+      "E147-025",
+      "E147-026",
+      "E147-027"
+    ],
+    "A": [
+      "E147-023",
+      "E147-024",
+      "E147-025",
+      "E147-026",
+      "E147-027",
+      "E147-028",
+      "E147-029",
+      "E147-030",
+      "E147-031",
+      "E147-032",
+      "E147-052",
+      "E147-053",
+      "E147-060",
+      "E147-061",
+      "E147-062",
+      "E147-063",
+      "E147-070"
+    ],
+    "C": [
+      "E147-033",
+      "E147-034",
+      "E147-035",
+      "E147-036",
+      "E147-037",
+      "E147-038",
+      "E147-039",
+      "E147-040",
+      "E147-041",
+      "E147-042",
+      "E147-043",
+      "E147-044",
+      "E147-045",
+      "E147-046",
+      "E147-047",
+      "E147-048",
+      "E147-049",
+      "E147-050",
+      "E147-052",
+      "E147-053",
+      "E147-054",
+      "E147-055",
+      "E147-056",
+      "E147-057",
+      "E147-058",
+      "E147-059",
+      "E147-062",
+      "E147-063",
+      "E147-064",
+      "E147-065",
+      "E147-066",
+      "E147-067",
+      "E147-068",
+      "E147-069",
+      "E147-071",
+      "E147-072"
+    ],
+    "B": [
+      "E147-046",
+      "E147-047",
+      "E147-048",
+      "E147-049",
+      "E147-050",
+      "E147-051"
+    ],
+    "TYPE": [
+      "E147-046",
+      "E147-047",
+      "E147-052",
+      "E147-053",
+      "E147-054",
+      "E147-055",
+      "E147-056",
+      "E147-057",
+      "E147-058",
+      "E147-059",
+      "E147-060",
+      "E147-061"
+    ],
+    "LIST": [
+      "E147-062",
+      "E147-063",
+      "E147-064",
+      "E147-065",
+      "E147-066",
+      "E147-067",
+      "E147-068",
+      "E147-069",
+      "E147-070",
+      "E147-071",
+      "E147-072"
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "A_FIRST_E",
+        "kind": "ENTRY",
+        "label": "0x60601234; H=0x200000; list [D2,D0,D1]",
+        "scenario": "A_FIRST"
+      },
+      {
+        "id": "A_FIRST_K",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "round mask and key 0x60600000",
+        "scenario": "A_FIRST"
+      },
+      {
+        "id": "A_FIRST_Q0",
+        "kind": "SOURCE_BRANCH",
+        "label": "D2.vaddr == key: TRUE",
+        "scenario": "A_FIRST"
+      },
+      {
+        "id": "A_FIRST_R",
+        "kind": "RETURN",
+        "label": "equality true; break; return descriptor D2 pointer",
+        "scenario": "A_FIRST"
+      },
+      {
+        "id": "A_BASE_E",
+        "kind": "ENTRY",
+        "label": "0x60000000; H=0x200000; list [D2,D0,D1]",
+        "scenario": "A_BASE"
+      },
+      {
+        "id": "A_BASE_K",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "round mask and key 0x60000000",
+        "scenario": "A_BASE"
+      },
+      {
+        "id": "A_BASE_Q0",
+        "kind": "SOURCE_BRANCH",
+        "label": "D2.vaddr == key: FALSE",
+        "scenario": "A_BASE"
+      },
+      {
+        "id": "A_BASE_Q1",
+        "kind": "SOURCE_BRANCH",
+        "label": "D0.vaddr == key: TRUE",
+        "scenario": "A_BASE"
+      },
+      {
+        "id": "A_BASE_R",
+        "kind": "RETURN",
+        "label": "equality true; break; return descriptor D0 pointer",
+        "scenario": "A_BASE"
+      },
+      {
+        "id": "A_LASTBYTE_E",
+        "kind": "ENTRY",
+        "label": "0x601fffff; H=0x200000; list [D2,D0,D1]",
+        "scenario": "A_LASTBYTE"
+      },
+      {
+        "id": "A_LASTBYTE_K",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "round mask and key 0x60000000",
+        "scenario": "A_LASTBYTE"
+      },
+      {
+        "id": "A_LASTBYTE_Q0",
+        "kind": "SOURCE_BRANCH",
+        "label": "D2.vaddr == key: FALSE",
+        "scenario": "A_LASTBYTE"
+      },
+      {
+        "id": "A_LASTBYTE_Q1",
+        "kind": "SOURCE_BRANCH",
+        "label": "D0.vaddr == key: TRUE",
+        "scenario": "A_LASTBYTE"
+      },
+      {
+        "id": "A_LASTBYTE_R",
+        "kind": "RETURN",
+        "label": "equality true; break; return descriptor D0 pointer",
+        "scenario": "A_LASTBYTE"
+      },
+      {
+        "id": "A_NEXT_E",
+        "kind": "ENTRY",
+        "label": "0x60200000; H=0x200000; list [D2,D0,D1]",
+        "scenario": "A_NEXT"
+      },
+      {
+        "id": "A_NEXT_K",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "round mask and key 0x60200000",
+        "scenario": "A_NEXT"
+      },
+      {
+        "id": "A_NEXT_Q0",
+        "kind": "SOURCE_BRANCH",
+        "label": "D2.vaddr == key: FALSE",
+        "scenario": "A_NEXT"
+      },
+      {
+        "id": "A_NEXT_Q1",
+        "kind": "SOURCE_BRANCH",
+        "label": "D0.vaddr == key: FALSE",
+        "scenario": "A_NEXT"
+      },
+      {
+        "id": "A_NEXT_Q2",
+        "kind": "SOURCE_BRANCH",
+        "label": "D1.vaddr == key: TRUE",
+        "scenario": "A_NEXT"
+      },
+      {
+        "id": "A_NEXT_R",
+        "kind": "RETURN",
+        "label": "equality true; break; return descriptor D1 pointer",
+        "scenario": "A_NEXT"
+      },
+      {
+        "id": "A_NEXTLAST_E",
+        "kind": "ENTRY",
+        "label": "0x603fffff; H=0x200000; list [D2,D0,D1]",
+        "scenario": "A_NEXTLAST"
+      },
+      {
+        "id": "A_NEXTLAST_K",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "round mask and key 0x60200000",
+        "scenario": "A_NEXTLAST"
+      },
+      {
+        "id": "A_NEXTLAST_Q0",
+        "kind": "SOURCE_BRANCH",
+        "label": "D2.vaddr == key: FALSE",
+        "scenario": "A_NEXTLAST"
+      },
+      {
+        "id": "A_NEXTLAST_Q1",
+        "kind": "SOURCE_BRANCH",
+        "label": "D0.vaddr == key: FALSE",
+        "scenario": "A_NEXTLAST"
+      },
+      {
+        "id": "A_NEXTLAST_Q2",
+        "kind": "SOURCE_BRANCH",
+        "label": "D1.vaddr == key: TRUE",
+        "scenario": "A_NEXTLAST"
+      },
+      {
+        "id": "A_NEXTLAST_R",
+        "kind": "RETURN",
+        "label": "equality true; break; return descriptor D1 pointer",
+        "scenario": "A_NEXTLAST"
+      },
+      {
+        "id": "A_MISS_E",
+        "kind": "ENTRY",
+        "label": "0x60400000; H=0x200000; list [D2,D0,D1]",
+        "scenario": "A_MISS"
+      },
+      {
+        "id": "A_MISS_K",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "round mask and key 0x60400000",
+        "scenario": "A_MISS"
+      },
+      {
+        "id": "A_MISS_Q0",
+        "kind": "SOURCE_BRANCH",
+        "label": "D2.vaddr == key: FALSE",
+        "scenario": "A_MISS"
+      },
+      {
+        "id": "A_MISS_Q1",
+        "kind": "SOURCE_BRANCH",
+        "label": "D0.vaddr == key: FALSE",
+        "scenario": "A_MISS"
+      },
+      {
+        "id": "A_MISS_Q2",
+        "kind": "SOURCE_BRANCH",
+        "label": "D1.vaddr == key: FALSE",
+        "scenario": "A_MISS"
+      },
+      {
+        "id": "A_MISS_R",
+        "kind": "RETURN",
+        "label": "anchor terminates, return NULL descriptor pointer",
+        "scenario": "A_MISS"
+      },
+      {
+        "id": "A_EMPTY_E",
+        "kind": "ENTRY",
+        "label": "0x60000000; H=0x200000; list []",
+        "scenario": "A_EMPTY"
+      },
+      {
+        "id": "A_EMPTY_K",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "round mask and key 0x60000000",
+        "scenario": "A_EMPTY"
+      },
+      {
+        "id": "A_EMPTY_R",
+        "kind": "RETURN",
+        "label": "anchor terminates, return NULL descriptor pointer",
+        "scenario": "A_EMPTY"
+      },
+      {
+        "id": "B_0_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(0), original words",
+        "scenario": "B_0_ASSIGNED"
+      },
+      {
+        "id": "B_0_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 0, t=0, left int32",
+        "scenario": "B_0_ASSIGNED"
+      },
+      {
+        "id": "B_0_AS_R",
+        "kind": "RETURN",
+        "label": "mask 0x0000000000000001, read word 0; unsigned result 1",
+        "scenario": "B_0_ASSIGNED"
+      },
+      {
+        "id": "B_0_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(0) from original words",
+        "scenario": "B_0_CLEAR"
+      },
+      {
+        "id": "B_0_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 0; word0 &= 0xfffffffffffffffe; changed bits 1",
+        "scenario": "B_0_CLEAR"
+      },
+      {
+        "id": "B_0_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_0_CLEAR"
+      },
+      {
+        "id": "B_UNSET_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(2), original words",
+        "scenario": "B_UNSET_ASSIGNED"
+      },
+      {
+        "id": "B_UNSET_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 0, t=2, left int32",
+        "scenario": "B_UNSET_ASSIGNED"
+      },
+      {
+        "id": "B_UNSET_AS_R",
+        "kind": "RETURN",
+        "label": "mask 0x0000000000000004, read word 0; unsigned result 0",
+        "scenario": "B_UNSET_ASSIGNED"
+      },
+      {
+        "id": "B_UNSET_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(2) from original words",
+        "scenario": "B_UNSET_CLEAR"
+      },
+      {
+        "id": "B_UNSET_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 2; word0 &= 0xfffffffffffffffb; changed bits 0",
+        "scenario": "B_UNSET_CLEAR"
+      },
+      {
+        "id": "B_UNSET_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_UNSET_CLEAR"
+      },
+      {
+        "id": "B_30_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(30), original words",
+        "scenario": "B_30_ASSIGNED"
+      },
+      {
+        "id": "B_30_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 0, t=30, left int32",
+        "scenario": "B_30_ASSIGNED"
+      },
+      {
+        "id": "B_30_AS_R",
+        "kind": "RETURN",
+        "label": "mask 0x0000000040000000, read word 0; unsigned result 1073741824",
+        "scenario": "B_30_ASSIGNED"
+      },
+      {
+        "id": "B_30_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(30) from original words",
+        "scenario": "B_30_CLEAR"
+      },
+      {
+        "id": "B_30_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 30; word0 &= 0xffffffffbfffffff; changed bits 1",
+        "scenario": "B_30_CLEAR"
+      },
+      {
+        "id": "B_30_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_30_CLEAR"
+      },
+      {
+        "id": "B_31_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(31), original words",
+        "scenario": "B_31_ASSIGNED"
+      },
+      {
+        "id": "B_31_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 0, t=31, left int32",
+        "scenario": "B_31_ASSIGNED"
+      },
+      {
+        "id": "B_31_AS_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "ANALYSIS_STOP_SIGNED_RESULT_NOT_REPRESENTABLE; mask/read/return NOT_DERIVED",
+        "scenario": "B_31_ASSIGNED"
+      },
+      {
+        "id": "B_31_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(31) from original words",
+        "scenario": "B_31_CLEAR"
+      },
+      {
+        "id": "B_31_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 31; word0 &= 0xffffffff7fffffff; changed bits 1",
+        "scenario": "B_31_CLEAR"
+      },
+      {
+        "id": "B_31_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_31_CLEAR"
+      },
+      {
+        "id": "B_32_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(32), original words",
+        "scenario": "B_32_ASSIGNED"
+      },
+      {
+        "id": "B_32_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 0, t=32, left int32",
+        "scenario": "B_32_ASSIGNED"
+      },
+      {
+        "id": "B_32_AS_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH; mask/read/return NOT_DERIVED",
+        "scenario": "B_32_ASSIGNED"
+      },
+      {
+        "id": "B_32_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(32) from original words",
+        "scenario": "B_32_CLEAR"
+      },
+      {
+        "id": "B_32_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 32; word0 &= 0xfffffffeffffffff; changed bits 1",
+        "scenario": "B_32_CLEAR"
+      },
+      {
+        "id": "B_32_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_32_CLEAR"
+      },
+      {
+        "id": "B_63_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(63), original words",
+        "scenario": "B_63_ASSIGNED"
+      },
+      {
+        "id": "B_63_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 0, t=63, left int32",
+        "scenario": "B_63_ASSIGNED"
+      },
+      {
+        "id": "B_63_AS_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH; mask/read/return NOT_DERIVED",
+        "scenario": "B_63_ASSIGNED"
+      },
+      {
+        "id": "B_63_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(63) from original words",
+        "scenario": "B_63_CLEAR"
+      },
+      {
+        "id": "B_63_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 63; word0 &= 0x7fffffffffffffff; changed bits 1",
+        "scenario": "B_63_CLEAR"
+      },
+      {
+        "id": "B_63_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_63_CLEAR"
+      },
+      {
+        "id": "B_64_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(64), original words",
+        "scenario": "B_64_ASSIGNED"
+      },
+      {
+        "id": "B_64_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 1, t=0, left int32",
+        "scenario": "B_64_ASSIGNED"
+      },
+      {
+        "id": "B_64_AS_R",
+        "kind": "RETURN",
+        "label": "mask 0x0000000000000001, read word 1; unsigned result 1",
+        "scenario": "B_64_ASSIGNED"
+      },
+      {
+        "id": "B_64_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(64) from original words",
+        "scenario": "B_64_CLEAR"
+      },
+      {
+        "id": "B_64_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 0; word1 &= 0xfffffffffffffffe; changed bits 1",
+        "scenario": "B_64_CLEAR"
+      },
+      {
+        "id": "B_64_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_64_CLEAR"
+      },
+      {
+        "id": "B_94_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(94), original words",
+        "scenario": "B_94_ASSIGNED"
+      },
+      {
+        "id": "B_94_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 1, t=30, left int32",
+        "scenario": "B_94_ASSIGNED"
+      },
+      {
+        "id": "B_94_AS_R",
+        "kind": "RETURN",
+        "label": "mask 0x0000000040000000, read word 1; unsigned result 1073741824",
+        "scenario": "B_94_ASSIGNED"
+      },
+      {
+        "id": "B_94_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(94) from original words",
+        "scenario": "B_94_CLEAR"
+      },
+      {
+        "id": "B_94_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 30; word1 &= 0xffffffffbfffffff; changed bits 1",
+        "scenario": "B_94_CLEAR"
+      },
+      {
+        "id": "B_94_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_94_CLEAR"
+      },
+      {
+        "id": "B_95_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(95), original words",
+        "scenario": "B_95_ASSIGNED"
+      },
+      {
+        "id": "B_95_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 1, t=31, left int32",
+        "scenario": "B_95_ASSIGNED"
+      },
+      {
+        "id": "B_95_AS_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "ANALYSIS_STOP_SIGNED_RESULT_NOT_REPRESENTABLE; mask/read/return NOT_DERIVED",
+        "scenario": "B_95_ASSIGNED"
+      },
+      {
+        "id": "B_95_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(95) from original words",
+        "scenario": "B_95_CLEAR"
+      },
+      {
+        "id": "B_95_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 31; word1 &= 0xffffffff7fffffff; changed bits 1",
+        "scenario": "B_95_CLEAR"
+      },
+      {
+        "id": "B_95_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_95_CLEAR"
+      },
+      {
+        "id": "B_96_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(96), original words",
+        "scenario": "B_96_ASSIGNED"
+      },
+      {
+        "id": "B_96_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 1, t=32, left int32",
+        "scenario": "B_96_ASSIGNED"
+      },
+      {
+        "id": "B_96_AS_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH; mask/read/return NOT_DERIVED",
+        "scenario": "B_96_ASSIGNED"
+      },
+      {
+        "id": "B_96_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(96) from original words",
+        "scenario": "B_96_CLEAR"
+      },
+      {
+        "id": "B_96_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 32; word1 &= 0xfffffffeffffffff; changed bits 1",
+        "scenario": "B_96_CLEAR"
+      },
+      {
+        "id": "B_96_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_96_CLEAR"
+      },
+      {
+        "id": "B_127_AS_E",
+        "kind": "ENTRY",
+        "label": "assigned(127), original words",
+        "scenario": "B_127_ASSIGNED"
+      },
+      {
+        "id": "B_127_AS_T",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "word 1, t=63, left int32",
+        "scenario": "B_127_ASSIGNED"
+      },
+      {
+        "id": "B_127_AS_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "ANALYSIS_STOP_SHIFT_COUNT_GE_LEFT_WIDTH; mask/read/return NOT_DERIVED",
+        "scenario": "B_127_ASSIGNED"
+      },
+      {
+        "id": "B_127_CL_E",
+        "kind": "INDEPENDENT_ENTRY",
+        "label": "clear(127) from original words",
+        "scenario": "B_127_CLEAR"
+      },
+      {
+        "id": "B_127_CL_W",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "1ULL shift 63; word1 &= 0x7fffffffffffffff; changed bits 1",
+        "scenario": "B_127_CLEAR"
+      },
+      {
+        "id": "B_127_CL_R",
+        "kind": "VOID_COMPLETION",
+        "label": "conditional void completion; no return value",
+        "scenario": "B_127_CLEAR"
+      },
+      {
+        "id": "C_NULL_S1",
+        "kind": "GIVEN_ENTRY",
+        "label": "DEBUG block excluded by given preprocessing premise; no runtime condition",
+        "scenario": "C_NULL"
+      },
+      {
+        "id": "C_NULL_S2",
+        "kind": "SOURCE_GATE",
+        "label": "obj_p==NULL TRUE",
+        "scenario": "C_NULL"
+      },
+      {
+        "id": "C_NULL_S3",
+        "kind": "VOID_EARLY_RETURN",
+        "label": "return; no lookup, pointer or slab read",
+        "scenario": "C_NULL"
+      },
+      {
+        "id": "C_FULL_S1",
+        "kind": "GIVEN_ENTRY",
+        "label": "DEBUG block excluded by given preprocessing premise; no runtime condition",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S2",
+        "kind": "SOURCE_GATE",
+        "label": "obj_p==NULL FALSE",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S3",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S4",
+        "kind": "SOURCE_GATE",
+        "label": "S.free==S.total FALSE",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S5",
+        "kind": "SOURCE_GATE",
+        "label": "given byte difference 0, obj_idx=0, assigned returns 1; !assigned FALSE",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S6",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "clear(0); S.free 0->1; CF 128->129; CU 128->127",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S7",
+        "kind": "SOURCE_GATE",
+        "label": "updated S.free==1 TRUE",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S8",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "list_del_init S from full, full.count 1->0, add used head, used.count 0->1; else-if not evaluated",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S9",
+        "kind": "SOURCE_GATE",
+        "label": "free-list count 1>2 FALSE; reclaim body not entered",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_FULL_S10",
+        "kind": "VOID_COMPLETION",
+        "label": "normal source end conditional void completion; no runtime execution",
+        "scenario": "C_FULL"
+      },
+      {
+        "id": "C_USED_S1",
+        "kind": "GIVEN_ENTRY",
+        "label": "DEBUG block excluded by given preprocessing premise; no runtime condition",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S2",
+        "kind": "SOURCE_GATE",
+        "label": "obj_p==NULL FALSE",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S3",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S4",
+        "kind": "SOURCE_GATE",
+        "label": "S.free==S.total FALSE",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S5",
+        "kind": "SOURCE_GATE",
+        "label": "given byte difference 491520, obj_idx=30, assigned returns 1073741824; !assigned FALSE",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S6",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "clear(30); S.free 64->65; CF 192->193; CU 64->63",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S7",
+        "kind": "SOURCE_GATE",
+        "label": "updated S.free==1 FALSE",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S8",
+        "kind": "SOURCE_GATE",
+        "label": "else-if updated free==0 FALSE (updated=65); no migration; S stays used",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S9",
+        "kind": "SOURCE_GATE",
+        "label": "free-list count 1>2 FALSE; reclaim body not entered",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_USED_S10",
+        "kind": "VOID_COMPLETION",
+        "label": "normal source end conditional void completion; no runtime execution",
+        "scenario": "C_USED"
+      },
+      {
+        "id": "C_LAST_S1",
+        "kind": "GIVEN_ENTRY",
+        "label": "DEBUG block excluded by given preprocessing premise; no runtime condition",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S2",
+        "kind": "SOURCE_GATE",
+        "label": "obj_p==NULL FALSE",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S3",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S4",
+        "kind": "SOURCE_GATE",
+        "label": "S.free==S.total FALSE",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S5",
+        "kind": "SOURCE_GATE",
+        "label": "given byte difference 0, obj_idx=0, assigned returns 1; !assigned FALSE",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S6",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "clear(0); S.free 127->128; CF 255->256; CU 1->0",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S7",
+        "kind": "SOURCE_GATE",
+        "label": "updated S.free==1 FALSE",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S8",
+        "kind": "SOURCE_GATE",
+        "label": "else-if updated free==0 FALSE (updated=128); no migration; S stays used despite free==total",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S9",
+        "kind": "SOURCE_GATE",
+        "label": "free-list count 1>2 FALSE; reclaim body not entered",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_LAST_S10",
+        "kind": "VOID_COMPLETION",
+        "label": "normal source end conditional void completion; no runtime execution",
+        "scenario": "C_LAST"
+      },
+      {
+        "id": "C_EMPTY_S1",
+        "kind": "GIVEN_ENTRY",
+        "label": "DEBUG block excluded by given preprocessing premise; no runtime condition",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "C_EMPTY_S2",
+        "kind": "SOURCE_GATE",
+        "label": "obj_p==NULL FALSE",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "C_EMPTY_S3",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "C_EMPTY_S4",
+        "kind": "SOURCE_GATE",
+        "label": "S.free==S.total TRUE",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "C_EMPTY_S5",
+        "kind": "SOURCE_LOOP_BOUNDARY",
+        "label": "line348 while(1); no obj_idx or bitmap access; stop source-level path",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "C_UNASSIGNED_S1",
+        "kind": "GIVEN_ENTRY",
+        "label": "DEBUG block excluded by given preprocessing premise; no runtime condition",
+        "scenario": "C_UNASSIGNED"
+      },
+      {
+        "id": "C_UNASSIGNED_S2",
+        "kind": "SOURCE_GATE",
+        "label": "obj_p==NULL FALSE",
+        "scenario": "C_UNASSIGNED"
+      },
+      {
+        "id": "C_UNASSIGNED_S3",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "upage_search normal return GIVEN; read page.uslab_p=S, then S.uslabcache_p=cache",
+        "scenario": "C_UNASSIGNED"
+      },
+      {
+        "id": "C_UNASSIGNED_S4",
+        "kind": "SOURCE_GATE",
+        "label": "S.free==S.total FALSE",
+        "scenario": "C_UNASSIGNED"
+      },
+      {
+        "id": "C_UNASSIGNED_S5",
+        "kind": "SOURCE_GATE",
+        "label": "given byte difference 32768, obj_idx=2, assigned returns 0; !assigned TRUE",
+        "scenario": "C_UNASSIGNED"
+      },
+      {
+        "id": "C_UNASSIGNED_S6",
+        "kind": "SOURCE_LOOP_BOUNDARY",
+        "label": "line355 while(1); no clear or counter/list mutation",
+        "scenario": "C_UNASSIGNED"
+      }
+    ],
+    "edges": [
+      {
+        "from": "A_FIRST_E",
+        "to": "A_FIRST_K",
+        "kind": "SOURCE_ORDER",
+        "label": "upage_search round down"
+      },
+      {
+        "from": "A_FIRST_K",
+        "to": "A_FIRST_Q0",
+        "kind": "SOURCE_ORDER",
+        "label": "anchor.next enters loop"
+      },
+      {
+        "from": "A_FIRST_Q0",
+        "to": "A_FIRST_R",
+        "kind": "CONTROL_TRUE",
+        "label": "BREAK_ON_EQUAL"
+      },
+      {
+        "from": "A_BASE_E",
+        "to": "A_BASE_K",
+        "kind": "SOURCE_ORDER",
+        "label": "upage_search round down"
+      },
+      {
+        "from": "A_BASE_K",
+        "to": "A_BASE_Q0",
+        "kind": "SOURCE_ORDER",
+        "label": "anchor.next enters loop"
+      },
+      {
+        "from": "A_BASE_Q0",
+        "to": "A_BASE_Q1",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_BASE_Q1",
+        "to": "A_BASE_R",
+        "kind": "CONTROL_TRUE",
+        "label": "BREAK_ON_EQUAL"
+      },
+      {
+        "from": "A_LASTBYTE_E",
+        "to": "A_LASTBYTE_K",
+        "kind": "SOURCE_ORDER",
+        "label": "upage_search round down"
+      },
+      {
+        "from": "A_LASTBYTE_K",
+        "to": "A_LASTBYTE_Q0",
+        "kind": "SOURCE_ORDER",
+        "label": "anchor.next enters loop"
+      },
+      {
+        "from": "A_LASTBYTE_Q0",
+        "to": "A_LASTBYTE_Q1",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_LASTBYTE_Q1",
+        "to": "A_LASTBYTE_R",
+        "kind": "CONTROL_TRUE",
+        "label": "BREAK_ON_EQUAL"
+      },
+      {
+        "from": "A_NEXT_E",
+        "to": "A_NEXT_K",
+        "kind": "SOURCE_ORDER",
+        "label": "upage_search round down"
+      },
+      {
+        "from": "A_NEXT_K",
+        "to": "A_NEXT_Q0",
+        "kind": "SOURCE_ORDER",
+        "label": "anchor.next enters loop"
+      },
+      {
+        "from": "A_NEXT_Q0",
+        "to": "A_NEXT_Q1",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_NEXT_Q1",
+        "to": "A_NEXT_Q2",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_NEXT_Q2",
+        "to": "A_NEXT_R",
+        "kind": "CONTROL_TRUE",
+        "label": "BREAK_ON_EQUAL"
+      },
+      {
+        "from": "A_NEXTLAST_E",
+        "to": "A_NEXTLAST_K",
+        "kind": "SOURCE_ORDER",
+        "label": "upage_search round down"
+      },
+      {
+        "from": "A_NEXTLAST_K",
+        "to": "A_NEXTLAST_Q0",
+        "kind": "SOURCE_ORDER",
+        "label": "anchor.next enters loop"
+      },
+      {
+        "from": "A_NEXTLAST_Q0",
+        "to": "A_NEXTLAST_Q1",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_NEXTLAST_Q1",
+        "to": "A_NEXTLAST_Q2",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_NEXTLAST_Q2",
+        "to": "A_NEXTLAST_R",
+        "kind": "CONTROL_TRUE",
+        "label": "BREAK_ON_EQUAL"
+      },
+      {
+        "from": "A_MISS_E",
+        "to": "A_MISS_K",
+        "kind": "SOURCE_ORDER",
+        "label": "upage_search round down"
+      },
+      {
+        "from": "A_MISS_K",
+        "to": "A_MISS_Q0",
+        "kind": "SOURCE_ORDER",
+        "label": "anchor.next enters loop"
+      },
+      {
+        "from": "A_MISS_Q0",
+        "to": "A_MISS_Q1",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_MISS_Q1",
+        "to": "A_MISS_Q2",
+        "kind": "CONTROL_FALSE",
+        "label": "advance to next node"
+      },
+      {
+        "from": "A_MISS_Q2",
+        "to": "A_MISS_R",
+        "kind": "CONTROL_FALSE",
+        "label": "ANCHOR_REACHED"
+      },
+      {
+        "from": "A_EMPTY_E",
+        "to": "A_EMPTY_K",
+        "kind": "SOURCE_ORDER",
+        "label": "upage_search round down"
+      },
+      {
+        "from": "A_EMPTY_K",
+        "to": "A_EMPTY_R",
+        "kind": "ANCHOR_EXIT",
+        "label": "ANCHOR_REACHED"
+      },
+      {
+        "from": "B_0_AS_E",
+        "to": "B_0_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_0_AS_T",
+        "to": "B_0_AS_R",
+        "kind": "MODEL_CONTINUATION",
+        "label": "GIVEN ISO t<=30; no mutation"
+      },
+      {
+        "from": "B_0_CL_E",
+        "to": "B_0_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_0_CL_W",
+        "to": "B_0_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_UNSET_AS_E",
+        "to": "B_UNSET_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_UNSET_AS_T",
+        "to": "B_UNSET_AS_R",
+        "kind": "MODEL_CONTINUATION",
+        "label": "GIVEN ISO t<=30; no mutation"
+      },
+      {
+        "from": "B_UNSET_CL_E",
+        "to": "B_UNSET_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_UNSET_CL_W",
+        "to": "B_UNSET_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_30_AS_E",
+        "to": "B_30_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_30_AS_T",
+        "to": "B_30_AS_R",
+        "kind": "MODEL_CONTINUATION",
+        "label": "GIVEN ISO t<=30; no mutation"
+      },
+      {
+        "from": "B_30_CL_E",
+        "to": "B_30_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_30_CL_W",
+        "to": "B_30_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_31_AS_E",
+        "to": "B_31_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_31_AS_T",
+        "to": "B_31_AS_X",
+        "kind": "MODEL_BOUNDARY",
+        "label": "not an actual source control edge or return"
+      },
+      {
+        "from": "B_31_CL_E",
+        "to": "B_31_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_31_CL_W",
+        "to": "B_31_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_32_AS_E",
+        "to": "B_32_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_32_AS_T",
+        "to": "B_32_AS_X",
+        "kind": "MODEL_BOUNDARY",
+        "label": "not an actual source control edge or return"
+      },
+      {
+        "from": "B_32_CL_E",
+        "to": "B_32_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_32_CL_W",
+        "to": "B_32_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_63_AS_E",
+        "to": "B_63_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_63_AS_T",
+        "to": "B_63_AS_X",
+        "kind": "MODEL_BOUNDARY",
+        "label": "not an actual source control edge or return"
+      },
+      {
+        "from": "B_63_CL_E",
+        "to": "B_63_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_63_CL_W",
+        "to": "B_63_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_64_AS_E",
+        "to": "B_64_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_64_AS_T",
+        "to": "B_64_AS_R",
+        "kind": "MODEL_CONTINUATION",
+        "label": "GIVEN ISO t<=30; no mutation"
+      },
+      {
+        "from": "B_64_CL_E",
+        "to": "B_64_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_64_CL_W",
+        "to": "B_64_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_94_AS_E",
+        "to": "B_94_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_94_AS_T",
+        "to": "B_94_AS_R",
+        "kind": "MODEL_CONTINUATION",
+        "label": "GIVEN ISO t<=30; no mutation"
+      },
+      {
+        "from": "B_94_CL_E",
+        "to": "B_94_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_94_CL_W",
+        "to": "B_94_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_95_AS_E",
+        "to": "B_95_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_95_AS_T",
+        "to": "B_95_AS_X",
+        "kind": "MODEL_BOUNDARY",
+        "label": "not an actual source control edge or return"
+      },
+      {
+        "from": "B_95_CL_E",
+        "to": "B_95_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_95_CL_W",
+        "to": "B_95_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_96_AS_E",
+        "to": "B_96_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_96_AS_T",
+        "to": "B_96_AS_X",
+        "kind": "MODEL_BOUNDARY",
+        "label": "not an actual source control edge or return"
+      },
+      {
+        "from": "B_96_CL_E",
+        "to": "B_96_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_96_CL_W",
+        "to": "B_96_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "B_127_AS_E",
+        "to": "B_127_AS_T",
+        "kind": "SOURCE_ORDER",
+        "label": "calculate unit_idx and shift count"
+      },
+      {
+        "from": "B_127_AS_T",
+        "to": "B_127_AS_X",
+        "kind": "MODEL_BOUNDARY",
+        "label": "not an actual source control edge or return"
+      },
+      {
+        "from": "B_127_CL_E",
+        "to": "B_127_CL_W",
+        "kind": "SOURCE_ORDER",
+        "label": "separate given call, no edge from assigned"
+      },
+      {
+        "from": "B_127_CL_W",
+        "to": "B_127_CL_R",
+        "kind": "SOURCE_ORDER",
+        "label": "one word updated"
+      },
+      {
+        "from": "C_NULL_S1",
+        "to": "C_NULL_S2",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_NULL_S2",
+        "to": "C_NULL_S3",
+        "kind": "CONTROL_TRUE",
+        "label": "given condition true"
+      },
+      {
+        "from": "C_FULL_S1",
+        "to": "C_FULL_S2",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_FULL_S2",
+        "to": "C_FULL_S3",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_FULL_S3",
+        "to": "C_FULL_S4",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_FULL_S4",
+        "to": "C_FULL_S5",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_FULL_S5",
+        "to": "C_FULL_S6",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_FULL_S6",
+        "to": "C_FULL_S7",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_FULL_S7",
+        "to": "C_FULL_S8",
+        "kind": "CONTROL_TRUE",
+        "label": "given condition true"
+      },
+      {
+        "from": "C_FULL_S8",
+        "to": "C_FULL_S9",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_FULL_S9",
+        "to": "C_FULL_S10",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_USED_S1",
+        "to": "C_USED_S2",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_USED_S2",
+        "to": "C_USED_S3",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_USED_S3",
+        "to": "C_USED_S4",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_USED_S4",
+        "to": "C_USED_S5",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_USED_S5",
+        "to": "C_USED_S6",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_USED_S6",
+        "to": "C_USED_S7",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_USED_S7",
+        "to": "C_USED_S8",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_USED_S8",
+        "to": "C_USED_S9",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_USED_S9",
+        "to": "C_USED_S10",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_LAST_S1",
+        "to": "C_LAST_S2",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_LAST_S2",
+        "to": "C_LAST_S3",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_LAST_S3",
+        "to": "C_LAST_S4",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_LAST_S4",
+        "to": "C_LAST_S5",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_LAST_S5",
+        "to": "C_LAST_S6",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_LAST_S6",
+        "to": "C_LAST_S7",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_LAST_S7",
+        "to": "C_LAST_S8",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_LAST_S8",
+        "to": "C_LAST_S9",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_LAST_S9",
+        "to": "C_LAST_S10",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_EMPTY_S1",
+        "to": "C_EMPTY_S2",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_EMPTY_S2",
+        "to": "C_EMPTY_S3",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_EMPTY_S3",
+        "to": "C_EMPTY_S4",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_EMPTY_S4",
+        "to": "C_EMPTY_S5",
+        "kind": "CONTROL_TRUE",
+        "label": "given condition true"
+      },
+      {
+        "from": "C_UNASSIGNED_S1",
+        "to": "C_UNASSIGNED_S2",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_UNASSIGNED_S2",
+        "to": "C_UNASSIGNED_S3",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_UNASSIGNED_S3",
+        "to": "C_UNASSIGNED_S4",
+        "kind": "SOURCE_ORDER",
+        "label": "conditional source sequence"
+      },
+      {
+        "from": "C_UNASSIGNED_S4",
+        "to": "C_UNASSIGNED_S5",
+        "kind": "CONTROL_FALSE",
+        "label": "given condition false"
+      },
+      {
+        "from": "C_UNASSIGNED_S5",
+        "to": "C_UNASSIGNED_S6",
+        "kind": "CONTROL_TRUE",
+        "label": "given condition true"
+      }
+    ]
+  },
+  "graph_coverage": {
+    "A": [
+      {
+        "id": "A_FIRST",
+        "scenario": "A_FIRST"
+      },
+      {
+        "id": "A_BASE",
+        "scenario": "A_BASE"
+      },
+      {
+        "id": "A_LASTBYTE",
+        "scenario": "A_LASTBYTE"
+      },
+      {
+        "id": "A_NEXT",
+        "scenario": "A_NEXT"
+      },
+      {
+        "id": "A_NEXTLAST",
+        "scenario": "A_NEXTLAST"
+      },
+      {
+        "id": "A_MISS",
+        "scenario": "A_MISS"
+      },
+      {
+        "id": "A_EMPTY",
+        "scenario": "A_EMPTY"
+      }
+    ],
+    "B": [
+      {
+        "id": "B_0",
+        "assigned": "B_0_ASSIGNED",
+        "clear": "B_0_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_UNSET",
+        "assigned": "B_UNSET_ASSIGNED",
+        "clear": "B_UNSET_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_30",
+        "assigned": "B_30_ASSIGNED",
+        "clear": "B_30_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_31",
+        "assigned": "B_31_ASSIGNED",
+        "clear": "B_31_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_32",
+        "assigned": "B_32_ASSIGNED",
+        "clear": "B_32_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_63",
+        "assigned": "B_63_ASSIGNED",
+        "clear": "B_63_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_64",
+        "assigned": "B_64_ASSIGNED",
+        "clear": "B_64_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_94",
+        "assigned": "B_94_ASSIGNED",
+        "clear": "B_94_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_95",
+        "assigned": "B_95_ASSIGNED",
+        "clear": "B_95_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_96",
+        "assigned": "B_96_ASSIGNED",
+        "clear": "B_96_CLEAR",
+        "independent": true
+      },
+      {
+        "id": "B_127",
+        "assigned": "B_127_ASSIGNED",
+        "clear": "B_127_CLEAR",
+        "independent": true
+      }
+    ],
+    "C": [
+      {
+        "id": "C_NULL",
+        "scenario": "C_NULL",
+        "stages": 3
+      },
+      {
+        "id": "C_FULL",
+        "scenario": "C_FULL",
+        "stages": 10
+      },
+      {
+        "id": "C_USED",
+        "scenario": "C_USED",
+        "stages": 10
+      },
+      {
+        "id": "C_LAST",
+        "scenario": "C_LAST",
+        "stages": 10
+      },
+      {
+        "id": "C_EMPTY",
+        "scenario": "C_EMPTY",
+        "stages": 5
+      },
+      {
+        "id": "C_UNASSIGNED",
+        "scenario": "C_UNASSIGNED",
+        "stages": 6
+      }
+    ],
+    "no_cross_scenario_call_edges": true
+  },
+  "open_questions": [
+    "N1547 independent retrieval UNKNOWN; model follows 204 GIVEN",
+    "actual compiler, DEBUG, linker, C objects and bitmap initial payload UNKNOWN; no runtime"
+  ],
+  "full_local_P9": "NOT_RUN"
+}

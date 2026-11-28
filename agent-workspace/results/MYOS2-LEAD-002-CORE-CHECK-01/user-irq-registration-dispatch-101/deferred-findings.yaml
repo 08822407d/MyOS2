@@ -1,0 +1,411 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101",
+  "record_type": "bounded_conditional_irq_defect_candidates_and_evidence_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "mainline_owner": "MYOS2-A-C07",
+  "produced_by": "GPT-6（当前可见模型家族；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-18",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C07_PRO",
+  "mainline_acceptance": "PENDING",
+  "old100": "RETURN",
+  "R100_01": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "old99": "PASS_PENDING_LOCAL_R99_01_CLOSED",
+  "new_candidates": [
+    {
+      "id": "IR101-F01",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F01",
+      "topic": "A",
+      "root": "unbounded_descriptor_index",
+      "source_fact": "register_irq/hwint_irq_handler index irq_descriptors without local range check",
+      "preconditions": "irq/vec>=256; first member write or read must have valid element",
+      "first_proof_gate": "No actual out-of-range caller or trap demonstrated",
+      "evidence_ids": [
+        "IR101-E011",
+        "IR101-E017",
+        "IR101-E018",
+        "IR101-E026",
+        "IR101-E027",
+        "IR101-E030"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    },
+    {
+      "id": "IR101-F02",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F02",
+      "topic": "A",
+      "root": "same_slot_replacement",
+      "source_fact": "register_irq overwrites controller,handler,parameter before new install/enable; no old disable in body",
+      "preconditions": "repeated same-index registration and previous controller active",
+      "first_proof_gate": "No observed in-flight handler or violated registration policy",
+      "evidence_ids": [
+        "IR101-E018",
+        "IR101-E019",
+        "IR101-E020",
+        "IR101-E022",
+        "IR101-E023"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    },
+    {
+      "id": "IR101-F03",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F03",
+      "topic": "A",
+      "root": "discarded_install_result",
+      "source_fact": "install return typed unsigned long discarded; enable may be attempted and register always returns1",
+      "preconditions": "install callback reports error but normally returns and enable exists",
+      "first_proof_gate": "No actual controller result or external success contract verified",
+      "evidence_ids": [
+        "IR101-E013",
+        "IR101-E019",
+        "IR101-E020",
+        "IR101-E021"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    },
+    {
+      "id": "IR101-F04",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F04",
+      "topic": "A/C",
+      "root": "ack_controller_reread",
+      "source_fact": "handler invoked before irq_d->controller is reread for ack; no single saved snapshot",
+      "preconditions": "handler changes or unregisters slot and returns normally",
+      "first_proof_gate": "No observed mutation, stable state or concurrency guarantee",
+      "evidence_ids": [
+        "IR101-E022",
+        "IR101-E023",
+        "IR101-E024",
+        "IR101-E026",
+        "IR101-E027"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    },
+    {
+      "id": "IR101-F05",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F05",
+      "topic": "B",
+      "root": "route_index_u8_aliasing",
+      "source_fact": "IOAPIC route index computed from unsigned long vector, passed into uint8_t; e.g 0xa0 maps 0x10",
+      "preconditions": "IOAPIC callback actually called with high vector and MMIO object valid",
+      "first_proof_gate": "Numerical alias not observed physical route error",
+      "evidence_ids": [
+        "IR101-E031",
+        "IR101-E032",
+        "IR101-E034",
+        "IR101-E036",
+        "IR101-E041",
+        "IR101-E045"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    },
+    {
+      "id": "IR101-F06",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F06",
+      "topic": "B/C",
+      "root": "partially_initialized_RTE_and_type_reinterpret",
+      "source_fact": "HPET local packed bitfield entry has selected fields assigned then IOAPIC_install reads through unsigned long*",
+      "preconditions": "valid caller object with unspecified other fields; actual compiler/ABI relevant",
+      "first_proof_gate": "Effective type, alignment, padding/remaining bits and hardware encoding not certified",
+      "evidence_ids": [
+        "IR101-E036",
+        "IR101-E053",
+        "IR101-E054",
+        "IR101-E055",
+        "IR101-E056",
+        "IR101-E057",
+        "IR101-E067",
+        "IR101-E068",
+        "IR101-E069",
+        "IR101-E070"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    },
+    {
+      "id": "IR101-F07",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F07",
+      "topic": "B",
+      "root": "RTE_sequential_halves_without_transaction",
+      "source_fact": "read high/low separately; write low/high separately; enable/disable RMW reads/writes",
+      "preconditions": "other producer/device changes register between operations; actual MMIO mapped",
+      "first_proof_gate": "No observed interleaving or hardware atomicity requirement",
+      "evidence_ids": [
+        "IR101-E032",
+        "IR101-E033",
+        "IR101-E034",
+        "IR101-E035",
+        "IR101-E041",
+        "IR101-E042",
+        "IR101-E043",
+        "IR101-E045",
+        "IR101-E046",
+        "IR101-E047"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    },
+    {
+      "id": "IR101-F08",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F08",
+      "topic": "C",
+      "root": "ignored_hpet_enable_status_before_registration",
+      "source_fact": "hpet_time_init calls hpet_enable(NULL) and then myos_HPET_init without inspecting returned value",
+      "preconditions": "hpet_enable returns failure normally and caller continues; later registration reached",
+      "first_proof_gate": "Not proven HPET fault; retain prior timing issue independently",
+      "evidence_ids": [
+        "IR101-E103",
+        "IR101-E104",
+        "IR101-E063",
+        "IR101-E067",
+        "IR101-E070"
+      ],
+      "status": "needs_evidence",
+      "kind": "CONDITIONAL_SOURCE_RISK_NOT_RUNTIME_BUG",
+      "runtime_reproduction": "NOT_RUN",
+      "patch_authorized": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "IR101-U01",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U01",
+      "topic": "A",
+      "missing_proof": "Actual IRQ vector provenance, valid descriptor backing and initialization before field access",
+      "first_proof_gate": "Index 256 needs an existing element, not just formed one-past pointer",
+      "evidence_ids": [
+        "IR101-E011",
+        "IR101-E017",
+        "IR101-E018",
+        "IR101-E026",
+        "IR101-E030"
+      ],
+      "prior_related_qualified_ids": [],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U02",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U02",
+      "topic": "A",
+      "missing_proof": "Borrowed controller/name/handler pointer lifetime and in-flight registration/unregistration synchronization",
+      "first_proof_gate": "Scoped field stores and clear do not prove ownership or drain",
+      "evidence_ids": [
+        "IR101-E013",
+        "IR101-E015",
+        "IR101-E016",
+        "IR101-E018",
+        "IR101-E022",
+        "IR101-E023",
+        "IR101-E024",
+        "IR101-E027"
+      ],
+      "prior_related_qualified_ids": [],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U03",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U03",
+      "topic": "B",
+      "missing_proof": "Actual IOAPIC physical device count, MMIO mapping, selector interpretation and accepted read/write requests",
+      "first_proof_gate": "IO_APIC_DEFAULT_PHYS_BASE literal is not a discovered physical IOAPIC",
+      "evidence_ids": [
+        "IR101-E012",
+        "IR101-E048",
+        "IR101-E049",
+        "IR101-E058",
+        "IR101-E041",
+        "IR101-E045"
+      ],
+      "prior_related_qualified_ids": [],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U04",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U04",
+      "topic": "B/C",
+      "missing_proof": "Compiler ABI of packed RTE/bitfield, aliasing/alignment and all local entry bytes",
+      "first_proof_gate": "Selected field assignments and unsigned long reinterpret are not a portable 64-bit RTE certificate",
+      "evidence_ids": [
+        "IR101-E036",
+        "IR101-E053",
+        "IR101-E054",
+        "IR101-E055",
+        "IR101-E056",
+        "IR101-E057",
+        "IR101-E067",
+        "IR101-E068",
+        "IR101-E069",
+        "IR101-E070"
+      ],
+      "prior_related_qualified_ids": [],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U05",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U05",
+      "topic": "C",
+      "missing_proof": "HPET clocksource enable return, true oscillator/routing status, original timing finding's exact full ID",
+      "first_proof_gate": "Source increments jiffies and calls opaque do_timer, but full original root and actual tick effects not reaudited",
+      "evidence_ids": [
+        "IR101-E065",
+        "IR101-E067",
+        "IR101-E070",
+        "IR101-E103",
+        "IR101-E104"
+      ],
+      "prior_related_qualified_ids": [],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U06",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U06",
+      "topic": "C",
+      "missing_proof": "Per-CPU LVT register mode, real period/EOI, AP versus CPU0 initialization and timer delivery",
+      "first_proof_gate": "MSR write texts and vector macros do not certify hardware clock or AP online",
+      "evidence_ids": [
+        "IR101-E074",
+        "IR101-E075",
+        "IR101-E076",
+        "IR101-E077",
+        "IR101-E078",
+        "IR101-E079",
+        "IR101-E080",
+        "IR101-E081",
+        "IR101-E082",
+        "IR101-E084",
+        "IR101-E087",
+        "IR101-E088",
+        "IR101-E089",
+        "IR101-E090"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-SMP-BOOT-PATH-100::SP100-U09"
+      ],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U07",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U07",
+      "topic": "C",
+      "missing_proof": "Actual IRQ_NR/pt_regs offsets, emitted entry_64 frame, IDTR and CPU return ABI",
+      "first_proof_gate": "R65-S01/S02 plus R65C-S01 still limit source frame/GS and iretq interpretation",
+      "evidence_ids": [
+        "IR101-E028",
+        "IR101-E029",
+        "IR101-E066",
+        "IR101-E094",
+        "IR101-E095",
+        "IR101-E096",
+        "IR101-E097",
+        "IR101-E098",
+        "IR101-E099",
+        "IR101-E100",
+        "IR101-E101",
+        "IR101-E102"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-EXCEPTION-ENTRY-65::EE65-F03"
+      ],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U08",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U08",
+      "topic": "A/C",
+      "missing_proof": "Handler-side descriptor mutation and controller re-read under real concurrent or nested IRQ",
+      "first_proof_gate": "No stable pointer snapshot or observed shared-memory race",
+      "evidence_ids": [
+        "IR101-E022",
+        "IR101-E023",
+        "IR101-E024",
+        "IR101-E026",
+        "IR101-E027",
+        "IR101-E038",
+        "IR101-E039",
+        "IR101-E040"
+      ],
+      "prior_related_qualified_ids": [],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "IR101-U09",
+      "qualified_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U09",
+      "topic": "ABC",
+      "missing_proof": "End-to-end hardware delivery, handler/ack return, in_atomic schedule and ASM tail/iret",
+      "first_proof_gate": "No actual interrupt, successful EOI, context switch or real CPU state evidence",
+      "evidence_ids": [
+        "IR101-E026",
+        "IR101-E027",
+        "IR101-E028",
+        "IR101-E029",
+        "IR101-E091",
+        "IR101-E092",
+        "IR101-E093",
+        "IR101-E100",
+        "IR101-E101",
+        "IR101-E102",
+        "IR101-E105"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-EXCEPTION-ENTRY-65::EE65-F03"
+      ],
+      "kind": "EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "status": "needs_evidence",
+      "auto_fix_authorized": false
+    }
+  ],
+  "history": {
+    "R65": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F03 and R65-S01/S02, R65C-S01 retained, not reclosed",
+    "R100": "R100-01 is document-only, not a kernel defect; original 100 F/U unchanged",
+    "HPET_and_jiffies": "CORE-SCHED-INTEGRATION-03 review describes prior HPET/jiffies/CPU0 timing issues; exact original local qualified ID not independently established, so no invented replacement, no asserted new root",
+    "in_atomic": "C scheduler gateway retained from R65; not recounted as a reproduced scheduler bug"
+  },
+  "counts": {
+    "conditional_candidates": 8,
+    "evidence_gaps": 9,
+    "reproduced_runtime_bugs": 0,
+    "source_edits": 0
+  },
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": []
+}

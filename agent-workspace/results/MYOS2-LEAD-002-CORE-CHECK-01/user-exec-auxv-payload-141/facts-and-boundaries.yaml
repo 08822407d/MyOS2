@@ -1,0 +1,4840 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "batch": "CORE-USER-EXEC-AUXV-PAYLOAD-141",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-22",
+  "date": "2026-11-24",
+  "base_snapshot": "time@a039d9803ade",
+  "phase": 2,
+  "produced_by": "GPT-6.2 system family; backend/tier/effort unknown",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested; actual unknown",
+  "evidence_class": "pinned source/static model/prior accepted result",
+  "status": "AUTHOR_STATIC_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "record_type": "facts_and_boundaries",
+  "model": {
+    "selected": {
+      "ARCH_DLINFO": false,
+      "ELF_HWCAP2": false,
+      "CONFIG_RSEQ": false,
+      "ELF_BASE_PLATFORM": null,
+      "ELF_PLATFORM": "x86_64",
+      "AT_VECTOR_SIZE_ARCH": 0
+    },
+    "sizes": {
+      "elf_addr_t": 8,
+      "ulong": 8,
+      "user_word": 8,
+      "elf_phdr": 56
+    },
+    "platform": "P is independent successful user copy of 78 38 36 5f 36 34 00; H is given expression value, not measured",
+    "scope": "conditional static model; uninitialized vma gate retained; no mapping/CRT/runtime proof"
+  },
+  "source_index": [
+    {
+      "id": "E141-001",
+      "key": "STACK_ADD",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "STACK_ADD",
+      "first_line": 110,
+      "last_line": 111,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-002",
+      "key": "STACK_ROUND",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "STACK_ROUND",
+      "first_line": 112,
+      "last_line": 113,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-003",
+      "key": "STACK_ALLOC",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "STACK_ALLOC",
+      "first_line": 114,
+      "last_line": 114,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-004",
+      "key": "ELF_BASE_PLATFORM",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "ELF_BASE_PLATFORM",
+      "first_line": 122,
+      "last_line": 122,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-005",
+      "key": "NEW_AUX_ENT",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "NEW_AUX_ENT",
+      "first_line": 194,
+      "last_line": 198,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-006",
+      "key": "signature",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 126,
+      "last_line": 127,
+      "kind": "active"
+    },
+    {
+      "id": "E141-007",
+      "key": "entry_init",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 129,
+      "last_line": 133,
+      "kind": "active"
+    },
+    {
+      "id": "E141-008",
+      "key": "platform_decl",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 134,
+      "last_line": 138,
+      "kind": "active"
+    },
+    {
+      "id": "E141-009",
+      "key": "flags",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 141,
+      "last_line": 143,
+      "kind": "active"
+    },
+    {
+      "id": "E141-010",
+      "key": "vma_decl",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 145,
+      "last_line": 145,
+      "kind": "active"
+    },
+    {
+      "id": "E141-011",
+      "key": "align",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 152,
+      "last_line": 152,
+      "kind": "active"
+    },
+    {
+      "id": "E141-012",
+      "key": "platform_test",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 160,
+      "last_line": 164,
+      "kind": "active"
+    },
+    {
+      "id": "E141-013",
+      "key": "platform_copy",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 165,
+      "last_line": 167,
+      "kind": "active"
+    },
+    {
+      "id": "E141-014",
+      "key": "base_test",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 173,
+      "last_line": 177,
+      "kind": "active"
+    },
+    {
+      "id": "E141-015",
+      "key": "base_copy",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 178,
+      "last_line": 180,
+      "kind": "active"
+    },
+    {
+      "id": "E141-016",
+      "key": "random_comment",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 185,
+      "last_line": 189,
+      "kind": "comment"
+    },
+    {
+      "id": "E141-017",
+      "key": "saved_start",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 192,
+      "last_line": 192,
+      "kind": "active"
+    },
+    {
+      "id": "E141-018",
+      "key": "arch_gate",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 200,
+      "last_line": 200,
+      "kind": "conditional"
+    },
+    {
+      "id": "E141-019",
+      "key": "arch_add",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 207,
+      "last_line": 208,
+      "kind": "conditional"
+    },
+    {
+      "id": "E141-020",
+      "key": "hwcap",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 209,
+      "last_line": 209,
+      "kind": "active"
+    },
+    {
+      "id": "E141-021",
+      "key": "pagesz",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 210,
+      "last_line": 210,
+      "kind": "active"
+    },
+    {
+      "id": "E141-022",
+      "key": "clktck",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 211,
+      "last_line": 211,
+      "kind": "active"
+    },
+    {
+      "id": "E141-023",
+      "key": "phdr",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 212,
+      "last_line": 212,
+      "kind": "active"
+    },
+    {
+      "id": "E141-024",
+      "key": "phent",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 213,
+      "last_line": 213,
+      "kind": "active"
+    },
+    {
+      "id": "E141-025",
+      "key": "phnum",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 214,
+      "last_line": 214,
+      "kind": "active"
+    },
+    {
+      "id": "E141-026",
+      "key": "base",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 215,
+      "last_line": 215,
+      "kind": "active"
+    },
+    {
+      "id": "E141-027",
+      "key": "flags_test",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 216,
+      "last_line": 217,
+      "kind": "active"
+    },
+    {
+      "id": "E141-028",
+      "key": "flags_emit",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 218,
+      "last_line": 218,
+      "kind": "active"
+    },
+    {
+      "id": "E141-029",
+      "key": "entry",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 219,
+      "last_line": 219,
+      "kind": "active"
+    },
+    {
+      "id": "E141-030",
+      "key": "cred_comment",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 220,
+      "last_line": 223,
+      "kind": "comment"
+    },
+    {
+      "id": "E141-031",
+      "key": "secure",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 224,
+      "last_line": 224,
+      "kind": "active"
+    },
+    {
+      "id": "E141-032",
+      "key": "rand_comment",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 225,
+      "last_line": 225,
+      "kind": "comment"
+    },
+    {
+      "id": "E141-033",
+      "key": "hwcap2",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 226,
+      "last_line": 228,
+      "kind": "conditional"
+    },
+    {
+      "id": "E141-034",
+      "key": "execfn",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 229,
+      "last_line": 229,
+      "kind": "active"
+    },
+    {
+      "id": "E141-035",
+      "key": "platform",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 230,
+      "last_line": 233,
+      "kind": "active"
+    },
+    {
+      "id": "E141-036",
+      "key": "base_platform",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 234,
+      "last_line": 237,
+      "kind": "active"
+    },
+    {
+      "id": "E141-037",
+      "key": "execfd",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 238,
+      "last_line": 240,
+      "kind": "active"
+    },
+    {
+      "id": "E141-038",
+      "key": "rseq",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 241,
+      "last_line": 244,
+      "kind": "conditional"
+    },
+    {
+      "id": "E141-039",
+      "key": "clear",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 246,
+      "last_line": 248,
+      "kind": "active"
+    },
+    {
+      "id": "E141-040",
+      "key": "advance",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 250,
+      "last_line": 251,
+      "kind": "active"
+    },
+    {
+      "id": "E141-041",
+      "key": "ei",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 253,
+      "last_line": 254,
+      "kind": "active"
+    },
+    {
+      "id": "E141-042",
+      "key": "items",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 256,
+      "last_line": 260,
+      "kind": "active"
+    },
+    {
+      "id": "E141-043",
+      "key": "lock",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 266,
+      "last_line": 267,
+      "kind": "active"
+    },
+    {
+      "id": "E141-044",
+      "key": "vma_gate",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 268,
+      "last_line": 271,
+      "kind": "active"
+    },
+    {
+      "id": "E141-045",
+      "key": "argc",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 274,
+      "last_line": 275,
+      "kind": "active"
+    },
+    {
+      "id": "E141-046",
+      "key": "argv",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 278,
+      "last_line": 282,
+      "kind": "active"
+    },
+    {
+      "id": "E141-047",
+      "key": "argv_end",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 288,
+      "last_line": 290,
+      "kind": "active"
+    },
+    {
+      "id": "E141-048",
+      "key": "envp",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 293,
+      "last_line": 297,
+      "kind": "active"
+    },
+    {
+      "id": "E141-049",
+      "key": "envp_end",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 303,
+      "last_line": 305,
+      "kind": "active"
+    },
+    {
+      "id": "E141-050",
+      "key": "copy",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 307,
+      "last_line": 310,
+      "kind": "active"
+    },
+    {
+      "id": "E141-051",
+      "key": "interp_init",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 614,
+      "last_line": 614,
+      "kind": "active"
+    },
+    {
+      "id": "E141-052",
+      "key": "phdr_init",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 615,
+      "last_line": 617,
+      "kind": "active"
+    },
+    {
+      "id": "E141-053",
+      "key": "entry_decl",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 627,
+      "last_line": 629,
+      "kind": "active"
+    },
+    {
+      "id": "E141-054",
+      "key": "header",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 636,
+      "last_line": 637,
+      "kind": "active"
+    },
+    {
+      "id": "E141-055",
+      "key": "ptload_gate",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 838,
+      "last_line": 839,
+      "kind": "active"
+    },
+    {
+      "id": "E141-056",
+      "key": "bias",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 977,
+      "last_line": 981,
+      "kind": "active"
+    },
+    {
+      "id": "E141-057",
+      "key": "phdr_gate",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 989,
+      "last_line": 993,
+      "kind": "active"
+    },
+    {
+      "id": "E141-058",
+      "key": "add_bias",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1025,
+      "last_line": 1026,
+      "kind": "active"
+    },
+    {
+      "id": "E141-059",
+      "key": "interp_call",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1035,
+      "last_line": 1038,
+      "kind": "active"
+    },
+    {
+      "id": "E141-060",
+      "key": "interp_sum",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1043,
+      "last_line": 1045,
+      "kind": "active"
+    },
+    {
+      "id": "E141-061",
+      "key": "interp_bad",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1046,
+      "last_line": 1050,
+      "kind": "active"
+    },
+    {
+      "id": "E141-062",
+      "key": "no_interp",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1057,
+      "last_line": 1061,
+      "kind": "active"
+    },
+    {
+      "id": "E141-063",
+      "key": "table_call",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1075,
+      "last_line": 1078,
+      "kind": "active"
+    },
+    {
+      "id": "E141-064",
+      "key": "regs",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1115,
+      "last_line": 1115,
+      "kind": "active"
+    },
+    {
+      "id": "E141-065",
+      "key": "start",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1130,
+      "last_line": 1134,
+      "kind": "active"
+    },
+    {
+      "id": "E141-066",
+      "key": "interp_ret",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_interp",
+      "first_line": 606,
+      "last_line": 608,
+      "kind": "active"
+    },
+    {
+      "id": "E141-067",
+      "key": "ELF_PLATFORM",
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "symbol": "ELF_PLATFORM",
+      "first_line": 151,
+      "last_line": 151,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-068",
+      "key": "ELF_EXEC_PAGESIZE",
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "symbol": "ELF_EXEC_PAGESIZE",
+      "first_line": 156,
+      "last_line": 156,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-069",
+      "key": "ELF_HWCAP",
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "symbol": "ELF_HWCAP",
+      "first_line": 169,
+      "last_line": 169,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-070",
+      "key": "elf_addr_t",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elf_addr_t",
+      "first_line": 47,
+      "last_line": 47,
+      "kind": "alias"
+    },
+    {
+      "id": "E141-071",
+      "key": "elfhdr",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elfhdr",
+      "first_line": 43,
+      "last_line": 43,
+      "kind": "alias"
+    },
+    {
+      "id": "E141-072",
+      "key": "elf_phdr",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elf_phdr",
+      "first_line": 44,
+      "last_line": 44,
+      "kind": "alias"
+    },
+    {
+      "id": "E141-073",
+      "key": "elfhdr_s",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elfhdr_s",
+      "first_line": 52,
+      "last_line": 52,
+      "kind": "alias"
+    },
+    {
+      "id": "E141-074",
+      "key": "elf_phdr_s",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elf_phdr_s",
+      "first_line": 53,
+      "last_line": 53,
+      "kind": "alias"
+    },
+    {
+      "id": "E141-075",
+      "key": "START_THREAD",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "START_THREAD",
+      "first_line": 29,
+      "last_line": 30,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-076",
+      "key": "Elf64_Addr",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Addr",
+      "first_line": 16,
+      "last_line": 16,
+      "kind": "type"
+    },
+    {
+      "id": "E141-077",
+      "key": "Elf64_Half",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Half",
+      "first_line": 17,
+      "last_line": 17,
+      "kind": "type"
+    },
+    {
+      "id": "E141-078",
+      "key": "Elf64_Off",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Off",
+      "first_line": 19,
+      "last_line": 19,
+      "kind": "type"
+    },
+    {
+      "id": "E141-079",
+      "key": "Elf64_Word",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Word",
+      "first_line": 21,
+      "last_line": 21,
+      "kind": "type"
+    },
+    {
+      "id": "E141-080",
+      "key": "Elf64_Xword",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Xword",
+      "first_line": 22,
+      "last_line": 22,
+      "kind": "type"
+    },
+    {
+      "id": "E141-081",
+      "key": "ehdr_entry",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "elf64_hdr",
+      "first_line": 238,
+      "last_line": 240,
+      "kind": "member"
+    },
+    {
+      "id": "E141-082",
+      "key": "ehdr_sizes",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "elf64_hdr",
+      "first_line": 242,
+      "last_line": 245,
+      "kind": "member"
+    },
+    {
+      "id": "E141-083",
+      "key": "phdr_first",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "elf64_phdr",
+      "first_line": 270,
+      "last_line": 274,
+      "kind": "member"
+    },
+    {
+      "id": "E141-084",
+      "key": "phdr_last",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "elf64_phdr",
+      "first_line": 275,
+      "last_line": 278,
+      "kind": "member"
+    },
+    {
+      "id": "E141-085",
+      "key": "AT_NULL",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_NULL",
+      "first_line": 9,
+      "last_line": 9,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-086",
+      "key": "AT_IGNORE",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_IGNORE",
+      "first_line": 10,
+      "last_line": 10,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-087",
+      "key": "AT_EXECFD",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_EXECFD",
+      "first_line": 11,
+      "last_line": 11,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-088",
+      "key": "AT_PHDR",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_PHDR",
+      "first_line": 12,
+      "last_line": 12,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-089",
+      "key": "AT_PHENT",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_PHENT",
+      "first_line": 13,
+      "last_line": 13,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-090",
+      "key": "AT_PHNUM",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_PHNUM",
+      "first_line": 14,
+      "last_line": 14,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-091",
+      "key": "AT_PAGESZ",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_PAGESZ",
+      "first_line": 15,
+      "last_line": 15,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-092",
+      "key": "AT_BASE",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_BASE",
+      "first_line": 16,
+      "last_line": 16,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-093",
+      "key": "AT_FLAGS",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_FLAGS",
+      "first_line": 17,
+      "last_line": 17,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-094",
+      "key": "AT_ENTRY",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_ENTRY",
+      "first_line": 18,
+      "last_line": 18,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-095",
+      "key": "AT_NOTELF",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_NOTELF",
+      "first_line": 19,
+      "last_line": 19,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-096",
+      "key": "AT_UID",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_UID",
+      "first_line": 20,
+      "last_line": 20,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-097",
+      "key": "AT_EUID",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_EUID",
+      "first_line": 21,
+      "last_line": 21,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-098",
+      "key": "AT_GID",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_GID",
+      "first_line": 22,
+      "last_line": 22,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-099",
+      "key": "AT_EGID",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_EGID",
+      "first_line": 23,
+      "last_line": 23,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-100",
+      "key": "AT_PLATFORM",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_PLATFORM",
+      "first_line": 24,
+      "last_line": 24,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-101",
+      "key": "AT_HWCAP",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_HWCAP",
+      "first_line": 25,
+      "last_line": 25,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-102",
+      "key": "AT_CLKTCK",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_CLKTCK",
+      "first_line": 26,
+      "last_line": 26,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-103",
+      "key": "AT_SECURE",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_SECURE",
+      "first_line": 28,
+      "last_line": 28,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-104",
+      "key": "AT_BASE_PLATFORM",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_BASE_PLATFORM",
+      "first_line": 29,
+      "last_line": 30,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-105",
+      "key": "AT_RANDOM",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_RANDOM",
+      "first_line": 31,
+      "last_line": 31,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-106",
+      "key": "AT_HWCAP2",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_HWCAP2",
+      "first_line": 32,
+      "last_line": 32,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-107",
+      "key": "AT_RSEQ_FEATURE_SIZE",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_RSEQ_FEATURE_SIZE",
+      "first_line": 33,
+      "last_line": 33,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-108",
+      "key": "AT_RSEQ_ALIGN",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_RSEQ_ALIGN",
+      "first_line": 34,
+      "last_line": 34,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-109",
+      "key": "AT_HWCAP3",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_HWCAP3",
+      "first_line": 35,
+      "last_line": 35,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-110",
+      "key": "AT_HWCAP4",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_HWCAP4",
+      "first_line": 36,
+      "last_line": 36,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-111",
+      "key": "AT_EXECFN",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_EXECFN",
+      "first_line": 38,
+      "last_line": 38,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-112",
+      "key": "AT_MINSIGSTKSZ",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_MINSIGSTKSZ",
+      "first_line": 41,
+      "last_line": 41,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-113",
+      "key": "have_execfd",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 24,
+      "last_line": 25,
+      "kind": "member"
+    },
+    {
+      "id": "E141-114",
+      "key": "secureexec",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 30,
+      "last_line": 34,
+      "kind": "member"
+    },
+    {
+      "id": "E141-115",
+      "key": "bprm_fields",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 55,
+      "last_line": 57,
+      "kind": "member"
+    },
+    {
+      "id": "E141-116",
+      "key": "BINPRM_FLAGS_PRESERVE_ARGV0_BIT",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "BINPRM_FLAGS_PRESERVE_ARGV0_BIT",
+      "first_line": 72,
+      "last_line": 72,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-117",
+      "key": "BINPRM_FLAGS_PRESERVE_ARGV0",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "BINPRM_FLAGS_PRESERVE_ARGV0",
+      "first_line": 73,
+      "last_line": 73,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-118",
+      "key": "AT_FLAGS_PRESERVE_ARGV0_BIT",
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "symbol": "AT_FLAGS_PRESERVE_ARGV0_BIT",
+      "first_line": 22,
+      "last_line": 22,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-119",
+      "key": "AT_FLAGS_PRESERVE_ARGV0",
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "symbol": "AT_FLAGS_PRESERVE_ARGV0",
+      "first_line": 23,
+      "last_line": 23,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-120",
+      "key": "AT_VECTOR_SIZE_ARCH",
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "symbol": "AT_VECTOR_SIZE_ARCH",
+      "first_line": 6,
+      "last_line": 6,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-121",
+      "key": "AT_VECTOR_SIZE_BASE",
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "symbol": "AT_VECTOR_SIZE_BASE",
+      "first_line": 9,
+      "last_line": 9,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-122",
+      "key": "AT_VECTOR_SIZE",
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "symbol": "AT_VECTOR_SIZE",
+      "first_line": 12,
+      "last_line": 12,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-123",
+      "key": "HZ",
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "symbol": "HZ",
+      "first_line": 9,
+      "last_line": 9,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-124",
+      "key": "USER_HZ",
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "symbol": "USER_HZ",
+      "first_line": 10,
+      "last_line": 10,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-125",
+      "key": "CLOCKS_PER_SEC",
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "symbol": "CLOCKS_PER_SEC",
+      "first_line": 11,
+      "last_line": 11,
+      "kind": "macro"
+    },
+    {
+      "id": "E141-126",
+      "key": "saved_auxv",
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "symbol": "mm_struct",
+      "first_line": 103,
+      "last_line": 103,
+      "kind": "member"
+    },
+    {
+      "id": "E141-127",
+      "key": "build_arch",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "ARCH",
+      "first_line": 7,
+      "last_line": 9,
+      "kind": "build_declaration"
+    },
+    {
+      "id": "E141-128",
+      "key": "build_64",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "first_line": 39,
+      "last_line": 43,
+      "kind": "build_declaration"
+    },
+    {
+      "id": "E141-129",
+      "key": "build_config",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "first_line": 58,
+      "last_line": 62,
+      "kind": "build_declaration"
+    }
+  ],
+  "A": {
+    "A0": {
+      "input": {
+        "H": "0x1234",
+        "phdr_addr": "0x400040",
+        "e_phnum": 3,
+        "interp_load_addr": 0,
+        "e_entry": "0x401020",
+        "interp_flags": 0,
+        "secureexec": 0,
+        "have_execfd": false,
+        "execfd": "not_read",
+        "F": "bprm->exec",
+        "P": "copied platform user address"
+      },
+      "pairs": [
+        {
+          "ordinal": 1,
+          "tag": 16,
+          "name": "AT_HWCAP",
+          "value": "0x1234",
+          "value_type": "位集",
+          "origin": "ELF_HWCAP；题设H",
+          "condition": "always",
+          "tag_word": 0,
+          "value_word": 1,
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 2,
+          "tag": 6,
+          "name": "AT_PAGESZ",
+          "value": 4096,
+          "value_type": "字节数",
+          "origin": "ELF_EXEC_PAGESIZE",
+          "condition": "always",
+          "tag_word": 2,
+          "value_word": 3,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 3,
+          "tag": 17,
+          "name": "AT_CLKTCK",
+          "value": 250,
+          "value_type": "频率",
+          "origin": "CLOCKS_PER_SEC=USER_HZ，非HZ",
+          "condition": "always",
+          "tag_word": 4,
+          "value_word": 5,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 4,
+          "tag": 3,
+          "name": "AT_PHDR",
+          "value": "0x400040",
+          "value_type": "用户地址",
+          "origin": "phdr_addr形参",
+          "condition": "always",
+          "tag_word": 6,
+          "value_word": 7,
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 5,
+          "tag": 4,
+          "name": "AT_PHENT",
+          "value": 56,
+          "value_type": "字节数",
+          "origin": "sizeof(struct elf_phdr)，非e_phentsize",
+          "condition": "always",
+          "tag_word": 8,
+          "value_word": 9,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 6,
+          "tag": 5,
+          "name": "AT_PHNUM",
+          "value": 3,
+          "value_type": "数量",
+          "origin": "exec->e_phnum",
+          "condition": "always",
+          "tag_word": 10,
+          "value_word": 11,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 7,
+          "tag": 7,
+          "name": "AT_BASE",
+          "value": 0,
+          "value_type": "地址/零",
+          "origin": "interp_load_addr",
+          "condition": "always",
+          "tag_word": 12,
+          "value_word": 13,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 8,
+          "tag": 8,
+          "name": "AT_FLAGS",
+          "value": 0,
+          "value_type": "标志",
+          "origin": "flags初始0；输入位8测试，输出位1",
+          "condition": "always",
+          "tag_word": 14,
+          "value_word": 15,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 9,
+          "tag": 9,
+          "name": "AT_ENTRY",
+          "value": "0x401020",
+          "value_type": "用户地址",
+          "origin": "e_entry主程序入口",
+          "condition": "always",
+          "tag_word": 16,
+          "value_word": 17,
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 10,
+          "tag": 23,
+          "name": "AT_SECURE",
+          "value": 0,
+          "value_type": "布尔字",
+          "origin": "bprm->secureexec",
+          "condition": "always",
+          "tag_word": 18,
+          "value_word": 19,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 11,
+          "tag": 31,
+          "name": "AT_EXECFN",
+          "value": "F",
+          "value_type": "用户字符串地址",
+          "origin": "bprm->exec保存文件名",
+          "condition": "always",
+          "tag_word": 20,
+          "value_word": 21,
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 12,
+          "tag": 15,
+          "name": "AT_PLATFORM",
+          "value": "P",
+          "value_type": "用户字符串地址",
+          "origin": "u_platform，成功复制x86_64及NUL",
+          "condition": "k_platform!=NULL",
+          "tag_word": 22,
+          "value_word": 23,
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 13,
+          "tag": 0,
+          "name": "AT_NULL",
+          "value": 0,
+          "value_type": "终止",
+          "origin": "memset清零，不是宏写入",
+          "condition": "always",
+          "tag_word": 24,
+          "value_word": 25,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ],
+          "producer": "memset"
+        }
+      ],
+      "buffer": {
+        "capacity_words": 46,
+        "capacity_bytes": 368,
+        "word_bytes": 8,
+        "written_words": [
+          0,
+          24
+        ],
+        "written_bytes": [
+          0,
+          192
+        ],
+        "clear_words": [
+          24,
+          46
+        ],
+        "clear_bytes": [
+          192,
+          368
+        ],
+        "clear_byte_count": 176,
+        "terminator_words": [
+          24,
+          25
+        ],
+        "elf_info_after_memset": 24,
+        "advance": 2,
+        "ei_index": 26,
+        "copy_words": [
+          0,
+          26
+        ],
+        "copy_bytes": [
+          0,
+          208
+        ],
+        "copy_byte_count": 208,
+        "clear_not_copied_words": [
+          26,
+          46
+        ],
+        "clear_not_copied_bytes": [
+          208,
+          368
+        ],
+        "clear_not_copied_byte_count": 160
+      }
+    },
+    "Afd": {
+      "input": {
+        "H": "0x1234",
+        "phdr_addr": "0x400040",
+        "e_phnum": 3,
+        "interp_load_addr": 0,
+        "e_entry": "0x401020",
+        "interp_flags": 8,
+        "secureexec": 1,
+        "have_execfd": true,
+        "execfd": 7,
+        "F": "bprm->exec",
+        "P": "copied platform user address"
+      },
+      "pairs": [
+        {
+          "ordinal": 1,
+          "tag": 16,
+          "name": "AT_HWCAP",
+          "value": "0x1234",
+          "value_type": "位集",
+          "origin": "ELF_HWCAP；题设H",
+          "condition": "always",
+          "tag_word": 0,
+          "value_word": 1,
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 2,
+          "tag": 6,
+          "name": "AT_PAGESZ",
+          "value": 4096,
+          "value_type": "字节数",
+          "origin": "ELF_EXEC_PAGESIZE",
+          "condition": "always",
+          "tag_word": 2,
+          "value_word": 3,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 3,
+          "tag": 17,
+          "name": "AT_CLKTCK",
+          "value": 250,
+          "value_type": "频率",
+          "origin": "CLOCKS_PER_SEC=USER_HZ，非HZ",
+          "condition": "always",
+          "tag_word": 4,
+          "value_word": 5,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 4,
+          "tag": 3,
+          "name": "AT_PHDR",
+          "value": "0x400040",
+          "value_type": "用户地址",
+          "origin": "phdr_addr形参",
+          "condition": "always",
+          "tag_word": 6,
+          "value_word": 7,
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 5,
+          "tag": 4,
+          "name": "AT_PHENT",
+          "value": 56,
+          "value_type": "字节数",
+          "origin": "sizeof(struct elf_phdr)，非e_phentsize",
+          "condition": "always",
+          "tag_word": 8,
+          "value_word": 9,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 6,
+          "tag": 5,
+          "name": "AT_PHNUM",
+          "value": 3,
+          "value_type": "数量",
+          "origin": "exec->e_phnum",
+          "condition": "always",
+          "tag_word": 10,
+          "value_word": 11,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 7,
+          "tag": 7,
+          "name": "AT_BASE",
+          "value": 0,
+          "value_type": "地址/零",
+          "origin": "interp_load_addr",
+          "condition": "always",
+          "tag_word": 12,
+          "value_word": 13,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 8,
+          "tag": 8,
+          "name": "AT_FLAGS",
+          "value": 1,
+          "value_type": "标志",
+          "origin": "flags初始0；输入位8测试，输出位1",
+          "condition": "always",
+          "tag_word": 14,
+          "value_word": 15,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 9,
+          "tag": 9,
+          "name": "AT_ENTRY",
+          "value": "0x401020",
+          "value_type": "用户地址",
+          "origin": "e_entry主程序入口",
+          "condition": "always",
+          "tag_word": 16,
+          "value_word": 17,
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 10,
+          "tag": 23,
+          "name": "AT_SECURE",
+          "value": 1,
+          "value_type": "布尔字",
+          "origin": "bprm->secureexec",
+          "condition": "always",
+          "tag_word": 18,
+          "value_word": 19,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 11,
+          "tag": 31,
+          "name": "AT_EXECFN",
+          "value": "F",
+          "value_type": "用户字符串地址",
+          "origin": "bprm->exec保存文件名",
+          "condition": "always",
+          "tag_word": 20,
+          "value_word": 21,
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 12,
+          "tag": 15,
+          "name": "AT_PLATFORM",
+          "value": "P",
+          "value_type": "用户字符串地址",
+          "origin": "u_platform，成功复制x86_64及NUL",
+          "condition": "k_platform!=NULL",
+          "tag_word": 22,
+          "value_word": 23,
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 13,
+          "tag": 2,
+          "name": "AT_EXECFD",
+          "value": 7,
+          "value_type": "整数fd",
+          "origin": "bprm->execfd",
+          "condition": "bprm->have_execfd",
+          "tag_word": 24,
+          "value_word": 25,
+          "source_evidence": [
+            "E141-087",
+            "E141-037",
+            "E141-113",
+            "E141-115"
+          ],
+          "producer": "NEW_AUX_ENT"
+        },
+        {
+          "ordinal": 14,
+          "tag": 0,
+          "name": "AT_NULL",
+          "value": 0,
+          "value_type": "终止",
+          "origin": "memset清零，不是宏写入",
+          "condition": "always",
+          "tag_word": 26,
+          "value_word": 27,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ],
+          "producer": "memset"
+        }
+      ],
+      "buffer": {
+        "capacity_words": 46,
+        "capacity_bytes": 368,
+        "word_bytes": 8,
+        "written_words": [
+          0,
+          26
+        ],
+        "written_bytes": [
+          0,
+          208
+        ],
+        "clear_words": [
+          26,
+          46
+        ],
+        "clear_bytes": [
+          208,
+          368
+        ],
+        "clear_byte_count": 160,
+        "terminator_words": [
+          26,
+          27
+        ],
+        "elf_info_after_memset": 26,
+        "advance": 2,
+        "ei_index": 28,
+        "copy_words": [
+          0,
+          28
+        ],
+        "copy_bytes": [
+          0,
+          224
+        ],
+        "copy_byte_count": 224,
+        "clear_not_copied_words": [
+          28,
+          46
+        ],
+        "clear_not_copied_bytes": [
+          224,
+          368
+        ],
+        "clear_not_copied_byte_count": 144
+      }
+    }
+  },
+  "excluded": [
+    [
+      [
+        "AT_UID",
+        "AT_EUID",
+        "AT_GID",
+        "AT_EGID"
+      ],
+      "定义存在；加入处为注释",
+      [
+        "E141-096",
+        "E141-097",
+        "E141-098",
+        "E141-099",
+        "E141-030"
+      ]
+    ],
+    [
+      [
+        "AT_RANDOM"
+      ],
+      "定义存在；随机生成及加入注释",
+      [
+        "E141-105",
+        "E141-016",
+        "E141-032"
+      ]
+    ],
+    [
+      [
+        "AT_HWCAP2"
+      ],
+      "条件加入；所选宏不存在；架构定义注释",
+      [
+        "E141-106",
+        "E141-033"
+      ]
+    ],
+    [
+      [
+        "ARCH_DLINFO"
+      ],
+      "所选宏不存在；架构候选注释",
+      [
+        "E141-018",
+        "E141-019"
+      ]
+    ],
+    [
+      [
+        "AT_BASE_PLATFORM"
+      ],
+      "定义存在，base platform=NULL使条件假",
+      [
+        "E141-104",
+        "E141-004",
+        "E141-014",
+        "E141-036"
+      ]
+    ],
+    [
+      [
+        "AT_RSEQ_FEATURE_SIZE",
+        "AT_RSEQ_ALIGN"
+      ],
+      "条件加入；所选CONFIG_RSEQ不存在",
+      [
+        "E141-107",
+        "E141-108",
+        "E141-038"
+      ]
+    ],
+    [
+      [
+        "AT_IGNORE",
+        "AT_NOTELF",
+        "AT_HWCAP3",
+        "AT_HWCAP4",
+        "AT_MINSIGSTKSZ"
+      ],
+      "有定义不等于本函数加入",
+      [
+        "E141-086",
+        "E141-095",
+        "E141-109",
+        "E141-110",
+        "E141-112"
+      ]
+    ]
+  ],
+  "B": [
+    {
+      "id": "B1",
+      "prior_case": "A1",
+      "prior_auxv_start": "S+56",
+      "prior_bprm_exec": "U-10",
+      "prefix_slots": [
+        {
+          "slot": 0,
+          "address": "S",
+          "kind": "argc_integer",
+          "value": 2,
+          "pointed_string": null
+        },
+        {
+          "slot": 1,
+          "address": "S+8",
+          "kind": "argv[0]",
+          "value": "U-30",
+          "pointed_string": "display"
+        },
+        {
+          "slot": 2,
+          "address": "S+16",
+          "kind": "argv[1]",
+          "value": "U-22",
+          "pointed_string": "-q"
+        },
+        {
+          "slot": 3,
+          "address": "S+24",
+          "kind": "argv_terminator",
+          "value": 0,
+          "pointed_string": null
+        },
+        {
+          "slot": 4,
+          "address": "S+32",
+          "kind": "envp[0]",
+          "value": "U-19",
+          "pointed_string": "E=1"
+        },
+        {
+          "slot": 5,
+          "address": "S+40",
+          "kind": "envp[1]",
+          "value": "U-15",
+          "pointed_string": "F=xy"
+        },
+        {
+          "slot": 6,
+          "address": "S+48",
+          "kind": "envp_terminator",
+          "value": 0,
+          "pointed_string": null
+        }
+      ],
+      "argc": 2,
+      "envc": 2,
+      "payload": "A0",
+      "Q": "S+56",
+      "F": "U-10",
+      "filename": "/bin/tool",
+      "argv0": "U-30",
+      "words": [
+        {
+          "index": 0,
+          "offset_from_Q": 0,
+          "address": "S+56",
+          "kind": "tag",
+          "pair": 1,
+          "name": "AT_HWCAP",
+          "value": 16,
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ]
+        },
+        {
+          "index": 1,
+          "offset_from_Q": 8,
+          "address": "S+64",
+          "kind": "value",
+          "pair": 1,
+          "name": "AT_HWCAP",
+          "value": "0x1234",
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ]
+        },
+        {
+          "index": 2,
+          "offset_from_Q": 16,
+          "address": "S+72",
+          "kind": "tag",
+          "pair": 2,
+          "name": "AT_PAGESZ",
+          "value": 6,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ]
+        },
+        {
+          "index": 3,
+          "offset_from_Q": 24,
+          "address": "S+80",
+          "kind": "value",
+          "pair": 2,
+          "name": "AT_PAGESZ",
+          "value": 4096,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ]
+        },
+        {
+          "index": 4,
+          "offset_from_Q": 32,
+          "address": "S+88",
+          "kind": "tag",
+          "pair": 3,
+          "name": "AT_CLKTCK",
+          "value": 17,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ]
+        },
+        {
+          "index": 5,
+          "offset_from_Q": 40,
+          "address": "S+96",
+          "kind": "value",
+          "pair": 3,
+          "name": "AT_CLKTCK",
+          "value": 250,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ]
+        },
+        {
+          "index": 6,
+          "offset_from_Q": 48,
+          "address": "S+104",
+          "kind": "tag",
+          "pair": 4,
+          "name": "AT_PHDR",
+          "value": 3,
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 7,
+          "offset_from_Q": 56,
+          "address": "S+112",
+          "kind": "value",
+          "pair": 4,
+          "name": "AT_PHDR",
+          "value": "0x400040",
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 8,
+          "offset_from_Q": 64,
+          "address": "S+120",
+          "kind": "tag",
+          "pair": 5,
+          "name": "AT_PHENT",
+          "value": 4,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ]
+        },
+        {
+          "index": 9,
+          "offset_from_Q": 72,
+          "address": "S+128",
+          "kind": "value",
+          "pair": 5,
+          "name": "AT_PHENT",
+          "value": 56,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ]
+        },
+        {
+          "index": 10,
+          "offset_from_Q": 80,
+          "address": "S+136",
+          "kind": "tag",
+          "pair": 6,
+          "name": "AT_PHNUM",
+          "value": 5,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ]
+        },
+        {
+          "index": 11,
+          "offset_from_Q": 88,
+          "address": "S+144",
+          "kind": "value",
+          "pair": 6,
+          "name": "AT_PHNUM",
+          "value": 3,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ]
+        },
+        {
+          "index": 12,
+          "offset_from_Q": 96,
+          "address": "S+152",
+          "kind": "tag",
+          "pair": 7,
+          "name": "AT_BASE",
+          "value": 7,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 13,
+          "offset_from_Q": 104,
+          "address": "S+160",
+          "kind": "value",
+          "pair": 7,
+          "name": "AT_BASE",
+          "value": 0,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 14,
+          "offset_from_Q": 112,
+          "address": "S+168",
+          "kind": "tag",
+          "pair": 8,
+          "name": "AT_FLAGS",
+          "value": 8,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ]
+        },
+        {
+          "index": 15,
+          "offset_from_Q": 120,
+          "address": "S+176",
+          "kind": "value",
+          "pair": 8,
+          "name": "AT_FLAGS",
+          "value": 0,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ]
+        },
+        {
+          "index": 16,
+          "offset_from_Q": 128,
+          "address": "S+184",
+          "kind": "tag",
+          "pair": 9,
+          "name": "AT_ENTRY",
+          "value": 9,
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 17,
+          "offset_from_Q": 136,
+          "address": "S+192",
+          "kind": "value",
+          "pair": 9,
+          "name": "AT_ENTRY",
+          "value": "0x401020",
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 18,
+          "offset_from_Q": 144,
+          "address": "S+200",
+          "kind": "tag",
+          "pair": 10,
+          "name": "AT_SECURE",
+          "value": 23,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ]
+        },
+        {
+          "index": 19,
+          "offset_from_Q": 152,
+          "address": "S+208",
+          "kind": "value",
+          "pair": 10,
+          "name": "AT_SECURE",
+          "value": 0,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ]
+        },
+        {
+          "index": 20,
+          "offset_from_Q": 160,
+          "address": "S+216",
+          "kind": "tag",
+          "pair": 11,
+          "name": "AT_EXECFN",
+          "value": 31,
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 21,
+          "offset_from_Q": 168,
+          "address": "S+224",
+          "kind": "value",
+          "pair": 11,
+          "name": "AT_EXECFN",
+          "value": "U-10",
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 22,
+          "offset_from_Q": 176,
+          "address": "S+232",
+          "kind": "tag",
+          "pair": 12,
+          "name": "AT_PLATFORM",
+          "value": 15,
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ]
+        },
+        {
+          "index": 23,
+          "offset_from_Q": 184,
+          "address": "S+240",
+          "kind": "value",
+          "pair": 12,
+          "name": "AT_PLATFORM",
+          "value": "P",
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ]
+        },
+        {
+          "index": 24,
+          "offset_from_Q": 192,
+          "address": "S+248",
+          "kind": "tag",
+          "pair": 13,
+          "name": "AT_NULL",
+          "value": 0,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ]
+        },
+        {
+          "index": 25,
+          "offset_from_Q": 200,
+          "address": "S+256",
+          "kind": "value",
+          "pair": 13,
+          "name": "AT_NULL",
+          "value": 0,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ]
+        }
+      ],
+      "copy_start": "S+56",
+      "copy_end": "S+264",
+      "copy_bytes": 208,
+      "terminator_addresses": [
+        "S+248",
+        "S+256"
+      ],
+      "terminator_offsets_Q": [
+        192,
+        200
+      ],
+      "next_address_not_sp_update": "S+264",
+      "return_on_copy_zero": 0,
+      "copy_failure": "-EFAULT; partial writes not inferred",
+      "scope": "conditional valid objects/writable target/all preceding gates"
+    },
+    {
+      "id": "B2",
+      "prior_case": "A2",
+      "prior_auxv_start": "S+48",
+      "prior_bprm_exec": "U-10",
+      "prefix_slots": [
+        {
+          "slot": 0,
+          "address": "S",
+          "kind": "argc_integer",
+          "value": 1,
+          "pointed_string": null
+        },
+        {
+          "slot": 1,
+          "address": "S+8",
+          "kind": "argv[0]",
+          "value": "U-20",
+          "pointed_string": ""
+        },
+        {
+          "slot": 2,
+          "address": "S+16",
+          "kind": "argv_terminator",
+          "value": 0,
+          "pointed_string": null
+        },
+        {
+          "slot": 3,
+          "address": "S+24",
+          "kind": "envp[0]",
+          "value": "U-19",
+          "pointed_string": "E=1"
+        },
+        {
+          "slot": 4,
+          "address": "S+32",
+          "kind": "envp[1]",
+          "value": "U-15",
+          "pointed_string": "F=xy"
+        },
+        {
+          "slot": 5,
+          "address": "S+40",
+          "kind": "envp_terminator",
+          "value": 0,
+          "pointed_string": null
+        }
+      ],
+      "argc": 1,
+      "envc": 2,
+      "payload": "Afd",
+      "Q": "S+48",
+      "F": "U-10",
+      "filename": "/bin/tool",
+      "argv0": "U-20",
+      "words": [
+        {
+          "index": 0,
+          "offset_from_Q": 0,
+          "address": "S+48",
+          "kind": "tag",
+          "pair": 1,
+          "name": "AT_HWCAP",
+          "value": 16,
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ]
+        },
+        {
+          "index": 1,
+          "offset_from_Q": 8,
+          "address": "S+56",
+          "kind": "value",
+          "pair": 1,
+          "name": "AT_HWCAP",
+          "value": "0x1234",
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ]
+        },
+        {
+          "index": 2,
+          "offset_from_Q": 16,
+          "address": "S+64",
+          "kind": "tag",
+          "pair": 2,
+          "name": "AT_PAGESZ",
+          "value": 6,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ]
+        },
+        {
+          "index": 3,
+          "offset_from_Q": 24,
+          "address": "S+72",
+          "kind": "value",
+          "pair": 2,
+          "name": "AT_PAGESZ",
+          "value": 4096,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ]
+        },
+        {
+          "index": 4,
+          "offset_from_Q": 32,
+          "address": "S+80",
+          "kind": "tag",
+          "pair": 3,
+          "name": "AT_CLKTCK",
+          "value": 17,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ]
+        },
+        {
+          "index": 5,
+          "offset_from_Q": 40,
+          "address": "S+88",
+          "kind": "value",
+          "pair": 3,
+          "name": "AT_CLKTCK",
+          "value": 250,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ]
+        },
+        {
+          "index": 6,
+          "offset_from_Q": 48,
+          "address": "S+96",
+          "kind": "tag",
+          "pair": 4,
+          "name": "AT_PHDR",
+          "value": 3,
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 7,
+          "offset_from_Q": 56,
+          "address": "S+104",
+          "kind": "value",
+          "pair": 4,
+          "name": "AT_PHDR",
+          "value": "0x400040",
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 8,
+          "offset_from_Q": 64,
+          "address": "S+112",
+          "kind": "tag",
+          "pair": 5,
+          "name": "AT_PHENT",
+          "value": 4,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ]
+        },
+        {
+          "index": 9,
+          "offset_from_Q": 72,
+          "address": "S+120",
+          "kind": "value",
+          "pair": 5,
+          "name": "AT_PHENT",
+          "value": 56,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ]
+        },
+        {
+          "index": 10,
+          "offset_from_Q": 80,
+          "address": "S+128",
+          "kind": "tag",
+          "pair": 6,
+          "name": "AT_PHNUM",
+          "value": 5,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ]
+        },
+        {
+          "index": 11,
+          "offset_from_Q": 88,
+          "address": "S+136",
+          "kind": "value",
+          "pair": 6,
+          "name": "AT_PHNUM",
+          "value": 3,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ]
+        },
+        {
+          "index": 12,
+          "offset_from_Q": 96,
+          "address": "S+144",
+          "kind": "tag",
+          "pair": 7,
+          "name": "AT_BASE",
+          "value": 7,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 13,
+          "offset_from_Q": 104,
+          "address": "S+152",
+          "kind": "value",
+          "pair": 7,
+          "name": "AT_BASE",
+          "value": 0,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 14,
+          "offset_from_Q": 112,
+          "address": "S+160",
+          "kind": "tag",
+          "pair": 8,
+          "name": "AT_FLAGS",
+          "value": 8,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ]
+        },
+        {
+          "index": 15,
+          "offset_from_Q": 120,
+          "address": "S+168",
+          "kind": "value",
+          "pair": 8,
+          "name": "AT_FLAGS",
+          "value": 1,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ]
+        },
+        {
+          "index": 16,
+          "offset_from_Q": 128,
+          "address": "S+176",
+          "kind": "tag",
+          "pair": 9,
+          "name": "AT_ENTRY",
+          "value": 9,
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 17,
+          "offset_from_Q": 136,
+          "address": "S+184",
+          "kind": "value",
+          "pair": 9,
+          "name": "AT_ENTRY",
+          "value": "0x401020",
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 18,
+          "offset_from_Q": 144,
+          "address": "S+192",
+          "kind": "tag",
+          "pair": 10,
+          "name": "AT_SECURE",
+          "value": 23,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ]
+        },
+        {
+          "index": 19,
+          "offset_from_Q": 152,
+          "address": "S+200",
+          "kind": "value",
+          "pair": 10,
+          "name": "AT_SECURE",
+          "value": 1,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ]
+        },
+        {
+          "index": 20,
+          "offset_from_Q": 160,
+          "address": "S+208",
+          "kind": "tag",
+          "pair": 11,
+          "name": "AT_EXECFN",
+          "value": 31,
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 21,
+          "offset_from_Q": 168,
+          "address": "S+216",
+          "kind": "value",
+          "pair": 11,
+          "name": "AT_EXECFN",
+          "value": "U-10",
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 22,
+          "offset_from_Q": 176,
+          "address": "S+224",
+          "kind": "tag",
+          "pair": 12,
+          "name": "AT_PLATFORM",
+          "value": 15,
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ]
+        },
+        {
+          "index": 23,
+          "offset_from_Q": 184,
+          "address": "S+232",
+          "kind": "value",
+          "pair": 12,
+          "name": "AT_PLATFORM",
+          "value": "P",
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ]
+        },
+        {
+          "index": 24,
+          "offset_from_Q": 192,
+          "address": "S+240",
+          "kind": "tag",
+          "pair": 13,
+          "name": "AT_EXECFD",
+          "value": 2,
+          "source_evidence": [
+            "E141-087",
+            "E141-037",
+            "E141-113",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 25,
+          "offset_from_Q": 200,
+          "address": "S+248",
+          "kind": "value",
+          "pair": 13,
+          "name": "AT_EXECFD",
+          "value": 7,
+          "source_evidence": [
+            "E141-087",
+            "E141-037",
+            "E141-113",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 26,
+          "offset_from_Q": 208,
+          "address": "S+256",
+          "kind": "tag",
+          "pair": 14,
+          "name": "AT_NULL",
+          "value": 0,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ]
+        },
+        {
+          "index": 27,
+          "offset_from_Q": 216,
+          "address": "S+264",
+          "kind": "value",
+          "pair": 14,
+          "name": "AT_NULL",
+          "value": 0,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ]
+        }
+      ],
+      "copy_start": "S+48",
+      "copy_end": "S+272",
+      "copy_bytes": 224,
+      "terminator_addresses": [
+        "S+256",
+        "S+264"
+      ],
+      "terminator_offsets_Q": [
+        208,
+        216
+      ],
+      "next_address_not_sp_update": "S+272",
+      "return_on_copy_zero": 0,
+      "copy_failure": "-EFAULT; partial writes not inferred",
+      "scope": "conditional valid objects/writable target/all preceding gates"
+    },
+    {
+      "id": "B3",
+      "prior_case": "C_ENTRY",
+      "prior_auxv_start": "S+72",
+      "prior_bprm_exec": "U-9",
+      "prefix_slots": [
+        {
+          "slot": 0,
+          "address": "S",
+          "kind": "argc_integer",
+          "value": 3,
+          "pointed_string": null
+        },
+        {
+          "slot": 1,
+          "address": "S+8",
+          "kind": "argv[0]",
+          "value": "U-93",
+          "pointed_string": "/boot/sh"
+        },
+        {
+          "slot": 2,
+          "address": "S+16",
+          "kind": "argv[1]",
+          "value": "U-84",
+          "pointed_string": "userarg_test_1"
+        },
+        {
+          "slot": 3,
+          "address": "S+24",
+          "kind": "argv[2]",
+          "value": "U-69",
+          "pointed_string": "userarg_test_2"
+        },
+        {
+          "slot": 4,
+          "address": "S+32",
+          "kind": "argv_terminator",
+          "value": 0,
+          "pointed_string": null
+        },
+        {
+          "slot": 5,
+          "address": "S+40",
+          "kind": "envp[0]",
+          "value": "U-54",
+          "pointed_string": "userenv_test_1"
+        },
+        {
+          "slot": 6,
+          "address": "S+48",
+          "kind": "envp[1]",
+          "value": "U-39",
+          "pointed_string": "userenv_test_2"
+        },
+        {
+          "slot": 7,
+          "address": "S+56",
+          "kind": "envp[2]",
+          "value": "U-24",
+          "pointed_string": "userenv_test_3"
+        },
+        {
+          "slot": 8,
+          "address": "S+64",
+          "kind": "envp_terminator",
+          "value": 0,
+          "pointed_string": null
+        }
+      ],
+      "argc": 3,
+      "envc": 3,
+      "payload": "A0",
+      "Q": "S+72",
+      "F": "U-9",
+      "filename": "/boot/sh",
+      "argv0": "U-93",
+      "words": [
+        {
+          "index": 0,
+          "offset_from_Q": 0,
+          "address": "S+72",
+          "kind": "tag",
+          "pair": 1,
+          "name": "AT_HWCAP",
+          "value": 16,
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ]
+        },
+        {
+          "index": 1,
+          "offset_from_Q": 8,
+          "address": "S+80",
+          "kind": "value",
+          "pair": 1,
+          "name": "AT_HWCAP",
+          "value": "0x1234",
+          "source_evidence": [
+            "E141-101",
+            "E141-020",
+            "E141-069"
+          ]
+        },
+        {
+          "index": 2,
+          "offset_from_Q": 16,
+          "address": "S+88",
+          "kind": "tag",
+          "pair": 2,
+          "name": "AT_PAGESZ",
+          "value": 6,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ]
+        },
+        {
+          "index": 3,
+          "offset_from_Q": 24,
+          "address": "S+96",
+          "kind": "value",
+          "pair": 2,
+          "name": "AT_PAGESZ",
+          "value": 4096,
+          "source_evidence": [
+            "E141-091",
+            "E141-021",
+            "E141-068"
+          ]
+        },
+        {
+          "index": 4,
+          "offset_from_Q": 32,
+          "address": "S+104",
+          "kind": "tag",
+          "pair": 3,
+          "name": "AT_CLKTCK",
+          "value": 17,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ]
+        },
+        {
+          "index": 5,
+          "offset_from_Q": 40,
+          "address": "S+112",
+          "kind": "value",
+          "pair": 3,
+          "name": "AT_CLKTCK",
+          "value": 250,
+          "source_evidence": [
+            "E141-102",
+            "E141-022",
+            "E141-125",
+            "E141-124",
+            "E141-123"
+          ]
+        },
+        {
+          "index": 6,
+          "offset_from_Q": 48,
+          "address": "S+120",
+          "kind": "tag",
+          "pair": 4,
+          "name": "AT_PHDR",
+          "value": 3,
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 7,
+          "offset_from_Q": 56,
+          "address": "S+128",
+          "kind": "value",
+          "pair": 4,
+          "name": "AT_PHDR",
+          "value": "0x400040",
+          "source_evidence": [
+            "E141-088",
+            "E141-023",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 8,
+          "offset_from_Q": 64,
+          "address": "S+136",
+          "kind": "tag",
+          "pair": 5,
+          "name": "AT_PHENT",
+          "value": 4,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ]
+        },
+        {
+          "index": 9,
+          "offset_from_Q": 72,
+          "address": "S+144",
+          "kind": "value",
+          "pair": 5,
+          "name": "AT_PHENT",
+          "value": 56,
+          "source_evidence": [
+            "E141-089",
+            "E141-024",
+            "E141-072",
+            "E141-083",
+            "E141-084",
+            "E141-079",
+            "E141-080"
+          ]
+        },
+        {
+          "index": 10,
+          "offset_from_Q": 80,
+          "address": "S+152",
+          "kind": "tag",
+          "pair": 6,
+          "name": "AT_PHNUM",
+          "value": 5,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ]
+        },
+        {
+          "index": 11,
+          "offset_from_Q": 88,
+          "address": "S+160",
+          "kind": "value",
+          "pair": 6,
+          "name": "AT_PHNUM",
+          "value": 3,
+          "source_evidence": [
+            "E141-090",
+            "E141-025",
+            "E141-082"
+          ]
+        },
+        {
+          "index": 12,
+          "offset_from_Q": 96,
+          "address": "S+168",
+          "kind": "tag",
+          "pair": 7,
+          "name": "AT_BASE",
+          "value": 7,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 13,
+          "offset_from_Q": 104,
+          "address": "S+176",
+          "kind": "value",
+          "pair": 7,
+          "name": "AT_BASE",
+          "value": 0,
+          "source_evidence": [
+            "E141-092",
+            "E141-026",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 14,
+          "offset_from_Q": 112,
+          "address": "S+184",
+          "kind": "tag",
+          "pair": 8,
+          "name": "AT_FLAGS",
+          "value": 8,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ]
+        },
+        {
+          "index": 15,
+          "offset_from_Q": 120,
+          "address": "S+192",
+          "kind": "value",
+          "pair": 8,
+          "name": "AT_FLAGS",
+          "value": 0,
+          "source_evidence": [
+            "E141-093",
+            "E141-009",
+            "E141-027",
+            "E141-028",
+            "E141-116",
+            "E141-117",
+            "E141-118",
+            "E141-119"
+          ]
+        },
+        {
+          "index": 16,
+          "offset_from_Q": 128,
+          "address": "S+200",
+          "kind": "tag",
+          "pair": 9,
+          "name": "AT_ENTRY",
+          "value": 9,
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 17,
+          "offset_from_Q": 136,
+          "address": "S+208",
+          "kind": "value",
+          "pair": 9,
+          "name": "AT_ENTRY",
+          "value": "0x401020",
+          "source_evidence": [
+            "E141-094",
+            "E141-029",
+            "E141-006"
+          ]
+        },
+        {
+          "index": 18,
+          "offset_from_Q": 144,
+          "address": "S+216",
+          "kind": "tag",
+          "pair": 10,
+          "name": "AT_SECURE",
+          "value": 23,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ]
+        },
+        {
+          "index": 19,
+          "offset_from_Q": 152,
+          "address": "S+224",
+          "kind": "value",
+          "pair": 10,
+          "name": "AT_SECURE",
+          "value": 0,
+          "source_evidence": [
+            "E141-103",
+            "E141-031",
+            "E141-114"
+          ]
+        },
+        {
+          "index": 20,
+          "offset_from_Q": 160,
+          "address": "S+232",
+          "kind": "tag",
+          "pair": 11,
+          "name": "AT_EXECFN",
+          "value": 31,
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 21,
+          "offset_from_Q": 168,
+          "address": "S+240",
+          "kind": "value",
+          "pair": 11,
+          "name": "AT_EXECFN",
+          "value": "U-9",
+          "source_evidence": [
+            "E141-111",
+            "E141-034",
+            "E141-115"
+          ]
+        },
+        {
+          "index": 22,
+          "offset_from_Q": 176,
+          "address": "S+248",
+          "kind": "tag",
+          "pair": 12,
+          "name": "AT_PLATFORM",
+          "value": 15,
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ]
+        },
+        {
+          "index": 23,
+          "offset_from_Q": 184,
+          "address": "S+256",
+          "kind": "value",
+          "pair": 12,
+          "name": "AT_PLATFORM",
+          "value": "P",
+          "source_evidence": [
+            "E141-100",
+            "E141-035",
+            "E141-012",
+            "E141-013",
+            "E141-067"
+          ]
+        },
+        {
+          "index": 24,
+          "offset_from_Q": 192,
+          "address": "S+264",
+          "kind": "tag",
+          "pair": 13,
+          "name": "AT_NULL",
+          "value": 0,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ]
+        },
+        {
+          "index": 25,
+          "offset_from_Q": 200,
+          "address": "S+272",
+          "kind": "value",
+          "pair": 13,
+          "name": "AT_NULL",
+          "value": 0,
+          "source_evidence": [
+            "E141-085",
+            "E141-039",
+            "E141-040",
+            "E141-041"
+          ]
+        }
+      ],
+      "copy_start": "S+72",
+      "copy_end": "S+280",
+      "copy_bytes": 208,
+      "terminator_addresses": [
+        "S+264",
+        "S+272"
+      ],
+      "terminator_offsets_Q": [
+        192,
+        200
+      ],
+      "next_address_not_sp_update": "S+280",
+      "return_on_copy_zero": 0,
+      "copy_failure": "-EFAULT; partial writes not inferred",
+      "scope": "conditional valid objects/writable target/all preceding gates"
+    }
+  ],
+  "C": [
+    {
+      "id": "C1",
+      "inputs": {
+        "p_offset": "0x0",
+        "p_filesz": "0x2000",
+        "p_vaddr": "0x400000",
+        "e_phoff": "0x40",
+        "e_phnum": 3,
+        "phent": 56,
+        "L": "0x0",
+        "e_entry": "0x401020",
+        "interp_return": null,
+        "interp_e_entry": null
+      },
+      "initial_phdr": 0,
+      "initial_load_bias": 0,
+      "initial_interp_load_addr": 0,
+      "hit": true,
+      "phdr_before_bias": "0x400040",
+      "phdr_addr": "0x400040",
+      "file_segment": [
+        "0x0",
+        "0x2000"
+      ],
+      "phdr_file_range": [
+        "0x40",
+        "0xe8"
+      ],
+      "whole_table_in_segment": true,
+      "AT_ENTRY": "0x401020",
+      "AT_BASE": 0,
+      "elf_entry": "0x401020",
+      "table_args": [
+        0,
+        "0x401020",
+        "0x400040"
+      ],
+      "START_THREAD_entry": "0x401020",
+      "source_evidence": [
+        "E141-051",
+        "E141-052",
+        "E141-053",
+        "E141-054",
+        "E141-055",
+        "E141-056",
+        "E141-057",
+        "E141-058",
+        "E141-059",
+        "E141-060",
+        "E141-061",
+        "E141-062",
+        "E141-063",
+        "E141-064",
+        "E141-065"
+      ],
+      "scope": "conditional nonerror R, final address accepted, table and other gates succeed; no execution"
+    },
+    {
+      "id": "C2",
+      "inputs": {
+        "p_offset": "0x0",
+        "p_filesz": "0x2000",
+        "p_vaddr": "0x0",
+        "e_phoff": "0x40",
+        "e_phnum": 3,
+        "phent": 56,
+        "L": "0x600000",
+        "e_entry": "0x120",
+        "interp_return": "0x70000000",
+        "interp_e_entry": "0x2340"
+      },
+      "initial_phdr": 0,
+      "initial_load_bias": 0,
+      "initial_interp_load_addr": 0,
+      "hit": true,
+      "phdr_before_bias": "0x40",
+      "phdr_addr": "0x600040",
+      "file_segment": [
+        "0x0",
+        "0x2000"
+      ],
+      "phdr_file_range": [
+        "0x40",
+        "0xe8"
+      ],
+      "whole_table_in_segment": true,
+      "AT_ENTRY": "0x600120",
+      "AT_BASE": "0x70000000",
+      "elf_entry": "0x70002340",
+      "table_args": [
+        "0x70000000",
+        "0x600120",
+        "0x600040"
+      ],
+      "START_THREAD_entry": "0x70002340",
+      "source_evidence": [
+        "E141-051",
+        "E141-052",
+        "E141-053",
+        "E141-054",
+        "E141-055",
+        "E141-056",
+        "E141-057",
+        "E141-058",
+        "E141-059",
+        "E141-060",
+        "E141-061",
+        "E141-062",
+        "E141-063",
+        "E141-064",
+        "E141-065"
+      ],
+      "scope": "conditional nonerror R, final address accepted, table and other gates succeed; no execution"
+    },
+    {
+      "id": "C3a",
+      "inputs": {
+        "p_offset": "0x1000",
+        "p_filesz": "0x1000",
+        "p_vaddr": "0x400000",
+        "e_phoff": "0x2000",
+        "e_phnum": 3,
+        "phent": 56,
+        "L": "0x200000",
+        "e_entry": null,
+        "interp_return": null,
+        "interp_e_entry": null
+      },
+      "initial_phdr": 0,
+      "initial_load_bias": 0,
+      "initial_interp_load_addr": 0,
+      "hit": false,
+      "phdr_before_bias": "0x0",
+      "phdr_addr": "0x200000",
+      "file_segment": [
+        "0x1000",
+        "0x2000"
+      ],
+      "phdr_file_range": [
+        "0x2000",
+        "0x20a8"
+      ],
+      "whole_table_in_segment": false,
+      "AT_ENTRY": null,
+      "AT_BASE": null,
+      "elf_entry": null,
+      "table_args": null,
+      "START_THREAD_entry": null,
+      "source_evidence": [
+        "E141-051",
+        "E141-052",
+        "E141-053",
+        "E141-054",
+        "E141-055",
+        "E141-056",
+        "E141-057",
+        "E141-058",
+        "E141-059",
+        "E141-060",
+        "E141-061",
+        "E141-062",
+        "E141-063",
+        "E141-064",
+        "E141-065"
+      ],
+      "scope": "PHDR arithmetic only; no inferred entry or map"
+    },
+    {
+      "id": "C3b",
+      "inputs": {
+        "p_offset": "0x1000",
+        "p_filesz": "0x1000",
+        "p_vaddr": "0x400000",
+        "e_phoff": "0x1ff8",
+        "e_phnum": 3,
+        "phent": 56,
+        "L": "0x200000",
+        "e_entry": null,
+        "interp_return": null,
+        "interp_e_entry": null
+      },
+      "initial_phdr": 0,
+      "initial_load_bias": 0,
+      "initial_interp_load_addr": 0,
+      "hit": true,
+      "phdr_before_bias": "0x400ff8",
+      "phdr_addr": "0x600ff8",
+      "file_segment": [
+        "0x1000",
+        "0x2000"
+      ],
+      "phdr_file_range": [
+        "0x1ff8",
+        "0x20a0"
+      ],
+      "whole_table_in_segment": false,
+      "AT_ENTRY": null,
+      "AT_BASE": null,
+      "elf_entry": null,
+      "table_args": null,
+      "START_THREAD_entry": null,
+      "source_evidence": [
+        "E141-051",
+        "E141-052",
+        "E141-053",
+        "E141-054",
+        "E141-055",
+        "E141-056",
+        "E141-057",
+        "E141-058",
+        "E141-059",
+        "E141-060",
+        "E141-061",
+        "E141-062",
+        "E141-063",
+        "E141-064",
+        "E141-065"
+      ],
+      "scope": "PHDR arithmetic only; no inferred entry or map"
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "s0",
+        "label": "saved pointer",
+        "scenario": "source",
+        "kind": "source"
+      },
+      {
+        "id": "s1",
+        "label": "macro writes",
+        "scenario": "source",
+        "kind": "source"
+      },
+      {
+        "id": "s2",
+        "label": "memset tail",
+        "scenario": "source",
+        "kind": "source"
+      },
+      {
+        "id": "s3",
+        "label": "advance 2; ei_index",
+        "scenario": "source",
+        "kind": "source"
+      },
+      {
+        "id": "s4",
+        "label": "vma uninitialized gate",
+        "scenario": "source",
+        "kind": "boundary"
+      },
+      {
+        "id": "s5",
+        "label": "argc argv envp plus nulls",
+        "scenario": "source",
+        "kind": "source"
+      },
+      {
+        "id": "s6",
+        "label": "copy_to_user",
+        "scenario": "source",
+        "kind": "source"
+      },
+      {
+        "id": "A0p1",
+        "label": "AT_HWCAP=0x1234",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p2",
+        "label": "AT_PAGESZ=4096",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p3",
+        "label": "AT_CLKTCK=250",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p4",
+        "label": "AT_PHDR=0x400040",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p5",
+        "label": "AT_PHENT=56",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p6",
+        "label": "AT_PHNUM=3",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p7",
+        "label": "AT_BASE=0",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p8",
+        "label": "AT_FLAGS=0",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p9",
+        "label": "AT_ENTRY=0x401020",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p10",
+        "label": "AT_SECURE=0",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p11",
+        "label": "AT_EXECFN=F",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p12",
+        "label": "AT_PLATFORM=P",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0p13",
+        "label": "AT_NULL=0",
+        "scenario": "A0",
+        "kind": "pair"
+      },
+      {
+        "id": "A0clear",
+        "label": "clear 176 bytes",
+        "scenario": "A0",
+        "kind": "range"
+      },
+      {
+        "id": "A0copy",
+        "label": "copy 208 bytes",
+        "scenario": "A0",
+        "kind": "range"
+      },
+      {
+        "id": "Afdp1",
+        "label": "AT_HWCAP=0x1234",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp2",
+        "label": "AT_PAGESZ=4096",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp3",
+        "label": "AT_CLKTCK=250",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp4",
+        "label": "AT_PHDR=0x400040",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp5",
+        "label": "AT_PHENT=56",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp6",
+        "label": "AT_PHNUM=3",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp7",
+        "label": "AT_BASE=0",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp8",
+        "label": "AT_FLAGS=1",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp9",
+        "label": "AT_ENTRY=0x401020",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp10",
+        "label": "AT_SECURE=1",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp11",
+        "label": "AT_EXECFN=F",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp12",
+        "label": "AT_PLATFORM=P",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp13",
+        "label": "AT_EXECFD=7",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdp14",
+        "label": "AT_NULL=0",
+        "scenario": "Afd",
+        "kind": "pair"
+      },
+      {
+        "id": "Afdclear",
+        "label": "clear 160 bytes",
+        "scenario": "Afd",
+        "kind": "range"
+      },
+      {
+        "id": "Afdcopy",
+        "label": "copy 224 bytes",
+        "scenario": "Afd",
+        "kind": "range"
+      },
+      {
+        "id": "B1q",
+        "label": "S+56 F=U-10",
+        "scenario": "B1",
+        "kind": "model"
+      },
+      {
+        "id": "B1p1",
+        "label": "S+56 AT_HWCAP / S+64 0x1234",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p2",
+        "label": "S+72 AT_PAGESZ / S+80 4096",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p3",
+        "label": "S+88 AT_CLKTCK / S+96 250",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p4",
+        "label": "S+104 AT_PHDR / S+112 0x400040",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p5",
+        "label": "S+120 AT_PHENT / S+128 56",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p6",
+        "label": "S+136 AT_PHNUM / S+144 3",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p7",
+        "label": "S+152 AT_BASE / S+160 0",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p8",
+        "label": "S+168 AT_FLAGS / S+176 0",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p9",
+        "label": "S+184 AT_ENTRY / S+192 0x401020",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p10",
+        "label": "S+200 AT_SECURE / S+208 0",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p11",
+        "label": "S+216 AT_EXECFN / S+224 U-10",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p12",
+        "label": "S+232 AT_PLATFORM / S+240 P",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1p13",
+        "label": "S+248 AT_NULL / S+256 0",
+        "scenario": "B1",
+        "kind": "pair"
+      },
+      {
+        "id": "B1end",
+        "label": "S+264",
+        "scenario": "B1",
+        "kind": "range"
+      },
+      {
+        "id": "B2q",
+        "label": "S+48 F=U-10",
+        "scenario": "B2",
+        "kind": "model"
+      },
+      {
+        "id": "B2p1",
+        "label": "S+48 AT_HWCAP / S+56 0x1234",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p2",
+        "label": "S+64 AT_PAGESZ / S+72 4096",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p3",
+        "label": "S+80 AT_CLKTCK / S+88 250",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p4",
+        "label": "S+96 AT_PHDR / S+104 0x400040",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p5",
+        "label": "S+112 AT_PHENT / S+120 56",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p6",
+        "label": "S+128 AT_PHNUM / S+136 3",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p7",
+        "label": "S+144 AT_BASE / S+152 0",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p8",
+        "label": "S+160 AT_FLAGS / S+168 1",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p9",
+        "label": "S+176 AT_ENTRY / S+184 0x401020",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p10",
+        "label": "S+192 AT_SECURE / S+200 1",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p11",
+        "label": "S+208 AT_EXECFN / S+216 U-10",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p12",
+        "label": "S+224 AT_PLATFORM / S+232 P",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p13",
+        "label": "S+240 AT_EXECFD / S+248 7",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2p14",
+        "label": "S+256 AT_NULL / S+264 0",
+        "scenario": "B2",
+        "kind": "pair"
+      },
+      {
+        "id": "B2end",
+        "label": "S+272",
+        "scenario": "B2",
+        "kind": "range"
+      },
+      {
+        "id": "B3q",
+        "label": "S+72 F=U-9",
+        "scenario": "B3",
+        "kind": "model"
+      },
+      {
+        "id": "B3p1",
+        "label": "S+72 AT_HWCAP / S+80 0x1234",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p2",
+        "label": "S+88 AT_PAGESZ / S+96 4096",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p3",
+        "label": "S+104 AT_CLKTCK / S+112 250",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p4",
+        "label": "S+120 AT_PHDR / S+128 0x400040",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p5",
+        "label": "S+136 AT_PHENT / S+144 56",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p6",
+        "label": "S+152 AT_PHNUM / S+160 3",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p7",
+        "label": "S+168 AT_BASE / S+176 0",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p8",
+        "label": "S+184 AT_FLAGS / S+192 0",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p9",
+        "label": "S+200 AT_ENTRY / S+208 0x401020",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p10",
+        "label": "S+216 AT_SECURE / S+224 0",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p11",
+        "label": "S+232 AT_EXECFN / S+240 U-9",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p12",
+        "label": "S+248 AT_PLATFORM / S+256 P",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3p13",
+        "label": "S+264 AT_NULL / S+272 0",
+        "scenario": "B3",
+        "kind": "pair"
+      },
+      {
+        "id": "B3end",
+        "label": "S+280",
+        "scenario": "B3",
+        "kind": "range"
+      },
+      {
+        "id": "C1init",
+        "label": "phdr=0 L=0x0",
+        "scenario": "C1",
+        "kind": "model"
+      },
+      {
+        "id": "C1hit",
+        "label": "true",
+        "scenario": "C1",
+        "kind": "model"
+      },
+      {
+        "id": "C1phdr",
+        "label": "PHDR=0x400040",
+        "scenario": "C1",
+        "kind": "model"
+      },
+      {
+        "id": "C1main",
+        "label": "AT_ENTRY=0x401020",
+        "scenario": "C1",
+        "kind": "model"
+      },
+      {
+        "id": "C1base",
+        "label": "AT_BASE=0",
+        "scenario": "C1",
+        "kind": "model"
+      },
+      {
+        "id": "C1table",
+        "label": "table args",
+        "scenario": "C1",
+        "kind": "model"
+      },
+      {
+        "id": "C1final",
+        "label": "START_THREAD elf_entry=0x401020",
+        "scenario": "C1",
+        "kind": "model"
+      },
+      {
+        "id": "C2init",
+        "label": "phdr=0 L=0x600000",
+        "scenario": "C2",
+        "kind": "model"
+      },
+      {
+        "id": "C2hit",
+        "label": "true",
+        "scenario": "C2",
+        "kind": "model"
+      },
+      {
+        "id": "C2phdr",
+        "label": "PHDR=0x600040",
+        "scenario": "C2",
+        "kind": "model"
+      },
+      {
+        "id": "C2main",
+        "label": "AT_ENTRY=0x600120",
+        "scenario": "C2",
+        "kind": "model"
+      },
+      {
+        "id": "C2base",
+        "label": "AT_BASE=0x70000000",
+        "scenario": "C2",
+        "kind": "model"
+      },
+      {
+        "id": "C2table",
+        "label": "table args",
+        "scenario": "C2",
+        "kind": "model"
+      },
+      {
+        "id": "C2final",
+        "label": "START_THREAD elf_entry=0x70002340",
+        "scenario": "C2",
+        "kind": "model"
+      },
+      {
+        "id": "C3ainit",
+        "label": "phdr=0 L=0x200000",
+        "scenario": "C3a",
+        "kind": "model"
+      },
+      {
+        "id": "C3ahit",
+        "label": "false",
+        "scenario": "C3a",
+        "kind": "model"
+      },
+      {
+        "id": "C3aphdr",
+        "label": "PHDR=0x200000",
+        "scenario": "C3a",
+        "kind": "model"
+      },
+      {
+        "id": "C3binit",
+        "label": "phdr=0 L=0x200000",
+        "scenario": "C3b",
+        "kind": "model"
+      },
+      {
+        "id": "C3bhit",
+        "label": "true",
+        "scenario": "C3b",
+        "kind": "model"
+      },
+      {
+        "id": "C3bphdr",
+        "label": "PHDR=0x600ff8",
+        "scenario": "C3b",
+        "kind": "model"
+      }
+    ],
+    "edges": [
+      {
+        "from": "s0",
+        "to": "s1",
+        "kind": "source_order_not_runtime",
+        "label": "next"
+      },
+      {
+        "from": "s1",
+        "to": "s2",
+        "kind": "source_order_not_runtime",
+        "label": "next"
+      },
+      {
+        "from": "s2",
+        "to": "s3",
+        "kind": "source_order_not_runtime",
+        "label": "next"
+      },
+      {
+        "from": "s3",
+        "to": "s4",
+        "kind": "source_order_not_runtime",
+        "label": "next"
+      },
+      {
+        "from": "s4",
+        "to": "s5",
+        "kind": "source_order_not_runtime",
+        "label": "next"
+      },
+      {
+        "from": "s5",
+        "to": "s6",
+        "kind": "source_order_not_runtime",
+        "label": "next"
+      },
+      {
+        "from": "A0p1",
+        "to": "A0p2",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p2",
+        "to": "A0p3",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p3",
+        "to": "A0p4",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p4",
+        "to": "A0p5",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p5",
+        "to": "A0p6",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p6",
+        "to": "A0p7",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p7",
+        "to": "A0p8",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p8",
+        "to": "A0p9",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p9",
+        "to": "A0p10",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p10",
+        "to": "A0p11",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p11",
+        "to": "A0p12",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "A0p12",
+        "to": "A0p13",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "s1",
+        "to": "A0p1",
+        "kind": "independent_model",
+        "label": "selected conditions"
+      },
+      {
+        "from": "A0clear",
+        "to": "A0p13",
+        "kind": "producer",
+        "label": "AT_NULL from zero fill"
+      },
+      {
+        "from": "A0clear",
+        "to": "A0copy",
+        "kind": "range_relationship",
+        "label": "only prefix copied"
+      },
+      {
+        "from": "Afdp1",
+        "to": "Afdp2",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp2",
+        "to": "Afdp3",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp3",
+        "to": "Afdp4",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp4",
+        "to": "Afdp5",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp5",
+        "to": "Afdp6",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp6",
+        "to": "Afdp7",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp7",
+        "to": "Afdp8",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp8",
+        "to": "Afdp9",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp9",
+        "to": "Afdp10",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp10",
+        "to": "Afdp11",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp11",
+        "to": "Afdp12",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp12",
+        "to": "Afdp13",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "Afdp13",
+        "to": "Afdp14",
+        "kind": "ordered_pairs",
+        "label": "next"
+      },
+      {
+        "from": "s1",
+        "to": "Afdp1",
+        "kind": "independent_model",
+        "label": "selected conditions"
+      },
+      {
+        "from": "Afdclear",
+        "to": "Afdp14",
+        "kind": "producer",
+        "label": "AT_NULL from zero fill"
+      },
+      {
+        "from": "Afdclear",
+        "to": "Afdcopy",
+        "kind": "range_relationship",
+        "label": "only prefix copied"
+      },
+      {
+        "from": "B1q",
+        "to": "B1p1",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p1",
+        "to": "B1p2",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p2",
+        "to": "B1p3",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p3",
+        "to": "B1p4",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p4",
+        "to": "B1p5",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p5",
+        "to": "B1p6",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p6",
+        "to": "B1p7",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p7",
+        "to": "B1p8",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p8",
+        "to": "B1p9",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p9",
+        "to": "B1p10",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p10",
+        "to": "B1p11",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p11",
+        "to": "B1p12",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p12",
+        "to": "B1p13",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B1p13",
+        "to": "B1end",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "A0p1",
+        "to": "B1q",
+        "kind": "independent_model",
+        "label": "140 prior table binding"
+      },
+      {
+        "from": "B2q",
+        "to": "B2p1",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p1",
+        "to": "B2p2",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p2",
+        "to": "B2p3",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p3",
+        "to": "B2p4",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p4",
+        "to": "B2p5",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p5",
+        "to": "B2p6",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p6",
+        "to": "B2p7",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p7",
+        "to": "B2p8",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p8",
+        "to": "B2p9",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p9",
+        "to": "B2p10",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p10",
+        "to": "B2p11",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p11",
+        "to": "B2p12",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p12",
+        "to": "B2p13",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p13",
+        "to": "B2p14",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B2p14",
+        "to": "B2end",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "Afdp1",
+        "to": "B2q",
+        "kind": "independent_model",
+        "label": "140 prior table binding"
+      },
+      {
+        "from": "B3q",
+        "to": "B3p1",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p1",
+        "to": "B3p2",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p2",
+        "to": "B3p3",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p3",
+        "to": "B3p4",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p4",
+        "to": "B3p5",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p5",
+        "to": "B3p6",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p6",
+        "to": "B3p7",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p7",
+        "to": "B3p8",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p8",
+        "to": "B3p9",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p9",
+        "to": "B3p10",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p10",
+        "to": "B3p11",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p11",
+        "to": "B3p12",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p12",
+        "to": "B3p13",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "B3p13",
+        "to": "B3end",
+        "kind": "address_order",
+        "label": "next"
+      },
+      {
+        "from": "A0p1",
+        "to": "B3q",
+        "kind": "independent_model",
+        "label": "140 prior table binding"
+      },
+      {
+        "from": "C1init",
+        "to": "C1hit",
+        "kind": "arithmetic",
+        "label": "next"
+      },
+      {
+        "from": "C1hit",
+        "to": "C1phdr",
+        "kind": "arithmetic",
+        "label": "next"
+      },
+      {
+        "from": "C1init",
+        "to": "C1main",
+        "kind": "arithmetic",
+        "label": "header entry+L"
+      },
+      {
+        "from": "C1init",
+        "to": "C1base",
+        "kind": "conditional_selection",
+        "label": "R or zero"
+      },
+      {
+        "from": "C1main",
+        "to": "C1table",
+        "kind": "argument_data",
+        "label": "main entry"
+      },
+      {
+        "from": "C1base",
+        "to": "C1table",
+        "kind": "argument_data",
+        "label": "base"
+      },
+      {
+        "from": "C1phdr",
+        "to": "C1table",
+        "kind": "argument_data",
+        "label": "PHDR"
+      },
+      {
+        "from": "C1table",
+        "to": "C1final",
+        "kind": "conditional_source_order",
+        "label": "only if gates succeed"
+      },
+      {
+        "from": "C2init",
+        "to": "C2hit",
+        "kind": "arithmetic",
+        "label": "next"
+      },
+      {
+        "from": "C2hit",
+        "to": "C2phdr",
+        "kind": "arithmetic",
+        "label": "next"
+      },
+      {
+        "from": "C2init",
+        "to": "C2main",
+        "kind": "arithmetic",
+        "label": "header entry+L"
+      },
+      {
+        "from": "C2init",
+        "to": "C2base",
+        "kind": "conditional_selection",
+        "label": "R or zero"
+      },
+      {
+        "from": "C2main",
+        "to": "C2table",
+        "kind": "argument_data",
+        "label": "main entry"
+      },
+      {
+        "from": "C2base",
+        "to": "C2table",
+        "kind": "argument_data",
+        "label": "base"
+      },
+      {
+        "from": "C2phdr",
+        "to": "C2table",
+        "kind": "argument_data",
+        "label": "PHDR"
+      },
+      {
+        "from": "C2table",
+        "to": "C2final",
+        "kind": "conditional_source_order",
+        "label": "only if gates succeed"
+      },
+      {
+        "from": "C3ainit",
+        "to": "C3ahit",
+        "kind": "arithmetic",
+        "label": "next"
+      },
+      {
+        "from": "C3ahit",
+        "to": "C3aphdr",
+        "kind": "arithmetic",
+        "label": "next"
+      },
+      {
+        "from": "C3binit",
+        "to": "C3bhit",
+        "kind": "arithmetic",
+        "label": "next"
+      },
+      {
+        "from": "C3bhit",
+        "to": "C3bphdr",
+        "kind": "arithmetic",
+        "label": "next"
+      }
+    ]
+  },
+  "D00": [],
+  "limits": [
+    "no actual configured preprocessing",
+    "uninitialized vma gate",
+    "no actual user mapping or copied bytes",
+    "no CRT or register binding",
+    "no execution"
+  ]
+}

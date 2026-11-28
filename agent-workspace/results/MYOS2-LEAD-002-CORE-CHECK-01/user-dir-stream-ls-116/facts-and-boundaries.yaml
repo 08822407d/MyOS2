@@ -1,0 +1,1395 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DIR-STREAM-LS-116",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "record_type": "directory_stream_source_bounded_facts_and_D00_corrections",
+  "date": "2026-11-21",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_publication_short12": "e96b1079ff0d",
+  "execution_parent_short12": "452444a1c4b4",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "inheritance": {
+    "R114_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R114_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch114": "PASS_PENDING_LOCAL",
+    "batch115": "RETURN",
+    "R115_01": "OPEN",
+    "R115_02": "OPEN",
+    "R115_03": "OPEN"
+  },
+  "G00": {
+    "direct_refs": {
+      "lead": "e96b1079ff0d",
+      "exec": "452444a1c4b4",
+      "time": "a039d9803ade",
+      "master": "e8e60cd19540"
+    },
+    "PR16": "OPEN_READY",
+    "PR17": "OPEN_DRAFT_ORIGINAL_TITLE",
+    "base": "master",
+    "merged": false,
+    "only_open_PRs": [
+      16,
+      17
+    ],
+    "prior115_fixed_active_six": "6/6_FULL_TEXT_AND_BLOB_IDENTICAL",
+    "new116_file_paths": "ALL_SIX_ABSENT",
+    "PR17_comment_pagination": [
+      100,
+      100,
+      18,
+      0
+    ],
+    "PR17_top_level_comments": 218,
+    "prior164_publish_id": 7043832344,
+    "prior115_author_id": 7044709177,
+    "C08_116_publish_id": 7056268192,
+    "new116_formal_author_marker_count_before": 0
+  },
+  "D00": {
+    "R115-01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_paths": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-memdev-scalar-io-115/memdev-scalar-io.md#L81-L116",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-memdev-scalar-io-115/facts-and-boundaries.yaml"
+      ],
+      "source_fields": [
+        "B.models[].final_chunk_not_counted",
+        "B.models[].sentinel_byte",
+        "B.models[].loop_steps[].remaining_after_subtract",
+        "C.six_cells[].method"
+      ],
+      "original_undefined_cells": {
+        "B_omitted_last_chunk": 7,
+        "B_omitted_sentinel": 7,
+        "loop_remaining": 3,
+        "C_methods": 6,
+        "total": 23
+      },
+      "replacement_tables": {
+        "B": [
+          {
+            "id": "B01",
+            "n": 0,
+            "zeroed": 0,
+            "reported": 0,
+            "last_chunk_not_counted": 0,
+            "cycles": 0,
+            "sentinel": "unchanged",
+            "fpos": 9
+          },
+          {
+            "id": "B02",
+            "n": 1,
+            "zeroed": 1,
+            "reported": 0,
+            "last_chunk_not_counted": 1,
+            "cycles": 1,
+            "sentinel": "unchanged",
+            "fpos": 9
+          },
+          {
+            "id": "B03",
+            "n": 4095,
+            "zeroed": 4095,
+            "reported": 0,
+            "last_chunk_not_counted": 4095,
+            "cycles": 1,
+            "sentinel": "unchanged",
+            "fpos": 9
+          },
+          {
+            "id": "B04",
+            "n": 4096,
+            "zeroed": 4096,
+            "reported": 0,
+            "last_chunk_not_counted": 4096,
+            "cycles": 1,
+            "sentinel": "unchanged",
+            "fpos": 9
+          },
+          {
+            "id": "B05",
+            "n": 4097,
+            "zeroed": 4097,
+            "reported": 4096,
+            "last_chunk_not_counted": 1,
+            "cycles": 2,
+            "sentinel": "unchanged",
+            "fpos": 9
+          },
+          {
+            "id": "B06",
+            "n": 8192,
+            "zeroed": 8192,
+            "reported": 4096,
+            "last_chunk_not_counted": 4096,
+            "cycles": 2,
+            "sentinel": "unchanged",
+            "fpos": 9
+          },
+          {
+            "id": "B07",
+            "n": 8193,
+            "zeroed": 8193,
+            "reported": 8192,
+            "last_chunk_not_counted": 1,
+            "cycles": 3,
+            "sentinel": "unchanged",
+            "fpos": 9
+          }
+        ],
+        "loop": [
+          {
+            "n": 4096,
+            "id": "B04",
+            "round": 1,
+            "start": 0,
+            "chunk": 4096,
+            "remaining_after": 0,
+            "break": true,
+            "cleared_after": 0
+          },
+          {
+            "n": 4097,
+            "id": "B05",
+            "round": 1,
+            "start": 0,
+            "chunk": 4096,
+            "remaining_after": 1,
+            "break": false,
+            "cleared_after": 4096
+          },
+          {
+            "n": 4097,
+            "id": "B05",
+            "round": 2,
+            "start": 4096,
+            "chunk": 1,
+            "remaining_after": 0,
+            "break": true,
+            "cleared_after": 4096
+          }
+        ],
+        "C": [
+          {
+            "id": "C_NULL_READ",
+            "device": "null",
+            "action": "read",
+            "mode": "READ（0x1）",
+            "method": "read_null",
+            "ret": 0,
+            "buf": "unchanged",
+            "commit": true,
+            "final": 9
+          },
+          {
+            "id": "C_NULL_WRITE",
+            "device": "null",
+            "action": "write",
+            "mode": "WRITE＋CAN_WRITE（0x40002，显式条件）",
+            "method": "write_null",
+            "ret": 4097,
+            "buf": "unchanged",
+            "commit": true,
+            "final": 9
+          },
+          {
+            "id": "C_ZERO_READ",
+            "device": "zero",
+            "action": "read",
+            "mode": "READ（0x1）",
+            "method": "read_zero",
+            "ret": 4096,
+            "buf": "zeroed 4097 requested bytes; sentinel at 4097 untouched",
+            "commit": true,
+            "final": 9
+          },
+          {
+            "id": "C_ZERO_WRITE",
+            "device": "zero",
+            "action": "write",
+            "mode": "WRITE＋CAN_WRITE（0x40002，显式条件）",
+            "method": "write_zero → write_null",
+            "ret": 4097,
+            "buf": "unchanged",
+            "commit": true,
+            "final": 9
+          },
+          {
+            "id": "C_FULL_READ",
+            "device": "full",
+            "action": "read",
+            "mode": "READ（0x1）",
+            "method": "未提供read/read_iter",
+            "ret": "-EINVAL",
+            "buf": "unchanged",
+            "commit": false,
+            "final": 9
+          },
+          {
+            "id": "C_FULL_WRITE",
+            "device": "full",
+            "action": "write",
+            "mode": "WRITE＋CAN_WRITE（0x40002，显式条件）",
+            "method": "未提供write/write_iter",
+            "ret": "-EINVAL",
+            "buf": "unchanged",
+            "commit": false,
+            "final": 9
+          }
+        ]
+      },
+      "mode_label": "WRITE＋CAN_WRITE（无原始竖线，单一Markdown单元格）",
+      "old_B_values_frozen": true,
+      "old_A9_B7_C6_frozen": true,
+      "closing_test": "seven B last chunk, seven sentinel, 4096 step remaining0, 4097 steps remaining1 then0, six methods, all Markdown cell widths correct, no placeholder"
+    },
+    "R115-02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "historical_evidence_tallies": {
+        "original_literal_windows": 70,
+        "original_symbol_definition_qualified": 69,
+        "original_prefix_occurrences_entire_six": 72,
+        "original_ordinary_positions": 35
+      },
+      "old_mislabel": {
+        "old_id": "MD115-E001",
+        "old_literal": "CMake_C_FLAGS",
+        "real_source_name": "set(CMAKE_C_FLAGS)",
+        "source_positions": [
+          "mykernel/scripts/options_flags.cmake#L58",
+          "mykernel/scripts/options_flags.cmake#L65"
+        ],
+        "new_ids": [
+          "DS116-E001",
+          "DS116-E002"
+        ],
+        "note": "old quote literal correct; only symbol label spelling wrong"
+      },
+      "exact_field_addenda": [
+        {
+          "old_path": "A.read_VFS.source",
+          "old_value": "MD115-E025",
+          "new_sources": {
+            "mode": "MD115-E023",
+            "mode_full_body": "MD115-P10",
+            "access": "MD115-E024",
+            "verify": "MD115-E033",
+            "limit": "MD115-E025",
+            "dispatch": [
+              "MD115-E026",
+              "MD115-E027"
+            ]
+          },
+          "note": "old E025 exclusively verifies rw_verify_area and length clamp, not mode guard"
+        },
+        {
+          "old_path": "A.write_VFS.source",
+          "old_value": "MD115-E030",
+          "new_sources": {
+            "mode": "MD115-E028",
+            "mode_full_body": "MD115-P11",
+            "access": "MD115-E029",
+            "verify": "MD115-E033",
+            "limit": "MD115-E030",
+            "dispatch": [
+              "MD115-E031",
+              "MD115-E032"
+            ]
+          },
+          "note": "old E030 is verify and count cap, not write mode gate"
+        },
+        {
+          "old_path": "A.MAX_RW_COUNT",
+          "old_value": {
+            "formula": "INT_MAX & PAGE_MASK",
+            "page_shift": 12,
+            "decimal": 2147479552,
+            "hex": "0x7ffff000",
+            "source_ids": [
+              "MD115-E043",
+              "MD115-E048",
+              "MD115-E049"
+            ]
+          },
+          "new_sources": {
+            "definition": "MD115-E043",
+            "page_shift": "MD115-E048",
+            "page_size": "MD115-E049",
+            "page_mask": "DS116-E004",
+            "int_max": "DS116-E003"
+          },
+          "note": "0x7fffffff INT_MAX under 32bit int, PAGE_SHIFT=12, mask 0xfffffffffffff000, bitwise and 0x7ffff000=2147479552"
+        },
+        {
+          "old_path": "C.operations.zero",
+          "old_value": {
+            "read": "read_zero clears all n bytes but returns undercount",
+            "write": "write_zero macro appears twice, both aliases write_null (discard)",
+            "sources": [
+              "MD115-E056",
+              "MD115-E059",
+              "MD115-E060",
+              "MD115-E058"
+            ]
+          },
+          "new_sources": {
+            "loop": [
+              "MD115-E051",
+              "MD115-E052"
+            ],
+            "writes": "MD115-E053",
+            "break": "MD115-E054",
+            "accumulate": "MD115-E055",
+            "return": "MD115-E056",
+            "write_alias": [
+              "MD115-E059",
+              "MD115-E060"
+            ],
+            "write_callback": "MD115-E058"
+          },
+          "note": "B undercount applies to n>0; zero count returns0 without any iteration"
+        },
+        {
+          "old_path": "C.installation",
+          "old_value": {
+            "devlist_to_cdev": "memdev=devlist[minor]; cdev_init(&memdev.cdev,memdev.fops); cdev_add, conditionally device_create",
+            "sources": [
+              "MD115-E042",
+              "MD115-E068",
+              "MD115-E069"
+            ],
+            "fops_open": "myos_do_dentry_open gets inode.i_fop; chrdev_open uses fops=p->ops, then filp->f_op=fops",
+            "actual_registration": "NOT_RUN"
+          },
+          "new_sources": {
+            "copy_devlist": "MD115-P27",
+            "cdev_init": "MD115-E066",
+            "cdev_add": "MD115-E067",
+            "method_from_inode": "MD115-E042",
+            "ops_lookup": "MD115-E068",
+            "ops_swap": "MD115-E069"
+          },
+          "note": "distinguish cdev register attempt and object f_op swap; no real running devices"
+        }
+      ],
+      "closing_test": "69/70 original P2 label suitability, literal70, total old prefix72, all five field source mappings independently verified"
+    },
+    "R115-03": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "old_dot": "user-memdev-scalar-io-115/memdev-scalar-io-paths.dot",
+      "fixed_graph_edits": [
+        {
+          "old_lines": "83",
+          "old": "sw -> stub direct dispatch with only use IDs",
+          "new": "active switch __SYSCALL definition MD115-E002 plus mapping invocation MD115-P01; type MACRO_EXPANSION_WITH_INVOKED_MAPPING; generated stub call separately"
+        },
+        {
+          "old_lines": "84-89",
+          "old": "read -> myget; myget -> vfs; write -> fdget; fdget -> vfs; read/write -> file_ppos",
+          "new": "read_syscall→ksys_read DIRECT_CALL; ksys_read→myos_fdget_pos/ file_ppos /vfs_read; write_syscall→ksys_write then fdget_pos / file_ppos /vfs_write"
+        },
+        {
+          "old_lines": "97",
+          "old": "verify -> cap based on E033 E043 only",
+          "new": "vfs_read verify E033→ count clamp E025; vfs_write verify E033→ count clamp E030; MAX_RW_COUNT definition E043 plus INT_MAX/ PAGE_MASK DS116-E003/004"
+        },
+        {
+          "old_lines": "107",
+          "old": "stack -> commit only local load ids E016 E020",
+          "new": "ksys_read / ksys_write actual f_pos write E017/E021, stack local capture E016/E020 kept as data dependency"
+        },
+        {
+          "old_lines": "109-120",
+          "old": "zero -> loop no zero-length return edge",
+          "new": "read_zero count==0 → immediate return cleared0; positive loop branch → page chunk→ memset→ subtract→ if0 break→return; if nonzero add cleared→loop; each write contributes to all bytes cleared"
+        },
+        {
+          "old_lines": "132",
+          "old": "readzero -> zero DIRECT_CALLBACK_BODY implying two symbols",
+          "new": "zero_fops → read_zero single source node, not a direct call from read_zero to itself; return branch derived from one implementation"
+        }
+      ],
+      "iter_return_guard": {
+        "read_before": "new_sync_read's read_iter returns ret then BUG_ON(ret == -EIOCBQUEUED), then if ppos store kiocb.ki_pos irrespective ret sign",
+        "write_before": "new_sync_write's write_iter returns ret then BUG_ON(ret == -EIOCBQUEUED), then if ret>0 && ppos store",
+        "after": "In branches that pass the BUG_ON condition, conditional writeback rules apply; special queued result cannot be reduced to ordinary negative return and may take BUG path",
+        "sources": [
+          "MD115-E034",
+          "MD115-E035",
+          "DS116-E006",
+          "DS116-E007",
+          "DS116-E005",
+          "mykernel/include/linux/lib/errno.h#L31"
+        ],
+        "scope": "A9/B7/C6 values preserved because scalar memdev fops do not reach sync iter helpers"
+      },
+      "closing_test": "actual callable owner nodes, typed mapping sources, zero-count /one-page/multi-page edges, BUG_ON precondition documented"
+    }
+  },
+  "A": {
+    "shell": {
+      "builtin": "ls",
+      "function": "ls_command",
+      "source": [
+        "DS116-E015",
+        "DS116-E016"
+      ],
+      "default_path": "argc<=1 => '.'",
+      "explicit_path": "argc>1 => argv[1]",
+      "source_path": "DS116-E017"
+    },
+    "opendir": {
+      "flags": "O_RDONLY|O_DIRECTORY|O_CLOEXEC",
+      "invalid_name": "name[0]=='\\0' returns NULL before open; commented errno set is not active",
+      "call": "fd=open(name,opendir_oflags,O_RDONLY); return __alloc_dir(fd,true,0) without fd<0 gate",
+      "allocation": "malloc(sizeof(DIR)+32768)",
+      "max_buffer_size_declared": 1048576,
+      "actual_allocation_size": 32768,
+      "DIR_init": {
+        "fd": "input fd including negatives",
+        "allocation": 32768,
+        "size": 0,
+        "offset": 0,
+        "filepos": 0,
+        "errcode": 0
+      },
+      "data": "char data[0] aligned to long double; sizeof(DIR) and actual alignment NOT_RUN",
+      "failure": "malloc NULL returns NULL without active close(fd), close_fd parameter not consumed in active branch",
+      "source_ids": [
+        "DS116-E019",
+        "DS116-E020",
+        "DS116-E021",
+        "DS116-E022",
+        "DS116-E023",
+        "DS116-E024",
+        "DS116-E025",
+        "DS116-E026",
+        "DS116-E027",
+        "DS116-E028",
+        "DS116-E029",
+        "DS116-P02",
+        "DS116-P03"
+      ]
+    },
+    "cases": [
+      {
+        "id": "A01",
+        "input": "argc=1",
+        "selected_path": ".",
+        "open_return": 7,
+        "malloc": "nonNULL",
+        "opendir_returns": "DIR*",
+        "fd_held": 7,
+        "DIR_fields": {
+          "allocation": 32768,
+          "size": 0,
+          "offset": 0,
+          "filepos": 0,
+          "errcode": 0
+        },
+        "calls_open": true,
+        "calls_malloc": true,
+        "calls_close": false,
+        "calls_free": false,
+        "errno_assigned_by_code": false,
+        "stop": "at opendir return",
+        "source_ids": [
+          "DS116-E022",
+          "DS116-E025",
+          "DS116-E027",
+          "DS116-E028",
+          "DS116-E029"
+        ]
+      },
+      {
+        "id": "A02",
+        "input": "explicit argv1 empty",
+        "selected_path": "",
+        "open_return": "NOT_CALLED",
+        "malloc": "NOT_CALLED",
+        "opendir_returns": "NULL",
+        "fd_held": null,
+        "DIR_fields": null,
+        "calls_open": false,
+        "calls_malloc": false,
+        "calls_close": false,
+        "calls_free": false,
+        "errno_assigned_by_code": false,
+        "stop": "at invalid_name early return",
+        "source_ids": [
+          "DS116-E020",
+          "DS116-E021"
+        ]
+      },
+      {
+        "id": "A03",
+        "input": "argc>1",
+        "selected_path": "/missing",
+        "open_return": -2,
+        "malloc": "nonNULL",
+        "opendir_returns": "DIR* even with fd=-2",
+        "fd_held": -2,
+        "DIR_fields": {
+          "allocation": 32768,
+          "size": 0,
+          "offset": 0,
+          "filepos": 0,
+          "errcode": 0
+        },
+        "calls_open": true,
+        "calls_malloc": true,
+        "calls_close": false,
+        "calls_free": false,
+        "errno_assigned_by_code": false,
+        "stop": "do not pass invalid fd into readdir/getdents64",
+        "source_ids": [
+          "DS116-E022",
+          "DS116-E025",
+          "DS116-E027",
+          "DS116-E028",
+          "DS116-E029"
+        ]
+      },
+      {
+        "id": "A04",
+        "input": "argc>1",
+        "selected_path": "/valid",
+        "open_return": 7,
+        "malloc": "NULL",
+        "opendir_returns": "NULL",
+        "fd_held": "fd7 remains not closed by examined opendir/__alloc_dir",
+        "DIR_fields": null,
+        "calls_open": true,
+        "calls_malloc": true,
+        "calls_close": false,
+        "calls_free": false,
+        "errno_assigned_by_code": false,
+        "stop": "malloc failure; errno from malloc not proven",
+        "source_ids": [
+          "DS116-E022",
+          "DS116-E025",
+          "DS116-E026"
+        ]
+      }
+    ]
+  },
+  "B": {
+    "public_signature": {
+      "function": "readdir",
+      "declared_return": "struct dirent64*",
+      "shell_variable": "struct dirent*",
+      "source_positions": [
+        "DS116-P06",
+        "DS116-P07"
+      ],
+      "warning": "not same C pointer types; compiler and actual feature macro selection NOT_RUN. X86-64 offset/layout equivalence is an explicit assumption"
+    },
+    "syscall": {
+      "user_public_symbol": "getdents64",
+      "generator": "SYSFUNC_DEF(getdents64) macro invocation at syscall.c:66 (ordinary position)",
+      "nr": 217,
+      "nr_source": "DS116-E047",
+      "asm_macro_sources": [
+        "DS116-E042",
+        "DS116-E043",
+        "DS116-E044",
+        "DS116-E045",
+        "DS116-E046"
+      ],
+      "asm_errno": "errno-setting instructions commented, no proven update in examined code for negative return",
+      "kernel_map": "__SYSCALL(__NR_getdents64,sys_getdents64) in syscalls_64.h:67 (ordinary position)",
+      "kernel": "getdents64 function uses myos_fdget_pos, iterate_shared; returns count-buf.count when prev_reclen nonzero; otherwise error",
+      "kernel_sources": [
+        "DS116-E049",
+        "DS116-E050",
+        "DS116-E051",
+        "DS116-E052"
+      ],
+      "kernel_f_pos": "file->f_pos → buf.ctx.pos, then ctx.pos → file->f_pos, independent of DIR.filepos",
+      "tail_d_off": "filldir64 writes previous d_off when adding the next record. Final tail patch in syscall is commented, hence last d_off not guaranteed initialized."
+    },
+    "consumer": {
+      "refill_gate": "offset >= size",
+      "new_Dir_allocation": 32768,
+      "cap": "maxread = min(allocation,INT_MAX)",
+      "per_refill_requested_bytes": 32768,
+      "when_positive": "size=(size_t)bytes; offset=0; then consume one record",
+      "when_nonpositive": "immediately return NULL, does not change size/offset/filepos/errcode in this complete function body",
+      "record_pointer": "struct dirent64* into dirp.data+offset",
+      "record_transition": "reclen=dp->d_reclen; offset+=reclen; filepos=dp->d_off",
+      "cached": "offset<size avoids getdents64",
+      "source_ids": [
+        "DS116-E034",
+        "DS116-E035",
+        "DS116-E036",
+        "DS116-E037",
+        "DS116-E038",
+        "DS116-E039",
+        "DS116-E040",
+        "DS116-E041"
+      ]
+    },
+    "wire": {
+      "kernel": "linux_dirent64_s with ino u64, off s64, reclen unsigned short, type byte, flexible name[]",
+      "user": "conditional __USE_LARGEFILE64 struct dirent64 with ino64/off64, ushort reclen, type byte, fixed d_name[256]",
+      "other_user": "struct dirent is distinct, inode/offset type conditional on __USE_FILE_OFFSET64",
+      "layout_assumption": "typical x86-64 d_name at offset19, records ALIGN(...,8); not compiler certified",
+      "source_ids": [
+        "DS116-E048",
+        "DS116-E053",
+        "DS116-E054",
+        "DS116-E059",
+        "DS116-P07",
+        "DS116-P20"
+      ]
+    },
+    "batch_model": {
+      "prerequisite": "getdents64 first returns exactly80 bytes of complete, valid, 8-byte aligned positive d_reclen entries with names ., .., alpha in that order; all d_off bytes accessed are explicitly initialized or represented by known symbolic D1/D2/D3; D3 is NOT assumed 0; no invalid buffer or concurrent mutation",
+      "records": [
+        {
+          "name": ".",
+          "name_length": 1,
+          "offset_before": 0,
+          "reclen": 24,
+          "offset_after": 24,
+          "d_off_symbol": "D1",
+          "shell_prints": false
+        },
+        {
+          "name": "..",
+          "name_length": 2,
+          "offset_before": 24,
+          "reclen": 24,
+          "offset_after": 48,
+          "d_off_symbol": "D2",
+          "shell_prints": false
+        },
+        {
+          "name": "alpha",
+          "name_length": 5,
+          "offset_before": 48,
+          "reclen": 32,
+          "offset_after": 80,
+          "d_off_symbol": "D3",
+          "shell_prints": true
+        }
+      ],
+      "total_bytes": 80,
+      "first_refill_returns": 80,
+      "second_refill_returns": 0,
+      "source_record_lengths": "ALIGN(19+strlen(name)+1,8)",
+      "d_off_status": "D1 and D2 can be zero if preceding FAT actor offsets 0 were successfully written; D3 tail not initialized by kernel patch and must be a known prefilled symbolic value for this paper model",
+      "calls": [
+        {
+          "id": "B01",
+          "readdir_call": 1,
+          "new_syscall_calls": 1,
+          "total_syscalls_so_far": 1,
+          "getdents_result": 80,
+          "record_start": 0,
+          "record_length": 24,
+          "pointer": "&DIR.data[0]",
+          "entry_name": ".",
+          "DIR_size_after": 80,
+          "DIR_offset_after": 24,
+          "DIR_filepos_after": "D1",
+          "shell_prints": false,
+          "print_text": ""
+        },
+        {
+          "id": "B02",
+          "readdir_call": 2,
+          "new_syscall_calls": 0,
+          "total_syscalls_so_far": 1,
+          "getdents_result": "NO_CALL",
+          "record_start": 24,
+          "record_length": 24,
+          "pointer": "&DIR.data[24]",
+          "entry_name": "..",
+          "DIR_size_after": 80,
+          "DIR_offset_after": 48,
+          "DIR_filepos_after": "D2",
+          "shell_prints": false,
+          "print_text": ""
+        },
+        {
+          "id": "B03",
+          "readdir_call": 3,
+          "new_syscall_calls": 0,
+          "total_syscalls_so_far": 1,
+          "getdents_result": "NO_CALL",
+          "record_start": 48,
+          "record_length": 32,
+          "pointer": "&DIR.data[48]",
+          "entry_name": "alpha",
+          "DIR_size_after": 80,
+          "DIR_offset_after": 80,
+          "DIR_filepos_after": "D3",
+          "shell_prints": true,
+          "print_text": "alpha\\t"
+        },
+        {
+          "id": "B04",
+          "readdir_call": 4,
+          "new_syscall_calls": 1,
+          "total_syscalls_so_far": 2,
+          "getdents_result": 0,
+          "record_start": null,
+          "record_length": null,
+          "pointer": null,
+          "entry_name": null,
+          "DIR_size_after": 80,
+          "DIR_offset_after": 80,
+          "DIR_filepos_after": "D3",
+          "shell_prints": false,
+          "print_text": "\\n after break; closedir called"
+        }
+      ],
+      "negative_variant": {
+        "id": "B05",
+        "same_first_three_calls": "B01-B03",
+        "readdir_call": 4,
+        "new_syscall_calls": 1,
+        "total_syscalls": 2,
+        "getdents_result": -5,
+        "DIR_size_after": 80,
+        "DIR_offset_after": 80,
+        "DIR_filepos_after": "D3",
+        "DIR_errcode_after": 0,
+        "pointer": null,
+        "shell_prints": false,
+        "shell_path": "break, newline, closedir call, return1",
+        "errno": "no active errno update by readdir and shown syscall wrapper"
+      },
+      "already_cached": {
+        "id": "B06",
+        "pre_DIR_size": 80,
+        "pre_DIR_offset": 24,
+        "call_result": "..",
+        "reclen": 24,
+        "new_getdents64_calls": 0,
+        "pointer": "&DIR.data[24]",
+        "post_DIR_offset": 48,
+        "post_DIR_filepos": "D2",
+        "shell_prints": false
+      }
+    }
+  },
+  "C": {
+    "shell": {
+      "opendir_null": {
+        "condition": "opendir(path)==NULL",
+        "source": "DS116-E018",
+        "output": "ls: <strerror(errno)>: <path> followed by newline",
+        "errno": "empty name and malloc failure do not set errno in examined opendir source; open/other library error can be different",
+        "ls_return": -1,
+        "closedir_called": false
+      },
+      "loop": {
+        "source": "DS116-E056",
+        "skip_names": [
+          ".",
+          ".."
+        ],
+        "name_print": {
+          "name": "alpha",
+          "format": "%s\\t",
+          "output": "alpha\\t"
+        },
+        "on_readdir_null": "break",
+        "on_success_tail": {
+          "source": "DS116-E058",
+          "output": "\\n",
+          "closedir_called": true,
+          "ls_return": 1
+        }
+      },
+      "same_shell_for_nonpositive": {
+        "getdents_zero": "readdir NULL, print newline, closedir call, ls return1",
+        "getdents_negative": "same shell-visible sequence and return, no separate branch for error",
+        "errno": "no active readdir errno write in complete body, syscall wrapper conversion code commented"
+      }
+    },
+    "libc": {
+      "nonpositive_branch": {
+        "bytes_zero": "if(bytes<=0) return NULL",
+        "bytes_negative": "same return NULL",
+        "source": [
+          "DS116-E036",
+          "DS116-E037"
+        ],
+        "state": "when buffer exhausted at size80 offset80 fileposD3, those values stay unchanged for both outcomes; errcode remains initially0 in source model",
+        "no_active_errno_repair": true
+      },
+      "entry_pointer": {
+        "source": "DS116-E039",
+        "place": "DIR.data[prior offset], not an independently allocated entry",
+        "validity": "can be overwritten upon later getdents64 refill of same DIR.data; copy any fields before next refill if needed"
+      },
+      "closedir": {
+        "source": "myglibc/sysdeps/unix/sysv_linux/closedir.c:26–51 (DS116-P01, DS116-P29)",
+        "interface_comment": "returns 0 success, -1 error",
+        "active_statements": "none; all close fd, free DIR and explicit return lines commented",
+        "close_syscall_called": false,
+        "free_called": false,
+        "errno_written": false,
+        "return_value": "indeterminate/no explicit return from nonvoid function; may not use a fabricated value",
+        "shell_uses_return_value": false,
+        "resource_claim": "cannot claim fd or DIR memory released by this examined function"
+      }
+    },
+    "kernel_distinction": {
+      "kernel_file_f_pos": "getdents64 stores ctx.pos in file->f_pos, under successful FAT exhaustion may become -1; not the readdir DIR.filepos",
+      "user_DIR_filepos": "assigned dp->d_off on each delivered entry, last tail field may lack a fixed value",
+      "DIR_buffer_offset": "byte displacement 0/24/48/80; not kernel file.f_pos",
+      "return_bytes": "kernel valid batch count-buf.count=80 in bounded case, not number of entries3",
+      "source_ids": [
+        "DS116-E050",
+        "DS116-E052",
+        "DS116-E040",
+        "DS116-E062"
+      ]
+    }
+  },
+  "evidence_ledger": [
+    {
+      "id": "DS116-E001",
+      "key": "D_CMAKE_SET",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "set(CMAKE_C_FLAGS)",
+      "start_line": 58,
+      "end_line": 58
+    },
+    {
+      "id": "DS116-E002",
+      "key": "D_CMAKE_CONFIG",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "set(CMAKE_C_FLAGS)",
+      "start_line": 65,
+      "end_line": 65
+    },
+    {
+      "id": "DS116-E003",
+      "key": "D_INT_MAX",
+      "path": "mykernel/include/linux/kernel/limits.h",
+      "symbol": "INT_MAX",
+      "start_line": 30,
+      "end_line": 30
+    },
+    {
+      "id": "DS116-E004",
+      "key": "D_PAGE_MASK",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_MASK",
+      "start_line": 11,
+      "end_line": 11
+    },
+    {
+      "id": "DS116-E005",
+      "key": "D_BUG_ON",
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "symbol": "BUG_ON",
+      "start_line": 66,
+      "end_line": 66
+    },
+    {
+      "id": "DS116-E006",
+      "key": "D_READ_ITER_GUARD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "new_sync_read",
+      "start_line": 88,
+      "end_line": 92
+    },
+    {
+      "id": "DS116-E007",
+      "key": "D_WRITE_ITER_GUARD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "new_sync_write",
+      "start_line": 212,
+      "end_line": 216
+    },
+    {
+      "id": "DS116-E008",
+      "key": "D_READ_KSYS_CALL",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 191,
+      "end_line": 194
+    },
+    {
+      "id": "DS116-E009",
+      "key": "D_WRITE_KSYS_CALL",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_write",
+      "start_line": 331,
+      "end_line": 334
+    },
+    {
+      "id": "DS116-E010",
+      "key": "D_VFS_READ_CAP",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 154,
+      "end_line": 158
+    },
+    {
+      "id": "DS116-E011",
+      "key": "D_VFS_WRITE_CAP",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 298,
+      "end_line": 302
+    },
+    {
+      "id": "DS116-E012",
+      "key": "D_ZERO_LOOP",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 87,
+      "end_line": 88
+    },
+    {
+      "id": "DS116-E013",
+      "key": "D_ZERO_BREAK",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 90,
+      "end_line": 93
+    },
+    {
+      "id": "DS116-E014",
+      "key": "D_ZERO_ACCUM",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 95,
+      "end_line": 95
+    },
+    {
+      "id": "DS116-E015",
+      "key": "A_SHELL_BIND",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "shell_internal_cmd",
+      "start_line": 44,
+      "end_line": 48
+    },
+    {
+      "id": "DS116-E016",
+      "key": "A_SHELL_RUN",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "run_cmd",
+      "start_line": 139,
+      "end_line": 142
+    },
+    {
+      "id": "DS116-E017",
+      "key": "A_SHELL_DEFAULT",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "ls_command",
+      "start_line": 219,
+      "end_line": 222
+    },
+    {
+      "id": "DS116-E018",
+      "key": "A_SHELL_ERROR",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "ls_command",
+      "start_line": 224,
+      "end_line": 228
+    },
+    {
+      "id": "DS116-E019",
+      "key": "A_OPEN_FLAGS",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "opendir_oflags",
+      "start_line": 33,
+      "end_line": 36
+    },
+    {
+      "id": "DS116-E020",
+      "key": "A_BAD_NAME",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "invalid_name",
+      "start_line": 40,
+      "end_line": 43
+    },
+    {
+      "id": "DS116-E021",
+      "key": "A_OPEN_CHECK",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "opendir",
+      "start_line": 63,
+      "end_line": 66
+    },
+    {
+      "id": "DS116-E022",
+      "key": "A_OPEN_TO_ALLOC",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "opendir",
+      "start_line": 68,
+      "end_line": 70
+    },
+    {
+      "id": "DS116-E023",
+      "key": "A_MAX_BUFFER",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 84,
+      "end_line": 87
+    },
+    {
+      "id": "DS116-E024",
+      "key": "A_BUFFER_ALLOC_SIZE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 89,
+      "end_line": 92
+    },
+    {
+      "id": "DS116-E025",
+      "key": "A_MALLOC",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 100,
+      "end_line": 103
+    },
+    {
+      "id": "DS116-E026",
+      "key": "A_MALLOC_NULL",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 103,
+      "end_line": 107
+    },
+    {
+      "id": "DS116-E027",
+      "key": "A_SAVE_FD",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 110,
+      "end_line": 110
+    },
+    {
+      "id": "DS116-E028",
+      "key": "A_INIT_FIELDS",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 114,
+      "end_line": 118
+    },
+    {
+      "id": "DS116-E029",
+      "key": "A_RETURN",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 120,
+      "end_line": 120
+    },
+    {
+      "id": "DS116-E030",
+      "key": "A_DIR_FD",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/dirstream.h",
+      "symbol": "struct __dirstream",
+      "start_line": 30,
+      "end_line": 32
+    },
+    {
+      "id": "DS116-E031",
+      "key": "A_DIR_CACHE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/dirstream.h",
+      "symbol": "struct __dirstream",
+      "start_line": 36,
+      "end_line": 40
+    },
+    {
+      "id": "DS116-E032",
+      "key": "A_DIR_ERR",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/dirstream.h",
+      "symbol": "struct __dirstream",
+      "start_line": 40,
+      "end_line": 42
+    },
+    {
+      "id": "DS116-E033",
+      "key": "A_DIR_DATA",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/dirstream.h",
+      "symbol": "struct __dirstream",
+      "start_line": 49,
+      "end_line": 50
+    },
+    {
+      "id": "DS116-E034",
+      "key": "B_REFILL_GATE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 37,
+      "end_line": 41
+    },
+    {
+      "id": "DS116-E035",
+      "key": "B_REFILL_CAP",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 47,
+      "end_line": 49
+    },
+    {
+      "id": "DS116-E036",
+      "key": "B_REFILL_NONPOS",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 49,
+      "end_line": 51
+    },
+    {
+      "id": "DS116-E037",
+      "key": "B_REFILL_NULL",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 61,
+      "end_line": 64
+    },
+    {
+      "id": "DS116-E038",
+      "key": "B_REFILL_INIT",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 65,
+      "end_line": 68
+    },
+    {
+      "id": "DS116-E039",
+      "key": "B_BUFFER_PTR",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 71,
+      "end_line": 73
+    },
+    {
+      "id": "DS116-E040",
+      "key": "B_CURSOR",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 73,
+      "end_line": 77
+    },
+    {
+      "id": "DS116-E041",
+      "key": "B_RETURN_ENTRY",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 82,
+      "end_line": 82
+    },
+    {
+      "id": "DS116-E042",
+      "key": "B_ASM_SYSMACRO",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "SYSFUNC_DEF",
+      "start_line": 13,
+      "end_line": 14
+    },
+    {
+      "id": "DS116-E043",
+      "key": "B_ASM_GEN",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "__SYSFUNC_DEF__",
+      "start_line": 19,
+      "end_line": 23
+    },
+    {
+      "id": "DS116-E044",
+      "key": "B_ASM_NUMBER",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "__SYSFUNC_DEF__",
+      "start_line": 24,
+      "end_line": 28
+    },
+    {
+      "id": "DS116-E045",
+      "key": "B_ASM_SYSCALL",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "LABEL_SYSCALL",
+      "start_line": 71,
+      "end_line": 74
+    },
+    {
+      "id": "DS116-E046",
+      "key": "B_ASM_RET",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "LABEL_SYSCALL",
+      "start_line": 75,
+      "end_line": 76
+    },
+    {
+      "id": "DS116-E047",
+      "key": "B_NR_GETDENTS64",
+      "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+      "symbol": "__NR_getdents64",
+      "start_line": 264,
+      "end_line": 264
+    },
+    {
+      "id": "DS116-E048",
+      "key": "B_K_RECORD",
+      "path": "mykernel/include/linux/kernel/dirent.h",
+      "symbol": "linux_dirent64_s",
+      "start_line": 8,
+      "end_line": 12
+    },
+    {
+      "id": "DS116-E049",
+      "key": "B_K_INIT",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 135,
+      "end_line": 139
+    },
+    {
+      "id": "DS116-E050",
+      "key": "B_K_FPOS",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 150,
+      "end_line": 152
+    },
+    {
+      "id": "DS116-E051",
+      "key": "B_K_RET_GATE",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 155,
+      "end_line": 157
+    },
+    {
+      "id": "DS116-E052",
+      "key": "B_K_BYTE_RET",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 165,
+      "end_line": 168
+    },
+    {
+      "id": "DS116-E053",
+      "key": "B_U_DIRENT64",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/dirent.h",
+      "symbol": "struct dirent64",
+      "start_line": 40,
+      "end_line": 44
+    },
+    {
+      "id": "DS116-E054",
+      "key": "B_U_DIRENT",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/dirent.h",
+      "symbol": "struct dirent",
+      "start_line": 25,
+      "end_line": 29
+    },
+    {
+      "id": "DS116-E055",
+      "key": "B_U_LAYOUT",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/dirent.h",
+      "symbol": "struct dirent64",
+      "start_line": 42,
+      "end_line": 44
+    },
+    {
+      "id": "DS116-E056",
+      "key": "C_LS_GET",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "ls_command",
+      "start_line": 231,
+      "end_line": 235
+    },
+    {
+      "id": "DS116-E057",
+      "key": "C_LS_FILTER",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "ls_command",
+      "start_line": 236,
+      "end_line": 238
+    },
+    {
+      "id": "DS116-E058",
+      "key": "C_LS_CLOSE",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "ls_command",
+      "start_line": 240,
+      "end_line": 242
+    },
+    {
+      "id": "DS116-E059",
+      "key": "C_FILL_SIZE",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "filldir64",
+      "start_line": 99,
+      "end_line": 100
+    },
+    {
+      "id": "DS116-E060",
+      "key": "C_FILL_OFF",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "filldir64",
+      "start_line": 113,
+      "end_line": 117
+    },
+    {
+      "id": "DS116-E061",
+      "key": "C_FILL_ACCOUNT",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "filldir64",
+      "start_line": 120,
+      "end_line": 123
+    },
+    {
+      "id": "DS116-E062",
+      "key": "C_KERNEL_TAIL",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 157,
+      "end_line": 161
+    }
+  ],
+  "P2_new_literal": 62,
+  "P2_new_single_definition": 62,
+  "position_only": 27,
+  "source_checks": {
+    "P2_new_exact_quotes": "62/62",
+    "new_anchors_qualify": "62/62",
+    "historical115_literal": 70,
+    "historical115_old_label_qualified": 69,
+    "historical115_label_prefix_occurrences": 72,
+    "other_historical_d00_records_frozen": true
+  },
+  "tests": {
+    "full_local_P9": "NOT_RUN",
+    "source_preprocessing": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "repository_scripts": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "kernel": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_hardware": "NOT_RUN",
+    "actual_ls_or_dir_operations": "NOT_RUN",
+    "runtime_layout": "NOT_RUN",
+    "negative_fd_syscalls": "NOT_RUN",
+    "paper_cases": {
+      "D00_placeholder_fixed": 23,
+      "A": 4,
+      "B_calls": 4,
+      "B_negative": 1,
+      "B_cached": 1,
+      "C_nonpositive": 2
+    }
+  }
+}

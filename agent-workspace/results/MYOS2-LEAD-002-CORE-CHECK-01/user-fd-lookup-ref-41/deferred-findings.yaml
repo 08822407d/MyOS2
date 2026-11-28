@@ -1,0 +1,194 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FD-LOOKUP-REF-41",
+  "record_type": "incremental_deferred_findings",
+  "source_pin_short12": "a039d9803ade",
+  "new_finding_count": 3,
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F01",
+      "id": "FG41-F01",
+      "title": "fget在逻辑范围内空槽的无效引用先于mmap调用者判空",
+      "kind": [
+        "source_fact",
+        "conditional_inference"
+      ],
+      "status": "deferred_owner_not_ready",
+      "owner_action_now": "none",
+      "premises": [
+        "current->files为有效files_struct_s",
+        "fd<fd_count且fd在物理fd_array[0..255]内",
+        "fd_array[fd]==NULL",
+        "atomic_long_inc为活动调用且没有另一个写者"
+      ],
+      "claim": "__simple_fget读retval=fd_array[fd]后不检查NULL就对retval->f_count执行atomic_long_inc；mmap的if(!file)在该调用后",
+      "effect": "空槽时在NULL成员操作处失去定义良好的执行前提；不认证返回NULL、-EBADF、硬件崩溃或真实用户后果",
+      "counter_evidence": [
+        "fd>=fd_count时__simple_fget直接返回NULL，非匿名mmap可通过后置判空返回-EBADF",
+        "范围内有效file时可正常inc并由mmap在正常返回后fput"
+      ],
+      "unknown": [
+        "真实任务的槽值、初始化与并发",
+        "编译及硬件行为未运行"
+      ],
+      "evidence": [
+        "FG41-A002",
+        "FG41-A028"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-11"
+      ],
+      "future_verification": {
+        "candidates": [
+          "重读新源码的有效对象/空槽语义",
+          "需要后续明确授权的隔离宿主模型或内核运行验证"
+        ],
+        "authorization_needed": [
+          "Owner独立新任务及测试/执行授权"
+        ]
+      },
+      "reopen_conditions": "Owner明确许可后以最新source/任务限定重新审查；不得本批修补内核"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F02",
+      "id": "FG41-F02",
+      "title": "非匿名mmap的ulong fd窄化为fget(uint)导致低32位别名条件",
+      "kind": [
+        "source_fact",
+        "bounded_integer_model"
+      ],
+      "status": "deferred_owner_not_ready",
+      "owner_action_now": "none",
+      "premises": [
+        "目标按x86-64 LP64将unsigned long解释为64位、uint为32位",
+        "非匿名标志且off先通过对齐检查",
+        "fget接收参数前无额外阻断",
+        "原值高32位非零，低32位对应有效fd_count与物理槽、有效file"
+      ],
+      "claim": "mmap fd签名为unsigned long，非匿名调用fget(fd)，fget形参uint；unsigned窄化按模2^32转换",
+      "effect": "例4294967298→2，mmap包装层会把slot2文件指针传给vm_mmap_pgoff；不认证深层VM映射最终成功",
+      "counter_evidence": [
+        "高32位为0不会出现这种高位信息丢失",
+        "低32位>=fd_count时fget正常NULL，mmap后门返回-EBADF",
+        "匿名路径不调用fget"
+      ],
+      "unknown": [
+        "实际用户/汇编ABI上游是否已经限制mmap参数",
+        "不同编译模型的位宽",
+        "vm_mmap_pgoff内部错误及持有引用策略"
+      ],
+      "evidence": [
+        "FG41-A025",
+        "FG41-A026",
+        "FG41-A003",
+        "FG41-A028"
+      ],
+      "related": [
+        "CORE-USER-VMA-LIFETIME-14",
+        "CORE-USER-FILE-CACHE-13"
+      ],
+      "future_verification": {
+        "candidates": [
+          "验证目标ABI及syscall入口完整宽度",
+          "单独获准的宽度边界测试"
+        ],
+        "authorization_needed": [
+          "Owner单独实施授权"
+        ]
+      },
+      "reopen_conditions": "新的Owner任务下重核入口签名、类型与范围，静态审查后才考虑测试"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F03",
+      "id": "FG41-F03",
+      "title": "fget传递FMODE_PATH但__simple_fget的mask在活动体未被消费",
+      "kind": [
+        "source_fact",
+        "design_intent_unknown"
+      ],
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "premises": [
+        "选定time固定活动函数体",
+        "合法索引与有效file",
+        "非匿名mmap使用这个fget实现"
+      ],
+      "claim": "fget(fd)将FMODE_PATH传给__simple_fget，该函数形参mask却没有任何活动条件或过滤",
+      "effect": "本地不会依据FMODE_PATH排除文件；不得断言此OS规范必须照搬Linux的O_PATH规则或更深VM必然允许映射",
+      "counter_evidence": [
+        "mask缺失可仅是未完成设计或参数保留，目标规范与意图未核",
+        "vm_mmap_pgoff/后继文件操作可能另行拒绝"
+      ],
+      "unknown": [
+        "MyOS2对应file打开模式与mmap的规范约束",
+        "被调VM的模式/权限检查"
+      ],
+      "evidence": [
+        "FG41-A001",
+        "FG41-A002",
+        "FG41-A003",
+        "FG41-A021"
+      ],
+      "related": [
+        "CORE-USER-FILE-CACHE-13",
+        "CORE-USER-OPEN-COMPLETION-39"
+      ],
+      "future_verification": {
+        "candidates": [
+          "先读取Owner既有设计及限定下游检查，再决定是否需修"
+        ],
+        "authorization_needed": [
+          "Owner下一阶段专项确认"
+        ]
+      },
+      "reopen_conditions": "核实mask语义意图并扩大授权后再评价，不自动升级问题"
+    }
+  ],
+  "history_preserved": [
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-01",
+      "status": "deferred_owner_not_ready",
+      "note": "fdget轻量取回不增引用却标记FPUT已存在；本批不再同义立项"
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-02",
+      "status": "deferred_owner_not_ready",
+      "note": "F_DUPFD超256旧项"
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-03",
+      "status": "deferred_owner_not_ready",
+      "note": "CLOEXEC旧项，本批未审"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-09",
+      "status": "needs_evidence",
+      "note": "fork副本与缓存归还另审"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "status": "deferred_owner_not_ready",
+      "note": "close/fput旧引用问题另审"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-11",
+      "status": "deferred_owner_not_ready",
+      "note": "fd索引与表满已有问题；本批仅增fget专用语义"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-ALLOCATION-INSTALL-40-REVIEW-001::R40-S01",
+      "status": "mandatory_supplement",
+      "note": "类型/索引/对象与引用转移"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-ALLOCATION-INSTALL-40-REVIEW-001::R40-S02",
+      "status": "mandatory_supplement",
+      "note": "引用符号身份与图前提区分"
+    }
+  ],
+  "owner_action_now": "none",
+  "runtime_evidence": "NOT_RUN",
+  "kernel_change_authorized": false,
+  "merge_authorized": false,
+  "old_results_changed": false
+}

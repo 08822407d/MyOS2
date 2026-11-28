@@ -1,0 +1,2077 @@
+{
+  "task_id": "CORE-USER-MMAP-PROTECTION-20",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "bounded_mmap_permission_facts",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra_owner_report_not_backend_attestation",
+  "date": "2026-11-01",
+  "source_pin_short12": "a039d9803ade",
+  "contract_short12": "038217219faa",
+  "result_initial_head_short12": "6166b3e2f5b9",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_anchor_count": 155,
+  "node_count": 53,
+  "edge_count": 60,
+  "effect_count": 21,
+  "scenario_count": 32,
+  "nodes": [
+    {
+      "id": "MP20-N01",
+      "name": "x64_sys_call",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N02",
+      "name": "__x64_sys_mmap",
+      "kind": "generated_wrapper"
+    },
+    {
+      "id": "MP20-N03",
+      "name": "__se_sys_mmap",
+      "kind": "generated_wrapper"
+    },
+    {
+      "id": "MP20-N04",
+      "name": "__do_sys_mmap",
+      "kind": "generated_syscall"
+    },
+    {
+      "id": "MP20-N05",
+      "name": "mmap_args",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N06",
+      "name": "fget",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N07",
+      "name": "__simple_fget",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N08",
+      "name": "fput",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N09",
+      "name": "file_s",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N10",
+      "name": "file_f_count",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N11",
+      "name": "file_f_mode",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N12",
+      "name": "file_f_flags",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N13",
+      "name": "OPEN_FMODE",
+      "kind": "macro"
+    },
+    {
+      "id": "MP20-N14",
+      "name": "vm_mmap_pgoff",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N15",
+      "name": "mmap_write_lock_killable",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N16",
+      "name": "mmap_write_unlock",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N17",
+      "name": "do_mmap",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N18",
+      "name": "request_prot",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N19",
+      "name": "request_flags",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N20",
+      "name": "normalized_prot",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N21",
+      "name": "normalized_flags",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N22",
+      "name": "calc_vm_prot_bits",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N23",
+      "name": "calc_vm_flag_bits",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N24",
+      "name": "mm_def_flags",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N25",
+      "name": "local_vm_flags",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N26",
+      "name": "path_noexec",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N27",
+      "name": "file_mmap_ok",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N28",
+      "name": "__get_unmapped_area",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N29",
+      "name": "simple_mmap_region",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N30",
+      "name": "simple_munmap_vma_range",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N31",
+      "name": "simple_vma_merge",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N32",
+      "name": "__simple_vma_adjust",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N33",
+      "name": "vm_area_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N34",
+      "name": "vma_s",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N35",
+      "name": "get_file",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N36",
+      "name": "vma_vm_flags",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N37",
+      "name": "vma_vm_page_prot",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N38",
+      "name": "vma_vm_ops",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N39",
+      "name": "vma_vm_file",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N40",
+      "name": "vm_get_page_prot",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N41",
+      "name": "protection_map",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N42",
+      "name": "supported_pte_mask",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N43",
+      "name": "call_mmap",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N44",
+      "name": "file_ops_mmap",
+      "kind": "callback_slot"
+    },
+    {
+      "id": "MP20-N45",
+      "name": "FAT32_file_ops",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N46",
+      "name": "generic_file_mmap",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N47",
+      "name": "mapping_map_writable",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N48",
+      "name": "mapping_unmap_writable",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N49",
+      "name": "simple_vma_link",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N50",
+      "name": "shmem_zero_setup",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N51",
+      "name": "vma_set_anonymous",
+      "kind": "function"
+    },
+    {
+      "id": "MP20-N52",
+      "name": "return_addr_or_error",
+      "kind": "data"
+    },
+    {
+      "id": "MP20-N53",
+      "name": "alloc_empty_file",
+      "kind": "function"
+    }
+  ],
+  "edges": [
+    {
+      "id": "MP20-E01",
+      "from": "MP20-N01",
+      "to": "MP20-N02",
+      "kind": "call",
+      "meaning": "generated syscall switch binding",
+      "condition": "nr==__NR_mmap",
+      "anchors": [
+        "MP20-A001",
+        "MP20-A002",
+        "MP20-A003"
+      ]
+    },
+    {
+      "id": "MP20-E02",
+      "from": "MP20-N02",
+      "to": "MP20-N03",
+      "kind": "call",
+      "meaning": "macro-generated stub forwards regs",
+      "condition": "x86 wrapper selected",
+      "anchors": [
+        "MP20-A004",
+        "MP20-A005",
+        "MP20-A006"
+      ]
+    },
+    {
+      "id": "MP20-E03",
+      "from": "MP20-N03",
+      "to": "MP20-N04",
+      "kind": "call",
+      "meaning": "macro decode of six regs to args",
+      "condition": "macro expands with valid regs",
+      "anchors": [
+        "MP20-A004",
+        "MP20-A006",
+        "MP20-A007",
+        "MP20-A009"
+      ]
+    },
+    {
+      "id": "MP20-E04",
+      "from": "MP20-N04",
+      "to": "MP20-N05",
+      "kind": "data",
+      "meaning": "consumes addr,len,prot,flags,fd,off",
+      "condition": "entered",
+      "anchors": [
+        "MP20-A009"
+      ]
+    },
+    {
+      "id": "MP20-E05",
+      "from": "MP20-N04",
+      "to": "MP20-N06",
+      "kind": "call",
+      "meaning": "fd lookup only for non-anonymous request",
+      "condition": "!(flags & MAP_ANONYMOUS)",
+      "anchors": [
+        "MP20-A012"
+      ]
+    },
+    {
+      "id": "MP20-E06",
+      "from": "MP20-N06",
+      "to": "MP20-N07",
+      "kind": "call",
+      "meaning": "simple file descriptor slot retrieval",
+      "condition": "fd given",
+      "anchors": [
+        "MP20-A015",
+        "MP20-A017"
+      ]
+    },
+    {
+      "id": "MP20-E07",
+      "from": "MP20-N07",
+      "to": "MP20-N10",
+      "kind": "effect",
+      "meaning": "increment selected fd slot f_count",
+      "condition": "fd<fd_count AND slot pointer valid",
+      "anchors": [
+        "MP20-A016"
+      ]
+    },
+    {
+      "id": "MP20-E08",
+      "from": "MP20-N04",
+      "to": "MP20-N14",
+      "kind": "call",
+      "meaning": "send file/address/length/prot/flags/pgoff",
+      "condition": "after offset/fget conditions",
+      "anchors": [
+        "MP20-A011",
+        "MP20-A014"
+      ]
+    },
+    {
+      "id": "MP20-E09",
+      "from": "MP20-N04",
+      "to": "MP20-N08",
+      "kind": "call",
+      "meaning": "drop temporary fd-lookup reference",
+      "condition": "file != NULL after vm_mmap_pgoff",
+      "anchors": [
+        "MP20-A014",
+        "MP20-A019"
+      ]
+    },
+    {
+      "id": "MP20-E10",
+      "from": "MP20-N08",
+      "to": "MP20-N10",
+      "kind": "effect",
+      "meaning": "dec and test file f_count",
+      "condition": "valid file object",
+      "anchors": [
+        "MP20-A019"
+      ]
+    },
+    {
+      "id": "MP20-E11",
+      "from": "MP20-N14",
+      "to": "MP20-N15",
+      "kind": "call",
+      "meaning": "try obtaining mmap write lock wrapper",
+      "condition": "entered",
+      "anchors": [
+        "MP20-A021",
+        "MP20-A026",
+        "MP20-A027"
+      ]
+    },
+    {
+      "id": "MP20-E12",
+      "from": "MP20-N14",
+      "to": "MP20-N17",
+      "kind": "call",
+      "meaning": "passes prot/flag/pgoff and vm_flags initial 0",
+      "condition": "lock wrapper returns 0",
+      "anchors": [
+        "MP20-A021"
+      ]
+    },
+    {
+      "id": "MP20-E13",
+      "from": "MP20-N14",
+      "to": "MP20-N16",
+      "kind": "call",
+      "meaning": "unlock wrapper after do_mmap return",
+      "condition": "do_mmap returned",
+      "anchors": [
+        "MP20-A021",
+        "MP20-A022",
+        "MP20-A028",
+        "MP20-A029"
+      ]
+    },
+    {
+      "id": "MP20-E14",
+      "from": "MP20-N17",
+      "to": "MP20-N18",
+      "kind": "data",
+      "meaning": "reads prot from syscall or vm_mmap interface",
+      "condition": "entered",
+      "anchors": [
+        "MP20-A035",
+        "MP20-A037"
+      ]
+    },
+    {
+      "id": "MP20-E15",
+      "from": "MP20-N17",
+      "to": "MP20-N19",
+      "kind": "data",
+      "meaning": "reads flags from caller",
+      "condition": "entered",
+      "anchors": [
+        "MP20-A035",
+        "MP20-A038"
+      ]
+    },
+    {
+      "id": "MP20-E16",
+      "from": "MP20-N17",
+      "to": "MP20-N20",
+      "kind": "effect",
+      "meaning": "OR PROT_EXEC for PROT_READ except file noexec",
+      "condition": "condition of branch true",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A150"
+      ]
+    },
+    {
+      "id": "MP20-E17",
+      "from": "MP20-N17",
+      "to": "MP20-N21",
+      "kind": "effect",
+      "meaning": "MAP_FIXED_NOREPLACE adds MAP_FIXED; MAP_SHARED file masks legacy flags",
+      "condition": "respective flag branches",
+      "anchors": [
+        "MP20-A038",
+        "MP20-A059",
+        "MP20-A060",
+        "MP20-A151",
+        "MP20-A155"
+      ]
+    },
+    {
+      "id": "MP20-E18",
+      "from": "MP20-N17",
+      "to": "MP20-N26",
+      "kind": "call",
+      "meaning": "consult mount/superblock for non-null file",
+      "condition": "PROT_READ check or file access branch",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A065",
+        "MP20-A150"
+      ]
+    },
+    {
+      "id": "MP20-E19",
+      "from": "MP20-N17",
+      "to": "MP20-N22",
+      "kind": "call",
+      "meaning": "translate effective prot bits to VM_READ/WRITE/EXEC",
+      "condition": "length and earlier checks pass",
+      "anchors": [
+        "MP20-A043",
+        "MP20-A046",
+        "MP20-A047"
+      ]
+    },
+    {
+      "id": "MP20-E20",
+      "from": "MP20-N17",
+      "to": "MP20-N23",
+      "kind": "call",
+      "meaning": "translate MAP attributes",
+      "condition": "length and earlier checks pass",
+      "anchors": [
+        "MP20-A043",
+        "MP20-A048",
+        "MP20-A049"
+      ]
+    },
+    {
+      "id": "MP20-E21",
+      "from": "MP20-N22",
+      "to": "MP20-N20",
+      "kind": "data",
+      "meaning": "consumes modified prot",
+      "condition": "call path valid",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A046",
+        "MP20-A047"
+      ]
+    },
+    {
+      "id": "MP20-E22",
+      "from": "MP20-N23",
+      "to": "MP20-N21",
+      "kind": "data",
+      "meaning": "consumes MAP flag state",
+      "condition": "call path valid",
+      "anchors": [
+        "MP20-A038",
+        "MP20-A048",
+        "MP20-A049"
+      ]
+    },
+    {
+      "id": "MP20-E23",
+      "from": "MP20-N17",
+      "to": "MP20-N24",
+      "kind": "data",
+      "meaning": "OR mm->def_flags into vm_flags",
+      "condition": "call path valid",
+      "anchors": [
+        "MP20-A043"
+      ]
+    },
+    {
+      "id": "MP20-E24",
+      "from": "MP20-N17",
+      "to": "MP20-N25",
+      "kind": "effect",
+      "meaning": "OR translated current VM bits, MAY* and def_flags",
+      "condition": "after earlier checks",
+      "anchors": [
+        "MP20-A043",
+        "MP20-A135",
+        "MP20-A136",
+        "MP20-A137"
+      ]
+    },
+    {
+      "id": "MP20-E25",
+      "from": "MP20-N17",
+      "to": "MP20-N28",
+      "kind": "call",
+      "meaning": "select address, results as opaque boundary",
+      "condition": "precomputed vm_flags and valid inputs",
+      "anchors": [
+        "MP20-A050",
+        "MP20-A051"
+      ]
+    },
+    {
+      "id": "MP20-E26",
+      "from": "MP20-N17",
+      "to": "MP20-N27",
+      "kind": "call",
+      "meaning": "validate file range and pgoff",
+      "condition": "file is nonnull",
+      "anchors": [
+        "MP20-A053",
+        "MP20-A054",
+        "MP20-A055",
+        "MP20-A056"
+      ]
+    },
+    {
+      "id": "MP20-E27",
+      "from": "MP20-N17",
+      "to": "MP20-N11",
+      "kind": "data",
+      "meaning": "FMODE_READ and WRITE access tests",
+      "condition": "file nonnull and valid",
+      "anchors": [
+        "MP20-A061",
+        "MP20-A063",
+        "MP20-A064",
+        "MP20-A073",
+        "MP20-A074"
+      ]
+    },
+    {
+      "id": "MP20-E28",
+      "from": "MP20-N17",
+      "to": "MP20-N25",
+      "kind": "effect",
+      "meaning": "file shared sets VM_SHARED/MAYSHARE; no FMODE_WRITE clears VM_SHARED and MAYWRITE",
+      "condition": "selected MAP_SHARED/VALIDATE file path",
+      "anchors": [
+        "MP20-A063",
+        "MP20-A064"
+      ]
+    },
+    {
+      "id": "MP20-E29",
+      "from": "MP20-N17",
+      "to": "MP20-N25",
+      "kind": "effect",
+      "meaning": "file path_noexec may clear VM_MAYEXEC after rejecting VM_EXEC",
+      "condition": "file nonnull and path_noexec true",
+      "anchors": [
+        "MP20-A065",
+        "MP20-A150"
+      ]
+    },
+    {
+      "id": "MP20-E30",
+      "from": "MP20-N17",
+      "to": "MP20-N29",
+      "kind": "call",
+      "meaning": "submit resulting vm_flags and pgoff",
+      "condition": "all required gates allow",
+      "anchors": [
+        "MP20-A072"
+      ]
+    },
+    {
+      "id": "MP20-E31",
+      "from": "MP20-N29",
+      "to": "MP20-N30",
+      "kind": "call",
+      "meaning": "attempt old overlapping VMA unmap before new/merge",
+      "condition": "entered",
+      "anchors": [
+        "MP20-A075",
+        "MP20-A087"
+      ]
+    },
+    {
+      "id": "MP20-E32",
+      "from": "MP20-N29",
+      "to": "MP20-N31",
+      "kind": "call",
+      "meaning": "attempt merge with preexisting VMA",
+      "condition": "old unmap helper returns 0",
+      "anchors": [
+        "MP20-A088",
+        "MP20-A076",
+        "MP20-A077",
+        "MP20-A079",
+        "MP20-A080",
+        "MP20-A081",
+        "MP20-A082",
+        "MP20-A083"
+      ]
+    },
+    {
+      "id": "MP20-E33",
+      "from": "MP20-N31",
+      "to": "MP20-N32",
+      "kind": "call",
+      "meaning": "adjust selected prior VMA bounds",
+      "condition": "merge conditions satisfied and loop returned",
+      "anchors": [
+        "MP20-A082",
+        "MP20-A083"
+      ]
+    },
+    {
+      "id": "MP20-E34",
+      "from": "MP20-N29",
+      "to": "MP20-N33",
+      "kind": "call",
+      "meaning": "allocate new VMA if not merged",
+      "condition": "no merge",
+      "anchors": [
+        "MP20-A089"
+      ]
+    },
+    {
+      "id": "MP20-E35",
+      "from": "MP20-N29",
+      "to": "MP20-N36",
+      "kind": "effect",
+      "meaning": "new VMA vm_flags assignment",
+      "condition": "new VMA exists",
+      "anchors": [
+        "MP20-A090"
+      ]
+    },
+    {
+      "id": "MP20-E36",
+      "from": "MP20-N29",
+      "to": "MP20-N40",
+      "kind": "call",
+      "meaning": "compute page protection from local vm_flags",
+      "condition": "new VMA path",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A122"
+      ]
+    },
+    {
+      "id": "MP20-E37",
+      "from": "MP20-N40",
+      "to": "MP20-N41",
+      "kind": "data",
+      "meaning": "indexes 16 templates by low VM_READ/WRITE/EXEC/SHARED",
+      "condition": "valid flags",
+      "anchors": [
+        "MP20-A118",
+        "MP20-A119",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A122"
+      ]
+    },
+    {
+      "id": "MP20-E38",
+      "from": "MP20-N40",
+      "to": "MP20-N42",
+      "kind": "data",
+      "meaning": "mask applies only if val has PRESENT; optional PKEY branch",
+      "condition": "current config and valid mask",
+      "anchors": [
+        "MP20-A123",
+        "MP20-A124",
+        "MP20-A125",
+        "MP20-A126",
+        "MP20-A127",
+        "MP20-A130"
+      ]
+    },
+    {
+      "id": "MP20-E39",
+      "from": "MP20-N29",
+      "to": "MP20-N37",
+      "kind": "effect",
+      "meaning": "assign pgprot from vm_get_page_prot once on new branch",
+      "condition": "new VMA path before call_mmap",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A122"
+      ]
+    },
+    {
+      "id": "MP20-E40",
+      "from": "MP20-N29",
+      "to": "MP20-N35",
+      "kind": "call",
+      "meaning": "increment file reference owned by new VMA",
+      "condition": "file nonnull new branch",
+      "anchors": [
+        "MP20-A091",
+        "MP20-A018"
+      ]
+    },
+    {
+      "id": "MP20-E41",
+      "from": "MP20-N35",
+      "to": "MP20-N10",
+      "kind": "effect",
+      "meaning": "atomic_long_inc for VMA-owned ref",
+      "condition": "valid file",
+      "anchors": [
+        "MP20-A018"
+      ]
+    },
+    {
+      "id": "MP20-E42",
+      "from": "MP20-N29",
+      "to": "MP20-N39",
+      "kind": "effect",
+      "meaning": "assign VMA file pointer from get_file",
+      "condition": "new file VMA",
+      "anchors": [
+        "MP20-A091"
+      ]
+    },
+    {
+      "id": "MP20-E43",
+      "from": "MP20-N29",
+      "to": "MP20-N43",
+      "kind": "call",
+      "meaning": "delegate to filesystem callback",
+      "condition": "file nonnull new VMA; get_file succeeded",
+      "anchors": [
+        "MP20-A091",
+        "MP20-A107"
+      ]
+    },
+    {
+      "id": "MP20-E44",
+      "from": "MP20-N43",
+      "to": "MP20-N44",
+      "kind": "data",
+      "meaning": "select callback slot from file->f_op",
+      "condition": "valid file ops",
+      "anchors": [
+        "MP20-A066",
+        "MP20-A107"
+      ]
+    },
+    {
+      "id": "MP20-E45",
+      "from": "MP20-N43",
+      "to": "MP20-N46",
+      "kind": "call_path",
+      "meaning": "indirect callback via file->f_op->mmap; representative FAT32 mapping only",
+      "condition": "file uses FAT32_file_ops and valid callback",
+      "anchors": [
+        "MP20-A107",
+        "MP20-A114",
+        "MP20-A115",
+        "MP20-A116",
+        "MP20-A117"
+      ],
+      "intermediates": [
+        "file->f_op->mmap",
+        "FAT32_file_ops.mmap=generic_file_mmap"
+      ]
+    },
+    {
+      "id": "MP20-E46",
+      "from": "MP20-N46",
+      "to": "MP20-N38",
+      "kind": "effect",
+      "meaning": "install generic_file_vm_ops; does not actively revise page prot in this body",
+      "condition": "representative callback reached",
+      "anchors": [
+        "MP20-A114",
+        "MP20-A115"
+      ]
+    },
+    {
+      "id": "MP20-E47",
+      "from": "MP20-N29",
+      "to": "MP20-N47",
+      "kind": "call",
+      "meaning": "conditional file writable mapping count",
+      "condition": "vma_is_shared_maywrite(vma) and file mapping valid",
+      "anchors": [
+        "MP20-A092",
+        "MP20-A093",
+        "MP20-A110"
+      ]
+    },
+    {
+      "id": "MP20-E48",
+      "from": "MP20-N29",
+      "to": "MP20-N48",
+      "kind": "call",
+      "meaning": "unmap_writable on selected exit branches",
+      "condition": "file and vm_flags & VM_SHARED; mapping state validity separate",
+      "anchors": [
+        "MP20-A100",
+        "MP20-A101",
+        "MP20-A105",
+        "MP20-A111"
+      ]
+    },
+    {
+      "id": "MP20-E49",
+      "from": "MP20-N29",
+      "to": "MP20-N49",
+      "kind": "call",
+      "meaning": "publish new VMA in mm list",
+      "condition": "new VMA and prior branches complete",
+      "anchors": [
+        "MP20-A085",
+        "MP20-A086",
+        "MP20-A100"
+      ]
+    },
+    {
+      "id": "MP20-E50",
+      "from": "MP20-N29",
+      "to": "MP20-N50",
+      "kind": "call",
+      "meaning": "no-file MAP_SHARED special branch",
+      "condition": "file NULL and local VM_SHARED",
+      "anchors": [
+        "MP20-A098"
+      ]
+    },
+    {
+      "id": "MP20-E51",
+      "from": "MP20-N29",
+      "to": "MP20-N51",
+      "kind": "call",
+      "meaning": "no-file nonshared branch",
+      "condition": "file NULL and !(VM_SHARED)",
+      "anchors": [
+        "MP20-A099",
+        "MP20-A133"
+      ]
+    },
+    {
+      "id": "MP20-E52",
+      "from": "MP20-N51",
+      "to": "MP20-N38",
+      "kind": "effect",
+      "meaning": "set vm_ops=NULL",
+      "condition": "called",
+      "anchors": [
+        "MP20-A133",
+        "MP20-A134"
+      ]
+    },
+    {
+      "id": "MP20-E53",
+      "from": "MP20-N29",
+      "to": "MP20-N25",
+      "kind": "effect",
+      "meaning": "updates local variable after callback or second merge",
+      "condition": "file callback changes flags or merge succeeds",
+      "anchors": [
+        "MP20-A095",
+        "MP20-A096",
+        "MP20-A097",
+        "MP20-A098"
+      ]
+    },
+    {
+      "id": "MP20-E54",
+      "from": "MP20-N29",
+      "to": "MP20-N36",
+      "kind": "effect",
+      "meaning": "set VM_SOFTDIRTY late without vma_set_page_prot",
+      "condition": "returns via out path",
+      "anchors": [
+        "MP20-A102",
+        "MP20-A144"
+      ]
+    },
+    {
+      "id": "MP20-E55",
+      "from": "MP20-N29",
+      "to": "MP20-N52",
+      "kind": "effect",
+      "meaning": "returns addr on success or error from explicit branches",
+      "condition": "control flow returns",
+      "anchors": [
+        "MP20-A089",
+        "MP20-A100",
+        "MP20-A102",
+        "MP20-A103",
+        "MP20-A104",
+        "MP20-A105",
+        "MP20-A106"
+      ]
+    },
+    {
+      "id": "MP20-E56",
+      "from": "MP20-N14",
+      "to": "MP20-N52",
+      "kind": "data",
+      "meaning": "passes do_mmap result outward",
+      "condition": "do_mmap and unlock wrapper return",
+      "anchors": [
+        "MP20-A021",
+        "MP20-A022"
+      ]
+    },
+    {
+      "id": "MP20-E57",
+      "from": "MP20-N53",
+      "to": "MP20-N11",
+      "kind": "effect",
+      "meaning": "alloc_empty_file assigns f->f_mode = OPEN_FMODE(flags), separate from macro evaluation",
+      "condition": "file allocation initialized with flags",
+      "anchors": [
+        "MP20-A145",
+        "MP20-A146",
+        "MP20-A147",
+        "MP20-A148"
+      ]
+    },
+    {
+      "id": "MP20-E58",
+      "from": "MP20-N09",
+      "to": "MP20-N12",
+      "kind": "layout",
+      "meaning": "file fields are distinct",
+      "condition": "valid file struct",
+      "anchors": [
+        "MP20-A108",
+        "MP20-A109",
+        "MP20-A145"
+      ]
+    },
+    {
+      "id": "MP20-E59",
+      "from": "MP20-N09",
+      "to": "MP20-N11",
+      "kind": "layout",
+      "meaning": "file fields are distinct",
+      "condition": "valid file struct",
+      "anchors": [
+        "MP20-A108",
+        "MP20-A109",
+        "MP20-A145"
+      ]
+    },
+    {
+      "id": "MP20-E60",
+      "from": "MP20-N53",
+      "to": "MP20-N13",
+      "kind": "call",
+      "meaning": "evaluate OPEN_FMODE(flags) macro as right-hand side before assigning f_mode",
+      "condition": "alloc_empty_file successfully allocated file and initialized fields",
+      "anchors": [
+        "MP20-A145",
+        "MP20-A146",
+        "MP20-A147",
+        "MP20-A148"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "MP20-X01",
+      "target": "mmap fd file.f_count",
+      "action": "+1 at fget; -1 at syscall fput",
+      "when": "file nonnull & valid fd slot; return from vm_mmap_pgoff",
+      "anchors": [
+        "MP20-A012",
+        "MP20-A014",
+        "MP20-A016",
+        "MP20-A019"
+      ]
+    },
+    {
+      "id": "MP20-X02",
+      "target": "file.f_count",
+      "action": "+1 at get_file for new VMA",
+      "when": "new file VMA not merged",
+      "anchors": [
+        "MP20-A018",
+        "MP20-A091"
+      ]
+    },
+    {
+      "id": "MP20-X03",
+      "target": "effective prot",
+      "action": "OR PROT_EXEC for PROT_READ except file path_noexec",
+      "when": "READ and (file==NULL or !path_noexec)",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A150"
+      ]
+    },
+    {
+      "id": "MP20-X04",
+      "target": "effective MAP flags",
+      "action": "OR MAP_FIXED for FIXED_NOREPLACE; strip unknown MAP_SHARED file flags via LEGACY_MAP_MASK",
+      "when": "selected branch",
+      "anchors": [
+        "MP20-A038",
+        "MP20-A059",
+        "MP20-A060",
+        "MP20-A151",
+        "MP20-A155"
+      ]
+    },
+    {
+      "id": "MP20-X05",
+      "target": "local vm_flags",
+      "action": "OR VM_READ/WRITE/EXEC, VM_GROWSDOWN/LOCKED/SYNC, mm.def_flags, VM_MAYREAD/MAYWRITE/MAYEXEC",
+      "when": "do_mmap entry after size checks",
+      "anchors": [
+        "MP20-A043",
+        "MP20-A046",
+        "MP20-A047",
+        "MP20-A048",
+        "MP20-A049"
+      ]
+    },
+    {
+      "id": "MP20-X06",
+      "target": "local vm_flags",
+      "action": "set VM_SHARED|VM_MAYSHARE then clear VM_MAYWRITE|VM_SHARED if !FMODE_WRITE",
+      "when": "file MAP_SHARED/VALIDATE",
+      "anchors": [
+        "MP20-A063",
+        "MP20-A064"
+      ]
+    },
+    {
+      "id": "MP20-X07",
+      "target": "local vm_flags",
+      "action": "clear VM_MAYEXEC for noexec, reject VM_EXEC before that",
+      "when": "file nonnull & path_noexec true",
+      "anchors": [
+        "MP20-A065",
+        "MP20-A150"
+      ]
+    },
+    {
+      "id": "MP20-X08",
+      "target": "offset to pgoff",
+      "action": "off >> PAGE_SHIFT after off alignment guard",
+      "when": "sys_mmap entered and off aligned",
+      "anchors": [
+        "MP20-A010",
+        "MP20-A011"
+      ]
+    },
+    {
+      "id": "MP20-X09",
+      "target": "VMA.vm_flags",
+      "action": "direct assignment of finalized local value on newly allocated VMA",
+      "when": "not merged; after file checking",
+      "anchors": [
+        "MP20-A090"
+      ]
+    },
+    {
+      "id": "MP20-X10",
+      "target": "VMA.vm_page_prot",
+      "action": "once from vm_get_page_prot(local vm_flags)",
+      "when": "new VMA before file callback",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A122",
+        "MP20-A127"
+      ]
+    },
+    {
+      "id": "MP20-X11",
+      "target": "VMA.vm_file",
+      "action": "get_file increments and returned file pointer assigned",
+      "when": "new file VMA",
+      "anchors": [
+        "MP20-A091",
+        "MP20-A018"
+      ]
+    },
+    {
+      "id": "MP20-X12",
+      "target": "VMA.vm_ops",
+      "action": "generic_file_mmap assigns generic_file_vm_ops",
+      "when": "FAT32 callback invoked",
+      "anchors": [
+        "MP20-A115",
+        "MP20-A116",
+        "MP20-A117"
+      ]
+    },
+    {
+      "id": "MP20-X13",
+      "target": "VMA fields",
+      "action": "possible file callback changes of vm_flags/vm_file",
+      "when": "other callback; known code explicitly detects change but FAT32 generic representative only changes vm_ops",
+      "anchors": [
+        "MP20-A095",
+        "MP20-A096",
+        "MP20-A097",
+        "MP20-A114",
+        "MP20-A115"
+      ]
+    },
+    {
+      "id": "MP20-X14",
+      "target": "VMA.vm_page_prot",
+      "action": "no active refresh after late SOFTDIRTY or callback changes",
+      "when": "selected end-of-function excerpt, excludes other writers",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A102",
+        "MP20-A144"
+      ]
+    },
+    {
+      "id": "MP20-X15",
+      "target": "VMA list and map_count",
+      "action": "simple_vma_link calls __vma_link_to_list and vma_link_file",
+      "when": "new VMA path, valid helpers",
+      "anchors": [
+        "MP20-A084",
+        "MP20-A085",
+        "MP20-A086",
+        "MP20-A100"
+      ]
+    },
+    {
+      "id": "MP20-X16",
+      "target": "existing VMA object",
+      "action": "simple_vma_merge returns existing/adjusted VMA, no new allocation",
+      "when": "merge conditions satisfy and helper returns",
+      "anchors": [
+        "MP20-A076",
+        "MP20-A077",
+        "MP20-A078",
+        "MP20-A079",
+        "MP20-A080",
+        "MP20-A081",
+        "MP20-A082",
+        "MP20-A083",
+        "MP20-A088"
+      ]
+    },
+    {
+      "id": "MP20-X17",
+      "target": "mapping i_mmap_writable",
+      "action": "conditional increment / decrement via map_writable helpers",
+      "when": "file callback VMA shared maywrite path and valid mapping",
+      "anchors": [
+        "MP20-A092",
+        "MP20-A110",
+        "MP20-A111"
+      ]
+    },
+    {
+      "id": "MP20-X18",
+      "target": "return value",
+      "action": "success addr vs early negative errno and callbacks",
+      "when": "path-specific return including no return if unsupported HugeTLB condition",
+      "anchors": [
+        "MP20-A010",
+        "MP20-A012",
+        "MP20-A013",
+        "MP20-A014",
+        "MP20-A036",
+        "MP20-A041",
+        "MP20-A042",
+        "MP20-A051",
+        "MP20-A060",
+        "MP20-A061",
+        "MP20-A062",
+        "MP20-A064",
+        "MP20-A065",
+        "MP20-A066",
+        "MP20-A067",
+        "MP20-A071",
+        "MP20-A072",
+        "MP20-A089",
+        "MP20-A103",
+        "MP20-A104",
+        "MP20-A105",
+        "MP20-A106"
+      ]
+    },
+    {
+      "id": "MP20-X19",
+      "target": "mmap lock state",
+      "action": "no down_write/up_write in selected wrapper bodies",
+      "when": "mmap_write_lock_killable returns 0 and unlock comments",
+      "anchors": [
+        "MP20-A021",
+        "MP20-A026",
+        "MP20-A027",
+        "MP20-A028",
+        "MP20-A029"
+      ]
+    },
+    {
+      "id": "MP20-X20",
+      "target": "prior overlapping VMA state",
+      "action": "simple_munmap_vma_range invoked before new VMA/callback success",
+      "when": "simple_mmap_region entered and helper reached",
+      "anchors": [
+        "MP20-A075",
+        "MP20-A087"
+      ]
+    },
+    {
+      "id": "MP20-X21",
+      "target": "PTE state",
+      "action": "no direct PTE installation by selected do_mmap/simple_mmap_region path",
+      "when": "selected functions and representative generic callback read; later fault/callback outside scope",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A091",
+        "MP20-A100",
+        "MP20-A102",
+        "MP20-A114",
+        "MP20-A115"
+      ]
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "MP20-M01",
+      "name": "anonymous/private PROT_NONE",
+      "premises": "file=NULL, MAP_PRIVATE, mm.def_flags has no extra low VM permission bits",
+      "normalized_prot": "PROT_NONE",
+      "vm_flags": "VM_NONE plus MAYREAD|MAYWRITE|MAYEXEC",
+      "template": "PAGE_NONE: PRESENT=0 USER=0 RW=0; NX not set in this constant",
+      "result": "new VMA or compatible merge",
+      "limits": "only if no additional flags/arch effects",
+      "anchors": [
+        "MP20-A031",
+        "MP20-A043",
+        "MP20-A068",
+        "MP20-A070",
+        "MP20-A071",
+        "MP20-A118",
+        "MP20-A128"
+      ]
+    },
+    {
+      "id": "MP20-M02",
+      "name": "anonymous/private PROT_READ",
+      "premises": "file=NULL; MAP_PRIVATE; default flags",
+      "normalized_prot": "PROT_READ|PROT_EXEC",
+      "vm_flags": "VM_READ|VM_EXEC + MAY*",
+      "template": "PAGE_READONLY_EXEC: PRESENT USER, RW=0, NX=0",
+      "result": "new/merge",
+      "limits": "read request upgraded to execute in do_mmap",
+      "anchors": [
+        "MP20-A030",
+        "MP20-A037",
+        "MP20-A043",
+        "MP20-A119",
+        "MP20-A129"
+      ]
+    },
+    {
+      "id": "MP20-M03",
+      "name": "anonymous/private PROT_WRITE",
+      "premises": "file=NULL; MAP_PRIVATE; default flags",
+      "normalized_prot": "PROT_WRITE",
+      "vm_flags": "VM_WRITE + MAY*",
+      "template": "PAGE_COPY: PRESENT USER RW=0 NX=1",
+      "result": "new/merge",
+      "limits": "write is later fault dependent, not immediately writable PTE",
+      "anchors": [
+        "MP20-A030",
+        "MP20-A037",
+        "MP20-A043",
+        "MP20-A118",
+        "MP20-A129"
+      ]
+    },
+    {
+      "id": "MP20-M04",
+      "name": "anonymous/private PROT_READ|PROT_WRITE",
+      "premises": "file=NULL; MAP_PRIVATE; default flags",
+      "normalized_prot": "PROT_READ|WRITE|EXEC",
+      "vm_flags": "VM_READ|WRITE|EXEC+MAY*",
+      "template": "PAGE_COPY_EXEC: PRESENT USER RW=0 NX=0",
+      "result": "new/merge",
+      "limits": "no W^X certification",
+      "anchors": [
+        "MP20-A030",
+        "MP20-A037",
+        "MP20-A043",
+        "MP20-A119",
+        "MP20-A128"
+      ]
+    },
+    {
+      "id": "MP20-M05",
+      "name": "anonymous/private PROT_EXEC",
+      "premises": "file=NULL; MAP_PRIVATE; default flags",
+      "normalized_prot": "PROT_EXEC",
+      "vm_flags": "VM_EXEC+MAY*",
+      "template": "PAGE_READONLY_EXEC: PRESENT USER RW=0 NX=0",
+      "result": "new/merge",
+      "limits": "different from VM_READ yet same template",
+      "anchors": [
+        "MP20-A030",
+        "MP20-A037",
+        "MP20-A119",
+        "MP20-A129"
+      ]
+    },
+    {
+      "id": "MP20-M06",
+      "name": "anonymous/shared PROT_READ",
+      "premises": "file=NULL; MAP_SHARED, valid shmem setup",
+      "normalized_prot": "PROT_READ|EXEC",
+      "vm_flags": "VM_READ|EXEC|VM_SHARED|VM_MAYSHARE+MAY*",
+      "template": "PAGE_READONLY_EXEC: PRESENT USER RW=0 NX=0",
+      "result": "shmem_zero_setup before linking",
+      "limits": "not do_anonymous_page of batch19 by default",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A068",
+        "MP20-A069",
+        "MP20-A098",
+        "MP20-A120",
+        "MP20-A121"
+      ]
+    },
+    {
+      "id": "MP20-M07",
+      "name": "anonymous/shared PROT_WRITE",
+      "premises": "file=NULL; MAP_SHARED, valid shmem setup",
+      "normalized_prot": "PROT_WRITE",
+      "vm_flags": "VM_WRITE|VM_SHARED+MAY*",
+      "template": "PAGE_SHARED: PRESENT USER RW=1 NX=1",
+      "result": "shmem setup",
+      "limits": "PTE not installed by this path",
+      "anchors": [
+        "MP20-A068",
+        "MP20-A069",
+        "MP20-A098",
+        "MP20-A120",
+        "MP20-A128"
+      ]
+    },
+    {
+      "id": "MP20-M08",
+      "name": "anonymous/shared PROT_READ|WRITE",
+      "premises": "file=NULL; MAP_SHARED, shmem success",
+      "normalized_prot": "PROT_READ|WRITE|EXEC",
+      "vm_flags": "VM_READ|WRITE|EXEC|SHARED+MAY*",
+      "template": "PAGE_SHARED_EXEC: PRESENT USER RW=1 NX=0",
+      "result": "shmem setup",
+      "limits": "only under default mm.def_flags and unchanged callback fields",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A068",
+        "MP20-A069",
+        "MP20-A098",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A128"
+      ]
+    },
+    {
+      "id": "MP20-M09",
+      "name": "file/private PROT_WRITE on O_RDONLY fd",
+      "premises": "valid f_mode=FMODE_READ, file callback exists, !noexec does not restrict W-only",
+      "normalized_prot": "PROT_WRITE",
+      "vm_flags": "VM_WRITE+MAY*",
+      "template": "PAGE_COPY: RW=0 NX=1",
+      "result": "passes FMODE_READ, no FMODE_WRITE requirement for MAP_PRIVATE",
+      "limits": "file mapping data/private copy requires later fault",
+      "anchors": [
+        "MP20-A061",
+        "MP20-A064",
+        "MP20-A065",
+        "MP20-A118",
+        "MP20-A129",
+        "MP20-A146",
+        "MP20-A147",
+        "MP20-A148"
+      ]
+    },
+    {
+      "id": "MP20-M10",
+      "name": "file/shared PROT_WRITE on O_RDONLY fd",
+      "premises": "file f_mode=READ not WRITE; other gates valid",
+      "normalized_prot": "PROT_WRITE",
+      "vm_flags": "local flags computed but rejected",
+      "template": "no new VMA template",
+      "result": "return -EACCES in file branch",
+      "limits": "earlier address selection and fd ref still occurred",
+      "anchors": [
+        "MP20-A061",
+        "MP20-A063",
+        "MP20-A064",
+        "MP20-A073",
+        "MP20-A074"
+      ]
+    },
+    {
+      "id": "MP20-M11",
+      "name": "file/shared PROT_READ on O_RDONLY fd",
+      "premises": "f_mode=READ, !noexec, no append rejection",
+      "normalized_prot": "READ|EXEC",
+      "vm_flags": "VM_READ|EXEC|VM_MAYSHARE+MAY*; VM_SHARED cleared",
+      "template": "PAGE_READONLY_EXEC, RW=0 NX=0",
+      "result": "can continue into file mmap callback",
+      "limits": "MAP_SHARED request not identical final VM_SHARED flag",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A063",
+        "MP20-A064",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A147",
+        "MP20-A148"
+      ]
+    },
+    {
+      "id": "MP20-M12",
+      "name": "file/shared PROT_WRITE on O_RDWR fd",
+      "premises": "FMODE_READ|WRITE; not append restricted; !noexec irrelevant to W-only",
+      "normalized_prot": "WRITE",
+      "vm_flags": "VM_WRITE|SHARED|MAYSHARE+MAY*",
+      "template": "PAGE_SHARED: PRESENT USER RW=1 NX=1",
+      "result": "callback must be valid",
+      "limits": "not hardware access attestation",
+      "anchors": [
+        "MP20-A061",
+        "MP20-A063",
+        "MP20-A064",
+        "MP20-A120",
+        "MP20-A128",
+        "MP20-A147",
+        "MP20-A148"
+      ]
+    },
+    {
+      "id": "MP20-M13",
+      "name": "file/shared PROT_READ|WRITE O_RDWR fd",
+      "premises": "FMODE_READ|WRITE, not noexec",
+      "normalized_prot": "READ|WRITE|EXEC",
+      "vm_flags": "VM_READ|WRITE|EXEC|SHARED+MAY*",
+      "template": "PAGE_SHARED_EXEC: RW=1 NX=0",
+      "result": "callback required",
+      "limits": "file mode and protection are independent fields",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A061",
+        "MP20-A063",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A128"
+      ]
+    },
+    {
+      "id": "MP20-M14",
+      "name": "file/private PROT_READ on O_WRONLY fd",
+      "premises": "file f_mode=FMODE_WRITE without READ",
+      "normalized_prot": "READ maybe EXEC",
+      "vm_flags": "rejected before VMA creation",
+      "template": "no template",
+      "result": "return -EACCES",
+      "limits": "not an invalid prot bit; file-mode check",
+      "anchors": [
+        "MP20-A064",
+        "MP20-A073",
+        "MP20-A074",
+        "MP20-A146",
+        "MP20-A147",
+        "MP20-A148"
+      ]
+    },
+    {
+      "id": "MP20-M15",
+      "name": "file/private PROT_READ on noexec",
+      "premises": "valid file path_noexec=true, f_mode=READ, valid callback",
+      "normalized_prot": "READ (no automatic EXEC)",
+      "vm_flags": "VM_READ; VM_MAYEXEC cleared",
+      "template": "PAGE_READONLY: PRESENT USER RW=0 NX=1",
+      "result": "callback if no errors",
+      "limits": "mm.def_flags/arch may add other bits, not globally excluded",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A065",
+        "MP20-A118",
+        "MP20-A129",
+        "MP20-A150"
+      ]
+    },
+    {
+      "id": "MP20-M16",
+      "name": "file/private PROT_EXEC explicit on noexec",
+      "premises": "file path_noexec=true; VM_EXEC survives initial composition",
+      "normalized_prot": "EXEC",
+      "vm_flags": "VM_EXEC before noexec gate",
+      "template": "no new VMA",
+      "result": "-EPERM",
+      "limits": "exact branch only if all earlier gates complete",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A043",
+        "MP20-A065",
+        "MP20-A150"
+      ]
+    },
+    {
+      "id": "MP20-M17",
+      "name": "file/shared PROT_READ on append-only inode writable fd",
+      "premises": "IS_APPEND(inode) && f_mode FMODE_WRITE",
+      "normalized_prot": "READ may upgrade EXEC",
+      "vm_flags": "rejected",
+      "template": "no template",
+      "result": "-EACCES even without PROT_WRITE",
+      "limits": "IS_APPEND checks inode S_APPEND not O_APPEND",
+      "anchors": [
+        "MP20-A062",
+        "MP20-A113",
+        "MP20-A149"
+      ]
+    },
+    {
+      "id": "MP20-M18",
+      "name": "file missing mmap callback",
+      "premises": "valid file/f_mode but file->f_op->mmap==NULL",
+      "normalized_prot": "arbitrary permitted",
+      "vm_flags": "prior gates pass",
+      "template": "no new VMA",
+      "result": "-ENODEV",
+      "limits": "f_op must itself be valid for earlier fop_flags read",
+      "anchors": [
+        "MP20-A057",
+        "MP20-A066",
+        "MP20-A067"
+      ]
+    },
+    {
+      "id": "MP20-M19",
+      "name": "file MAP_SHARED_VALIDATE unsupported flags",
+      "premises": "flags contain bits outside LEGACY|FOP_MMAP_SYNC permission",
+      "normalized_prot": "arbitrary",
+      "vm_flags": "file validation fails",
+      "template": "no template",
+      "result": "-EOPNOTSUPP",
+      "limits": "MAP_SHARED clears nonlegacy first; validate does not",
+      "anchors": [
+        "MP20-A057",
+        "MP20-A058",
+        "MP20-A059",
+        "MP20-A060",
+        "MP20-A112",
+        "MP20-A151",
+        "MP20-A155"
+      ]
+    },
+    {
+      "id": "MP20-M20",
+      "name": "file MAP_SHARED extra flags",
+      "premises": "MAP_SHARED and unsupported nonlegacy flags; compatible filename",
+      "normalized_prot": "arbitrary",
+      "vm_flags": "normalization flags&=LEGACY_MAP_MASK",
+      "template": "template conditional",
+      "result": "continue other checks",
+      "limits": "not equivalent to MAP_SHARED_VALIDATE rejection",
+      "anchors": [
+        "MP20-A058",
+        "MP20-A059",
+        "MP20-A060",
+        "MP20-A151",
+        "MP20-A155"
+      ]
+    },
+    {
+      "id": "MP20-M21",
+      "name": "no-file MAP_SHARED_VALIDATE",
+      "premises": "file=NULL, flags & MAP_TYPE==3",
+      "normalized_prot": "arbitrary",
+      "vm_flags": "local flags computed",
+      "template": "no new VMA",
+      "result": "-EINVAL from no-file default",
+      "limits": "MAP_SHARED_VALIDATE value 3 is distinct from MAP_SHARED",
+      "anchors": [
+        "MP20-A034",
+        "MP20-A068",
+        "MP20-A069",
+        "MP20-A070",
+        "MP20-A071"
+      ]
+    },
+    {
+      "id": "MP20-M22",
+      "name": "new VMA",
+      "premises": "no merge, vm_area_alloc succeeds",
+      "normalized_prot": "normalized",
+      "vm_flags": "vm_flags stored",
+      "template": "vm_get_page_prot computed once before callback",
+      "result": "new VMA may link",
+      "limits": "vm_file separate get_file and vm_ops may mutate",
+      "anchors": [
+        "MP20-A089",
+        "MP20-A090",
+        "MP20-A091",
+        "MP20-A095",
+        "MP20-A100"
+      ]
+    },
+    {
+      "id": "MP20-M23",
+      "name": "merged VMA",
+      "premises": "simple_vma_merge returns an existing object",
+      "normalized_prot": "normalized",
+      "vm_flags": "prior compatible VM flag state, subject to SOFTDIRTY",
+      "template": "existing vm_page_prot retained",
+      "result": "out success address",
+      "limits": "do not claim new allocation or recomputation",
+      "anchors": [
+        "MP20-A076",
+        "MP20-A077",
+        "MP20-A079",
+        "MP20-A080",
+        "MP20-A081",
+        "MP20-A082",
+        "MP20-A083",
+        "MP20-A088",
+        "MP20-A102"
+      ]
+    },
+    {
+      "id": "MP20-M24",
+      "name": "file callback changes access flags",
+      "premises": "file-mmap callback returns ENOERR and mutates vma.vm_flags including low VM bits",
+      "normalized_prot": "normalized",
+      "vm_flags": "vma.vm_flags can differ from local initial",
+      "template": "vm_page_prot was computed pre-callback and not recalculated here",
+      "result": "returns address if remaining gates complete",
+      "limits": "representative FAT32 generic callback only assigns vm_ops; no actual mutating producer proven",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A091",
+        "MP20-A095",
+        "MP20-A096",
+        "MP20-A097",
+        "MP20-A102",
+        "MP20-A115"
+      ]
+    },
+    {
+      "id": "MP20-M25",
+      "name": "syscall unaligned off",
+      "premises": "off & ~PAGE_MASK != 0",
+      "normalized_prot": "unmodified",
+      "vm_flags": "not invoked",
+      "template": "none",
+      "result": "-EINVAL before file acquisition",
+      "limits": "no offset conversion or do_mmap",
+      "anchors": [
+        "MP20-A010",
+        "MP20-A011",
+        "MP20-A012"
+      ]
+    },
+    {
+      "id": "MP20-M26",
+      "name": "syscall invalid fd",
+      "premises": "!(MAP_ANONYMOUS); fd>=fd_count or invalid slot",
+      "normalized_prot": "unmodified",
+      "vm_flags": "not invoked if fget returns NULL",
+      "template": "none",
+      "result": "-EBADF when fget cleanly returns NULL; invalid in-range NULL slot may be dereferenced before return",
+      "limits": "not a deterministic fault outcome",
+      "anchors": [
+        "MP20-A012",
+        "MP20-A015",
+        "MP20-A016"
+      ]
+    },
+    {
+      "id": "MP20-M27",
+      "name": "anonymous MAP_HUGETLB",
+      "premises": "MAP_ANONYMOUS|MAP_HUGETLB",
+      "normalized_prot": "unmodified",
+      "vm_flags": "no call vm_mmap_pgoff",
+      "template": "none",
+      "result": "while(1) in source control flow",
+      "limits": "not runtime compiled loop certification",
+      "anchors": [
+        "MP20-A012",
+        "MP20-A013"
+      ]
+    },
+    {
+      "id": "MP20-M28",
+      "name": "vm_mmap vs syscall offset path",
+      "premises": "kernel caller vm_mmap offset bytes vs mmap syscall direct vm_mmap_pgoff",
+      "normalized_prot": "unmodified",
+      "vm_flags": "different wrapper checks",
+      "template": "none",
+      "result": "vm_mmap checks offset+PAGE_ALIGN(len), syscall uses off alignment then do_mmap checks pgoff + size",
+      "limits": "not identical validation path",
+      "anchors": [
+        "MP20-A010",
+        "MP20-A011",
+        "MP20-A020",
+        "MP20-A021",
+        "MP20-A023",
+        "MP20-A024",
+        "MP20-A025",
+        "MP20-A041"
+      ]
+    },
+    {
+      "id": "MP20-M29",
+      "name": "file mmap callback returns error",
+      "premises": "new file VMA, get_file succeeded, call_mmap nonzero",
+      "normalized_prot": "normalized",
+      "vm_flags": "VMA has preliminary fields",
+      "template": "none installed here",
+      "result": "enters unmap_and_free_vma and returns error",
+      "limits": "earlier simple_munmap_vma_range may have changed prior VMAs; rollback not proven",
+      "anchors": [
+        "MP20-A087",
+        "MP20-A090",
+        "MP20-A091",
+        "MP20-A103",
+        "MP20-A104",
+        "MP20-A105",
+        "MP20-A106"
+      ]
+    },
+    {
+      "id": "MP20-M30",
+      "name": "mmap_write_lock wrapper",
+      "premises": "vm_mmap_pgoff called",
+      "normalized_prot": "unmodified",
+      "vm_flags": "do_mmap reached after lock wrapper returns0",
+      "template": "none guaranteed",
+      "result": "unlock wrapper activity absent",
+      "limits": "cannot claim actual exclusive mmap synchronization from API name",
+      "anchors": [
+        "MP20-A021",
+        "MP20-A026",
+        "MP20-A027",
+        "MP20-A028",
+        "MP20-A029"
+      ]
+    },
+    {
+      "id": "MP20-M31",
+      "name": "PROT_EXEC|PROT_WRITE private file",
+      "premises": "file readable, not noexec, otherwise valid",
+      "normalized_prot": "WRITE|EXEC",
+      "vm_flags": "VM_WRITE|EXEC",
+      "template": "PAGE_COPY_EXEC: RW=0 NX=0",
+      "result": "normal success path if callback accepts",
+      "limits": "no READ implies logic needed",
+      "anchors": [
+        "MP20-A030",
+        "MP20-A037",
+        "MP20-A043",
+        "MP20-A119",
+        "MP20-A128"
+      ]
+    },
+    {
+      "id": "MP20-M32",
+      "name": "PROT_NONE on file MAP_PRIVATE",
+      "premises": "file readable and valid callback, no additional mm.def_flags",
+      "normalized_prot": "NONE",
+      "vm_flags": "VM_NONE+MAY*",
+      "template": "PAGE_NONE nonpresent",
+      "result": "normal conditional success",
+      "limits": "not CPU readable guarantee",
+      "anchors": [
+        "MP20-A031",
+        "MP20-A043",
+        "MP20-A118",
+        "MP20-A128"
+      ]
+    }
+  ],
+  "permission_layers": [
+    {
+      "layer": "L0 syscall request",
+      "prot": "raw PROT bits",
+      "flags": "raw MAP bits",
+      "offset": "byte offset off",
+      "file": "fd integer",
+      "effect": "off alignment / conditional fget",
+      "anchors": [
+        "MP20-A009",
+        "MP20-A010",
+        "MP20-A011",
+        "MP20-A012"
+      ]
+    },
+    {
+      "layer": "L1 normalized",
+      "prot": "PROT_READ may imply PROT_EXEC if !file noexec",
+      "flags": "MAP_FIXED_NOREPLACE implies MAP_FIXED; file MAP_SHARED strips non-legacy flags",
+      "offset": "pgoff=off>>PAGE_SHIFT",
+      "file": "file pointer or NULL",
+      "effect": "no VMA yet",
+      "anchors": [
+        "MP20-A011",
+        "MP20-A037",
+        "MP20-A038",
+        "MP20-A059",
+        "MP20-A060"
+      ]
+    },
+    {
+      "layer": "L2 VM capability",
+      "prot": "VM_READ/WRITE/EXEC = calc_vm_prot_bits(normalized_prot)",
+      "flags": "calc_vm_flag_bits|mm->def_flags|VM_MAYREAD|MAYWRITE|MAYEXEC, file-specific modification",
+      "offset": "no-file MAP_SHARED->0, PRIVATE->addr>>PAGE_SHIFT",
+      "file": "FMODE_READ/WRITE and path_noexec/append gates",
+      "effect": "local vm_flags",
+      "anchors": [
+        "MP20-A043",
+        "MP20-A046",
+        "MP20-A047",
+        "MP20-A048",
+        "MP20-A049",
+        "MP20-A063",
+        "MP20-A064",
+        "MP20-A065",
+        "MP20-A068",
+        "MP20-A069",
+        "MP20-A070",
+        "MP20-A071"
+      ]
+    },
+    {
+      "layer": "L3 VMA",
+      "prot": "new VMA vm_page_prot = vm_get_page_prot(local vm_flags)",
+      "flags": "vma->vm_flags assigned; callback may alter; SOFTDIRTY later OR",
+      "offset": "vma->vm_pgoff=pgoff",
+      "file": "vma->vm_file=get_file(file), callback, vm_ops",
+      "effect": "new VMA only; merge reuses prior fields",
+      "anchors": [
+        "MP20-A088",
+        "MP20-A090",
+        "MP20-A091",
+        "MP20-A095",
+        "MP20-A096",
+        "MP20-A098",
+        "MP20-A099",
+        "MP20-A102"
+      ]
+    },
+    {
+      "layer": "L4 page protection template",
+      "prot": "mask low current VM_READ|WRITE|EXEC|SHARED to protection_map[16]",
+      "flags": "PKEY conditional; PRESENT template masked by __supported_pte_mask",
+      "offset": "none",
+      "file": "callback may alter vm_flags, no local vma_set_page_prot after callback",
+      "effect": "PRESENT/USER/RW/NX template, not PTE installed",
+      "anchors": [
+        "MP20-A118",
+        "MP20-A119",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A122",
+        "MP20-A123",
+        "MP20-A124",
+        "MP20-A125",
+        "MP20-A126",
+        "MP20-A127",
+        "MP20-A128",
+        "MP20-A129",
+        "MP20-A130",
+        "MP20-A144"
+      ]
+    },
+    {
+      "layer": "L5 real PTE",
+      "prot": "not generated by mmap itself; missing fault may consume vm_page_prot per batch19",
+      "flags": "not directly hardware validated in batch20",
+      "offset": "page virtual address",
+      "file": "file callback and faults outside proof scope",
+      "effect": "NOT_RUN",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A091",
+        "MP20-A102",
+        "MP20-A115"
+      ]
+    }
+  ],
+  "reference_models": [
+    {
+      "model": "OPEN_FMODE",
+      "source": "((flags+1)&O_ACCMODE)",
+      "values": [
+        {
+          "input": "O_RDONLY=0",
+          "f_mode": "FMODE_READ=1"
+        },
+        {
+          "input": "O_WRONLY=1",
+          "f_mode": "FMODE_WRITE=2"
+        },
+        {
+          "input": "O_RDWR=2",
+          "f_mode": "FMODE_READ|FMODE_WRITE=3"
+        }
+      ],
+      "conditions": "only selected flags without other bits, actual file allocation reached",
+      "anchors": [
+        "MP20-A145",
+        "MP20-A146",
+        "MP20-A147",
+        "MP20-A148",
+        "MP20-A073",
+        "MP20-A074"
+      ]
+    },
+    {
+      "model": "new file mmap ref ledger",
+      "source": "fget +1, get_file +1 if new VMA, end fput -1",
+      "values": "file_ref count n -> n+1 -> n+2 -> n+1 if fget/get_file/fput valid; merged path skips get_file; callback/error may do additional fput",
+      "conditions": "all calls return, no concurrent updates, same file identity; cannot infer VMA lifetime cleanup",
+      "anchors": [
+        "MP20-A012",
+        "MP20-A014",
+        "MP20-A015",
+        "MP20-A016",
+        "MP20-A018",
+        "MP20-A019",
+        "MP20-A091",
+        "MP20-A096",
+        "MP20-A103",
+        "MP20-A104"
+      ]
+    },
+    {
+      "model": "shared read-only fd",
+      "source": "vm_flags|=VM_SHARED|VM_MAYSHARE then VM_MAYWRITE|VM_SHARED cleared",
+      "values": "VM_MAYSHARE remains, VM_SHARED becomes 0 if !FMODE_WRITE",
+      "conditions": "file shared branch reached, valid file mode",
+      "anchors": [
+        "MP20-A063",
+        "MP20-A064"
+      ]
+    },
+    {
+      "model": "template mask",
+      "source": "protection_map[vm_flags &(VM_READ|WRITE|EXEC|SHARED)]",
+      "values": "PRESENT/RW/USER/NX from constant templates; optional PKEY OR and PRESENT mask",
+      "conditions": "initial __supported_pte_mask=~0 but later writers not closed; no preprocessor/CPU validation",
+      "anchors": [
+        "MP20-A118",
+        "MP20-A119",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A122",
+        "MP20-A123",
+        "MP20-A124",
+        "MP20-A125",
+        "MP20-A126",
+        "MP20-A127",
+        "MP20-A128",
+        "MP20-A129",
+        "MP20-A130"
+      ]
+    }
+  ],
+  "limits": [
+    "20 only mmap parameter, file access, VMA/template and callback boundary; no entire VM or runtime closure",
+    "R19-S01/S02/S03 mandatory to consume 19; R18/R17 bounds inherited via 19, no re-analysis",
+    "No globally held mmap lock may be inferred from mmap_write_lock_killable name; source bodies stub",
+    "mmap return addr means only selected control flow returned; not successful page fault, file backend, PTE, TLB or hardware permission",
+    "PROT_READ may be normalized to EXEC; request bits, VM_MAY*, active VM_* and pgprot/PTE remain distinct",
+    "file f_mode is converted from O_ACCMODE; f_flags kept separately; inode IS_APPEND does not mean O_APPEND",
+    "file callback can mutate fields; representative FAT32 binding only vm_ops; no all-callback enumeration",
+    "no owner files, old results, source files, builds, C/ASM or QEMU touched"
+  ]
+}

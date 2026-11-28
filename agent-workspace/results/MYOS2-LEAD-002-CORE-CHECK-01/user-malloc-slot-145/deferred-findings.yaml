@@ -1,0 +1,46 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+track_id: MYOS2-LEAD-002
+record_type: batch145_new_deferred_findings
+execution_identity: MYOS2-LEAD-002-CHAT-EXEC-23
+date: 2026-11-24
+base_snapshot: "time@a039d9803ade"
+status: NEEDS_EVIDENCE_NOT_RUNTIME_FINDINGS
+prior_record_policy: "144 results and R144-N01 correction remain unchanged; no historic reclassification"
+items:
+  - qualified_id: "CORE-USER-MALLOC-SLOT-145::MS145-N01"
+    kind: conditional_bitmap_metadata_mismatch
+    status: needs_evidence
+    source_ref:
+      path: myinitramfs/mylib/myglibc/malloc/malloc.c
+      symbol: malloc
+      evidence: [E145-014, E145-018, E145-019, E145-020]
+    description: "The modeled used/free list and bitmap/free counters are stipulated coherent. If the free counter and bitmap become inconsistent, the helper may return limit and skip slot updates; this batch has not established a real reachable inconsistent state or a specific runtime failure."
+    premises: ["a mismatched counter/bitmap state occurs", "prior list and pointer operations remain legal"]
+    counterexamples_or_limiters: ["three valid returning C cases have in-range free bits", "C_EMPTY stops before scan"]
+    effect_boundary: conditional_source_branch_only
+    unknowns: ["source of inconsistent state", "real reachability", "actual heap corruption"]
+    resume_condition: "new explicit invariant/path authorization and evidence"
+  - qualified_id: "CORE-USER-MALLOC-SLOT-145::MS145-N02"
+    kind: dynamic_refill_and_recursion_unproved
+    status: needs_evidence
+    source_ref:
+      path: myinitramfs/mylib/myglibc/malloc/malloc.c
+      symbol: uslab_alloc
+      evidence: [E145-021, E145-022, E145-023, E145-025, E145-026, E145-027]
+    description: "A separate state with post-slot free.count<1 requests nested metadata malloc operations and upage_alloc. None of C_USED_MORE, C_USED_LAST or C_FREE_FIRST enters that branch, and C_EMPTY stops earlier. This is not a demonstrated recursive crash."
+    premises: ["a valid case reaches the refill gate", "all previous operations return normally"]
+    effect_boundary: call_chain_and_conditional_branch_only
+    unknowns: ["first initialization recursion", "dynamic bitmap initialization", "callee success and partial updates"]
+    resume_condition: "separate allocator-init/refill work package authorized by mainline"
+  - qualified_id: "CORE-USER-MALLOC-SLOT-145::MS145-N03"
+    kind: final_linkage_unknown
+    status: needs_evidence
+    source_ref:
+      path: myinitramfs/CMakeLists.txt
+      symbol: CMakeLists.txt
+      evidence: [E145-046, E145-047, E145-048, E145-049, E145-052, E145-053]
+    description: "Top-level initramfs CMake enters myinit and myshell and uses an external musl toolchain, whereas an independently readable mylibc CMake target includes this malloc source. These texts do not establish which malloc symbol sh actually uses."
+    effect_boundary: actual_linked_to_sh_UNKNOWN_not_a_bug_claim
+    unknowns: ["generated build graph", "linker inputs", "runtime binding"]
+    resume_condition: "separately authorized build/link selection inspection"
+owner_decisions_requested_now: []

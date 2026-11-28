@@ -1,0 +1,132 @@
+// task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+// track_id: "MYOS2-LEAD-002"
+// batch_id: "CORE-USER-MALLOC-REFILL-149"
+// conversation_display_name: "MYOS2-A-C10c 代码分析执行"
+// execution_identity: "MYOS2-LEAD-002-CHAT-EXEC-24"
+// produced_by: "GPT-6.2"
+// model_per_owner: "GPT-6.2 Sol；Extra／高推理强度（Owner指定）"
+// actual_model_identifier_basis: "系统标识GPT-6.2；客户端选择不可见"
+// actual_backend_model: "UNATTESTED"
+// actual_reasoning_effort: "UNATTESTED"
+// date: "2026-11-25"
+// date_timezone: "Asia/Shanghai"
+// phase: 2
+// base_snapshot: "time（分支名）"
+// source_pin_short12: "a039d9803ade"
+// direct_master_short12: "e8e60cd19540"
+// lead_pin_short12: "95d47a823b80"
+// execution_parent_short12: "d2c99a1f285b"
+// read_channel: "connector"
+// status: "AUTHOR_PENDING_MAINLINE_REVIEW"
+// evidence_class: "SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / CONDITIONAL_FRAGMENT / UNKNOWN"
+// open_questions: ["完整补充递归及终止性、实际对象建立/映射、bitmap载荷、真实ABI/标准/编译器/DEBUG、sh实际链接与运行均未证；N1547独立外证沿旧UNKNOWN。"]
+// full_local_P9: "NOT_RUN"
+// record_type: "batch149_path_graph"
+// Generated from facts.graph; no Graphviz execution.
+digraph malloc_refill_149 {
+  rankdir=LR;
+  CLASS_32 [kind="potential_cache_class", label="cache O=32", scenario="A_DEPENDENCY"];
+  CLASS_64 [kind="potential_cache_class", label="cache O=64", scenario="A_DEPENDENCY"];
+  CLASS_16384 [kind="potential_cache_class", label="cache O=16384", scenario="A_DEPENDENCY"];
+  CLASS_8192 [kind="potential_cache_class", label="cache O=8192", scenario="A_DEPENDENCY"];
+  B_MORE_OUT [kind="given_entry", label="outer C/U/R; free.count0/physical0; slab_total1", scenario="B_MORE"];
+  B_MORE_RES [kind="source_step", label="L308 true; L310 count0→1; physical empty", scenario="B_MORE"];
+  B_MORE_CALL [kind="source_call", label="L311 uslab_alloc(U) → L225 malloc64; outer paused, 312 not reached", scenario="B_MORE"];
+  B_MORE_SEL [kind="source_step", label="nested initiated=true, same C; used priority/count1", scenario="B_MORE"];
+  B_MORE_REM [kind="source_step", label="remove U, used.count1→0; wait false; projection U", scenario="B_MORE"];
+  B_MORE_MOVE [kind="source_step", label="U.free=2 pre-decrement; used→used, used.count0→1", scenario="B_MORE"];
+  B_MORE_SCAN [kind="source_step", label="idx0, offset0; V local ret; word0 read", scenario="B_MORE"];
+  B_MORE_UPDATE [kind="source_step", label="U.free/C.free 2→1, C.used32766→32767, word0 fc→fd", scenario="B_MORE"];
+  B_MORE_GATE [kind="source_step", label="L308 reached FALSE: count1/physical0; no nested refill", scenario="B_MORE"];
+  B_MORE_RETURN [kind="modeled_return", label="nested returns V to uslab_alloc, outer R not returned", scenario="B_MORE"];
+  B_MORE_STOP [kind="analysis_stop", label="missing metadata object at V before226; outer312/publish not reached", scenario="B_MORE"];
+  B_LAST_OUT [kind="given_entry", label="outer C/U/R; free.count0/physical0; slab_total1", scenario="B_LAST"];
+  B_LAST_RES [kind="source_step", label="L308 true; L310 count0→1; physical empty", scenario="B_LAST"];
+  B_LAST_CALL [kind="source_call", label="L311 uslab_alloc(U) → L225 malloc64; outer paused, 312 not reached", scenario="B_LAST"];
+  B_LAST_SEL [kind="source_step", label="nested initiated=true, same C; used priority/count1", scenario="B_LAST"];
+  B_LAST_REM [kind="source_step", label="remove U, used.count1→0; wait false; projection U", scenario="B_LAST"];
+  B_LAST_MOVE [kind="source_step", label="U.free=1 pre-decrement; used→full, full.count0→1", scenario="B_LAST"];
+  B_LAST_SCAN [kind="source_step", label="idx0, offset0; V local ret; word0 read", scenario="B_LAST"];
+  B_LAST_UPDATE [kind="source_step", label="U.free/C.free 1→0, C.used32767→32768, word0 fe→ff", scenario="B_LAST"];
+  B_LAST_GATE [kind="source_step", label="L308 reached FALSE: count1/physical0; no nested refill", scenario="B_LAST"];
+  B_LAST_RETURN [kind="modeled_return", label="nested returns V to uslab_alloc, outer R not returned", scenario="B_LAST"];
+  B_LAST_STOP [kind="analysis_stop", label="missing metadata object at V before226; outer312/publish not reached", scenario="B_LAST"];
+  B_NO_USED_OUT [kind="given_entry", label="outer C/U/R; free.count0/physical0; slab_total1", scenario="B_NO_USED"];
+  B_NO_USED_RES [kind="source_step", label="L308 true; L310 count0→1; physical empty", scenario="B_NO_USED"];
+  B_NO_USED_CALL [kind="source_call", label="L311 uslab_alloc(U) → L225 malloc64; outer paused, 312 not reached", scenario="B_NO_USED"];
+  B_NO_USED_SEL [kind="source_step", label="nested initiated=true, same C; used.count0/free.count1", scenario="B_NO_USED"];
+  B_NO_USED_REM [kind="source_step", label="returns F (anchor), four self-loop writes, free.count1→0; wait false; projection F−0", scenario="B_NO_USED"];
+  B_NO_USED_STOP [kind="analysis_stop", label="missing live slab object before286; no scan/return/outer312", scenario="B_NO_USED"];
+  C_META_NULL_IN [kind="given_entry", label="independent cslp.total=128; per-call frame GIVEN", scenario="C_META_NULL"];
+  C_META_NULL_S0 [kind="given_call_response", label="225 malloc(sizeof(uslab_s)) → null", scenario="C_META_NULL"];
+  C_META_NULL_S1 [kind="analysis_stop", label="226 analysis_stop ; ANALYSIS_STOP_MISSING_METADATA_OBJECT_PREMISE before226", scenario="C_META_NULL"];
+  C_MAP_NULL_IN [kind="given_entry", label="independent cslp.total=128; per-call frame GIVEN", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S0 [kind="given_call_response", label="225 malloc(sizeof(uslab_s)) → D", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S1 [kind="source_step", label="226; list.c10–14 INIT_LIST_S(&D.uslab_list) ; D.uslab_list.prev=&D.uslab_list, D.uslab_list.next=&D.uslab_list", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S2 [kind="given_call_response", label="228 read cslp.total=128; malloc request 128/8+8 → null ; D.colormap=NULL", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S3 [kind="source_step", label="229–230 read cslp.total again (128); nested assignment ; D.free=128, D.total=128", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S4 [kind="given_call_response", label="231 upage_alloc() → P ; D.upage_p=P", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S5 [kind="source_step", label="232 read D.upage_p=P, P.vaddr=W ; D.virt_addr=0x70000000", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S6 [kind="source_step", label="233 read D.upage_p and store owner ; P.uslab_p=D", scenario="C_MAP_NULL"];
+  C_MAP_NULL_S7 [kind="modeled_return", label="235 return D", scenario="C_MAP_NULL"];
+  C_PAGE_NULL_IN [kind="given_entry", label="independent cslp.total=128; per-call frame GIVEN", scenario="C_PAGE_NULL"];
+  C_PAGE_NULL_S0 [kind="given_call_response", label="225 malloc(sizeof(uslab_s)) → D", scenario="C_PAGE_NULL"];
+  C_PAGE_NULL_S1 [kind="source_step", label="226; list.c10–14 INIT_LIST_S(&D.uslab_list) ; D.uslab_list.prev=&D.uslab_list, D.uslab_list.next=&D.uslab_list", scenario="C_PAGE_NULL"];
+  C_PAGE_NULL_S2 [kind="given_call_response", label="228 read cslp.total=128; malloc request 128/8+8 → M ; D.colormap=M", scenario="C_PAGE_NULL"];
+  C_PAGE_NULL_S3 [kind="source_step", label="229–230 read cslp.total again (128); nested assignment ; D.free=128, D.total=128", scenario="C_PAGE_NULL"];
+  C_PAGE_NULL_S4 [kind="given_call_response", label="231 upage_alloc() → null ; D.upage_p=NULL", scenario="C_PAGE_NULL"];
+  C_PAGE_NULL_S5 [kind="analysis_stop", label="232 analysis_stop ; ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE at232 after legitimate D.upage_p=NULL store", scenario="C_PAGE_NULL"];
+  CLASS_32 -> CLASS_64 [kind="potential_dependency", label="A32: malloc.c:225, request=64; 到达首次metadata申请"];
+  CLASS_32 -> CLASS_16384 [kind="potential_dependency", label="A32: malloc.c:228, request=8200; 合法metadata对象且到达bitmap申请"];
+  CLASS_32 -> CLASS_32 [kind="potential_dependency", label="A32: malloc.c:124, request=32; upage_alloc动态分支count<=0；合法计数为0"];
+  CLASS_64 -> CLASS_64 [kind="potential_dependency", label="A64: malloc.c:225, request=64; 到达首次metadata申请"];
+  CLASS_64 -> CLASS_8192 [kind="potential_dependency", label="A64: malloc.c:228, request=4104; 合法metadata对象且到达bitmap申请"];
+  CLASS_64 -> CLASS_32 [kind="potential_dependency", label="A64: malloc.c:124, request=32; upage_alloc动态分支count<=0；合法计数为0"];
+  CLASS_8192 -> CLASS_64 [kind="potential_dependency", label="A8K: malloc.c:225, request=64; 到达首次metadata申请"];
+  CLASS_8192 -> CLASS_64 [kind="potential_dependency", label="A8K: malloc.c:228, request=40; 合法metadata对象且到达bitmap申请"];
+  CLASS_8192 -> CLASS_32 [kind="potential_dependency", label="A8K: malloc.c:124, request=32; upage_alloc动态分支count<=0；合法计数为0"];
+  CLASS_16384 -> CLASS_64 [kind="potential_dependency", label="A16K: malloc.c:225, request=64; 到达首次metadata申请"];
+  CLASS_16384 -> CLASS_32 [kind="potential_dependency", label="A16K: malloc.c:228, request=24; 合法metadata对象且到达bitmap申请"];
+  CLASS_16384 -> CLASS_32 [kind="potential_dependency", label="A16K: malloc.c:124, request=32; upage_alloc动态分支count<=0；合法计数为0"];
+  B_MORE_OUT -> B_MORE_RES [kind="source_step", label="ordered source step"];
+  B_MORE_RES -> B_MORE_CALL [kind="source_call", label="caller suspended"];
+  B_MORE_CALL -> B_MORE_SEL [kind="source_step", label="ordered source step"];
+  B_MORE_SEL -> B_MORE_REM [kind="source_step", label="ordered source step"];
+  B_MORE_REM -> B_MORE_MOVE [kind="source_step", label="ordered source step"];
+  B_MORE_MOVE -> B_MORE_SCAN [kind="source_step", label="ordered source step"];
+  B_MORE_SCAN -> B_MORE_UPDATE [kind="source_step", label="ordered source step"];
+  B_MORE_UPDATE -> B_MORE_GATE [kind="source_step", label="ordered source step"];
+  B_MORE_GATE -> B_MORE_RETURN [kind="modeled_return", label="bounded nested return"];
+  B_MORE_RETURN -> B_MORE_STOP [kind="analysis_stop", label="not source if/return"];
+  B_LAST_OUT -> B_LAST_RES [kind="source_step", label="ordered source step"];
+  B_LAST_RES -> B_LAST_CALL [kind="source_call", label="caller suspended"];
+  B_LAST_CALL -> B_LAST_SEL [kind="source_step", label="ordered source step"];
+  B_LAST_SEL -> B_LAST_REM [kind="source_step", label="ordered source step"];
+  B_LAST_REM -> B_LAST_MOVE [kind="source_step", label="ordered source step"];
+  B_LAST_MOVE -> B_LAST_SCAN [kind="source_step", label="ordered source step"];
+  B_LAST_SCAN -> B_LAST_UPDATE [kind="source_step", label="ordered source step"];
+  B_LAST_UPDATE -> B_LAST_GATE [kind="source_step", label="ordered source step"];
+  B_LAST_GATE -> B_LAST_RETURN [kind="modeled_return", label="bounded nested return"];
+  B_LAST_RETURN -> B_LAST_STOP [kind="analysis_stop", label="not source if/return"];
+  B_NO_USED_OUT -> B_NO_USED_RES [kind="source_step", label="ordered source step"];
+  B_NO_USED_RES -> B_NO_USED_CALL [kind="source_call", label="caller suspended"];
+  B_NO_USED_CALL -> B_NO_USED_SEL [kind="source_step", label="ordered source step"];
+  B_NO_USED_SEL -> B_NO_USED_REM [kind="source_step", label="ordered source step"];
+  B_NO_USED_REM -> B_NO_USED_STOP [kind="analysis_stop", label="not source if/return"];
+  C_META_NULL_IN -> C_META_NULL_S0 [kind="given_call_response", label="independent GIVEN response + frame"];
+  C_META_NULL_S0 -> C_META_NULL_S1 [kind="analysis_stop", label="missing object premise, not source branch"];
+  C_MAP_NULL_IN -> C_MAP_NULL_S0 [kind="given_call_response", label="independent GIVEN response + frame"];
+  C_MAP_NULL_S0 -> C_MAP_NULL_S1 [kind="source_step", label="direct store/read"];
+  C_MAP_NULL_S1 -> C_MAP_NULL_S2 [kind="given_call_response", label="independent GIVEN response + frame"];
+  C_MAP_NULL_S2 -> C_MAP_NULL_S3 [kind="source_step", label="direct store/read"];
+  C_MAP_NULL_S3 -> C_MAP_NULL_S4 [kind="given_call_response", label="independent GIVEN response + frame"];
+  C_MAP_NULL_S4 -> C_MAP_NULL_S5 [kind="source_step", label="direct store/read"];
+  C_MAP_NULL_S5 -> C_MAP_NULL_S6 [kind="source_step", label="direct store/read"];
+  C_MAP_NULL_S6 -> C_MAP_NULL_S7 [kind="modeled_return", label="conditional callee return"];
+  C_PAGE_NULL_IN -> C_PAGE_NULL_S0 [kind="given_call_response", label="independent GIVEN response + frame"];
+  C_PAGE_NULL_S0 -> C_PAGE_NULL_S1 [kind="source_step", label="direct store/read"];
+  C_PAGE_NULL_S1 -> C_PAGE_NULL_S2 [kind="given_call_response", label="independent GIVEN response + frame"];
+  C_PAGE_NULL_S2 -> C_PAGE_NULL_S3 [kind="source_step", label="direct store/read"];
+  C_PAGE_NULL_S3 -> C_PAGE_NULL_S4 [kind="given_call_response", label="independent GIVEN response + frame"];
+  C_PAGE_NULL_S4 -> C_PAGE_NULL_S5 [kind="analysis_stop", label="missing object premise, not source branch"];
+}

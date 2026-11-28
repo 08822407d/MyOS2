@@ -1,0 +1,423 @@
+---
+# JSON mapping is a YAML 1.2-compatible document; not a second artifact
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ELF-STACK-TABLES-25",
+  "record_type": "bounded_static_elf_stack_tables_facts",
+  "date": "2026-11-02",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "c0f4d6a603f8",
+  "result_status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime": "NOT_RUN",
+  "read_rules": [
+    "45 handoff / 44 contract",
+    "R23-S01/S02/S03",
+    "R24-S01/S02/S03"
+  ],
+  "source_evidence": "evidence.md",
+  "read_limit": "Fixed time file definitions; default-branch code search used for locating only",
+  "objects": [
+    {
+      "id": "ET25-O01",
+      "name": "bprm->p",
+      "role": "incoming string area base and final table bottom",
+      "evidence": [
+        "ET25-A01",
+        "ET25-A14",
+        "ET25-A34"
+      ]
+    },
+    {
+      "id": "ET25-O02",
+      "name": "local p",
+      "role": "ulong byte address, 16-byte align then platform string alloc",
+      "evidence": [
+        "ET25-A14",
+        "ET25-A16",
+        "ET25-A21"
+      ]
+    },
+    {
+      "id": "ET25-O03",
+      "name": "sp",
+      "role": "elf_addr_t* user table write position, post-incremented by direct put_user",
+      "evidence": [
+        "ET25-A19",
+        "ET25-A34",
+        "ET25-A54"
+      ]
+    },
+    {
+      "id": "ET25-O04",
+      "name": "mm.saved_auxv",
+      "role": "kernel-side auxv staging buffer, NOT user table",
+      "evidence": [
+        "ET25-A24",
+        "ET25-A43"
+      ]
+    },
+    {
+      "id": "ET25-O05",
+      "name": "u_platform",
+      "role": "user pointer to separate x86_64 null-terminated platform bytes",
+      "evidence": [
+        "ET25-A17",
+        "ET25-A22",
+        "ET25-A29"
+      ]
+    },
+    {
+      "id": "ET25-O06",
+      "name": "vma local",
+      "role": "uninitialized local condition, undefined behavior gate",
+      "evidence": [
+        "ET25-A15",
+        "ET25-A35",
+        "ET25-A36"
+      ]
+    },
+    {
+      "id": "ET25-O07",
+      "name": "mm.arg_start/arg_end/env_start/env_end",
+      "role": "string boundary metadata updated in distinct phases",
+      "evidence": [
+        "ET25-A01",
+        "ET25-A37",
+        "ET25-A38",
+        "ET25-A39",
+        "ET25-A41"
+      ]
+    },
+    {
+      "id": "ET25-O08",
+      "name": "e_entry",
+      "role": "main-program entry and AT_ENTRY",
+      "evidence": [
+        "ET25-A08",
+        "ET25-A26"
+      ]
+    },
+    {
+      "id": "ET25-O09",
+      "name": "elf_entry",
+      "role": "final entry may be interpreter, START_THREAD argument",
+      "evidence": [
+        "ET25-A09",
+        "ET25-A10",
+        "ET25-A13"
+      ]
+    }
+  ],
+  "widths": {
+    "source_arch": "x86_64",
+    "elf_addr_t": "Elf64_Off = __u64",
+    "elf_word_bytes": 8,
+    "ulong_bytes": 8,
+    "alignment_bytes": 16,
+    "ELF_EXEC_PAGESIZE": 4096,
+    "USER_HZ_on_time": 250,
+    "CLOCKS_PER_SEC_on_time": 250,
+    "evidence": [
+      "ET25-A16",
+      "ET25-A18",
+      "ET25-A20",
+      "ET25-A45",
+      "ET25-A46",
+      "ET25-A48"
+    ]
+  },
+  "auxv": {
+    "capacity_base_pairs": 22,
+    "capacity_arch_default_pairs": 0,
+    "capacity_total_elf_words": 46,
+    "capacity_bytes": 368,
+    "entry_macro_writes_words": 2,
+    "mandatory": [
+      [
+        "AT_HWCAP",
+        "boot_cpu_data.x86_capability[CPUID_1_EDX]"
+      ],
+      [
+        "AT_PAGESZ",
+        "ELF_EXEC_PAGESIZE"
+      ],
+      [
+        "AT_CLKTCK",
+        "CLOCKS_PER_SEC"
+      ],
+      [
+        "AT_PHDR",
+        "phdr_addr"
+      ],
+      [
+        "AT_PHENT",
+        "sizeof(struct elf_phdr)"
+      ],
+      [
+        "AT_PHNUM",
+        "exec->e_phnum"
+      ],
+      [
+        "AT_BASE",
+        "interp_load_addr"
+      ],
+      [
+        "AT_FLAGS",
+        "flags; optionally PRESERVE_ARGV0"
+      ],
+      [
+        "AT_ENTRY",
+        "e_entry (main program)"
+      ],
+      [
+        "AT_SECURE",
+        "bprm->secureexec"
+      ],
+      [
+        "AT_EXECFN",
+        "bprm->exec"
+      ]
+    ],
+    "conditional": [
+      [
+        "AT_PLATFORM",
+        "k_platform != NULL; fixed x86_64 source has ELF_PLATFORM=x86_64"
+      ],
+      [
+        "AT_BASE_PLATFORM",
+        "k_base_platform != NULL; selected fallback NULL"
+      ],
+      [
+        "AT_EXECFD",
+        "bprm->have_execfd"
+      ],
+      [
+        "AT_HWCAP2",
+        "ELF_HWCAP2 macro; selected arch macro commented"
+      ],
+      [
+        "AT_RSEQ_FEATURE_SIZE,AT_RSEQ_ALIGN",
+        "CONFIG_RSEQ; not enabled in read explicit compile flags"
+      ],
+      [
+        "ARCH_DLINFO",
+        "if defined; selected architecture definition commented"
+      ]
+    ],
+    "commented_out": [
+      "AT_UID",
+      "AT_EUID",
+      "AT_GID",
+      "AT_EGID",
+      "AT_RANDOM",
+      "random seed generation/copy"
+    ],
+    "default_nonterminal_pairs": 12,
+    "default_nonterminal_pairs_with_execfd": 13,
+    "at_null_pairs": 1,
+    "copy_bytes_default": 208,
+    "copy_bytes_with_execfd": 224,
+    "count_expression": "N=11+P+BP+H+F+2R+A",
+    "capacity_predicate": "N <= 22 + AT_VECTOR_SIZE_ARCH",
+    "current_selected_assumptions": {
+      "P": 1,
+      "BP": 0,
+      "H": 0,
+      "R": 0,
+      "A": 0,
+      "F": "0 or 1"
+    },
+    "unknowns": [
+      "preprocessor not executed",
+      "uninspected build injected definitions"
+    ],
+    "evidence": [
+      "ET25-A24",
+      "ET25-A25",
+      "ET25-A26",
+      "ET25-A27",
+      "ET25-A28",
+      "ET25-A29",
+      "ET25-A30",
+      "ET25-A31",
+      "ET25-A32",
+      "ET25-A33",
+      "ET25-A43",
+      "ET25-A44"
+    ]
+  },
+  "stack_layout": {
+    "p0": "incoming bprm.p",
+    "p1": "p0 & ~15",
+    "platform_string_len_bytes": 7,
+    "p2": "p1 - sum(enabled strlen+1)",
+    "ei_index_words": "2*(N+1)",
+    "aux_bytes": "8*ei_index",
+    "items_words": "argc+envc+3",
+    "stack_bottom": "((p2-aux_bytes)-8*items)&~15",
+    "lower_to_upper": [
+      "argc 8",
+      "argv[argc] pointers then NULL",
+      "envp[envc] pointers then NULL",
+      "auxv with AT_NULL pair",
+      "0..15 alignment gap (not explicitly zeroed)",
+      "optional platform/base-platform byte strings",
+      "preexisting argument bytes"
+    ],
+    "evidence": [
+      "ET25-A14",
+      "ET25-A16",
+      "ET25-A19",
+      "ET25-A20",
+      "ET25-A21",
+      "ET25-A22",
+      "ET25-A23",
+      "ET25-A33",
+      "ET25-A34"
+    ]
+  },
+  "worked_example": {
+    "kind": "conditional arithmetic, NOT_RUN",
+    "p0": "0x7fffffffeff8",
+    "argc": 2,
+    "envc": 1,
+    "N": 12,
+    "ei_index": 26,
+    "items": 6,
+    "p1": "0x7fffffffeff0",
+    "p2": "0x7fffffffefe9",
+    "sp0": "0x7fffffffef19",
+    "stack_bottom": "0x7fffffffeee0",
+    "argc_slot": "0x7fffffffeee0",
+    "argv_slots": [
+      "0x7fffffffeee8",
+      "0x7fffffffeef0"
+    ],
+    "argv_null": "0x7fffffffeef8",
+    "env_slot": "0x7fffffffef00",
+    "env_null": "0x7fffffffef08",
+    "aux_start": "0x7fffffffef10",
+    "aux_end_exclusive": "0x7fffffffefe0",
+    "padding_bytes": 9,
+    "platform_start": "0x7fffffffefe9",
+    "platform_end_exclusive": "0x7fffffffeff0"
+  },
+  "return_write_matrix": [
+    {
+      "id": "ET25-M01",
+      "gate": "platform copy_to_user nonzero",
+      "prefix": "local p decreased, prior bytes may have written",
+      "local_result": "-EFAULT",
+      "evidence": [
+        "ET25-A22",
+        "ET25-A56"
+      ]
+    },
+    {
+      "id": "ET25-M02",
+      "gate": "mmap_write_lock_killable nonzero",
+      "prefix": "kernel auxv and bprm.p may already change",
+      "local_result": "-EINTR; actual return producer not established",
+      "evidence": [
+        "ET25-A32",
+        "ET25-A34",
+        "ET25-A35"
+      ]
+    },
+    {
+      "id": "ET25-M03",
+      "gate": "if(!vma) reads uninitialized local",
+      "prefix": "pre-vma writes may already happen",
+      "local_result": "undefined behavior, no deterministic later machine state",
+      "evidence": [
+        "ET25-A15",
+        "ET25-A35",
+        "ET25-A36"
+      ]
+    },
+    {
+      "id": "ET25-M04",
+      "gate": "put_user valid pointer and expression completes",
+      "prefix": "one direct write and one sp increment",
+      "local_result": "-ENOERR=0; no recoverable fault guarantee",
+      "evidence": [
+        "ET25-A37",
+        "ET25-A54",
+        "ET25-A55"
+      ]
+    },
+    {
+      "id": "ET25-M05",
+      "gate": "put_user invalid pointer",
+      "prefix": "unknown",
+      "local_result": "not guaranteed -EFAULT; may fault/undefined",
+      "evidence": [
+        "ET25-A54"
+      ]
+    },
+    {
+      "id": "ET25-M06",
+      "gate": "strnlen_user returns >MAX_ARG_STRLEN",
+      "prefix": "corresponding pointer slot written",
+      "local_result": "-EINVAL",
+      "evidence": [
+        "ET25-A38",
+        "ET25-A40",
+        "ET25-A58"
+      ]
+    },
+    {
+      "id": "ET25-M07",
+      "gate": "hypothetical strnlen_user returns 0",
+      "prefix": "corresponding pointer slot written",
+      "local_result": "caller -EINVAL but no actual positive-count valid-object producer",
+      "evidence": [
+        "ET25-A38",
+        "ET25-A58",
+        "ET25-A59"
+      ]
+    },
+    {
+      "id": "ET25-M08",
+      "gate": "aux copy_to_user returned uncopied bytes",
+      "prefix": "partial user bytes and mm field changes possible",
+      "local_result": "-EFAULT without rollback",
+      "evidence": [
+        "ET25-A41",
+        "ET25-A42",
+        "ET25-A56"
+      ]
+    },
+    {
+      "id": "ET25-M09",
+      "gate": "return 0 in valid hypothetical local model",
+      "prefix": "all prior steps defined and passed",
+      "local_result": "caller writes start_stack then START_THREAD",
+      "evidence": [
+        "ET25-A11",
+        "ET25-A12",
+        "ET25-A13",
+        "ET25-A42"
+      ]
+    }
+  ],
+  "handoff": {
+    "called_by": "load_elf_binary",
+    "returns_checked": "retval < 0",
+    "after_gate": "mm.start_stack=bprm.p",
+    "thread_macro": "START_THREAD -> start_thread -> start_thread_common",
+    "observed_field": "regs.sp=new_sp",
+    "actually_entered_user": false,
+    "execution_path_known_defined": false,
+    "upstream_gup_known_defined": false,
+    "mainline_review": "PENDING"
+  },
+  "deferred": [
+    "ET25-F01",
+    "ET25-F02",
+    "ET25-F03",
+    "ET25-F04"
+  ]
+}

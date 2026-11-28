@@ -1,0 +1,331 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BRK-ALLOCATOR-144",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-22",
+  "conversation_display_name": "MYOS2-A-C10a 代码分析执行",
+  "produced_by": "GPT-6.2（系统模型族；界面具体型号及实际后台未独立核实）",
+  "model_per_owner": "次一档GPT-6.2 Sol及高推理强度",
+  "actual_effort": "UNATTESTED",
+  "date": "2026-11-24",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "inputs_read": [
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ref": "a039d9803ade",
+      "blob": "6019436417ad",
+      "LF": 84,
+      "CRLF": 0,
+      "physical_lines": 85
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/syscall.c",
+      "ref": "a039d9803ade",
+      "blob": "8ed3c9a1e018",
+      "LF": 223,
+      "CRLF": 0,
+      "physical_lines": 223
+    },
+    {
+      "path": "mykernel/mm/vm_map/mmap.c",
+      "ref": "a039d9803ade",
+      "blob": "69000768d94b",
+      "LF": 1356,
+      "CRLF": 0,
+      "physical_lines": 1357
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "ref": "a039d9803ade",
+      "blob": "b9d93f504756",
+      "LF": 188,
+      "CRLF": 0,
+      "physical_lines": 188
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy_const.h",
+      "ref": "a039d9803ade",
+      "blob": "536bc906fc5e",
+      "LF": 410,
+      "CRLF": 0,
+      "physical_lines": 411
+    },
+    {
+      "path": "mykernel/include/linux/kernel/align.h",
+      "ref": "a039d9803ade",
+      "blob": "ddd63ec4b93f",
+      "LF": 14,
+      "CRLF": 0,
+      "physical_lines": 15
+    },
+    {
+      "path": "mykernel/include/uapi/linux/const.h",
+      "ref": "a039d9803ade",
+      "blob": "d8bcaf7e3151",
+      "LF": 38,
+      "CRLF": 0,
+      "physical_lines": 39
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "a039d9803ade",
+      "blob": "b10e280f26f0",
+      "LF": 104,
+      "CRLF": 0,
+      "physical_lines": 105
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "a039d9803ade",
+      "blob": "ef531baa8317",
+      "LF": 240,
+      "CRLF": 0,
+      "physical_lines": 241
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+      "ref": "a039d9803ade",
+      "blob": "3b54c09e5d3a",
+      "LF": 447,
+      "CRLF": 0,
+      "physical_lines": 447
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+      "ref": "a039d9803ade",
+      "blob": "544cfdb93d7e",
+      "LF": 79,
+      "CRLF": 0,
+      "physical_lines": 80
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "ref": "a039d9803ade",
+      "blob": "a21461322a9f",
+      "LF": 32,
+      "CRLF": 0,
+      "physical_lines": 33
+    },
+    {
+      "path": "mykernel/include/linux/kernel/syscalls.h",
+      "ref": "a039d9803ade",
+      "blob": "6cc2f85fec90",
+      "LF": 1399,
+      "CRLF": 0,
+      "physical_lines": 1399
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "ref": "a039d9803ade",
+      "blob": "4224440c2c48",
+      "LF": 254,
+      "CRLF": 0,
+      "physical_lines": 254
+    },
+    {
+      "path": "myinitramfs/CMakeLists.txt",
+      "ref": "a039d9803ade",
+      "blob": "6757d21bc64c",
+      "LF": 50,
+      "CRLF": 0,
+      "physical_lines": 51
+    },
+    {
+      "path": "myinitramfs/mylib/CMakeLists.txt",
+      "ref": "a039d9803ade",
+      "blob": "8f6abc24095a",
+      "LF": 2,
+      "CRLF": 0,
+      "physical_lines": 3
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+      "ref": "a039d9803ade",
+      "blob": "b956957a602a",
+      "LF": 29,
+      "CRLF": 0,
+      "physical_lines": 29
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+      "ref": "a039d9803ade",
+      "blob": "3b9f22dd9ab9",
+      "LF": 2,
+      "CRLF": 0,
+      "physical_lines": 3
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/syscall/CMakeLists.txt",
+      "ref": "a039d9803ade",
+      "blob": "22503b9bff44",
+      "LF": 6,
+      "CRLF": 0,
+      "physical_lines": 7
+    },
+    {
+      "path": "myinitramfs/mylib/util/CMakeLists.txt",
+      "ref": "a039d9803ade",
+      "blob": "5fd782a35629",
+      "LF": 2,
+      "CRLF": 0,
+      "physical_lines": 3
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/include/unistd.h",
+      "ref": "a039d9803ade",
+      "blob": "bdb6ffa91612",
+      "LF": 177,
+      "CRLF": 0,
+      "physical_lines": 177
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "ref": "a039d9803ade",
+      "blob": "847cd015da2b",
+      "LF": 89,
+      "CRLF": 0,
+      "physical_lines": 89
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/brk.c",
+      "ref": "a039d9803ade",
+      "blob": "6bd7a1079152",
+      "LF": 48,
+      "CRLF": 0,
+      "physical_lines": 48
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "ref": "a039d9803ade",
+      "blob": "44db9ea9d7f7",
+      "LF": 390,
+      "CRLF": 390,
+      "physical_lines": 391
+    },
+    {
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "ref": "a039d9803ade",
+      "blob": "2dea1f8fc05c",
+      "LF": 56,
+      "CRLF": 0,
+      "physical_lines": 57
+    },
+    {
+      "path": "myinitramfs/mylib/util/list.c",
+      "ref": "a039d9803ade",
+      "blob": "24f7a214a288",
+      "LF": 127,
+      "CRLF": 0,
+      "physical_lines": 127
+    },
+    {
+      "path": "myinitramfs/mylib/include/utils.h",
+      "ref": "a039d9803ade",
+      "blob": "4e3e8910ac00",
+      "LF": 62,
+      "CRLF": 0,
+      "physical_lines": 63
+    }
+  ],
+  "open_questions": [
+    "实际sh链接、实际预处理/编译、C指针与对象、真实VMA/页和堆操作未证"
+  ],
+  "record_type": "incremental_deferred_findings",
+  "D00": [],
+  "new_confirmed_kernel_defects": [],
+  "new_findings": [
+    {
+      "qualified_id": "CORE-USER-BRK-ALLOCATOR-144::INIT_RETURN_ADDRESS_CONSUMPTION",
+      "kind": "CONDITIONAL_LOCAL_NUMERIC_OBSERVATION",
+      "status": "recorded_no_runtime_claim",
+      "source_ref": [
+        {
+          "base_snapshot": "time（分支名）",
+          "source_pin_short12": "a039d9803ade",
+          "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+          "symbol": "init_uslab",
+          "selectors": [
+            "facts.B[id=B_OK].rounds",
+            "facts.B[id=B_REFUSE_I1].rounds[0..2]"
+          ],
+          "evidence": [
+            "E144-093",
+            "E144-094",
+            "E144-095"
+          ]
+        },
+        {
+          "base_snapshot": "time（分支名）",
+          "source_pin_short12": "a039d9803ade",
+          "path": "mykernel/arch/x86_64/myos/syscall.c",
+          "symbol": "MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)",
+          "selectors": [
+            "facts.A[id=A_GROW_FAIL]"
+          ],
+          "evidence": [
+            "E144-013",
+            "E144-015"
+          ]
+        }
+      ],
+      "known": "success saves request exclusive end; refusal returns nonzero old break and two different nodes save same numeric address in given B_REFUSE_I1",
+      "unknown": "real linked candidate, mapped memory, object aliasing, actual corruption",
+      "effect": "conditional metadata address observation; no runtime bug or new confirmed defect",
+      "resume": "authorized actual linkage/object/mapping investigation if needed"
+    },
+    {
+      "qualified_id": "CORE-USER-BRK-ALLOCATOR-144::DYNAMIC_BREAK_DIVERGENCE",
+      "kind": "CONDITIONAL_LOCAL_NUMERIC_OBSERVATION",
+      "status": "recorded_no_runtime_claim",
+      "source_ref": [
+        {
+          "base_snapshot": "time（分支名）",
+          "source_pin_short12": "a039d9803ade",
+          "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+          "symbol": "upage_alloc",
+          "selectors": [
+            "facts.C[id=C_GROW_REFUSED].stages",
+            "facts.C[id=C_GROW_OK].result"
+          ],
+          "evidence": [
+            "E144-082",
+            "E144-083",
+            "E144-084",
+            "E144-085"
+          ]
+        },
+        {
+          "base_snapshot": "time（分支名）",
+          "source_pin_short12": "a039d9803ade",
+          "path": "mykernel/arch/x86_64/myos/syscall.c",
+          "symbol": "MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)",
+          "selectors": [
+            "facts.A[id=A_GROW_FAIL]"
+          ],
+          "evidence": [
+            "E144-013",
+            "E144-015"
+          ]
+        }
+      ],
+      "known": "nonnull old break passes gate; independent +=H produces numeric user/kernel break divergence under given refusal; M.vaddr old",
+      "unknown": "actual prior malloc recursion, actual pages and list/heap runtime effects",
+      "effect": "no actual memory damage asserted",
+      "resume": "authorized linkage and bounded allocation runtime review only"
+    }
+  ],
+  "inherited_not_reopened": [
+    "R14-S01",
+    "R26-S02",
+    "75 kernel allocator scope",
+    "121/122 valid object and build boundary",
+    "R143-N01 navigation already supplied"
+  ],
+  "owner_decisions_requested_now": []
+}

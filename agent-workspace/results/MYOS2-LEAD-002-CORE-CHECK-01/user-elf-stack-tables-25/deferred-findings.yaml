@@ -1,0 +1,159 @@
+---
+# YAML 1.2 compatible JSON document; all historical IDs are links only
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-ELF-STACK-TABLES-25",
+  "record_type": "new_deferred_findings_with_historical_qualified_links",
+  "date": "2026-11-02",
+  "source": "time @ a039d9803ade",
+  "author": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "status": "deferred_owner_not_ready",
+  "owner_decisions_requested_now": [],
+  "old_items_frozen": true,
+  "phase3_authorized": false,
+  "findings": [
+    {
+      "id": "ET25-F01",
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25::ET25-F01",
+      "status": "needs_evidence",
+      "kind": "undefined_local_value_gate",
+      "title": "create_elf_tables的局部vma在有效性判断前没有活动赋值",
+      "anchors": [
+        "ET25-A15",
+        "ET25-A35",
+        "ET25-A36"
+      ],
+      "premises": [
+        "固定time源码的所选函数体被完整读取",
+        "若控制流确实抵达if(!vma)"
+      ],
+      "claim": "vma仅为未初始化自动局部指针；查找赋值为注释，却立即if(!vma)",
+      "possible_impact": "C层读前未写，无法得到定义良好的后续argc/argv/envp/auxv写入和启动判决",
+      "counterevidence": [
+        "没有实际编译/运行数据说明某个机器症状",
+        "不能以局部静态未定义行为推定某次机器必定返回-EFAULT或继续"
+      ],
+      "priority": "high_evidence_clarity_not_runtime_severity",
+      "owner_action_now": "none",
+      "next_gate": "由主线未来另授权修复/运行前确认正确VMA来源与错误传播"
+    },
+    {
+      "id": "ET25-F02",
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25::ET25-F02",
+      "status": "deferred_owner_not_ready",
+      "kind": "direct_put_user_contract",
+      "title": "put_user为直接解引用并返回-ENOERR，未实现所期待的可恢复写入检查",
+      "anchors": [
+        "ET25-A37",
+        "ET25-A39",
+        "ET25-A54",
+        "ET25-A55"
+      ],
+      "premises": [
+        "目标是有效地址时宏赋值正常完成并返回0",
+        "无效用户地址场景在用户态/内核隔离下需独立验证"
+      ],
+      "claim": "当前活动宏仅*(ptr)=x; -ENOERR；if(put_user(...))无法据此证实非法地址会转-EFAULT",
+      "possible_impact": "局部写入错误分流和用户内存访问保护不具备已证安全返回契约",
+      "counterevidence": [
+        "可能存在宏以外的异常/页故障处理，未全系统验证",
+        "没有用户地址故障或真实写入复现"
+      ],
+      "priority": "high_evidence_clarity_not_runtime_severity",
+      "owner_action_now": "none",
+      "next_gate": "先独立核用户写入异常/错误恢复，再讨论修复"
+    },
+    {
+      "id": "ET25-F03",
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25::ET25-F03",
+      "status": "needs_evidence",
+      "kind": "simplified_strnlen_user_contract",
+      "title": "strnlen_user只返回strnlen(str,count)+1，0错误值未在活动函数中生产",
+      "anchors": [
+        "ET25-A38",
+        "ET25-A40",
+        "ET25-A58",
+        "ET25-A59"
+      ],
+      "premises": [
+        "MAX_ARG_STRLEN为正数且读取地址有效时才能讨论正常长度",
+        "当前strnlen_user没有活动访问探测"
+      ],
+      "claim": "对有效正长度输入，结果为strnlen+1，超过MAX时调用者返回-EINVAL；零返回门仅是调用者文本分支",
+      "possible_impact": "用户字符串错误/不可访问性未获得该封装的明确定义0返回，真实异常结果未知",
+      "counterevidence": [
+        "对有效NUL终止字符串长度可正常推进",
+        "未展开底层strnlen的所有环境和异常行为"
+      ],
+      "priority": "medium_conditional",
+      "owner_action_now": "none",
+      "next_gate": "未来由用户内存/异常专项核查"
+    },
+    {
+      "id": "ET25-F04",
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25::ET25-F04",
+      "status": "needs_evidence",
+      "kind": "conditional_auxv_capacity_invariant",
+      "title": "NEW_AUX_ENT缺每次追加的容量检查，依赖宏定义与条件项同步",
+      "anchors": [
+        "ET25-A24",
+        "ET25-A30",
+        "ET25-A31",
+        "ET25-A32",
+        "ET25-A43",
+        "ET25-A44"
+      ],
+      "premises": [
+        "若未来ARCH_DLINFO、CONFIG_RSEQ或其他条目数增大且容量不相应变化",
+        "出现N大于22+AT_VECTOR_SIZE_ARCH的组合"
+      ],
+      "claim": "宏每条追加两个元素，未见边界门；当前已读默认12或13对均不超22对预留",
+      "possible_impact": "未来条件变更时可能写出saved_auxv、清尾长度计算错误；本批不认定当前越界",
+      "counterevidence": [
+        "当前已读x86-64宏组合下容量明确足够",
+        "未进行预处理或验证所有外部构建变量"
+      ],
+      "priority": "low_current_high_on_configuration_change",
+      "owner_action_now": "none",
+      "next_gate": "仅在修改辅助项/编译配置时先专项容量回归"
+    }
+  ],
+  "history_consumption": [
+    {
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F02",
+      "kind": "existing_upstream_gap_reference",
+      "new_finding": false,
+      "note": "GUP缺活动return，上游参数页成功不可提升为定义良好端到端事实"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F03",
+      "kind": "existing_upstream_gap_reference",
+      "new_finding": false,
+      "note": "参数页PTE权限和结果有效性只在固定条件中讨论"
+    },
+    {
+      "qualified_id": "CORE-USER-ARG-PAGES-24-REVIEW-001::R24-S01",
+      "kind": "acceptance_supplement_reference",
+      "new_finding": false,
+      "note": "不将UB返值假定为已定义正常生产路径"
+    },
+    {
+      "qualified_id": "CORE-USER-ARG-PAGES-24-REVIEW-001::R24-S02",
+      "kind": "acceptance_supplement_reference",
+      "new_finding": false,
+      "note": "区分指针有效性、引用和值被使用"
+    },
+    {
+      "qualified_id": "CORE-USER-ARG-PAGES-24-REVIEW-001::R24-S03",
+      "kind": "acceptance_supplement_reference",
+      "new_finding": false,
+      "note": "关系边不混同调用、消费、未消费"
+    }
+  ],
+  "new_findings_count": 4,
+  "old_findings_modified": false,
+  "runtime_evidence": "NOT_RUN",
+  "kernel_correctness_verdict": "NOT_ISSUED",
+  "manual_fix_requested_now": false
+}

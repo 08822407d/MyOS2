@@ -1,0 +1,1236 @@
+{
+ "check": "SCHED_ORDER_02_RUN",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/order02/official/work/order-h73al2z_",
+ "frozen_extraction": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/order02/official/frozen",
+ "template": {
+  "bytes": 8846,
+  "sha256_segments": [
+   "05c6dfdfb1d459d7",
+   "5380b805bc15e5d5",
+   "ede472de08000a83",
+   "41eec20b29b991dd"
+  ]
+ },
+ "template_source": "scheduler-order-02/fixtures/fx_order.c",
+ "copied_next_to_template": {
+  "fx_common.h": {
+   "bytes": 1854,
+   "sha256_segments": [
+    "5c3b5baaeb652c16",
+    "2676d7b4ad193f26",
+    "4ea329133dc4817d",
+    "2c754ed1ee0fb906"
+   ]
+  },
+  "fx_list.inc.c": {
+   "bytes": 3054,
+   "sha256_segments": [
+    "146d23b7aa2d1e4b",
+    "1bed214a8b8d716e",
+    "a8eadb69f4222fb2",
+    "45ff21540f35ad3f"
+   ]
+  }
+ },
+ "limits": {
+  "compile_s": 60,
+  "run_s": 5,
+  "walk_links": 16
+ },
+ "cflags": [
+  "-std=gnu11",
+  "-O0",
+  "-g",
+  "-fno-strict-aliasing",
+  "-Wall",
+  "-Wno-unused-label",
+  "-Wno-unused-variable",
+  "-Wno-unused-function"
+ ],
+ "compiler": "/usr/bin/gcc",
+ "tools": {
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "python3": "3.11.15",
+  "git": "git version 2.43.0"
+ },
+ "extraction": [
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_types.h",
+   "kind": "struct",
+   "name": "list_head",
+   "lines": [
+    8,
+    11
+   ],
+   "bytes": 57,
+   "sha256_segments": [
+    "ebf1c027f3463abc",
+    "9029be1c1da14773",
+    "780ed6b2ba9cc720",
+    "23726124f4272c69"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_types.h",
+   "kind": "struct",
+   "name": "list_hdr",
+   "lines": [
+    13,
+    16
+   ],
+   "bytes": 56,
+   "sha256_segments": [
+    "d248e3e72255d766",
+    "328d6ce52b5bb521",
+    "1c323da28c70123e",
+    "5a6b3b8b647eb892"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_const.h",
+   "kind": "macro",
+   "name": "LIST_POISON1",
+   "lines": [
+    5,
+    5
+   ],
+   "bytes": 39,
+   "sha256_segments": [
+    "4208b26ec9006c27",
+    "23019599fa9f5b52",
+    "4e0008809c563eaa",
+    "c4696f4816d4065a"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_const.h",
+   "kind": "macro",
+   "name": "LIST_POISON2",
+   "lines": [
+    6,
+    6
+   ],
+   "bytes": 39,
+   "sha256_segments": [
+    "7e513a95411558d5",
+    "abc9ae4608901471",
+    "f4f690fd07992c8d",
+    "8530c20dbcc56ceb"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/include/uapi/linux/stddef.h",
+   "kind": "macro",
+   "name": "container_of",
+   "lines": [
+    9,
+    13
+   ],
+   "bytes": 263,
+   "sha256_segments": [
+    "ae12efae715f1169",
+    "20f9bfc0a68d2261",
+    "0d19e43a6a403411",
+    "a852ec8a5a0b75e6"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "macro",
+   "name": "INIT_LIST_HEAD",
+   "lines": [
+    125,
+    125
+   ],
+   "bytes": 48,
+   "sha256_segments": [
+    "0c5f3ae9c2784896",
+    "b0dbb8bcd040ae59",
+    "aa94407f02c1a9c9",
+    "410f3e3da30c7b11"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "macro",
+   "name": "list_is_head",
+   "lines": [
+    132,
+    132
+   ],
+   "bytes": 42,
+   "sha256_segments": [
+    "7eadc5411f450e4d",
+    "0b846f5b635bd9e7",
+    "8e321c11a58798b8",
+    "ba1bb8cce2366434"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "LIST_INIT",
+   "lines": [
+    5,
+    8
+   ],
+   "bytes": 65,
+   "sha256_segments": [
+    "3a4d4e1a6894cb52",
+    "5c8ce8c6013db55a",
+    "2a120a498c8bf204",
+    "47909789cef22a30"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "LIST_HEADER_INIT",
+   "lines": [
+    9,
+    12
+   ],
+   "bytes": 106,
+   "sha256_segments": [
+    "fd948458e96905d1",
+    "fd3115f3708a15bf",
+    "6914443895cc9b99",
+    "6679a1911dfa71b8"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "list_container",
+   "lines": [
+    25,
+    26
+   ],
+   "bytes": 80,
+   "sha256_segments": [
+    "98d6a6e49e50f5a3",
+    "a3cc91ecd944524e",
+    "8379836ca5f4cc60",
+    "5db07ee1dc4106a4"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "list_entry",
+   "lines": [
+    27,
+    27
+   ],
+   "bytes": 34,
+   "sha256_segments": [
+    "18fedd137eb90cba",
+    "03ef61ad0d4bb5a1",
+    "678dcd038a633546",
+    "1e921a14699e55e1"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "list_first_entry",
+   "lines": [
+    37,
+    38
+   ],
+   "bytes": 88,
+   "sha256_segments": [
+    "9158858037a4a4dc",
+    "ec0ad3c7b14ed4fd",
+    "6301979bf184afff",
+    "c0fb930c32721a76"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "list_for_each",
+   "lines": [
+    88,
+    91
+   ],
+   "bytes": 126,
+   "sha256_segments": [
+    "0d8764ba976cf21c",
+    "5ae9ae6e094cd9bc",
+    "352eed94abe11d70",
+    "eff67bbd84f5b071"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "list_headr_first_container",
+   "lines": [
+    334,
+    335
+   ],
+   "bytes": 109,
+   "sha256_segments": [
+    "68549932735e1f43",
+    "146a592968730380",
+    "43ffbd5e0c66b1d0",
+    "4d971593aa35fe2b"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list_macro.h",
+   "kind": "macro",
+   "name": "list_header_foreach",
+   "lines": [
+    340,
+    341
+   ],
+   "bytes": 83,
+   "sha256_segments": [
+    "63e3a3c429a91383",
+    "7840e201b2c821c3",
+    "6e24b3649fc9283f",
+    "b145beed88b4bce2"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "INIT_LIST_S",
+   "lines": [
+    147,
+    152
+   ],
+   "bytes": 129,
+   "sha256_segments": [
+    "6503fe0d66ff1558",
+    "1f640e13371c02a3",
+    "7938fded5e28c909",
+    "b86a13275cb0410a"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "INIT_LIST_HEADER_S",
+   "lines": [
+    153,
+    158
+   ],
+   "bytes": 136,
+   "sha256_segments": [
+    "53598975b6d1421a",
+    "b63bc9bfdeb3a12f",
+    "0af6937bab98f97d",
+    "f75b67847f917ae2"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "__list_add_valid",
+   "lines": [
+    160,
+    168
+   ],
+   "bytes": 247,
+   "sha256_segments": [
+    "3ed8f4cedd0f9fda",
+    "e1e2bf838cabf053",
+    "2f4aeb0056ed04c4",
+    "39753a237659c70a"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "__list_del_entry_valid",
+   "lines": [
+    169,
+    179
+   ],
+   "bytes": 306,
+   "sha256_segments": [
+    "13f263662c49e0ff",
+    "3303fb6e1f5dcfd3",
+    "ca5c5220df88bba2",
+    "270354b21ea40d41"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "__list_add_between",
+   "lines": [
+    187,
+    197
+   ],
+   "bytes": 248,
+   "sha256_segments": [
+    "9147161d2d4ba947",
+    "ab9b41bf303ecc2b",
+    "71944175f0aba081",
+    "47e17d14785cec6f"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_add_to_next",
+   "lines": [
+    206,
+    210
+   ],
+   "bytes": 127,
+   "sha256_segments": [
+    "1388a0b7eda6e30b",
+    "7ad3e725953b9f22",
+    "bf7500f7fb2282a8",
+    "12216b2f101f62ae"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_add_to_prev",
+   "lines": [
+    219,
+    223
+   ],
+   "bytes": 127,
+   "sha256_segments": [
+    "69a63f65475e8438",
+    "a0ef66048d0bbd01",
+    "c58afd93239cfffd",
+    "7b765ab78d7eb30d"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "__list_del",
+   "lines": [
+    233,
+    238
+   ],
+   "bytes": 133,
+   "sha256_segments": [
+    "4b2d41eef303900b",
+    "5d8f42afdb3fad5c",
+    "ad3da5a9396736b6",
+    "330ce2826fb59874"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "__list_del_entry",
+   "lines": [
+    253,
+    260
+   ],
+   "bytes": 162,
+   "sha256_segments": [
+    "1e6b8fa214378a31",
+    "7922af680c712821",
+    "27183b68156fb1fa",
+    "2649002e489130e0"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_del_init",
+   "lines": [
+    278,
+    283
+   ],
+   "bytes": 120,
+   "sha256_segments": [
+    "69ca4826f39fa5d2",
+    "62df122459de7e35",
+    "4964226ddcd19c7c",
+    "4cb01e8b13c55b90"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_is_head_anchor",
+   "lines": [
+    419,
+    423
+   ],
+   "bytes": 121,
+   "sha256_segments": [
+    "2115a38e9262a008",
+    "6932bc75201fcff1",
+    "f5713f5df30d89c2",
+    "b7fc71d037652c8d"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_is_empty_entry",
+   "lines": [
+    428,
+    432
+   ],
+   "bytes": 118,
+   "sha256_segments": [
+    "a917ea3ed5156f20",
+    "aaa8bdf4fd524d5f",
+    "a581b7c57f785e0d",
+    "b7af8047a7e4b52b"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_header_is_empty",
+   "lines": [
+    628,
+    632
+   ],
+   "bytes": 125,
+   "sha256_segments": [
+    "6d2bbba923422901",
+    "a98e79ac6699a16f",
+    "18915e829d6dbf9a",
+    "e35e80eda44c7623"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_header_contains",
+   "lines": [
+    633,
+    642
+   ],
+   "bytes": 212,
+   "sha256_segments": [
+    "d2c885447e83747d",
+    "34793b1d05e1ee1b",
+    "a688d6a42c12a0a7",
+    "3d545c1fb3ecc573"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_header_add_to_head",
+   "lines": [
+    644,
+    649
+   ],
+   "bytes": 157,
+   "sha256_segments": [
+    "bdf1ccbe85075372",
+    "3c3193e93fc8241d",
+    "366f8ab719b737b7",
+    "dc7fd8095582cd57"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_header_remove_head",
+   "lines": [
+    650,
+    660
+   ],
+   "bytes": 245,
+   "sha256_segments": [
+    "c36e35500b6e3970",
+    "3f72ce1228c530e4",
+    "79cd6c6a55ba27cb",
+    "0f30d8c9b5992435"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_header_add_to_tail",
+   "lines": [
+    662,
+    667
+   ],
+   "bytes": 157,
+   "sha256_segments": [
+    "e7451841f25dda30",
+    "2703ff77eea647b4",
+    "d5b2f77f7503ad62",
+    "f46666e314ad5174"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/lib/list/double_list.h",
+   "kind": "func",
+   "name": "list_header_delete_node",
+   "lines": [
+    681,
+    691
+   ],
+   "bytes": 224,
+   "sha256_segments": [
+    "239d2d2bf75873c5",
+    "f3aa16b8028993df",
+    "90585be83380e402",
+    "c47501b2c4e6ad84"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/sched/scheduler/scheduler_types.h",
+   "kind": "struct",
+   "name": "sched_entity",
+   "lines": [
+    8,
+    40
+   ],
+   "bytes": 811,
+   "sha256_segments": [
+    "2ae073a5d065956e",
+    "eba66540ca4f7028",
+    "d442f7ebf8e79e1a",
+    "6baa46519aae71f4"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/sched/scheduler/scheduler_types.h",
+   "kind": "struct",
+   "name": "sched_rt_entity",
+   "lines": [
+    42,
+    58
+   ],
+   "bytes": 454,
+   "sha256_segments": [
+    "b5dd1d6f5523a96d",
+    "d0d8a693f346a24b",
+    "d5019fe060a1e127",
+    "4b779d440dfc77b8"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/arch/x86_64/sched/context/thread_info_types_arch.h",
+   "kind": "struct",
+   "name": "thread_info",
+   "lines": [
+    19,
+    24
+   ],
+   "bytes": 189,
+   "sha256_segments": [
+    "848398c2f9f642ad",
+    "3e8a6ce0434e1af4",
+    "464dcf56989d0ea3",
+    "3b33b0e84da05519"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/sched/runqueue/runqueue_types.h",
+   "kind": "struct",
+   "name": "myos_rq",
+   "lines": [
+    193,
+    197
+   ],
+   "bytes": 131,
+   "sha256_segments": [
+    "6470522644a0034b",
+    "87d6a2d412bc4fb2",
+    "97003fd0808d4c7d",
+    "915cad38add28281"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/sched/task/task_const.h",
+   "kind": "macro",
+   "name": "TASK_RUNNING",
+   "lines": [
+    26,
+    26
+   ],
+   "bytes": 34,
+   "sha256_segments": [
+    "1eb741bd7c9b5641",
+    "d1df3d8e36ee44b6",
+    "f096c7691e61c999",
+    "5962bd4a265ee06a"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/sched/task/task_const.h",
+   "kind": "macro",
+   "name": "TASK_UNINTERRUPTIBLE",
+   "lines": [
+    28,
+    28
+   ],
+   "bytes": 40,
+   "sha256_segments": [
+    "160d93bd1d542e1b",
+    "01464472626b7ba2",
+    "9d0ca27e5fed3ef0",
+    "c759fdb05b93a8c9"
+   ]
+  },
+  {
+   "pin": "time",
+   "commit_short12": "a039d9803ade",
+   "path": "mykernel/sched/scheduler/myos_rt.c",
+   "kind": "func",
+   "name": "pick_next_task_myos",
+   "lines": [
+    5,
+    58
+   ],
+   "bytes": 1598,
+   "sha256_segments": [
+    "2ff36b570d0422f3",
+    "ccb84857384d5cd7",
+    "c8df90beee74d36a",
+    "adda9dacb713e54f"
+   ]
+  }
+ ],
+ "expanded_source": {
+  "bytes": 23713,
+  "sha256_segments": [
+   "716a2646484eb144",
+   "32a736e4092a75ec",
+   "70ccb3fc7b534641",
+   "fd330f5833bb40f1"
+  ]
+ },
+ "compile": {
+  "cmd": [
+   "/usr/bin/gcc",
+   "-std=gnu11",
+   "-O0",
+   "-g",
+   "-fno-strict-aliasing",
+   "-Wall",
+   "-Wno-unused-label",
+   "-Wno-unused-variable",
+   "-Wno-unused-function",
+   "-I",
+   "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/order02/official/work/order-h73al2z_/build",
+   "-o",
+   "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/order02/official/work/order-h73al2z_/build/fx_order",
+   "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/order02/official/work/order-h73al2z_/build/fx_order.expanded.c"
+  ],
+  "timeout_s": 60,
+  "pid": 806,
+  "pgid": 806,
+  "pgid_differs_from_own": true,
+  "timed_out": false,
+  "kill": null,
+  "collect_timed_out": false,
+  "output_lost": false,
+  "returncode": 0,
+  "reaped_confirmed": true,
+  "terminal_state": "exited",
+  "stdout": "",
+  "stderr": "",
+  "elapsed_s": 0.076,
+  "group_members_after": null,
+  "binary_exists": true
+ },
+ "binary": {
+  "bytes": 31216,
+  "committed": false
+ },
+ "status": "BUILT",
+ "scenarios": {
+  "W01": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W01"
+     ],
+     "timeout_s": 5,
+     "pid": 811,
+     "pgid": 811,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W01\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":100,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":25,\"idle_vruntime\":0}\n{\"case\":\"W01\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W01\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W01\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[4,20],[5,30],[0,0],[2,25]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W01\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W01"
+     ],
+     "timeout_s": 5,
+     "pid": 812,
+     "pgid": 812,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W01\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":100,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":25,\"idle_vruntime\":0}\n{\"case\":\"W01\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W01\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W01\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[4,20],[5,30],[0,0],[2,25]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W01\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  },
+  "W02": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W02"
+     ],
+     "timeout_s": 5,
+     "pid": 813,
+     "pgid": 813,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W02\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W02\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W02\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W02\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,25],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W02\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W02"
+     ],
+     "timeout_s": 5,
+     "pid": 814,
+     "pgid": 814,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W02\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W02\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W02\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W02\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,25],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W02\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  },
+  "W03": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W03"
+     ],
+     "timeout_s": 5,
+     "pid": 815,
+     "pgid": 815,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W03\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":100,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W03\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W03\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W03\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,15],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W03\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W03"
+     ],
+     "timeout_s": 5,
+     "pid": 816,
+     "pgid": 816,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W03\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":100,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W03\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W03\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W03\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":100,\"last_jiffies\":100,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,15],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W03\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  },
+  "W04": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W04"
+     ],
+     "timeout_s": 5,
+     "pid": 817,
+     "pgid": 817,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W04\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":105,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W04\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W04\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W04\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":105,\"last_jiffies\":105,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":20,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,20,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,20],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W04\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W04"
+     ],
+     "timeout_s": 5,
+     "pid": 818,
+     "pgid": 818,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W04\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":105,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W04\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W04\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W04\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":105,\"last_jiffies\":105,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":20,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,20,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,20],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W04\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  },
+  "W05": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W05"
+     ],
+     "timeout_s": 5,
+     "pid": 819,
+     "pgid": 819,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W05\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":2,\"a_state\":2,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W05\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":2,\"state\":2,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,2],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W05\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W05\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":2,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,2],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[4,20],[5,30],[0,0]],\"count\":3,\"walk_len\":3,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W05\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W05"
+     ],
+     "timeout_s": 5,
+     "pid": 820,
+     "pgid": 820,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W05\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":2,\"a_state\":2,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W05\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":2,\"state\":2,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,2],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W05\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W05\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":2,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,2],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[4,20],[5,30],[0,0]],\"count\":3,\"walk_len\":3,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W05\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  },
+  "W06": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W06"
+     ],
+     "timeout_s": 5,
+     "pid": 821,
+     "pgid": 821,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W06\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":0,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":7}\n{\"case\":\"W06\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":0,\"state\":0,\"vruntime\":7,\"time_slice\":100},\"rq_curr\":0,\"rq_idle\":0,\"tasks\":[[0,7,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30]],\"count\":3,\"walk_len\":3,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":0,\"current_occurrences\":0}\n{\"case\":\"W06\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W06\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":0,\"state\":0,\"vruntime\":7,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,7,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[4,20],[5,30],[0,7]],\"count\":3,\"walk_len\":3,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W06\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W06"
+     ],
+     "timeout_s": 5,
+     "pid": 822,
+     "pgid": 822,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W06\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":0,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":7}\n{\"case\":\"W06\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":0,\"state\":0,\"vruntime\":7,\"time_slice\":100},\"rq_curr\":0,\"rq_idle\":0,\"tasks\":[[0,7,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30]],\"count\":3,\"walk_len\":3,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":0,\"current_occurrences\":0}\n{\"case\":\"W06\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W06\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":0,\"state\":0,\"vruntime\":7,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,7,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[4,20],[5,30],[0,7]],\"count\":3,\"walk_len\":3,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W06\",\"ev\":\"end\",\"steps\":1}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  },
+  "W07": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W07"
+     ],
+     "timeout_s": 5,
+     "pid": 823,
+     "pgid": 823,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W07\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W07\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,25],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W07\",\"ev\":\"sequence\",\"before_step\":2,\"current_set_to_returned\":3,\"jiffies\":110,\"need_resched\":1}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"before\",\"step\":2,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":3,\"state\":0,\"vruntime\":10,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,25],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W07\",\"ev\":\"call\",\"step\":2,\"returned\":2,\"rq_curr\":2}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"after\",\"step\":2,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":3,\"state\":0,\"vruntime\":10,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W07\",\"ev\":\"end\",\"steps\":2}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W07"
+     ],
+     "timeout_s": 5,
+     "pid": 824,
+     "pgid": 824,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W07\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":110,\"need_resched\":1,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":110,\"last_jiffies\":100,\"used_external\":10,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W07\",\"ev\":\"call\",\"step\":1,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":25,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,25],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W07\",\"ev\":\"sequence\",\"before_step\":2,\"current_set_to_returned\":3,\"jiffies\":110,\"need_resched\":1}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"before\",\"step\":2,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":3,\"state\":0,\"vruntime\":10,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,25],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W07\",\"ev\":\"call\",\"step\":2,\"returned\":2,\"rq_curr\":2}\n{\"case\":\"W07\",\"ev\":\"snap\",\"where\":\"after\",\"step\":2,\"jiffies\":110,\"last_jiffies\":110,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":3,\"state\":0,\"vruntime\":10,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,25,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W07\",\"ev\":\"end\",\"steps\":2}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  },
+  "W08": {
+   "runs": [
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W08"
+     ],
+     "timeout_s": 5,
+     "pid": 825,
+     "pgid": 825,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W08\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":105,\"need_resched\":0,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":0,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W08\",\"ev\":\"call\",\"step\":1,\"returned\":2,\"rq_curr\":2}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":0,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W08\",\"ev\":\"sequence\",\"before_step\":2,\"current_set_to_returned\":2,\"jiffies\":105,\"need_resched\":1}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"before\",\"step\":2,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W08\",\"ev\":\"call\",\"step\":2,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"after\",\"step\":2,\"jiffies\":105,\"last_jiffies\":105,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":20,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,20,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,20],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W08\",\"ev\":\"end\",\"steps\":2}\n",
+     "stderr": "",
+     "elapsed_s": 0.001,
+     "group_members_after": null,
+     "rep": 1
+    },
+    {
+     "cmd": [
+      "<build>/fx_order",
+      "W08"
+     ],
+     "timeout_s": 5,
+     "pid": 826,
+     "pgid": 826,
+     "pgid_differs_from_own": true,
+     "timed_out": false,
+     "kill": null,
+     "collect_timed_out": false,
+     "output_lost": false,
+     "returncode": 0,
+     "reaped_confirmed": true,
+     "terminal_state": "exited",
+     "stdout": "{\"case\":\"W08\",\"ev\":\"scenario\",\"time_slice\":100,\"last_jiffies_initial\":100,\"jiffies\":105,\"need_resched\":0,\"current\":2,\"a_state\":0,\"a_vruntime\":15,\"idle_vruntime\":0}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"before\",\"step\":1,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":0,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W08\",\"ev\":\"call\",\"step\":1,\"returned\":2,\"rq_curr\":2}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"after\",\"step\":1,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":0,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W08\",\"ev\":\"sequence\",\"before_step\":2,\"current_set_to_returned\":2,\"jiffies\":105,\"need_resched\":1}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"before\",\"step\":2,\"jiffies\":105,\"last_jiffies\":100,\"used_external\":5,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":15,\"time_slice\":100},\"rq_curr\":2,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,15,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[3,10],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":0}\n{\"case\":\"W08\",\"ev\":\"call\",\"step\":2,\"returned\":3,\"rq_curr\":3}\n{\"case\":\"W08\",\"ev\":\"snap\",\"where\":\"after\",\"step\":2,\"jiffies\":105,\"last_jiffies\":105,\"used_external\":0,\"need_resched\":1,\"current\":{\"id\":2,\"state\":0,\"vruntime\":20,\"time_slice\":100},\"rq_curr\":3,\"rq_idle\":0,\"tasks\":[[0,0,0],[2,20,0],[3,10,0],[4,20,0],[5,30,0]],\"queue\":[[2,20],[4,20],[5,30],[0,0]],\"count\":4,\"walk_len\":4,\"walk_complete\":true,\"unknown_link\":false,\"duplicate_nodes\":false,\"idle_occurrences\":1,\"current_occurrences\":1}\n{\"case\":\"W08\",\"ev\":\"end\",\"steps\":2}\n",
+     "stderr": "",
+     "elapsed_s": 0.002,
+     "group_members_after": null,
+     "rep": 2
+    }
+   ],
+   "stdout_identical": true,
+   "stderr_identical": true,
+   "returncode_identical": true
+  }
+ }
+}

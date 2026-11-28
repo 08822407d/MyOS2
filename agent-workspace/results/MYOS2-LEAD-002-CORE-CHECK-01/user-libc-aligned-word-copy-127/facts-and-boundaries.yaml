@@ -1,0 +1,3393 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-ALIGNED-WORD-COPY-127",
+  "record_type": "R126_01_and_aligned_word_copy_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 (self-described; backend/effort UNATTESTED)",
+  "model_per_owner": "GPT-6＋Extra (Owner via 178)",
+  "date": "2026-11-22",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "345d0f32374c",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R126_01": {
+      "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+      "followup_id": "CORE-USER-LIBC-ALIGNED-WORD-COPY-127",
+      "record_type": "R126_01_additive_reconstructable_dot_delta",
+      "supersedes": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-memory-copy-fill-126/libc-memory-copy-fill-paths.dot",
+      "source_commit_short12": "345d0f32374c",
+      "source_base_snapshot": "time（分支名）",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "original": {
+        "node_declarations": 194,
+        "unique_node_ids": 184,
+        "duplicate_declarations": 10,
+        "typed_edges": 211,
+        "direct_call_instance": 40,
+        "macro_expansion": 12
+      },
+      "corrected": {
+        "node_declarations": 192,
+        "unique_node_ids": 192,
+        "duplicate_declarations": 0,
+        "typed_edges": 218,
+        "direct_call_instance": 40,
+        "macro_expansion": 13,
+        "read_events_for_M00": 0,
+        "write_events_for_M00": 0,
+        "macro_position_denominator_definition": "selected source-level copy macro invocation positions across four A126 memcpy cases plus two memcpy calls in each of three C125 cases; excludes constants/types and conditional helper C function calls",
+        "macro_positions": {
+          "A126_M00": [
+            "memcpy.c:57"
+          ],
+          "A126_M03": [
+            "memcpy.c:57"
+          ],
+          "A126_M15": [
+            "memcpy.c:57"
+          ],
+          "A126_M16": [
+            "memcpy.c:40",
+            "memcpy.c:45",
+            "memcpy.c:51",
+            "memcpy.c:57"
+          ],
+          "C125_01": [
+            "two memcpy.c:57 byte macros"
+          ],
+          "C125_02": [
+            "two memcpy.c:57 byte macros"
+          ],
+          "C125_03": [
+            "two memcpy.c:57 byte macros"
+          ],
+          "numerator": 13,
+          "denominator": 13
+        },
+        "case_cluster_node_counts": {
+          "A126_M00": 12,
+          "A126_M03": 11,
+          "A126_M15": 11,
+          "A126_M16": 12,
+          "B126_S00": 11,
+          "B126_S07": 11,
+          "B126_S08": 11,
+          "B126_S09": 11,
+          "B126_S64": 11,
+          "B126_S09_U3": 11,
+          "C125_01": 24,
+          "C125_02": 24,
+          "C125_03": 24,
+          "D126_R125_01": 4,
+          "D126_R125_02": 4
+        }
+      },
+      "selectors": {
+        "old_graph_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-memory-copy-fill-126/libc-memory-copy-fill-paths.dot",
+        "old_revision_short12": "345d0f32374c",
+        "case_ids": [
+          "A126_M00",
+          "A126_M03",
+          "A126_M15",
+          "A126_M16",
+          "B126_S00",
+          "B126_S07",
+          "B126_S08",
+          "B126_S09",
+          "B126_S64",
+          "B126_S09_U3",
+          "C125_01",
+          "C125_02",
+          "C125_03",
+          "D126_R125_01",
+          "D126_R125_02"
+        ],
+        "old_duplicate_decl_location": "B126_S09_U3 nodes included in both old B126_S09 cluster and B126_S09_U3 cluster; remove first occurrence in B126_S09 and retain dedicated cluster",
+        "M16_pre_source": "memcpy.c:39-40",
+        "M16_page_word_tail": "memcpy.c:45,51,57",
+        "memset_return_source": "memset.c:22,83",
+        "C_ranges_source": "126 machine facts C_cat.cases operation_ledger write_half_open"
+      },
+      "removed_edges": [
+        {
+          "from": "A126_M16_decision",
+          "to": "A126_M16_page_macro",
+          "kind": "CONTROL",
+          "label": "CONTROL | long branch, threshold reached"
+        },
+        {
+          "from": "A126_M00_byte_macro",
+          "to": "A126_M00_read",
+          "kind": "READ",
+          "label": "READ | selected bytes 0"
+        },
+        {
+          "from": "A126_M00_read",
+          "to": "A126_M00_write",
+          "kind": "WRITE",
+          "label": "WRITE | each read byte saved to byte __x before write"
+        },
+        {
+          "from": "A126_M00_write",
+          "to": "A126_M00_cursor",
+          "kind": "DATA",
+          "label": "DATA | srcp/dstp advance once per byte"
+        },
+        {
+          "from": "B126_S00_owner",
+          "to": "B126_S00_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83"
+        },
+        {
+          "from": "B126_S07_owner",
+          "to": "B126_S07_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83"
+        },
+        {
+          "from": "B126_S08_owner",
+          "to": "B126_S08_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83"
+        },
+        {
+          "from": "B126_S09_owner",
+          "to": "B126_S09_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83"
+        },
+        {
+          "from": "B126_S64_owner",
+          "to": "B126_S64_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83"
+        },
+        {
+          "from": "B126_S09_U3_owner",
+          "to": "B126_S09_U3_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83"
+        }
+      ],
+      "added_nodes": [
+        {
+          "id": "A126_M16_pre_byte_macro",
+          "label": "BYTE_COPY_FWD at memcpy.c:40; 0 iterations",
+          "shape": "box"
+        },
+        {
+          "id": "A126_M00_zero_loop",
+          "label": "BYTE_COPY_FWD at memcpy.c:57 entered with 0; no read, write or cursor increments",
+          "shape": "box"
+        },
+        {
+          "id": "B126_S00_original_dstpp",
+          "label": "original argument dstpp=D+0 at memset.c:22",
+          "shape": "box"
+        },
+        {
+          "id": "B126_S07_original_dstpp",
+          "label": "original argument dstpp=D+0 at memset.c:22",
+          "shape": "box"
+        },
+        {
+          "id": "B126_S08_original_dstpp",
+          "label": "original argument dstpp=D+0 at memset.c:22",
+          "shape": "box"
+        },
+        {
+          "id": "B126_S09_original_dstpp",
+          "label": "original argument dstpp=D+0 at memset.c:22",
+          "shape": "box"
+        },
+        {
+          "id": "B126_S64_original_dstpp",
+          "label": "original argument dstpp=D+0 at memset.c:22",
+          "shape": "box"
+        },
+        {
+          "id": "B126_S09_U3_original_dstpp",
+          "label": "original argument dstpp=D+3 at memset.c:22",
+          "shape": "box"
+        }
+      ],
+      "added_edges": [
+        {
+          "from": "A126_M16_decision",
+          "to": "A126_M16_pre_byte_macro",
+          "kind": "CONTROL",
+          "label": "CONTROL | len>=16; pre-align count 0 (memcpy.c:39-40)"
+        },
+        {
+          "from": "A126_M16_owner",
+          "to": "A126_M16_pre_byte_macro",
+          "kind": "MACRO_EXPANSION",
+          "label": "MACRO_EXPANSION | memcpy.c:40, 0-byte request"
+        },
+        {
+          "from": "A126_M16_pre_byte_macro",
+          "to": "A126_M16_page_macro",
+          "kind": "SEQUENCE",
+          "label": "SEQUENCE | pre-copy no iterations, then empty PAGE at line45"
+        },
+        {
+          "from": "A126_M00_byte_macro",
+          "to": "A126_M00_zero_loop",
+          "kind": "CONTROL_ZERO_ITERATION",
+          "label": "CONTROL_ZERO_ITERATION | __nbytes=0; while not entered"
+        },
+        {
+          "from": "A126_M00_zero_loop",
+          "to": "A126_M00_cursor",
+          "kind": "SEQUENCE",
+          "label": "SEQUENCE | local pointers unchanged (S+1/D+2)"
+        },
+        {
+          "from": "B126_S00_owner",
+          "to": "B126_S00_original_dstpp",
+          "kind": "ARGUMENT_DATA",
+          "label": "ARGUMENT_DATA | preserve entry dstpp separately from local dstp"
+        },
+        {
+          "from": "B126_S00_original_dstpp",
+          "to": "B126_S00_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83 returns original dstpp"
+        },
+        {
+          "from": "B126_S07_owner",
+          "to": "B126_S07_original_dstpp",
+          "kind": "ARGUMENT_DATA",
+          "label": "ARGUMENT_DATA | preserve entry dstpp separately from local dstp"
+        },
+        {
+          "from": "B126_S07_original_dstpp",
+          "to": "B126_S07_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83 returns original dstpp"
+        },
+        {
+          "from": "B126_S08_owner",
+          "to": "B126_S08_original_dstpp",
+          "kind": "ARGUMENT_DATA",
+          "label": "ARGUMENT_DATA | preserve entry dstpp separately from local dstp"
+        },
+        {
+          "from": "B126_S08_original_dstpp",
+          "to": "B126_S08_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83 returns original dstpp"
+        },
+        {
+          "from": "B126_S09_owner",
+          "to": "B126_S09_original_dstpp",
+          "kind": "ARGUMENT_DATA",
+          "label": "ARGUMENT_DATA | preserve entry dstpp separately from local dstp"
+        },
+        {
+          "from": "B126_S09_original_dstpp",
+          "to": "B126_S09_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83 returns original dstpp"
+        },
+        {
+          "from": "B126_S64_owner",
+          "to": "B126_S64_original_dstpp",
+          "kind": "ARGUMENT_DATA",
+          "label": "ARGUMENT_DATA | preserve entry dstpp separately from local dstp"
+        },
+        {
+          "from": "B126_S64_original_dstpp",
+          "to": "B126_S64_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83 returns original dstpp"
+        },
+        {
+          "from": "B126_S09_U3_owner",
+          "to": "B126_S09_U3_original_dstpp",
+          "kind": "ARGUMENT_DATA",
+          "label": "ARGUMENT_DATA | preserve entry dstpp separately from local dstp"
+        },
+        {
+          "from": "B126_S09_U3_original_dstpp",
+          "to": "B126_S09_U3_return",
+          "kind": "RETURN_DATA",
+          "label": "RETURN_DATA | memset.c:83 returns original dstpp"
+        }
+      ],
+      "modified_existing": [
+        {
+          "type": "node_label",
+          "id": "A126_M16_byte_macro",
+          "old_label": "BYTE_COPY_FWD macro expansion",
+          "new_label": "BYTE_COPY_FWD at memcpy.c:57; 0 iterations"
+        },
+        {
+          "type": "retype_edge",
+          "from": "B126_S00_final",
+          "to": "B126_S00_return",
+          "old_kind": "RETURN_DATA",
+          "new_kind": "SEQUENCE",
+          "old_label": "RETURN_DATA | returns unchanged dstpp",
+          "new_label": "SEQUENCE | completed writes/cursor progress precedes return"
+        },
+        {
+          "type": "retype_edge",
+          "from": "B126_S07_final",
+          "to": "B126_S07_return",
+          "old_kind": "RETURN_DATA",
+          "new_kind": "SEQUENCE",
+          "old_label": "RETURN_DATA | returns unchanged dstpp",
+          "new_label": "SEQUENCE | completed writes/cursor progress precedes return"
+        },
+        {
+          "type": "retype_edge",
+          "from": "B126_S08_final",
+          "to": "B126_S08_return",
+          "old_kind": "RETURN_DATA",
+          "new_kind": "SEQUENCE",
+          "old_label": "RETURN_DATA | returns unchanged dstpp",
+          "new_label": "SEQUENCE | completed writes/cursor progress precedes return"
+        },
+        {
+          "type": "retype_edge",
+          "from": "B126_S09_final",
+          "to": "B126_S09_return",
+          "old_kind": "RETURN_DATA",
+          "new_kind": "SEQUENCE",
+          "old_label": "RETURN_DATA | returns unchanged dstpp",
+          "new_label": "SEQUENCE | completed writes/cursor progress precedes return"
+        },
+        {
+          "type": "retype_edge",
+          "from": "B126_S64_final",
+          "to": "B126_S64_return",
+          "old_kind": "RETURN_DATA",
+          "new_kind": "SEQUENCE",
+          "old_label": "RETURN_DATA | returns unchanged dstpp",
+          "new_label": "SEQUENCE | completed writes/cursor progress precedes return"
+        },
+        {
+          "type": "retype_edge",
+          "from": "B126_S09_U3_final",
+          "to": "B126_S09_U3_return",
+          "old_kind": "RETURN_DATA",
+          "new_kind": "SEQUENCE",
+          "old_label": "RETURN_DATA | returns unchanged dstpp",
+          "new_label": "SEQUENCE | completed writes/cursor progress precedes return"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_01_zero",
+          "old_label": "memset writes [0,9] width=9",
+          "new_label": "memset writes [0,9) width=9"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_01_first",
+          "old_label": "MEMCPY#1 writes [0,2] width=2",
+          "new_label": "MEMCPY#1 writes [0,2) width=2"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_01_second",
+          "old_label": "MEMCPY#2 writes [1,8] width=7",
+          "new_label": "MEMCPY#2 writes [1,8) width=7"
+        },
+        {
+          "type": "edge_label",
+          "from": "C125_01_strcpy_2_strlen",
+          "to": "C125_01_memcpy_2",
+          "kind": "DATA",
+          "old_label": "DATA | argc source length+1",
+          "new_label": "DATA | argv[1] source strlen+1 (not argc)"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_02_zero",
+          "old_label": "memset writes [0,8] width=8",
+          "new_label": "memset writes [0,8) width=8"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_02_first",
+          "old_label": "MEMCPY#1 writes [0,5] width=5",
+          "new_label": "MEMCPY#1 writes [0,5) width=5"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_02_second",
+          "old_label": "MEMCPY#2 writes [5,8] width=3",
+          "new_label": "MEMCPY#2 writes [5,8) width=3"
+        },
+        {
+          "type": "edge_label",
+          "from": "C125_02_strcpy_2_strlen",
+          "to": "C125_02_memcpy_2",
+          "kind": "DATA",
+          "old_label": "DATA | argc source length+1",
+          "new_label": "DATA | argv[1] source strlen+1 (not argc)"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_03_zero",
+          "old_label": "memset writes [0,9] width=9",
+          "new_label": "memset writes [0,9) width=9"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_03_first",
+          "old_label": "MEMCPY#1 writes [0,5] width=5",
+          "new_label": "MEMCPY#1 writes [0,5) width=5"
+        },
+        {
+          "type": "node_label",
+          "id": "C125_03_second",
+          "old_label": "MEMCPY#2 writes [5,9] width=4",
+          "new_label": "MEMCPY#2 writes [5,9) width=4"
+        },
+        {
+          "type": "edge_label",
+          "from": "C125_03_strcpy_2_strlen",
+          "to": "C125_03_memcpy_2",
+          "kind": "DATA",
+          "old_label": "DATA | argc source length+1",
+          "new_label": "DATA | argv[1] source strlen+1 (not argc)"
+        }
+      ],
+      "removed_duplicate_declarations": 10,
+      "retained_original_data": [
+        "126 A/B/C calculated values, access/write widths, pointer data under stated conditions",
+        "40 direct source-owned calls",
+        "12 original macro edges plus one missing M16 pre-copy position",
+        "none of the original 126 six files or old PR17 author comment mutated"
+      ],
+      "mainline_closure": "C08 independent only"
+    },
+    "review_status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "R125_01_R125_02": "CLOSED_DOCUMENTATION_ONLY_BY_C08",
+    "source_126_unchanged": true,
+    "corrected_graph_location": "libc-aligned-word-copy-paths.dot::cluster_D00_R126_01"
+  },
+  "model_assumptions": {
+    "word_bytes": 8,
+    "generic_header_selected": true,
+    "OP_T_THRES_bytes": 16,
+    "PAGE_COPY_THRESHOLD": "assume 0",
+    "PAGE_COPY_FWD_MAYBE": "empty",
+    "source_and_dest_each": 384,
+    "base_mod8": 0,
+    "source_generator": "S[i]=0x20+(floor(i/8)%32)+16*(i%8),0<=i<384",
+    "destination_initial": "0xcc per byte",
+    "arrays_valid_distinct_nonoverlapping": true,
+    "source_unmodified": true,
+    "dest_outside_span_sentinels_preserved": true,
+    "real_sh_libc": "UNKNOWN"
+  },
+  "A_entry": {
+    "source_file": "myinitramfs/mylib/myglibc/string/wordcopy.c",
+    "function": "WORDCOPY_FWD_ALIGNED",
+    "len_unit": "op_t words (not bytes)",
+    "cases": [
+      {
+        "case_id": "A127-00",
+        "source_start": 128,
+        "dest_start": 128,
+        "word_count": 0,
+        "remainder": 0,
+        "entry_label": null,
+        "entry_prefetch": null,
+        "initial_adjust": null,
+        "ordered_trace": [
+          {
+            "seq": 2,
+            "type": "RETURN_VOID"
+          }
+        ],
+        "source_to_dest_map": [],
+        "read_words": 0,
+        "written_words": 0,
+        "read_half_open": [
+          128,
+          128
+        ],
+        "write_half_open": [
+          128,
+          128
+        ],
+        "final_local_srcp": 128,
+        "final_local_dstp": 128,
+        "final_local_len": 0,
+        "final_do0": null,
+        "return_type": "void",
+        "verified_all_words_correct": true,
+        "dest_outside_writes_unchanged": true
+      },
+      {
+        "case_id": "A127-01",
+        "source_start": 128,
+        "dest_start": 128,
+        "word_count": 1,
+        "remainder": 1,
+        "entry_label": "do0",
+        "entry_prefetch": {
+          "location": "case1.prefetch:83",
+          "reg": "a1",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "initial_adjust": {
+          "where": "case1:84-86",
+          "srcp_after": 136,
+          "dstp_after": 128,
+          "len_words_after": 0,
+          "src_adjust_bytes": 8,
+          "dst_adjust_bytes": 0
+        },
+        "ordered_trace": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case1.prefetch:83",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a1",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 3,
+            "type": "PTR_ARITH",
+            "at": "case1:84-86",
+            "srcp": 136,
+            "dstp": 128,
+            "len": 0
+          },
+          {
+            "seq": 4,
+            "type": "GOTO",
+            "target": "do0"
+          },
+          {
+            "seq": 5,
+            "type": "WRITE",
+            "at": "do0.final_store:127",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a1",
+            "from_prior_read": "case1.prefetch:83",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 6,
+            "type": "RETURN_VOID"
+          }
+        ],
+        "source_to_dest_map": [
+          {
+            "S_word": 0,
+            "D_word": 0,
+            "source_value": "0xa090807060504030"
+          }
+        ],
+        "read_words": 1,
+        "written_words": 1,
+        "read_half_open": [
+          128,
+          136
+        ],
+        "write_half_open": [
+          128,
+          136
+        ],
+        "final_local_srcp": 136,
+        "final_local_dstp": 128,
+        "final_local_len": 0,
+        "final_do0": {
+          "where": "do0.final_store:127",
+          "dst_word": 0,
+          "reg": "a1"
+        },
+        "return_type": "void",
+        "verified_all_words_correct": true,
+        "dest_outside_writes_unchanged": true
+      },
+      {
+        "case_id": "A127-02",
+        "source_start": 128,
+        "dest_start": 128,
+        "word_count": 2,
+        "remainder": 2,
+        "entry_label": "do1",
+        "entry_prefetch": {
+          "location": "case2.prefetch:39",
+          "reg": "a0",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "initial_adjust": {
+          "where": "case2:40-42",
+          "srcp_after": 80,
+          "dstp_after": 72,
+          "len_words_after": 8,
+          "src_adjust_bytes": -48,
+          "dst_adjust_bytes": -56
+        },
+        "ordered_trace": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case2.prefetch:39",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a0",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 3,
+            "type": "PTR_ARITH",
+            "at": "case2:40-42",
+            "srcp": 80,
+            "dstp": 72,
+            "len": 8
+          },
+          {
+            "seq": 4,
+            "type": "GOTO",
+            "target": "do1"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a1",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a0",
+            "from_prior_read": "case2.prefetch:39",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 8,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 144,
+            "dstp": 136,
+            "len": 0
+          },
+          {
+            "seq": 9,
+            "type": "WRITE",
+            "at": "do0.final_store:127",
+            "dest_word": 1,
+            "dest_offset": 136,
+            "from_reg": "a1",
+            "from_prior_read": "do1.read:116",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 10,
+            "type": "RETURN_VOID"
+          }
+        ],
+        "source_to_dest_map": [
+          {
+            "S_word": 0,
+            "D_word": 0,
+            "source_value": "0xa090807060504030"
+          },
+          {
+            "S_word": 1,
+            "D_word": 1,
+            "source_value": "0xa191817161514131"
+          }
+        ],
+        "read_words": 2,
+        "written_words": 2,
+        "read_half_open": [
+          128,
+          144
+        ],
+        "write_half_open": [
+          128,
+          144
+        ],
+        "final_local_srcp": 144,
+        "final_local_dstp": 136,
+        "final_local_len": 0,
+        "final_do0": {
+          "where": "do0.final_store:127",
+          "dst_word": 1,
+          "reg": "a1"
+        },
+        "return_type": "void",
+        "verified_all_words_correct": true,
+        "dest_outside_writes_unchanged": true
+      },
+      {
+        "case_id": "A127-07",
+        "source_start": 128,
+        "dest_start": 128,
+        "word_count": 7,
+        "remainder": 7,
+        "entry_label": "do6",
+        "entry_prefetch": {
+          "location": "case7.prefetch:69",
+          "reg": "a1",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "initial_adjust": {
+          "where": "case7:70-72",
+          "srcp_after": 120,
+          "dstp_after": 112,
+          "len_words_after": 8,
+          "src_adjust_bytes": -8,
+          "dst_adjust_bytes": -16
+        },
+        "ordered_trace": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case7.prefetch:69",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a1",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 3,
+            "type": "PTR_ARITH",
+            "at": "case7:70-72",
+            "srcp": 120,
+            "dstp": 112,
+            "len": 8
+          },
+          {
+            "seq": 4,
+            "type": "GOTO",
+            "target": "do6"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do6.read:101",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a0",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do6.write:102",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a1",
+            "from_prior_read": "case7.prefetch:69",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 8,
+            "type": "READ",
+            "at": "do5.read:104",
+            "source_word": 2,
+            "source_offset": 144,
+            "reg": "a1",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 9,
+            "type": "WRITE",
+            "at": "do5.write:105",
+            "dest_word": 1,
+            "dest_offset": 136,
+            "from_reg": "a0",
+            "from_prior_read": "do6.read:101",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 10,
+            "type": "READ",
+            "at": "do4.read:107",
+            "source_word": 3,
+            "source_offset": 152,
+            "reg": "a0",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 11,
+            "type": "WRITE",
+            "at": "do4.write:108",
+            "dest_word": 2,
+            "dest_offset": 144,
+            "from_reg": "a1",
+            "from_prior_read": "do5.read:104",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 12,
+            "type": "READ",
+            "at": "do3.read:110",
+            "source_word": 4,
+            "source_offset": 160,
+            "reg": "a1",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 13,
+            "type": "WRITE",
+            "at": "do3.write:111",
+            "dest_word": 3,
+            "dest_offset": 152,
+            "from_reg": "a0",
+            "from_prior_read": "do4.read:107",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 14,
+            "type": "READ",
+            "at": "do2.read:113",
+            "source_word": 5,
+            "source_offset": 168,
+            "reg": "a0",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 15,
+            "type": "WRITE",
+            "at": "do2.write:114",
+            "dest_word": 4,
+            "dest_offset": 160,
+            "from_reg": "a1",
+            "from_prior_read": "do3.read:110",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 16,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 6,
+            "source_offset": 176,
+            "reg": "a1",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 17,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 5,
+            "dest_offset": 168,
+            "from_reg": "a0",
+            "from_prior_read": "do2.read:113",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 18,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 184,
+            "dstp": 176,
+            "len": 0
+          },
+          {
+            "seq": 19,
+            "type": "WRITE",
+            "at": "do0.final_store:127",
+            "dest_word": 6,
+            "dest_offset": 176,
+            "from_reg": "a1",
+            "from_prior_read": "do1.read:116",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 20,
+            "type": "RETURN_VOID"
+          }
+        ],
+        "source_to_dest_map": [
+          {
+            "S_word": 0,
+            "D_word": 0,
+            "source_value": "0xa090807060504030"
+          },
+          {
+            "S_word": 1,
+            "D_word": 1,
+            "source_value": "0xa191817161514131"
+          },
+          {
+            "S_word": 2,
+            "D_word": 2,
+            "source_value": "0xa292827262524232"
+          },
+          {
+            "S_word": 3,
+            "D_word": 3,
+            "source_value": "0xa393837363534333"
+          },
+          {
+            "S_word": 4,
+            "D_word": 4,
+            "source_value": "0xa494847464544434"
+          },
+          {
+            "S_word": 5,
+            "D_word": 5,
+            "source_value": "0xa595857565554535"
+          },
+          {
+            "S_word": 6,
+            "D_word": 6,
+            "source_value": "0xa696867666564636"
+          }
+        ],
+        "read_words": 7,
+        "written_words": 7,
+        "read_half_open": [
+          128,
+          184
+        ],
+        "write_half_open": [
+          128,
+          184
+        ],
+        "final_local_srcp": 184,
+        "final_local_dstp": 176,
+        "final_local_len": 0,
+        "final_do0": {
+          "where": "do0.final_store:127",
+          "dst_word": 6,
+          "reg": "a1"
+        },
+        "return_type": "void",
+        "verified_all_words_correct": true,
+        "dest_outside_writes_unchanged": true
+      },
+      {
+        "case_id": "A127-08",
+        "source_start": 128,
+        "dest_start": 128,
+        "word_count": 8,
+        "remainder": 0,
+        "entry_label": "do7",
+        "entry_prefetch": {
+          "location": "case0.prefetch:78",
+          "reg": "a0",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "initial_adjust": {
+          "where": "case0:79-81",
+          "srcp_after": 128,
+          "dstp_after": 120,
+          "len_words_after": 8,
+          "src_adjust_bytes": 0,
+          "dst_adjust_bytes": -8
+        },
+        "ordered_trace": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case0.prefetch:78",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a0",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 3,
+            "type": "PTR_ARITH",
+            "at": "case0:79-81",
+            "srcp": 128,
+            "dstp": 120,
+            "len": 8
+          },
+          {
+            "seq": 4,
+            "type": "GOTO",
+            "target": "do7"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do7.read:98",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a1",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do7.write:99",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a0",
+            "from_prior_read": "case0.prefetch:78",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 8,
+            "type": "READ",
+            "at": "do6.read:101",
+            "source_word": 2,
+            "source_offset": 144,
+            "reg": "a0",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 9,
+            "type": "WRITE",
+            "at": "do6.write:102",
+            "dest_word": 1,
+            "dest_offset": 136,
+            "from_reg": "a1",
+            "from_prior_read": "do7.read:98",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 10,
+            "type": "READ",
+            "at": "do5.read:104",
+            "source_word": 3,
+            "source_offset": 152,
+            "reg": "a1",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 11,
+            "type": "WRITE",
+            "at": "do5.write:105",
+            "dest_word": 2,
+            "dest_offset": 144,
+            "from_reg": "a0",
+            "from_prior_read": "do6.read:101",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 12,
+            "type": "READ",
+            "at": "do4.read:107",
+            "source_word": 4,
+            "source_offset": 160,
+            "reg": "a0",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 13,
+            "type": "WRITE",
+            "at": "do4.write:108",
+            "dest_word": 3,
+            "dest_offset": 152,
+            "from_reg": "a1",
+            "from_prior_read": "do5.read:104",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 14,
+            "type": "READ",
+            "at": "do3.read:110",
+            "source_word": 5,
+            "source_offset": 168,
+            "reg": "a1",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 15,
+            "type": "WRITE",
+            "at": "do3.write:111",
+            "dest_word": 4,
+            "dest_offset": 160,
+            "from_reg": "a0",
+            "from_prior_read": "do4.read:107",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 16,
+            "type": "READ",
+            "at": "do2.read:113",
+            "source_word": 6,
+            "source_offset": 176,
+            "reg": "a0",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 17,
+            "type": "WRITE",
+            "at": "do2.write:114",
+            "dest_word": 5,
+            "dest_offset": 168,
+            "from_reg": "a1",
+            "from_prior_read": "do3.read:110",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 18,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 7,
+            "source_offset": 184,
+            "reg": "a1",
+            "value": "0xa797877767574737"
+          },
+          {
+            "seq": 19,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 6,
+            "dest_offset": 176,
+            "from_reg": "a0",
+            "from_prior_read": "do2.read:113",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 20,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 192,
+            "dstp": 184,
+            "len": 0
+          },
+          {
+            "seq": 21,
+            "type": "WRITE",
+            "at": "do0.final_store:127",
+            "dest_word": 7,
+            "dest_offset": 184,
+            "from_reg": "a1",
+            "from_prior_read": "do1.read:116",
+            "value": "0xa797877767574737"
+          },
+          {
+            "seq": 22,
+            "type": "RETURN_VOID"
+          }
+        ],
+        "source_to_dest_map": [
+          {
+            "S_word": 0,
+            "D_word": 0,
+            "source_value": "0xa090807060504030"
+          },
+          {
+            "S_word": 1,
+            "D_word": 1,
+            "source_value": "0xa191817161514131"
+          },
+          {
+            "S_word": 2,
+            "D_word": 2,
+            "source_value": "0xa292827262524232"
+          },
+          {
+            "S_word": 3,
+            "D_word": 3,
+            "source_value": "0xa393837363534333"
+          },
+          {
+            "S_word": 4,
+            "D_word": 4,
+            "source_value": "0xa494847464544434"
+          },
+          {
+            "S_word": 5,
+            "D_word": 5,
+            "source_value": "0xa595857565554535"
+          },
+          {
+            "S_word": 6,
+            "D_word": 6,
+            "source_value": "0xa696867666564636"
+          },
+          {
+            "S_word": 7,
+            "D_word": 7,
+            "source_value": "0xa797877767574737"
+          }
+        ],
+        "read_words": 8,
+        "written_words": 8,
+        "read_half_open": [
+          128,
+          192
+        ],
+        "write_half_open": [
+          128,
+          192
+        ],
+        "final_local_srcp": 192,
+        "final_local_dstp": 184,
+        "final_local_len": 0,
+        "final_do0": {
+          "where": "do0.final_store:127",
+          "dst_word": 7,
+          "reg": "a1"
+        },
+        "return_type": "void",
+        "verified_all_words_correct": true,
+        "dest_outside_writes_unchanged": true
+      },
+      {
+        "case_id": "A127-09",
+        "source_start": 128,
+        "dest_start": 128,
+        "word_count": 9,
+        "remainder": 1,
+        "entry_label": "do8",
+        "entry_prefetch": {
+          "location": "case1.prefetch:83",
+          "reg": "a1",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "initial_adjust": {
+          "where": "case1:84-86",
+          "srcp_after": 136,
+          "dstp_after": 128,
+          "len_words_after": 8,
+          "src_adjust_bytes": 8,
+          "dst_adjust_bytes": 0
+        },
+        "ordered_trace": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case1.prefetch:83",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a1",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 3,
+            "type": "PTR_ARITH",
+            "at": "case1:84-86",
+            "srcp": 136,
+            "dstp": 128,
+            "len": 8
+          },
+          {
+            "seq": 4,
+            "type": "GOTO",
+            "target": "do8"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do8.read:95",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a0",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do8.write:96",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a1",
+            "from_prior_read": "case1.prefetch:83",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 8,
+            "type": "READ",
+            "at": "do7.read:98",
+            "source_word": 2,
+            "source_offset": 144,
+            "reg": "a1",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 9,
+            "type": "WRITE",
+            "at": "do7.write:99",
+            "dest_word": 1,
+            "dest_offset": 136,
+            "from_reg": "a0",
+            "from_prior_read": "do8.read:95",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 10,
+            "type": "READ",
+            "at": "do6.read:101",
+            "source_word": 3,
+            "source_offset": 152,
+            "reg": "a0",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 11,
+            "type": "WRITE",
+            "at": "do6.write:102",
+            "dest_word": 2,
+            "dest_offset": 144,
+            "from_reg": "a1",
+            "from_prior_read": "do7.read:98",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 12,
+            "type": "READ",
+            "at": "do5.read:104",
+            "source_word": 4,
+            "source_offset": 160,
+            "reg": "a1",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 13,
+            "type": "WRITE",
+            "at": "do5.write:105",
+            "dest_word": 3,
+            "dest_offset": 152,
+            "from_reg": "a0",
+            "from_prior_read": "do6.read:101",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 14,
+            "type": "READ",
+            "at": "do4.read:107",
+            "source_word": 5,
+            "source_offset": 168,
+            "reg": "a0",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 15,
+            "type": "WRITE",
+            "at": "do4.write:108",
+            "dest_word": 4,
+            "dest_offset": 160,
+            "from_reg": "a1",
+            "from_prior_read": "do5.read:104",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 16,
+            "type": "READ",
+            "at": "do3.read:110",
+            "source_word": 6,
+            "source_offset": 176,
+            "reg": "a1",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 17,
+            "type": "WRITE",
+            "at": "do3.write:111",
+            "dest_word": 5,
+            "dest_offset": 168,
+            "from_reg": "a0",
+            "from_prior_read": "do4.read:107",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 18,
+            "type": "READ",
+            "at": "do2.read:113",
+            "source_word": 7,
+            "source_offset": 184,
+            "reg": "a0",
+            "value": "0xa797877767574737"
+          },
+          {
+            "seq": 19,
+            "type": "WRITE",
+            "at": "do2.write:114",
+            "dest_word": 6,
+            "dest_offset": 176,
+            "from_reg": "a1",
+            "from_prior_read": "do3.read:110",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 20,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 8,
+            "source_offset": 192,
+            "reg": "a1",
+            "value": "0xa898887868584838"
+          },
+          {
+            "seq": 21,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 7,
+            "dest_offset": 184,
+            "from_reg": "a0",
+            "from_prior_read": "do2.read:113",
+            "value": "0xa797877767574737"
+          },
+          {
+            "seq": 22,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 200,
+            "dstp": 192,
+            "len": 0
+          },
+          {
+            "seq": 23,
+            "type": "WRITE",
+            "at": "do0.final_store:127",
+            "dest_word": 8,
+            "dest_offset": 192,
+            "from_reg": "a1",
+            "from_prior_read": "do1.read:116",
+            "value": "0xa898887868584838"
+          },
+          {
+            "seq": 24,
+            "type": "RETURN_VOID"
+          }
+        ],
+        "source_to_dest_map": [
+          {
+            "S_word": 0,
+            "D_word": 0,
+            "source_value": "0xa090807060504030"
+          },
+          {
+            "S_word": 1,
+            "D_word": 1,
+            "source_value": "0xa191817161514131"
+          },
+          {
+            "S_word": 2,
+            "D_word": 2,
+            "source_value": "0xa292827262524232"
+          },
+          {
+            "S_word": 3,
+            "D_word": 3,
+            "source_value": "0xa393837363534333"
+          },
+          {
+            "S_word": 4,
+            "D_word": 4,
+            "source_value": "0xa494847464544434"
+          },
+          {
+            "S_word": 5,
+            "D_word": 5,
+            "source_value": "0xa595857565554535"
+          },
+          {
+            "S_word": 6,
+            "D_word": 6,
+            "source_value": "0xa696867666564636"
+          },
+          {
+            "S_word": 7,
+            "D_word": 7,
+            "source_value": "0xa797877767574737"
+          },
+          {
+            "S_word": 8,
+            "D_word": 8,
+            "source_value": "0xa898887868584838"
+          }
+        ],
+        "read_words": 9,
+        "written_words": 9,
+        "read_half_open": [
+          128,
+          200
+        ],
+        "write_half_open": [
+          128,
+          200
+        ],
+        "final_local_srcp": 200,
+        "final_local_dstp": 192,
+        "final_local_len": 0,
+        "final_do0": {
+          "where": "do0.final_store:127",
+          "dst_word": 8,
+          "reg": "a1"
+        },
+        "return_type": "void",
+        "verified_all_words_correct": true,
+        "dest_outside_writes_unchanged": true
+      },
+      {
+        "case_id": "A127-16",
+        "source_start": 128,
+        "dest_start": 128,
+        "word_count": 16,
+        "remainder": 0,
+        "entry_label": "do7",
+        "entry_prefetch": {
+          "location": "case0.prefetch:78",
+          "reg": "a0",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "initial_adjust": {
+          "where": "case0:79-81",
+          "srcp_after": 128,
+          "dstp_after": 120,
+          "len_words_after": 16,
+          "src_adjust_bytes": 0,
+          "dst_adjust_bytes": -8
+        },
+        "ordered_trace": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case0.prefetch:78",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a0",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 3,
+            "type": "PTR_ARITH",
+            "at": "case0:79-81",
+            "srcp": 128,
+            "dstp": 120,
+            "len": 16
+          },
+          {
+            "seq": 4,
+            "type": "GOTO",
+            "target": "do7"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do7.read:98",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a1",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do7.write:99",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a0",
+            "from_prior_read": "case0.prefetch:78",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 8,
+            "type": "READ",
+            "at": "do6.read:101",
+            "source_word": 2,
+            "source_offset": 144,
+            "reg": "a0",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 9,
+            "type": "WRITE",
+            "at": "do6.write:102",
+            "dest_word": 1,
+            "dest_offset": 136,
+            "from_reg": "a1",
+            "from_prior_read": "do7.read:98",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 10,
+            "type": "READ",
+            "at": "do5.read:104",
+            "source_word": 3,
+            "source_offset": 152,
+            "reg": "a1",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 11,
+            "type": "WRITE",
+            "at": "do5.write:105",
+            "dest_word": 2,
+            "dest_offset": 144,
+            "from_reg": "a0",
+            "from_prior_read": "do6.read:101",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 12,
+            "type": "READ",
+            "at": "do4.read:107",
+            "source_word": 4,
+            "source_offset": 160,
+            "reg": "a0",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 13,
+            "type": "WRITE",
+            "at": "do4.write:108",
+            "dest_word": 3,
+            "dest_offset": 152,
+            "from_reg": "a1",
+            "from_prior_read": "do5.read:104",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 14,
+            "type": "READ",
+            "at": "do3.read:110",
+            "source_word": 5,
+            "source_offset": 168,
+            "reg": "a1",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 15,
+            "type": "WRITE",
+            "at": "do3.write:111",
+            "dest_word": 4,
+            "dest_offset": 160,
+            "from_reg": "a0",
+            "from_prior_read": "do4.read:107",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 16,
+            "type": "READ",
+            "at": "do2.read:113",
+            "source_word": 6,
+            "source_offset": 176,
+            "reg": "a0",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 17,
+            "type": "WRITE",
+            "at": "do2.write:114",
+            "dest_word": 5,
+            "dest_offset": 168,
+            "from_reg": "a1",
+            "from_prior_read": "do3.read:110",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 18,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 7,
+            "source_offset": 184,
+            "reg": "a1",
+            "value": "0xa797877767574737"
+          },
+          {
+            "seq": 19,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 6,
+            "dest_offset": 176,
+            "from_reg": "a0",
+            "from_prior_read": "do2.read:113",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 20,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 192,
+            "dstp": 184,
+            "len": 8
+          },
+          {
+            "seq": 21,
+            "type": "GOTO",
+            "target": "do8"
+          },
+          {
+            "seq": 23,
+            "type": "READ",
+            "at": "do8.read:95",
+            "source_word": 8,
+            "source_offset": 192,
+            "reg": "a0",
+            "value": "0xa898887868584838"
+          },
+          {
+            "seq": 24,
+            "type": "WRITE",
+            "at": "do8.write:96",
+            "dest_word": 7,
+            "dest_offset": 184,
+            "from_reg": "a1",
+            "from_prior_read": "do1.read:116",
+            "value": "0xa797877767574737"
+          },
+          {
+            "seq": 25,
+            "type": "READ",
+            "at": "do7.read:98",
+            "source_word": 9,
+            "source_offset": 200,
+            "reg": "a1",
+            "value": "0xa999897969594939"
+          },
+          {
+            "seq": 26,
+            "type": "WRITE",
+            "at": "do7.write:99",
+            "dest_word": 8,
+            "dest_offset": 192,
+            "from_reg": "a0",
+            "from_prior_read": "do8.read:95",
+            "value": "0xa898887868584838"
+          },
+          {
+            "seq": 27,
+            "type": "READ",
+            "at": "do6.read:101",
+            "source_word": 10,
+            "source_offset": 208,
+            "reg": "a0",
+            "value": "0xaa9a8a7a6a5a4a3a"
+          },
+          {
+            "seq": 28,
+            "type": "WRITE",
+            "at": "do6.write:102",
+            "dest_word": 9,
+            "dest_offset": 200,
+            "from_reg": "a1",
+            "from_prior_read": "do7.read:98",
+            "value": "0xa999897969594939"
+          },
+          {
+            "seq": 29,
+            "type": "READ",
+            "at": "do5.read:104",
+            "source_word": 11,
+            "source_offset": 216,
+            "reg": "a1",
+            "value": "0xab9b8b7b6b5b4b3b"
+          },
+          {
+            "seq": 30,
+            "type": "WRITE",
+            "at": "do5.write:105",
+            "dest_word": 10,
+            "dest_offset": 208,
+            "from_reg": "a0",
+            "from_prior_read": "do6.read:101",
+            "value": "0xaa9a8a7a6a5a4a3a"
+          },
+          {
+            "seq": 31,
+            "type": "READ",
+            "at": "do4.read:107",
+            "source_word": 12,
+            "source_offset": 224,
+            "reg": "a0",
+            "value": "0xac9c8c7c6c5c4c3c"
+          },
+          {
+            "seq": 32,
+            "type": "WRITE",
+            "at": "do4.write:108",
+            "dest_word": 11,
+            "dest_offset": 216,
+            "from_reg": "a1",
+            "from_prior_read": "do5.read:104",
+            "value": "0xab9b8b7b6b5b4b3b"
+          },
+          {
+            "seq": 33,
+            "type": "READ",
+            "at": "do3.read:110",
+            "source_word": 13,
+            "source_offset": 232,
+            "reg": "a1",
+            "value": "0xad9d8d7d6d5d4d3d"
+          },
+          {
+            "seq": 34,
+            "type": "WRITE",
+            "at": "do3.write:111",
+            "dest_word": 12,
+            "dest_offset": 224,
+            "from_reg": "a0",
+            "from_prior_read": "do4.read:107",
+            "value": "0xac9c8c7c6c5c4c3c"
+          },
+          {
+            "seq": 35,
+            "type": "READ",
+            "at": "do2.read:113",
+            "source_word": 14,
+            "source_offset": 240,
+            "reg": "a0",
+            "value": "0xae9e8e7e6e5e4e3e"
+          },
+          {
+            "seq": 36,
+            "type": "WRITE",
+            "at": "do2.write:114",
+            "dest_word": 13,
+            "dest_offset": 232,
+            "from_reg": "a1",
+            "from_prior_read": "do3.read:110",
+            "value": "0xad9d8d7d6d5d4d3d"
+          },
+          {
+            "seq": 37,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 15,
+            "source_offset": 248,
+            "reg": "a1",
+            "value": "0xaf9f8f7f6f5f4f3f"
+          },
+          {
+            "seq": 38,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 14,
+            "dest_offset": 240,
+            "from_reg": "a0",
+            "from_prior_read": "do2.read:113",
+            "value": "0xae9e8e7e6e5e4e3e"
+          },
+          {
+            "seq": 39,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 256,
+            "dstp": 248,
+            "len": 0
+          },
+          {
+            "seq": 40,
+            "type": "WRITE",
+            "at": "do0.final_store:127",
+            "dest_word": 15,
+            "dest_offset": 248,
+            "from_reg": "a1",
+            "from_prior_read": "do1.read:116",
+            "value": "0xaf9f8f7f6f5f4f3f"
+          },
+          {
+            "seq": 41,
+            "type": "RETURN_VOID"
+          }
+        ],
+        "source_to_dest_map": [
+          {
+            "S_word": 0,
+            "D_word": 0,
+            "source_value": "0xa090807060504030"
+          },
+          {
+            "S_word": 1,
+            "D_word": 1,
+            "source_value": "0xa191817161514131"
+          },
+          {
+            "S_word": 2,
+            "D_word": 2,
+            "source_value": "0xa292827262524232"
+          },
+          {
+            "S_word": 3,
+            "D_word": 3,
+            "source_value": "0xa393837363534333"
+          },
+          {
+            "S_word": 4,
+            "D_word": 4,
+            "source_value": "0xa494847464544434"
+          },
+          {
+            "S_word": 5,
+            "D_word": 5,
+            "source_value": "0xa595857565554535"
+          },
+          {
+            "S_word": 6,
+            "D_word": 6,
+            "source_value": "0xa696867666564636"
+          },
+          {
+            "S_word": 7,
+            "D_word": 7,
+            "source_value": "0xa797877767574737"
+          },
+          {
+            "S_word": 8,
+            "D_word": 8,
+            "source_value": "0xa898887868584838"
+          },
+          {
+            "S_word": 9,
+            "D_word": 9,
+            "source_value": "0xa999897969594939"
+          },
+          {
+            "S_word": 10,
+            "D_word": 10,
+            "source_value": "0xaa9a8a7a6a5a4a3a"
+          },
+          {
+            "S_word": 11,
+            "D_word": 11,
+            "source_value": "0xab9b8b7b6b5b4b3b"
+          },
+          {
+            "S_word": 12,
+            "D_word": 12,
+            "source_value": "0xac9c8c7c6c5c4c3c"
+          },
+          {
+            "S_word": 13,
+            "D_word": 13,
+            "source_value": "0xad9d8d7d6d5d4d3d"
+          },
+          {
+            "S_word": 14,
+            "D_word": 14,
+            "source_value": "0xae9e8e7e6e5e4e3e"
+          },
+          {
+            "S_word": 15,
+            "D_word": 15,
+            "source_value": "0xaf9f8f7f6f5f4f3f"
+          }
+        ],
+        "read_words": 16,
+        "written_words": 16,
+        "read_half_open": [
+          128,
+          256
+        ],
+        "write_half_open": [
+          128,
+          256
+        ],
+        "final_local_srcp": 256,
+        "final_local_dstp": 248,
+        "final_local_len": 0,
+        "final_do0": {
+          "where": "do0.final_store:127",
+          "dst_word": 15,
+          "reg": "a1"
+        },
+        "return_type": "void",
+        "verified_all_words_correct": true,
+        "dest_outside_writes_unchanged": true
+      }
+    ]
+  },
+  "B_pipeline": {
+    "cases": [
+      {
+        "case_id": "B127-02",
+        "A_detailed_trace": "A127-02",
+        "word_count": 2,
+        "entry": "do1",
+        "first_preload": {
+          "location": "case2.prefetch:39",
+          "reg": "a0",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "loop_footers": [
+          {
+            "seq": 8,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 144,
+            "dstp": 136,
+            "len": 0
+          }
+        ],
+        "first_iteration_source_reads": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case2.prefetch:39",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a0",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a1",
+            "value": "0xa191817161514131"
+          }
+        ],
+        "first_iteration_dest_writes": [
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a0",
+            "from_prior_read": "case2.prefetch:39",
+            "value": "0xa090807060504030"
+          }
+        ],
+        "last_write": {
+          "dst_word": 1,
+          "source_word": 1,
+          "reg": "a1",
+          "code": "wordcopy.c:127"
+        },
+        "reads_total": 2,
+        "writes_total": 2,
+        "explanation": "prefetch S0 as a0, do1 reads S1 as a1 and writes D0 from a0, do0 writes D1 from a1",
+        "all_word_values_preserved": true
+      },
+      {
+        "case_id": "B127-08",
+        "A_detailed_trace": "A127-08",
+        "word_count": 8,
+        "entry": "do7",
+        "first_preload": {
+          "location": "case0.prefetch:78",
+          "reg": "a0",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "loop_footers": [
+          {
+            "seq": 20,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 192,
+            "dstp": 184,
+            "len": 0
+          }
+        ],
+        "first_iteration_source_reads": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case0.prefetch:78",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a0",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do7.read:98",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a1",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 8,
+            "type": "READ",
+            "at": "do6.read:101",
+            "source_word": 2,
+            "source_offset": 144,
+            "reg": "a0",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 10,
+            "type": "READ",
+            "at": "do5.read:104",
+            "source_word": 3,
+            "source_offset": 152,
+            "reg": "a1",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 12,
+            "type": "READ",
+            "at": "do4.read:107",
+            "source_word": 4,
+            "source_offset": 160,
+            "reg": "a0",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 14,
+            "type": "READ",
+            "at": "do3.read:110",
+            "source_word": 5,
+            "source_offset": 168,
+            "reg": "a1",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 16,
+            "type": "READ",
+            "at": "do2.read:113",
+            "source_word": 6,
+            "source_offset": 176,
+            "reg": "a0",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 18,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 7,
+            "source_offset": 184,
+            "reg": "a1",
+            "value": "0xa797877767574737"
+          }
+        ],
+        "first_iteration_dest_writes": [
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do7.write:99",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a0",
+            "from_prior_read": "case0.prefetch:78",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 9,
+            "type": "WRITE",
+            "at": "do6.write:102",
+            "dest_word": 1,
+            "dest_offset": 136,
+            "from_reg": "a1",
+            "from_prior_read": "do7.read:98",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 11,
+            "type": "WRITE",
+            "at": "do5.write:105",
+            "dest_word": 2,
+            "dest_offset": 144,
+            "from_reg": "a0",
+            "from_prior_read": "do6.read:101",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 13,
+            "type": "WRITE",
+            "at": "do4.write:108",
+            "dest_word": 3,
+            "dest_offset": 152,
+            "from_reg": "a1",
+            "from_prior_read": "do5.read:104",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 15,
+            "type": "WRITE",
+            "at": "do3.write:111",
+            "dest_word": 4,
+            "dest_offset": 160,
+            "from_reg": "a0",
+            "from_prior_read": "do4.read:107",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 17,
+            "type": "WRITE",
+            "at": "do2.write:114",
+            "dest_word": 5,
+            "dest_offset": 168,
+            "from_reg": "a1",
+            "from_prior_read": "do3.read:110",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 19,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 6,
+            "dest_offset": 176,
+            "from_reg": "a0",
+            "from_prior_read": "do2.read:113",
+            "value": "0xa696867666564636"
+          }
+        ],
+        "last_write": {
+          "dst_word": 7,
+          "source_word": 7,
+          "reg": "a1",
+          "code": "wordcopy.c:127"
+        },
+        "reads_total": 8,
+        "writes_total": 8,
+        "explanation": "prefetch S0, do7..do1 pipeline 7 writes, do0 writes D7",
+        "all_word_values_preserved": true
+      },
+      {
+        "case_id": "B127-16",
+        "A_detailed_trace": "A127-16",
+        "word_count": 16,
+        "entry": "do7",
+        "first_preload": {
+          "location": "case0.prefetch:78",
+          "reg": "a0",
+          "source_word": 0,
+          "bytes_hex": "30 40 50 60 70 80 90 a0"
+        },
+        "loop_footers": [
+          {
+            "seq": 20,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 192,
+            "dstp": 184,
+            "len": 8
+          },
+          {
+            "seq": 39,
+            "type": "PTR_ARITH",
+            "at": "loop_footer:119-121",
+            "srcp": 256,
+            "dstp": 248,
+            "len": 0
+          }
+        ],
+        "first_iteration_source_reads": [
+          {
+            "seq": 2,
+            "type": "READ",
+            "at": "case0.prefetch:78",
+            "source_word": 0,
+            "source_offset": 128,
+            "reg": "a0",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 6,
+            "type": "READ",
+            "at": "do7.read:98",
+            "source_word": 1,
+            "source_offset": 136,
+            "reg": "a1",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 8,
+            "type": "READ",
+            "at": "do6.read:101",
+            "source_word": 2,
+            "source_offset": 144,
+            "reg": "a0",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 10,
+            "type": "READ",
+            "at": "do5.read:104",
+            "source_word": 3,
+            "source_offset": 152,
+            "reg": "a1",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 12,
+            "type": "READ",
+            "at": "do4.read:107",
+            "source_word": 4,
+            "source_offset": 160,
+            "reg": "a0",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 14,
+            "type": "READ",
+            "at": "do3.read:110",
+            "source_word": 5,
+            "source_offset": 168,
+            "reg": "a1",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 16,
+            "type": "READ",
+            "at": "do2.read:113",
+            "source_word": 6,
+            "source_offset": 176,
+            "reg": "a0",
+            "value": "0xa696867666564636"
+          },
+          {
+            "seq": 18,
+            "type": "READ",
+            "at": "do1.read:116",
+            "source_word": 7,
+            "source_offset": 184,
+            "reg": "a1",
+            "value": "0xa797877767574737"
+          }
+        ],
+        "first_iteration_dest_writes": [
+          {
+            "seq": 7,
+            "type": "WRITE",
+            "at": "do7.write:99",
+            "dest_word": 0,
+            "dest_offset": 128,
+            "from_reg": "a0",
+            "from_prior_read": "case0.prefetch:78",
+            "value": "0xa090807060504030"
+          },
+          {
+            "seq": 9,
+            "type": "WRITE",
+            "at": "do6.write:102",
+            "dest_word": 1,
+            "dest_offset": 136,
+            "from_reg": "a1",
+            "from_prior_read": "do7.read:98",
+            "value": "0xa191817161514131"
+          },
+          {
+            "seq": 11,
+            "type": "WRITE",
+            "at": "do5.write:105",
+            "dest_word": 2,
+            "dest_offset": 144,
+            "from_reg": "a0",
+            "from_prior_read": "do6.read:101",
+            "value": "0xa292827262524232"
+          },
+          {
+            "seq": 13,
+            "type": "WRITE",
+            "at": "do4.write:108",
+            "dest_word": 3,
+            "dest_offset": 152,
+            "from_reg": "a1",
+            "from_prior_read": "do5.read:104",
+            "value": "0xa393837363534333"
+          },
+          {
+            "seq": 15,
+            "type": "WRITE",
+            "at": "do3.write:111",
+            "dest_word": 4,
+            "dest_offset": 160,
+            "from_reg": "a0",
+            "from_prior_read": "do4.read:107",
+            "value": "0xa494847464544434"
+          },
+          {
+            "seq": 17,
+            "type": "WRITE",
+            "at": "do2.write:114",
+            "dest_word": 5,
+            "dest_offset": 168,
+            "from_reg": "a1",
+            "from_prior_read": "do3.read:110",
+            "value": "0xa595857565554535"
+          },
+          {
+            "seq": 19,
+            "type": "WRITE",
+            "at": "do1.write:117",
+            "dest_word": 6,
+            "dest_offset": 176,
+            "from_reg": "a0",
+            "from_prior_read": "do2.read:113",
+            "value": "0xa696867666564636"
+          }
+        ],
+        "last_write": {
+          "dst_word": 15,
+          "source_word": 15,
+          "reg": "a1",
+          "code": "wordcopy.c:127"
+        },
+        "reads_total": 16,
+        "writes_total": 16,
+        "explanation": "prefetch S0; first partial do7..do1 writes D0..D6; second full do8..do1 writes D7..D14; do0 writes D15",
+        "all_word_values_preserved": true
+      }
+    ]
+  },
+  "C_outer_memcpy": {
+    "cases": [
+      {
+        "case_id": "C127-M16-A",
+        "original_src_pointer": "S+128",
+        "original_dst_pointer": "D+128",
+        "len_bytes": 16,
+        "S_D_object_length": 384,
+        "source_generator": "S[i] = 0x20 + floor(i/8)%32 + 16*(i%8)",
+        "destination_initial_byte": "0xcc",
+        "lead_bytes": 0,
+        "after_leading_macro": {
+          "source_offset": 128,
+          "dest_offset": 128,
+          "remaining_bytes": 16
+        },
+        "page_macro": {
+          "source_site": "memcpy.c:45",
+          "chosen_macro": "PAGE_COPY_FWD_MAYBE",
+          "selected_effect": "empty",
+          "copied_bytes": 0
+        },
+        "aligned_helper": {
+          "direct_call_owner": "MEMCPY",
+          "source_site": "memcopy.h:124-125",
+          "symbol": "_wordcopy_fwd_aligned",
+          "third_arg_words": 2,
+          "src_offset_at_call": 128,
+          "dst_offset_at_call": 128,
+          "entry_remainder": 2,
+          "entry_goto": "do1",
+          "reads": [
+            {
+              "where": "case2.prefetch:39",
+              "effective_offset": 128,
+              "word_index_from_helper": 0,
+              "register": "a0",
+              "bytes_hex": "30 40 50 60 70 80 90 a0"
+            },
+            {
+              "where": "do1.read:116",
+              "effective_offset": 136,
+              "word_index_from_helper": 1,
+              "register": "a1",
+              "bytes_hex": "31 41 51 61 71 81 91 a1"
+            }
+          ],
+          "writes": [
+            {
+              "where": "do1.write:117",
+              "effective_offset": 128,
+              "word_index_from_helper": 0,
+              "register": "a0",
+              "bytes_hex": "30 40 50 60 70 80 90 a0"
+            },
+            {
+              "where": "do0.final_store:127",
+              "effective_offset": 136,
+              "word_index_from_helper": 1,
+              "register": "a1",
+              "bytes_hex": "31 41 51 61 71 81 91 a1"
+            }
+          ],
+          "return_type": "void",
+          "normal_return_assumed": true,
+          "internal_srcp_at_end": 144,
+          "internal_dstp_at_final_write": 136,
+          "outer_local_pointers_not_modified_by_helper_params": true
+        },
+        "after_word_macro": {
+          "srcp_offset": 144,
+          "dstp_offset": 144,
+          "remaining_bytes": 0,
+          "caller_pointer_increment": 16
+        },
+        "tail_bytes": 0,
+        "outer_srcp_end": 144,
+        "outer_dstp_end": 144,
+        "memcpy_return": "D+128",
+        "ranges": [
+          {
+            "site": "memcpy.c:40",
+            "label": "leading BYTE_COPY_FWD",
+            "read": [
+              128,
+              128
+            ],
+            "write": [
+              128,
+              128
+            ],
+            "byte_count": 0
+          },
+          {
+            "site": "memcpy.c:45",
+            "label": "PAGE_COPY_FWD_MAYBE empty",
+            "read": null,
+            "write": null,
+            "byte_count": 0
+          },
+          {
+            "site": "memcpy.c:51 + memcopy.h:121-131",
+            "label": "WORD_COPY_FWD helper",
+            "read": [
+              128,
+              144
+            ],
+            "write": [
+              128,
+              144
+            ],
+            "byte_count": 16,
+            "word_count": 2
+          },
+          {
+            "site": "memcpy.c:57",
+            "label": "trailing BYTE_COPY_FWD",
+            "read": [
+              144,
+              144
+            ],
+            "write": [
+              144,
+              144
+            ],
+            "byte_count": 0
+          }
+        ],
+        "trace": [
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              128,
+              136
+            ],
+            "src_half_open": [
+              128,
+              136
+            ],
+            "bytes_hex": "30 40 50 60 70 80 90 a0",
+            "where": "do1.write:117"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              136,
+              144
+            ],
+            "src_half_open": [
+              136,
+              144
+            ],
+            "bytes_hex": "31 41 51 61 71 81 91 a1",
+            "where": "do0.final_store:127"
+          }
+        ],
+        "src_bytes_at_requested_span": "30 40 50 60 70 80 90 a0 31 41 51 61 71 81 91 a1",
+        "dst_bytes_at_requested_span": "30 40 50 60 70 80 90 a0 31 41 51 61 71 81 91 a1",
+        "outside_dst_sentinels_unchanged": true,
+        "source_array_unchanged": true,
+        "copy_bytes_checked": 16,
+        "real_program_execution": "NOT_RUN"
+      },
+      {
+        "case_id": "C127-M16-U3",
+        "original_src_pointer": "S+131",
+        "original_dst_pointer": "D+131",
+        "len_bytes": 16,
+        "S_D_object_length": 384,
+        "source_generator": "S[i] = 0x20 + floor(i/8)%32 + 16*(i%8)",
+        "destination_initial_byte": "0xcc",
+        "lead_bytes": 5,
+        "after_leading_macro": {
+          "source_offset": 136,
+          "dest_offset": 136,
+          "remaining_bytes": 11
+        },
+        "page_macro": {
+          "source_site": "memcpy.c:45",
+          "chosen_macro": "PAGE_COPY_FWD_MAYBE",
+          "selected_effect": "empty",
+          "copied_bytes": 0
+        },
+        "aligned_helper": {
+          "direct_call_owner": "MEMCPY",
+          "source_site": "memcopy.h:124-125",
+          "symbol": "_wordcopy_fwd_aligned",
+          "third_arg_words": 1,
+          "src_offset_at_call": 136,
+          "dst_offset_at_call": 136,
+          "entry_remainder": 1,
+          "entry_goto": "do0",
+          "reads": [
+            {
+              "where": "case1.prefetch:83",
+              "effective_offset": 136,
+              "word_index_from_helper": 0,
+              "register": "a1",
+              "bytes_hex": "31 41 51 61 71 81 91 a1"
+            }
+          ],
+          "writes": [
+            {
+              "where": "do0.final_store:127",
+              "effective_offset": 136,
+              "word_index_from_helper": 0,
+              "register": "a1",
+              "bytes_hex": "31 41 51 61 71 81 91 a1"
+            }
+          ],
+          "return_type": "void",
+          "normal_return_assumed": true,
+          "internal_srcp_at_end": 144,
+          "internal_dstp_at_final_write": 136,
+          "outer_local_pointers_not_modified_by_helper_params": true
+        },
+        "after_word_macro": {
+          "srcp_offset": 144,
+          "dstp_offset": 144,
+          "remaining_bytes": 3,
+          "caller_pointer_increment": 8
+        },
+        "tail_bytes": 3,
+        "outer_srcp_end": 147,
+        "outer_dstp_end": 147,
+        "memcpy_return": "D+131",
+        "ranges": [
+          {
+            "site": "memcpy.c:40",
+            "label": "leading BYTE_COPY_FWD",
+            "read": [
+              131,
+              136
+            ],
+            "write": [
+              131,
+              136
+            ],
+            "byte_count": 5
+          },
+          {
+            "site": "memcpy.c:45",
+            "label": "PAGE_COPY_FWD_MAYBE empty",
+            "read": null,
+            "write": null,
+            "byte_count": 0
+          },
+          {
+            "site": "memcpy.c:51 + memcopy.h:121-131",
+            "label": "WORD_COPY_FWD helper",
+            "read": [
+              136,
+              144
+            ],
+            "write": [
+              136,
+              144
+            ],
+            "byte_count": 8,
+            "word_count": 1
+          },
+          {
+            "site": "memcpy.c:57",
+            "label": "trailing BYTE_COPY_FWD",
+            "read": [
+              144,
+              147
+            ],
+            "write": [
+              144,
+              147
+            ],
+            "byte_count": 3
+          }
+        ],
+        "trace": [
+          {
+            "phase": "memcpy.c:40 leading",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 131,
+            "dest_offset": 131,
+            "value_hex": "60"
+          },
+          {
+            "phase": "memcpy.c:40 leading",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 132,
+            "dest_offset": 132,
+            "value_hex": "70"
+          },
+          {
+            "phase": "memcpy.c:40 leading",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 133,
+            "dest_offset": 133,
+            "value_hex": "80"
+          },
+          {
+            "phase": "memcpy.c:40 leading",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 134,
+            "dest_offset": 134,
+            "value_hex": "90"
+          },
+          {
+            "phase": "memcpy.c:40 leading",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 135,
+            "dest_offset": 135,
+            "value_hex": "a0"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              136,
+              144
+            ],
+            "src_half_open": [
+              136,
+              144
+            ],
+            "bytes_hex": "31 41 51 61 71 81 91 a1",
+            "where": "do0.final_store:127"
+          },
+          {
+            "phase": "memcpy.c:57 trailing",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 144,
+            "dest_offset": 144,
+            "value_hex": "32"
+          },
+          {
+            "phase": "memcpy.c:57 trailing",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 145,
+            "dest_offset": 145,
+            "value_hex": "42"
+          },
+          {
+            "phase": "memcpy.c:57 trailing",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 146,
+            "dest_offset": 146,
+            "value_hex": "52"
+          }
+        ],
+        "src_bytes_at_requested_span": "60 70 80 90 a0 31 41 51 61 71 81 91 a1 32 42 52",
+        "dst_bytes_at_requested_span": "60 70 80 90 a0 31 41 51 61 71 81 91 a1 32 42 52",
+        "outside_dst_sentinels_unchanged": true,
+        "source_array_unchanged": true,
+        "copy_bytes_checked": 16,
+        "real_program_execution": "NOT_RUN"
+      },
+      {
+        "case_id": "C127-M129-A",
+        "original_src_pointer": "S+128",
+        "original_dst_pointer": "D+128",
+        "len_bytes": 129,
+        "S_D_object_length": 384,
+        "source_generator": "S[i] = 0x20 + floor(i/8)%32 + 16*(i%8)",
+        "destination_initial_byte": "0xcc",
+        "lead_bytes": 0,
+        "after_leading_macro": {
+          "source_offset": 128,
+          "dest_offset": 128,
+          "remaining_bytes": 129
+        },
+        "page_macro": {
+          "source_site": "memcpy.c:45",
+          "chosen_macro": "PAGE_COPY_FWD_MAYBE",
+          "selected_effect": "empty",
+          "copied_bytes": 0
+        },
+        "aligned_helper": {
+          "direct_call_owner": "MEMCPY",
+          "source_site": "memcopy.h:124-125",
+          "symbol": "_wordcopy_fwd_aligned",
+          "third_arg_words": 16,
+          "src_offset_at_call": 128,
+          "dst_offset_at_call": 128,
+          "entry_remainder": 0,
+          "entry_goto": "do7",
+          "reads": [
+            {
+              "where": "case0.prefetch:78",
+              "effective_offset": 128,
+              "word_index_from_helper": 0,
+              "register": "a0",
+              "bytes_hex": "30 40 50 60 70 80 90 a0"
+            },
+            {
+              "where": "do7.read:98",
+              "effective_offset": 136,
+              "word_index_from_helper": 1,
+              "register": "a1",
+              "bytes_hex": "31 41 51 61 71 81 91 a1"
+            },
+            {
+              "where": "do6.read:101",
+              "effective_offset": 144,
+              "word_index_from_helper": 2,
+              "register": "a0",
+              "bytes_hex": "32 42 52 62 72 82 92 a2"
+            },
+            {
+              "where": "do5.read:104",
+              "effective_offset": 152,
+              "word_index_from_helper": 3,
+              "register": "a1",
+              "bytes_hex": "33 43 53 63 73 83 93 a3"
+            },
+            {
+              "where": "do4.read:107",
+              "effective_offset": 160,
+              "word_index_from_helper": 4,
+              "register": "a0",
+              "bytes_hex": "34 44 54 64 74 84 94 a4"
+            },
+            {
+              "where": "do3.read:110",
+              "effective_offset": 168,
+              "word_index_from_helper": 5,
+              "register": "a1",
+              "bytes_hex": "35 45 55 65 75 85 95 a5"
+            },
+            {
+              "where": "do2.read:113",
+              "effective_offset": 176,
+              "word_index_from_helper": 6,
+              "register": "a0",
+              "bytes_hex": "36 46 56 66 76 86 96 a6"
+            },
+            {
+              "where": "do1.read:116",
+              "effective_offset": 184,
+              "word_index_from_helper": 7,
+              "register": "a1",
+              "bytes_hex": "37 47 57 67 77 87 97 a7"
+            },
+            {
+              "where": "do8.read:95",
+              "effective_offset": 192,
+              "word_index_from_helper": 8,
+              "register": "a0",
+              "bytes_hex": "38 48 58 68 78 88 98 a8"
+            },
+            {
+              "where": "do7.read:98",
+              "effective_offset": 200,
+              "word_index_from_helper": 9,
+              "register": "a1",
+              "bytes_hex": "39 49 59 69 79 89 99 a9"
+            },
+            {
+              "where": "do6.read:101",
+              "effective_offset": 208,
+              "word_index_from_helper": 10,
+              "register": "a0",
+              "bytes_hex": "3a 4a 5a 6a 7a 8a 9a aa"
+            },
+            {
+              "where": "do5.read:104",
+              "effective_offset": 216,
+              "word_index_from_helper": 11,
+              "register": "a1",
+              "bytes_hex": "3b 4b 5b 6b 7b 8b 9b ab"
+            },
+            {
+              "where": "do4.read:107",
+              "effective_offset": 224,
+              "word_index_from_helper": 12,
+              "register": "a0",
+              "bytes_hex": "3c 4c 5c 6c 7c 8c 9c ac"
+            },
+            {
+              "where": "do3.read:110",
+              "effective_offset": 232,
+              "word_index_from_helper": 13,
+              "register": "a1",
+              "bytes_hex": "3d 4d 5d 6d 7d 8d 9d ad"
+            },
+            {
+              "where": "do2.read:113",
+              "effective_offset": 240,
+              "word_index_from_helper": 14,
+              "register": "a0",
+              "bytes_hex": "3e 4e 5e 6e 7e 8e 9e ae"
+            },
+            {
+              "where": "do1.read:116",
+              "effective_offset": 248,
+              "word_index_from_helper": 15,
+              "register": "a1",
+              "bytes_hex": "3f 4f 5f 6f 7f 8f 9f af"
+            }
+          ],
+          "writes": [
+            {
+              "where": "do7.write:99",
+              "effective_offset": 128,
+              "word_index_from_helper": 0,
+              "register": "a0",
+              "bytes_hex": "30 40 50 60 70 80 90 a0"
+            },
+            {
+              "where": "do6.write:102",
+              "effective_offset": 136,
+              "word_index_from_helper": 1,
+              "register": "a1",
+              "bytes_hex": "31 41 51 61 71 81 91 a1"
+            },
+            {
+              "where": "do5.write:105",
+              "effective_offset": 144,
+              "word_index_from_helper": 2,
+              "register": "a0",
+              "bytes_hex": "32 42 52 62 72 82 92 a2"
+            },
+            {
+              "where": "do4.write:108",
+              "effective_offset": 152,
+              "word_index_from_helper": 3,
+              "register": "a1",
+              "bytes_hex": "33 43 53 63 73 83 93 a3"
+            },
+            {
+              "where": "do3.write:111",
+              "effective_offset": 160,
+              "word_index_from_helper": 4,
+              "register": "a0",
+              "bytes_hex": "34 44 54 64 74 84 94 a4"
+            },
+            {
+              "where": "do2.write:114",
+              "effective_offset": 168,
+              "word_index_from_helper": 5,
+              "register": "a1",
+              "bytes_hex": "35 45 55 65 75 85 95 a5"
+            },
+            {
+              "where": "do1.write:117",
+              "effective_offset": 176,
+              "word_index_from_helper": 6,
+              "register": "a0",
+              "bytes_hex": "36 46 56 66 76 86 96 a6"
+            },
+            {
+              "where": "do8.write:96",
+              "effective_offset": 184,
+              "word_index_from_helper": 7,
+              "register": "a1",
+              "bytes_hex": "37 47 57 67 77 87 97 a7"
+            },
+            {
+              "where": "do7.write:99",
+              "effective_offset": 192,
+              "word_index_from_helper": 8,
+              "register": "a0",
+              "bytes_hex": "38 48 58 68 78 88 98 a8"
+            },
+            {
+              "where": "do6.write:102",
+              "effective_offset": 200,
+              "word_index_from_helper": 9,
+              "register": "a1",
+              "bytes_hex": "39 49 59 69 79 89 99 a9"
+            },
+            {
+              "where": "do5.write:105",
+              "effective_offset": 208,
+              "word_index_from_helper": 10,
+              "register": "a0",
+              "bytes_hex": "3a 4a 5a 6a 7a 8a 9a aa"
+            },
+            {
+              "where": "do4.write:108",
+              "effective_offset": 216,
+              "word_index_from_helper": 11,
+              "register": "a1",
+              "bytes_hex": "3b 4b 5b 6b 7b 8b 9b ab"
+            },
+            {
+              "where": "do3.write:111",
+              "effective_offset": 224,
+              "word_index_from_helper": 12,
+              "register": "a0",
+              "bytes_hex": "3c 4c 5c 6c 7c 8c 9c ac"
+            },
+            {
+              "where": "do2.write:114",
+              "effective_offset": 232,
+              "word_index_from_helper": 13,
+              "register": "a1",
+              "bytes_hex": "3d 4d 5d 6d 7d 8d 9d ad"
+            },
+            {
+              "where": "do1.write:117",
+              "effective_offset": 240,
+              "word_index_from_helper": 14,
+              "register": "a0",
+              "bytes_hex": "3e 4e 5e 6e 7e 8e 9e ae"
+            },
+            {
+              "where": "do0.final_store:127",
+              "effective_offset": 248,
+              "word_index_from_helper": 15,
+              "register": "a1",
+              "bytes_hex": "3f 4f 5f 6f 7f 8f 9f af"
+            }
+          ],
+          "return_type": "void",
+          "normal_return_assumed": true,
+          "internal_srcp_at_end": 256,
+          "internal_dstp_at_final_write": 248,
+          "outer_local_pointers_not_modified_by_helper_params": true
+        },
+        "after_word_macro": {
+          "srcp_offset": 256,
+          "dstp_offset": 256,
+          "remaining_bytes": 1,
+          "caller_pointer_increment": 128
+        },
+        "tail_bytes": 1,
+        "outer_srcp_end": 257,
+        "outer_dstp_end": 257,
+        "memcpy_return": "D+128",
+        "ranges": [
+          {
+            "site": "memcpy.c:40",
+            "label": "leading BYTE_COPY_FWD",
+            "read": [
+              128,
+              128
+            ],
+            "write": [
+              128,
+              128
+            ],
+            "byte_count": 0
+          },
+          {
+            "site": "memcpy.c:45",
+            "label": "PAGE_COPY_FWD_MAYBE empty",
+            "read": null,
+            "write": null,
+            "byte_count": 0
+          },
+          {
+            "site": "memcpy.c:51 + memcopy.h:121-131",
+            "label": "WORD_COPY_FWD helper",
+            "read": [
+              128,
+              256
+            ],
+            "write": [
+              128,
+              256
+            ],
+            "byte_count": 128,
+            "word_count": 16
+          },
+          {
+            "site": "memcpy.c:57",
+            "label": "trailing BYTE_COPY_FWD",
+            "read": [
+              256,
+              257
+            ],
+            "write": [
+              256,
+              257
+            ],
+            "byte_count": 1
+          }
+        ],
+        "trace": [
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              128,
+              136
+            ],
+            "src_half_open": [
+              128,
+              136
+            ],
+            "bytes_hex": "30 40 50 60 70 80 90 a0",
+            "where": "do7.write:99"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              136,
+              144
+            ],
+            "src_half_open": [
+              136,
+              144
+            ],
+            "bytes_hex": "31 41 51 61 71 81 91 a1",
+            "where": "do6.write:102"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              144,
+              152
+            ],
+            "src_half_open": [
+              144,
+              152
+            ],
+            "bytes_hex": "32 42 52 62 72 82 92 a2",
+            "where": "do5.write:105"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              152,
+              160
+            ],
+            "src_half_open": [
+              152,
+              160
+            ],
+            "bytes_hex": "33 43 53 63 73 83 93 a3",
+            "where": "do4.write:108"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              160,
+              168
+            ],
+            "src_half_open": [
+              160,
+              168
+            ],
+            "bytes_hex": "34 44 54 64 74 84 94 a4",
+            "where": "do3.write:111"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              168,
+              176
+            ],
+            "src_half_open": [
+              168,
+              176
+            ],
+            "bytes_hex": "35 45 55 65 75 85 95 a5",
+            "where": "do2.write:114"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              176,
+              184
+            ],
+            "src_half_open": [
+              176,
+              184
+            ],
+            "bytes_hex": "36 46 56 66 76 86 96 a6",
+            "where": "do1.write:117"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              184,
+              192
+            ],
+            "src_half_open": [
+              184,
+              192
+            ],
+            "bytes_hex": "37 47 57 67 77 87 97 a7",
+            "where": "do8.write:96"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              192,
+              200
+            ],
+            "src_half_open": [
+              192,
+              200
+            ],
+            "bytes_hex": "38 48 58 68 78 88 98 a8",
+            "where": "do7.write:99"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              200,
+              208
+            ],
+            "src_half_open": [
+              200,
+              208
+            ],
+            "bytes_hex": "39 49 59 69 79 89 99 a9",
+            "where": "do6.write:102"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              208,
+              216
+            ],
+            "src_half_open": [
+              208,
+              216
+            ],
+            "bytes_hex": "3a 4a 5a 6a 7a 8a 9a aa",
+            "where": "do5.write:105"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              216,
+              224
+            ],
+            "src_half_open": [
+              216,
+              224
+            ],
+            "bytes_hex": "3b 4b 5b 6b 7b 8b 9b ab",
+            "where": "do4.write:108"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              224,
+              232
+            ],
+            "src_half_open": [
+              224,
+              232
+            ],
+            "bytes_hex": "3c 4c 5c 6c 7c 8c 9c ac",
+            "where": "do3.write:111"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              232,
+              240
+            ],
+            "src_half_open": [
+              232,
+              240
+            ],
+            "bytes_hex": "3d 4d 5d 6d 7d 8d 9d ad",
+            "where": "do2.write:114"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              240,
+              248
+            ],
+            "src_half_open": [
+              240,
+              248
+            ],
+            "bytes_hex": "3e 4e 5e 6e 7e 8e 9e ae",
+            "where": "do1.write:117"
+          },
+          {
+            "phase": "memcopy.h:125 + wordcopy.c",
+            "type": "ALIGNED_HELPER_WORD_WRITE",
+            "dst_half_open": [
+              248,
+              256
+            ],
+            "src_half_open": [
+              248,
+              256
+            ],
+            "bytes_hex": "3f 4f 5f 6f 7f 8f 9f af",
+            "where": "do0.final_store:127"
+          },
+          {
+            "phase": "memcpy.c:57 trailing",
+            "type": "BYTE_COPY_FWD_ITERATION",
+            "source_offset": 256,
+            "dest_offset": 256,
+            "value_hex": "20"
+          }
+        ],
+        "src_bytes_at_requested_span": "30 40 50 60 70 80 90 a0 31 41 51 61 71 81 91 a1 32 42 52 62 72 82 92 a2 33 43 53 63 73 83 93 a3 34 44 54 64 74 84 94 a4 35 45 55 65 75 85 95 a5 36 46 56 66 76 86 96 a6 37 47 57 67 77 87 97 a7 38 48 58 68 78 88 98 a8 39 49 59 69 79 89 99 a9 3a 4a 5a 6a 7a 8a 9a aa 3b 4b 5b 6b 7b 8b 9b ab 3c 4c 5c 6c 7c 8c 9c ac 3d 4d 5d 6d 7d 8d 9d ad 3e 4e 5e 6e 7e 8e 9e ae 3f 4f 5f 6f 7f 8f 9f af 20",
+        "dst_bytes_at_requested_span": "30 40 50 60 70 80 90 a0 31 41 51 61 71 81 91 a1 32 42 52 62 72 82 92 a2 33 43 53 63 73 83 93 a3 34 44 54 64 74 84 94 a4 35 45 55 65 75 85 95 a5 36 46 56 66 76 86 96 a6 37 47 57 67 77 87 97 a7 38 48 58 68 78 88 98 a8 39 49 59 69 79 89 99 a9 3a 4a 5a 6a 7a 8a 9a aa 3b 4b 5b 6b 7b 8b 9b ab 3c 4c 5c 6c 7c 8c 9c ac 3d 4d 5d 6d 7d 8d 9d ad 3e 4e 5e 6e 7e 8e 9e ae 3f 4f 5f 6f 7f 8f 9f af 20",
+        "outside_dst_sentinels_unchanged": true,
+        "source_array_unchanged": true,
+        "copy_bytes_checked": 129,
+        "real_program_execution": "NOT_RUN"
+      }
+    ],
+    "outer_call_sites": "memcpy.c:39-40,45,51,57,59; memcopy.h:121-131",
+    "helper_direct_call_owner": "MEMCPY through macro expansion",
+    "helper_return": "void",
+    "outer_memcpy_return": "original dstpp"
+  },
+  "graph_validation": {
+    "D00": {
+      "old_unique": 184,
+      "old_declarations": 194,
+      "old_edges": 211,
+      "new_unique": 192,
+      "new_declarations": 192,
+      "new_edges": 218,
+      "new_macro_positions": 13,
+      "direct_calls": 40
+    },
+    "new_cases": {
+      "A": 7,
+      "B": 3,
+      "C": 3
+    },
+    "full_graph": {
+      "nodes": 366,
+      "edges": 441
+    },
+    "all_endpoints_known": true
+  },
+  "limit": {
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "C_compilation_linking": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_files": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

@@ -1,0 +1,367 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FD-CONTROL-61",
+  "record_type": "conditional_findings_and_missing_evidence_only",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "1a6ef1c7a5aa",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_items": [],
+  "owner_decisions_requested_now": [],
+  "prior_acceptance": {
+    "batch60": "PASS_PENDING_LOCAL R60-S01/S02",
+    "batches40_43": "PASS_PENDING_LOCAL each with mandatory S01/S02",
+    "batch58": "PASS_PENDING_LOCAL with R58C-S01; B25 mainline objection withdrawn",
+    "batch59": "PASS_PENDING_LOCAL, directory position comparison only"
+  },
+  "new_findings": [
+    {
+      "id": "DC61-F01",
+      "topic": "A",
+      "kind": "admitted_fcntl_commands_without_active_switch_case",
+      "claim": "check_fcntl_cmd在FMODE_PATH分支把F_GETFD/F_SETFD列为准入，但do_fcntl中的这两个case及close-on-exec处理全部注释；在有效file和正常调用条件下落到default并保留- EINVAL，而非实现GETFD/SETFD。",
+      "premises": [
+        "fdget_raw取回有效file，f_mode包含FMODE_PATH，指针/锁/返回均正常",
+        "所选do_fcntl活动switch覆盖全定义",
+        "内核宏调用体在本源码中使用此函数"
+      ],
+      "counterevidence": [
+        "不在FMODE_PATH时省略准入检查仍走同一default；F_GETFL活动case真实存在",
+        "不认证用户进程已执行该命令或完整fcntl规范"
+      ],
+      "earliest_stop": "fd_array越界/NULL对象/f_mode无效早于白名单；valid分支才可推default -EINVAL",
+      "anchors": [
+        "A03",
+        "A04",
+        "A11",
+        "A12",
+        "A15",
+        "A16",
+        "A17",
+        "A26",
+        "A27"
+      ],
+      "related": [],
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F01",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separate authorizes new focused source evidence or execution",
+        "re-verify current selected source and original qualified links"
+      ]
+    },
+    {
+      "id": "DC61-F02",
+      "topic": "A/B",
+      "kind": "dup_success_reference_alias_consumer_of_US01",
+      "claim": "有效F_DUPFD通过fdget_raw后不增file.f_count，f_dupfd成功时get_file加1并将同file_s指针装入新槽，随后fcntl的fdput按flags3调用fput减1；在无其它写者的局部事件模型中净计数不变但新增alias槽仍在，属于旧US-01的成功复制消费者，不应记为新引用根因。",
+      "premises": [
+        "合法源fd、有效file_s、正且可表示的f_count",
+        "f_dupfd合法选择空槽，fd_install正常返回",
+        "fcntl走out1并正常执行fdput；没有并行引用修改"
+      ],
+      "counterevidence": [
+        "f_dupfd单独成功时确实+1，不能抹成未增加",
+        "有其它持有者或下层引用转移时，全局计数与真实生命期另论"
+      ],
+      "earliest_stop": "alloc_fd失败未赋fd、越界扫描、BUG_ON/无效file时不得算已安装或已fdput",
+      "anchors": [
+        "A19",
+        "A20",
+        "A21",
+        "B01",
+        "B04",
+        "B05",
+        "B12",
+        "B13",
+        "B14"
+      ],
+      "related": [
+        "CORE-USER-SYSCALL-STDIO-08::US-01",
+        "CORE-USER-FD-LOOKUP-REF-41::FG41-F01"
+      ],
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F02",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separate authorizes new focused source evidence or execution",
+        "re-verify current selected source and original qualified links"
+      ]
+    },
+    {
+      "id": "DC61-F03",
+      "topic": "B",
+      "kind": "cloexec_flag_passed_without_local_per_fd_storage",
+      "claim": "F_DUPFD_CLOEXEC分支传O_CLOEXEC给f_dupfd，后者传入alloc_fd flags，但alloc_fd的活动扫描/return未使用flags，fd_install仅验证占用并写fd_array指针；所读files_struct_s的close_on_exec位图成员为注释，不能据实参证明新描述符具有FD_CLOEXEC。",
+      "premises": [
+        "合法file/rlimit/可用新槽，所有前缀正常结束",
+        "所读alloc_fd/fd_install活动体为实际选择",
+        "不假设外部未核函数隐式设置位图"
+      ],
+      "counterevidence": [
+        "宏O_CLOEXEC真实存在且作为实参传递，但仅说明意图",
+        "其它未审的全局close-on-exec机制可能有约束，不能由此断言所有exec都泄露fd"
+      ],
+      "earliest_stop": "无安全alloc_fd返回或fd_install失效之前不得声明已建立一个新fd",
+      "anchors": [
+        "A10",
+        "A30",
+        "B04",
+        "B07",
+        "B12",
+        "B16",
+        "B23"
+      ],
+      "related": [],
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F03",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separate authorizes new focused source evidence or execution",
+        "re-verify current selected source and original qualified links"
+      ]
+    },
+    {
+      "id": "DC61-F04",
+      "topic": "B",
+      "kind": "dup_dup2_dummy_active_body_lacks_return",
+      "claim": "dup/dup2的实际MYOS_SYSCALL_DEFINE宏调用体仅调用ALERT_DUMMY_SYSCALL，其余候选实现都是注释；固定头IF_ALERT_DUMMY_SYSCALL为0，ALERT_DUMMY的活动分支只有if(show_alert) pr_alert而无return。若所选宏定义实际展开为long返回函数且控制到尾部，没有定义良好的返回值来源。",
+      "premises": [
+        "对应唯一宏定义/展开选择在目标构建中有效",
+        "没有其它未展开宏注入return",
+        "正常控制到活动体末尾"
+      ],
+      "counterevidence": [
+        "注释块确实描述了候选dup逻辑但不会执行",
+        "不确定真实编译器如何诊断/优化，未运行syscall stub或用户dup"
+      ],
+      "earliest_stop": "宏/函数绑定未完成取证或警告路径不返回时不能假定已走到尾部",
+      "anchors": [
+        "B25",
+        "B28",
+        "B31",
+        "B32",
+        "B35",
+        "B36"
+      ],
+      "related": [],
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F04",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separate authorizes new focused source evidence or execution",
+        "re-verify current selected source and original qualified links"
+      ]
+    },
+    {
+      "id": "DC61-F05",
+      "topic": "C",
+      "kind": "lseek_absent_method_returns_zero_without_position_update",
+      "claim": "lseek调用体在物理索引范围比较与whence检查后，读fp=fd_array[fd]，仅当fp->f_op及llseek均存在才调用；有有效fp且f_op或方法缺失时，ulong ret保留初值0被返回，而没有赋file.f_pos。源码0结果不保证完成了定位到0。",
+      "premises": [
+        "合法fd、物理数组和有效file_s对象；f_op为NULL或其llseek为NULL",
+        "可正常读file字段、活动宏正常返回"
+      ],
+      "counterevidence": [
+        "若绑定有效FAT32_file_ops，llseek实际存在并调用FAT32_lseek",
+        "无效NULL槽先在fp->f_op成员访问失去合法性，不会安全返回0"
+      ],
+      "earliest_stop": "fd_array索引非法或fp为NULL时先停止，不推0或-EBADF",
+      "anchors": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C16"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-11"
+      ],
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F05",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separate authorizes new focused source evidence or execution",
+        "re-verify current selected source and original qualified links"
+      ]
+    },
+    {
+      "id": "DC61-F06",
+      "topic": "C",
+      "kind": "fat_lseek_early_signed_arithmetic_and_eof_boundary",
+      "claim": "FAT32_lseek在SEEK_CUR/END先形成f_pos+offset或i_size+offset并赋给long pos，再检测pos<0或pos>i_size并返回- EOVERFLOW；有效有限数值域内超过EOF或负值会被拒绝并保持旧f_pos，但签名不能证明溢出前已经安全给- EOVERFLOW。",
+      "premises": [
+        "合法file、inode和i_size，真实FAT回调已选中",
+        "同一个非并发f_pos，算术在signed long/loff_t可表示区间内",
+        "i_size非负且可比较"
+      ],
+      "counterevidence": [
+        "SEEK_SET目标在[0,i_size]时可写f_pos并返回pos",
+        "SEEK_DATA=3实际进入FAT default -EINVAL，SEEK_HOLE4由外层先拒绝，不归到EOF门"
+      ],
+      "earliest_stop": "signed addition溢出或更早inode指针无效时，不能推EOVERFLOW/更新",
+      "anchors": [
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13"
+      ],
+      "related": [],
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F06",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separate authorizes new focused source evidence or execution",
+        "re-verify current selected source and original qualified links"
+      ]
+    },
+    {
+      "id": "DC61-F07",
+      "topic": "C",
+      "kind": "lseek_negative_to_ulong_return_conversion",
+      "claim": "系统调用用ulong ret保存loff_t llseek的可能负返回，而选定宏生成的函数返回long；源级存在负有符号→无符号→有符号的转换链，其结果需要明确LP64及具体实现定义，不可直接认证用户看到同一负errno。",
+      "premises": [
+        "有效file/操作表/方法调用正常返回负错误值",
+        "ulong和long目标位宽模型明确，返回语句实际到达",
+        "无更早越界或不返回"
+      ],
+      "counterevidence": [
+        "非负结果位于可表示范围时，通常保持数值；缺方法则ret0路径没有负数转换",
+        "典型x86-64二补数模型可能回到负错误编码，但不是本次已编译ABI证明"
+      ],
+      "earliest_stop": "callback失效、类型/宏选择未证时不作确定syscall返回推断",
+      "anchors": [
+        "C02",
+        "C05",
+        "C06",
+        "C12",
+        "B35",
+        "B36"
+      ],
+      "related": [],
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F07",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separate authorizes new focused source evidence or execution",
+        "re-verify current selected source and original qualified links"
+      ]
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "DC61-U01",
+      "topic": "A/B/C",
+      "kind": "physical_fd_array_and_initial_slot_state",
+      "detail": "files_struct_s.fd_array fixed256, fd_count/logical limits and actual slot contents may differ; real fd indexes and concurrent writers not audited",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U01",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U02",
+      "topic": "B",
+      "kind": "rlimit_type_and_allocator_failure",
+      "detail": "current->signal->rlim[RLIMIT_NOFILE].rlim_cur/ulong end cast into alloc_fd uint and int scan loop; out-of-range/empty-range return not safe",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U02",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U03",
+      "topic": "A/B",
+      "kind": "reference_lifetime_and_fd_ownership",
+      "detail": "fdget_raw flags3 no local increment, get_file/fput local counts; full source slot ownership, actual concurrent refs and filp cache frees not run",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U03",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U04",
+      "topic": "B",
+      "kind": "cloexec_real_record_and_exec",
+      "detail": "O_CLOEXEC passed but no local bit write; complete exec and alternative close-on-exec bookkeeping out of scope",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U04",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U05",
+      "topic": "B",
+      "kind": "dummy_macro_build_binding",
+      "detail": "MYOS_SYSCALL_DEFINE and ALERT_DUMMY macro read but preprocessor/compile/stub table not run; no actual dup/dup2 return or error",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U05",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U06",
+      "topic": "C",
+      "kind": "signed_width_and_error_roundtrip",
+      "detail": "off_t/loff_t/long/ulong mixed, arithmetic overflow and negative→unsigned→signed conversion; no compiled LP64 ABI or syscall CPU registers",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U06",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U07",
+      "topic": "C",
+      "kind": "real_seekable_file_and_inode",
+      "detail": "FAT32_file_ops.llseek exists but f.file->f_op actual binding, inode/i_size/f_pos and real media state unverified",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U07",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U08",
+      "topic": "C",
+      "kind": "cross_fd_and_directory_semantics",
+      "detail": "f_dupfd aliases can share file.f_pos, 59 directory iteration pos sentinel is separate; real open/close/getdents/seek concurrency not run",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U08",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DC61-U09",
+      "topic": "A",
+      "kind": "fcntl_flag_policy",
+      "detail": "FMODE_PATH whitelist/unsupported commands are source-level policy; overall POSIX, O_PATH and permission policy may be different",
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-U09",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    }
+  ],
+  "candidate_count": 7,
+  "gap_count": 9,
+  "runtime_confirmed_count": 0,
+  "duplication_policy": "DC61-F02 is explicit upper F_DUPFD consumer of existing US-01; array-bound issues remain UV-11, close remains UV-10; no full history dedup certification",
+  "not_authorized": [
+    "kernel changes",
+    "compiler/preprocessor/fixtures",
+    "old artifacts/comments edits",
+    "new branch or PR",
+    "merge/close",
+    "self acceptance or batch62 start"
+  ]
+}

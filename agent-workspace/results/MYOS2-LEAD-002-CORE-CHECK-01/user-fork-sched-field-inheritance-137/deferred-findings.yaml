@@ -1,0 +1,119 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FORK-SCHED-FIELD-INHERITANCE-137",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "date": "2026-11-23",
+  "phase": 2,
+  "produced_by": "GPT-6（文本模型族；后端未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "actual_backend_model": "UNATTESTED",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "exec_parent_short12": "95b6af84d8f6",
+  "lead_contract_short12": "0b6cffc26e2d",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "record_type": "incremental_deferred_findings",
+  "corrections": [
+    {
+      "qualified_id": "R136-01",
+      "original_batch": 136,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_source": "136 six files @95b6af84d8f6",
+      "not_closed_by_author": true
+    },
+    {
+      "qualified_id": "R136-02",
+      "original_batch": 136,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_source": "136 six files @95b6af84d8f6",
+      "not_closed_by_author": true
+    },
+    {
+      "qualified_id": "R136-03",
+      "original_batch": 136,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_source": "136 six files @95b6af84d8f6",
+      "not_closed_by_author": true
+    },
+    {
+      "qualified_id": "R136-04",
+      "original_batch": 136,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_source": "136 six files @95b6af84d8f6",
+      "not_closed_by_author": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "R136-G04",
+      "kind": "LIMITED_EVIDENCE_SCOPE_CLOSED_PART",
+      "status": "deferred_owner_not_ready",
+      "known": "For one ordinary success fork of P, child rt.time_slice is copied by value and not overwritten by selected copy_process/sched_fork/wake bodies; K=4 J=9 under stated B",
+      "unknown": "actual global time_slice default and complete writer graph including on_rq; other CPU and schedule mutation",
+      "resume": "separately authorized system-wide source research and runtime gates"
+    },
+    {
+      "id": "R137-A01",
+      "kind": "POINTER_COPY_SCOPE",
+      "status": "needs_evidence",
+      "known": "rt.run_list pointer VALUES transiently point to parent node immediately after whole task copy; INIT_LIST_S makes child self-linked before wake",
+      "unknown": "all other fields copied including shared pointer lifetime and concurrency",
+      "resume": "full fork resource and reference analysis in distinct contract"
+    },
+    {
+      "id": "R137-C01",
+      "kind": "RUNTIME_GAP",
+      "status": "needs_evidence",
+      "known": "C1 reaches context_switch call site, C2 does not; outer switch counters differ",
+      "unknown": "physical context switch, resumed task execution, return-to-user ABI",
+      "resume": "authorized instrumented run and local P9"
+    },
+    {
+      "id": "R137-C02",
+      "kind": "CLOCK_GAP",
+      "status": "needs_evidence",
+      "known": "rq.clock uses local_clock delta, picker uses stipulated jiffies/last",
+      "unknown": "real values, ordering, time conversion in a live kernel",
+      "resume": "time subsystem and physical observation"
+    },
+    {
+      "id": "R137-C03",
+      "kind": "CONFIG_SCOPE",
+      "status": "needs_evidence",
+      "known": "CMake includes -DCONFIG_BUG, BUG_ON has CONFIG_BUG source gate, list functions source conditional by LIST_DEFINATION/DEBUG",
+      "unknown": "preprocessed translation units and actual binary branch selection",
+      "resume": "only if a separately authorized preprocessing/build validation is available"
+    },
+    {
+      "id": "R137-C04",
+      "kind": "FULL_WRITER_SCOPE",
+      "status": "deferred_owner_not_ready",
+      "known": "nvcsw/nivcsw retained from selected copy and prev.nivcsw incremented in one selected __schedule path",
+      "unknown": "all writes/initializations across project and physical scheduling semantics",
+      "resume": "full program write-site audit after future approval"
+    }
+  ],
+  "historical": {
+    "batch135_combined": "PASS_PENDING_LOCAL",
+    "batch136_independent": "RETURN",
+    "batch137_mainline": "PENDING"
+  },
+  "owner_decisions_requested_now": [],
+  "full_local_P9": "NOT_RUN",
+  "runtime": "NOT_RUN"
+}

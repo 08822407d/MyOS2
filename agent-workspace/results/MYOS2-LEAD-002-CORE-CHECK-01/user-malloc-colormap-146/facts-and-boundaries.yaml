@@ -1,0 +1,5884 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "batch146_colormap_and_D00",
+  "batch_id": "CORE-USER-MALLOC-COLORMAP-146",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-23",
+  "produced_by": "GPT-6.2 (system model identifier; UI actual selection/backend/effort unattested)",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested",
+  "date": "2026-11-24",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "contract": "203-user-malloc-colormap-contract.md@f9de786c34d4",
+  "read_channel": "connector",
+  "status": "AUTHOR_DISPOSITION_AND_NEW_ANALYSIS_SUBMITTED_PENDING_MAINLINE",
+  "evidence_class": "SOURCE_FACT plus GIVEN and ARITHMETIC_MODEL or CONDITIONAL_FRAGMENT; no runtime",
+  "open_questions": [
+    "actual linkage and runtime bitmap/object state unknown",
+    "D00 closure by C10 pending"
+  ],
+  "D00": {
+    "R145-01": {
+      "status": "disposition_submitted",
+      "mainline_closure": "PENDING",
+      "old_manifest": {
+        "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/MANIFEST.md",
+        "snapshot": "b094af6bb8f3",
+        "missing_standard_root_fields": [
+          "base_snapshot",
+          "inputs_read",
+          "startup_selfcheck_quote",
+          "branch_canary_quotes",
+          "self_check"
+        ],
+        "read_channel_present": true,
+        "old_reported_self_check": {
+          "verified_claims": 55,
+          "quotes_reconfirmed": 55,
+          "downgraded_to_inferred": 0
+        },
+        "prior_publication_timing": "UNKNOWN_NOT_RETROATTESTED"
+      },
+      "replacement_standard_root_fields": {
+        "base_snapshot": "time（分支名）",
+        "source_pin_short12": "a039d9803ade",
+        "read_channel": "connector",
+        "inputs_read": [
+          "myinitramfs/mylib/myglibc/malloc/malloc.c",
+          "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+          "myinitramfs/mylib/include/utils.h",
+          "myinitramfs/mylib/util/bitmap.c",
+          "myinitramfs/mylib/util/list.c",
+          "myinitramfs/CMakeLists.txt",
+          "myinitramfs/mylib/CMakeLists.txt",
+          "myinitramfs/mylib/myglibc/CMakeLists.txt",
+          "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+          "myinitramfs/mylib/util/CMakeLists.txt",
+          "mykernel/scripts/options_flags.cmake",
+          "mykernel/debug/panic.c",
+          "agent-workspace/README.md",
+          "agent-workspace/conventions.md",
+          "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/24-chatgpt-specialist-conversation-separation.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/28-review-and-next-batch-same-turn.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/124-model-routing-and-pro-message-budget.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/193-mainline-context-thresholds-and-model-availability.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/194-owner-continuity-and-copyable-return.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/198-repository-first-compact-relay.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/201-user-malloc-slot-contract.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/202-executor-continuation/00-C10a-to-C10b-recovery-package.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/202-executor-continuation/01-MYOS2-A-C10b-receiver-startup-prompt.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-24-c10a-to-c10b-recovery-malloc145.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-BRK-ALLOCATOR-144-review.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ALLOCATOR-ENTRY-75-review.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-SLAB-OBJECT-LIFECYCLE-76-review.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77-review.md"
+        ],
+        "startup_selfcheck_quote": "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。",
+        "branch_canary_quotes": [
+          "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\",
+          "\tthis_cpu = smp_processor_id();"
+        ],
+        "self_check": {
+          "verified_claims": 55,
+          "quotes_reconfirmed": 55,
+          "downgraded_to_inferred": 0
+        },
+        "scope": "replacement consumption recorded during batch146 only; earlier author timing UNKNOWN; 10 formal source paths reconstructed from frozen original index, prior other inputs documented in 145 record and current manifest",
+        "inputs_read_scope": "145 fixed source and control/history paths actually fetched in the retained same-conversation trace; several historical reviews only task-local sections. External guidance paths and precise completion limitations are separately recorded in 146 MANIFEST; 145 private timestamps and earlier fulltext completion UNKNOWN. This is a replacement consumption record, not the original root."
+      },
+      "reconfirmation": {
+        "class": "RECONFIRMATION_DURING_BATCH_146_ONLY",
+        "old_windows": 55,
+        "exact_after_reconstruction": 55,
+        "old_raw_fence_matches": 52,
+        "none_separator_only": 3,
+        "new_P6_excluded": true,
+        "records": [
+          {
+            "id": "E145-001",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "CONST_1M",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 12,
+            "end_line": 12,
+            "kind": "macro_definition",
+            "source_line_endings": [
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "CONST_1M value (not a complete size-path proof)",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-002",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "PAGE_SIZE",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 58,
+            "end_line": 60,
+            "kind": "macro_definition",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "PAGE_SIZE maps to CONST_2M; numeric CONST_2M required separately",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-003",
+            "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+            "symbol": "USLAB_LEVEL",
+            "source_blob_short12": "2dea1f8fc05c",
+            "start_line": 7,
+            "end_line": 8,
+            "kind": "macro_definition",
+            "source_line_endings": [
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "USLAB_LEVEL and USLAB_SIZE_BASE text",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-004",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "init_uslab",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 181,
+            "end_line": 185,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "init group loop/address/init/list tail",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-005",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "init_uslab",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 187,
+            "end_line": 189,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "init three list-header initialization calls",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-006",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "init_uslab",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 191,
+            "end_line": 195,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "init base slab selection and obj_size/obj_nr production",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-007",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "init_uslab",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 198,
+            "end_line": 202,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "init base slab link and three cache totals",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-008",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "init_uslab",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 204,
+            "end_line": 208,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "init bitmap pointer/cache pointer/free/total fields",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-009",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "init_uslab",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 216,
+            "end_line": 220,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "init page binding and initiated flag at loop end",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-010",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 249,
+            "end_line": 252,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc initiation gate before ret_val/size",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-011",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 254,
+            "end_line": 258,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc ret_val initialized NULL and upper-bound branch",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-012",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 261,
+            "end_line": 265,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc starts at group0 and advances by size comparison",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-013",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 268,
+            "end_line": 272,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc used-count selection and head removal",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-014",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 274,
+            "end_line": 278,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc free==1 decision and full/used insertion",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-015",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 280,
+            "end_line": 283,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc free-list fallback and remove head",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-016",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 284,
+            "end_line": 286,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc fallback container conversion and used head insert",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-017",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 288,
+            "end_line": 292,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc both-empty else explicit while(1)",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-018",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 294,
+            "end_line": 297,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc bitmap helper call and index<total gate",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-019",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 298,
+            "end_line": 302,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc offset/address and free decrements",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-020",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 301,
+            "end_line": 305,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc free/used counters and set call",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-021",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 307,
+            "end_line": 311,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc post-slot refill condition/temp increment/call",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-022",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 312,
+            "end_line": 316,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc post-callee decrement and NULL loop",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-023",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 318,
+            "end_line": 322,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc new slab owner/head insertion and counts",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-024",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "malloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 324,
+            "end_line": 327,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc final return only if reached",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-025",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "uslab_alloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 223,
+            "end_line": 226,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "uslab_alloc metadata malloc/INIT_LIST_S call",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-026",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "uslab_alloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 228,
+            "end_line": 232,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "uslab_alloc bitmap request, total/free chain and page request",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-027",
+            "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+            "symbol": "uslab_alloc",
+            "source_blob_short12": "44db9ea9d7f7",
+            "start_line": 231,
+            "end_line": 235,
+            "kind": "function_body",
+            "source_line_endings": [
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF",
+              "CRLF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "uslab_alloc upage/virtual address/backpointer/return",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-028",
+            "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+            "symbol": "uslab",
+            "source_blob_short12": "2dea1f8fc05c",
+            "start_line": 26,
+            "end_line": 30,
+            "kind": "struct_member",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "uslab structure list and owner fields",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-029",
+            "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+            "symbol": "uslab",
+            "source_blob_short12": "2dea1f8fc05c",
+            "start_line": 31,
+            "end_line": 35,
+            "kind": "struct_member",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "uslab structure total/free/upage/virt_addr",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-030",
+            "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+            "symbol": "uslab",
+            "source_blob_short12": "2dea1f8fc05c",
+            "start_line": 34,
+            "end_line": 37,
+            "kind": "struct_member",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "uslab structure upage/virt_addr/colormap and alias ending",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-031",
+            "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+            "symbol": "uslab_cache",
+            "source_blob_short12": "2dea1f8fc05c",
+            "start_line": 39,
+            "end_line": 43,
+            "kind": "struct_member",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "cache list/object size",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-032",
+            "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+            "symbol": "uslab_cache",
+            "source_blob_short12": "2dea1f8fc05c",
+            "start_line": 45,
+            "end_line": 49,
+            "kind": "struct_member",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "cache total and three headers plus free aggregate",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-033",
+            "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+            "symbol": "uslab_cache",
+            "source_blob_short12": "2dea1f8fc05c",
+            "start_line": 49,
+            "end_line": 53,
+            "kind": "struct_member",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "cache free/used aggregate and base pointer",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-034",
+            "path": "myinitramfs/mylib/include/utils.h",
+            "symbol": "bitmap_t",
+            "source_blob_short12": "4e3e8910ac00",
+            "start_line": 19,
+            "end_line": 20,
+            "kind": "type_definition",
+            "source_line_endings": [
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "bitmap typedef and unit macro",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-035",
+            "path": "myinitramfs/mylib/include/utils.h",
+            "symbol": "container_of",
+            "source_blob_short12": "4e3e8910ac00",
+            "start_line": 12,
+            "end_line": 16,
+            "kind": "macro_definition",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "container_of macro expression (tail brace outside old window)",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-036",
+            "path": "myinitramfs/mylib/include/utils.h",
+            "symbol": "List_hdr",
+            "source_blob_short12": "4e3e8910ac00",
+            "start_line": 41,
+            "end_line": 45,
+            "kind": "struct_member",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "List_hdr anchor/count/alias",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-037",
+            "path": "myinitramfs/mylib/util/bitmap.c",
+            "symbol": "bm_get_freebit_idx",
+            "source_blob_short12": "6a86523c41ba",
+            "start_line": 24,
+            "end_line": 28,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "scan start and exclusive upper limit",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-038",
+            "path": "myinitramfs/mylib/util/bitmap.c",
+            "symbol": "bm_get_freebit_idx",
+            "source_blob_short12": "6a86523c41ba",
+            "start_line": 29,
+            "end_line": 33,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "scan word expression, zero break and return",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-039",
+            "path": "myinitramfs/mylib/util/bitmap.c",
+            "symbol": "bm_set_bit",
+            "source_blob_short12": "6a86523c41ba",
+            "start_line": 14,
+            "end_line": 17,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "set helper bit-write expression",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-040",
+            "path": "myinitramfs/mylib/util/list.c",
+            "symbol": "INIT_LIST_HEADER_S",
+            "source_blob_short12": "24f7a214a288",
+            "start_line": 73,
+            "end_line": 77,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "INIT_LIST_HEADER_S count and nested init",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-041",
+            "path": "myinitramfs/mylib/util/list.c",
+            "symbol": "list_header_add_to_head",
+            "source_blob_short12": "24f7a214a288",
+            "start_line": 79,
+            "end_line": 83,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "head insertion wrapper and count++",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-042",
+            "path": "myinitramfs/mylib/util/list.c",
+            "symbol": "list_header_remove_head",
+            "source_blob_short12": "24f7a214a288",
+            "start_line": 85,
+            "end_line": 89,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "remove head count gate and selected node",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-043",
+            "path": "myinitramfs/mylib/util/list.c",
+            "symbol": "list_header_remove_head",
+            "source_blob_short12": "24f7a214a288",
+            "start_line": 89,
+            "end_line": 93,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "remove head unlink/count--/return",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-044",
+            "path": "myinitramfs/mylib/util/list.c",
+            "symbol": "list_header_add_to_tail",
+            "source_blob_short12": "24f7a214a288",
+            "start_line": 98,
+            "end_line": 102,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "tail insertion wrapper and count++",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-045",
+            "path": "myinitramfs/mylib/util/list.c",
+            "symbol": "list_del_init",
+            "source_blob_short12": "24f7a214a288",
+            "start_line": 40,
+            "end_line": 44,
+            "kind": "function_body",
+            "source_line_endings": [
+              "LF",
+              "LF",
+              "LF",
+              "LF",
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "unlink and reset via INIT_LIST_S",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-046",
+            "path": "myinitramfs/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "6757d21bc64c",
+            "start_line": 40,
+            "end_line": 40,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "root CMake MUSL_PATH setting",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-047",
+            "path": "myinitramfs/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "6757d21bc64c",
+            "start_line": 41,
+            "end_line": 41,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "root CMake compiler reference",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-048",
+            "path": "myinitramfs/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "6757d21bc64c",
+            "start_line": 47,
+            "end_line": 47,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "root CMake myinit entry",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-049",
+            "path": "myinitramfs/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "6757d21bc64c",
+            "start_line": 48,
+            "end_line": 48,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "root CMake myshell entry",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-050",
+            "path": "myinitramfs/mylib/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "8f6abc24095a",
+            "start_line": 1,
+            "end_line": 1,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "standalone mylib myglibc subdir",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-051",
+            "path": "myinitramfs/mylib/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "8f6abc24095a",
+            "start_line": 3,
+            "end_line": 3,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "NONE"
+            ],
+            "render_separator": "LF",
+            "raw_render_equals_source": false,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "standalone mylib util subdir; NONE",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-052",
+            "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "b956957a602a",
+            "start_line": 1,
+            "end_line": 1,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "static mylibc declaration",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-053",
+            "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "b956957a602a",
+            "start_line": 19,
+            "end_line": 19,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "LF"
+            ],
+            "render_separator": "NONE",
+            "raw_render_equals_source": true,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc subdirectory entry",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-054",
+            "path": "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "3b9f22dd9ab9",
+            "start_line": 3,
+            "end_line": 3,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "NONE"
+            ],
+            "render_separator": "LF",
+            "raw_render_equals_source": false,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "malloc target_sources consumption only; GLOB definition missing in old window; NONE",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          },
+          {
+            "id": "E145-055",
+            "path": "myinitramfs/mylib/util/CMakeLists.txt",
+            "symbol": "CMakeLists.txt",
+            "source_blob_short12": "5fd782a35629",
+            "start_line": 3,
+            "end_line": 3,
+            "kind": "build_directive",
+            "source_line_endings": [
+              "NONE"
+            ],
+            "render_separator": "LF",
+            "raw_render_equals_source": false,
+            "reconstructed_matches_source": true,
+            "path_symbol_blob_physical_range_match": true,
+            "support_scope": "util target_sources consumption only; GLOB definition missing in old window; NONE",
+            "record_class": "RECONFIRMATION_DURING_BATCH_146_ONLY"
+          }
+        ]
+      },
+      "old_P9_11": {
+        "old_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/malloc-slot.md",
+        "line": 78,
+        "old_precise_forbidden_token_ordinal": 3,
+        "old_count": 1,
+        "old_zero_hit_claim": "WITHDRAWN",
+        "replacement": "初始化及错误恢复不在本批已经取得的证据范围。",
+        "not_a_runtime_fabrication": true,
+        "replacement_consumption": "原第78行相应末句以replacement字段替代；原件仍冻结；不将否定句字符命中定为运行伪报。"
+      },
+      "receive_and_refresh": "146 MANIFEST independent execution_handoff_receive and guidance_refresh; 145 actual receive time UNKNOWN; current missing fulltext remedied",
+      "consumption_index": "146 MANIFEST both frozen145 and new146 six-file tables",
+      "original_acceptance": "RETURN"
+    },
+    "R145-02": {
+      "status": "disposition_submitted",
+      "mainline_closure": "PENDING",
+      "old_index_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/facts-and-boundaries.yaml",
+      "old_pin": "b094af6bb8f3",
+      "new_anchor_mapping": {
+        "active_config": {
+          "old_gap": "no official source_index window for options_flags",
+          "new": [
+            "E146-001",
+            "E146-002",
+            "E146-003",
+            "E146-004",
+            "E146-005",
+            "E146-006"
+          ]
+        },
+        "H_numeric_and_alias": {
+          "old": [
+            "E145-002"
+          ],
+          "new": [
+            "E146-018",
+            "E146-019"
+          ]
+        },
+        "direct_list_helpers": {
+          "old": [
+            "E145-040",
+            "E145-041",
+            "E145-042",
+            "E145-043",
+            "E145-044",
+            "E145-045"
+          ],
+          "new": [
+            "E146-077",
+            "E146-078",
+            "E146-079",
+            "E146-080",
+            "E146-081",
+            "E146-082"
+          ]
+        },
+        "List_prev_next": {
+          "old": "E145-036 only List_hdr",
+          "new": [
+            "E146-073",
+            "E146-074"
+          ]
+        },
+        "build_GLOB": {
+          "old": [
+            "E145-054",
+            "E145-055"
+          ],
+          "new": [
+            "E146-016",
+            "E146-017"
+          ]
+        }
+      },
+      "NONE_line_repairs": [
+        {
+          "id": "E145-051",
+          "path": "myinitramfs/mylib/CMakeLists.txt",
+          "physical_line": 3,
+          "source_eol": "NONE",
+          "render_separator": "LF",
+          "restore": "remove exactly the one added LF immediately before the closing Markdown fence; all source characters unchanged",
+          "verified_this_batch": true
+        },
+        {
+          "id": "E145-054",
+          "path": "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+          "physical_line": 3,
+          "source_eol": "NONE",
+          "render_separator": "LF",
+          "restore": "remove exactly the one added LF immediately before the closing Markdown fence; all source characters unchanged",
+          "verified_this_batch": true
+        },
+        {
+          "id": "E145-055",
+          "path": "myinitramfs/mylib/util/CMakeLists.txt",
+          "physical_line": 3,
+          "source_eol": "NONE",
+          "render_separator": "LF",
+          "restore": "remove exactly the one added LF immediately before the closing Markdown fence; all source characters unchanged",
+          "verified_this_batch": true
+        }
+      ],
+      "new_P6_includes_new_anchors": true
+    },
+    "R145-03": {
+      "status": "disposition_submitted",
+      "mainline_closure": "PENDING",
+      "old_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/facts-and-boundaries.yaml",
+      "old_dot_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/malloc-slot-paths.dot",
+      "old_pin": "b094af6bb8f3",
+      "refill_boundary_replacement": {
+        "old_keys": [
+          "reached_by_any_C",
+          "nonreach_reason"
+        ],
+        "remove_from_effective_consumption": true,
+        "any_gate_reached": true,
+        "any_refill_body_entered": false,
+        "per_scenario": [
+          {
+            "id": "C_USED_MORE",
+            "gate_reached": true,
+            "condition_result": "FALSE",
+            "refill_body_entered": false
+          },
+          {
+            "id": "C_USED_LAST",
+            "gate_reached": true,
+            "condition_result": "FALSE",
+            "refill_body_entered": false
+          },
+          {
+            "id": "C_FREE_FIRST",
+            "gate_reached": true,
+            "condition_result": "FALSE",
+            "refill_body_entered": false
+          },
+          {
+            "id": "C_EMPTY",
+            "gate_reached": false,
+            "condition_result": "NOT_REACHED",
+            "refill_body_entered": false
+          }
+        ],
+        "reason": "three return scenarios reach and evaluate gate FALSE due to retained R/free.count=1; C_EMPTY stops before gate",
+        "independent_boundary_true_path": "separate conditional interface boundary, entered by none of the four given C models; not an added 145 scenario"
+      },
+      "graph_replacement": {
+        "namespace_prefix": "R145_",
+        "node_count": 77,
+        "edge_count": 59,
+        "old_to_new_mapping": "prefix R145_ on every original node.id, node.scenario, edge.from and edge.to; retain node kind, edge kind/label and unchanged node labels",
+        "changed_nodes": [
+          {
+            "old_id": "C_USED_MORE_SELECT",
+            "new_id": "R145_C_USED_MORE_SELECT",
+            "old_label": "choose used and list move",
+            "new_label": "used[S] remove head; old S.free=65 !=1; used.count 1->0->1 by add back BEFORE scan"
+          },
+          {
+            "old_id": "C_USED_LAST_SELECT",
+            "new_id": "R145_C_USED_LAST_SELECT",
+            "old_label": "choose used and list move",
+            "new_label": "used[S] remove head; old S.free=1; used.count 1->0, full.count 0->1 BEFORE scan and free--"
+          },
+          {
+            "old_id": "C_FREE_FIRST_SELECT",
+            "new_id": "R145_C_FREE_FIRST_SELECT",
+            "old_label": "choose free and list move",
+            "new_label": "used empty; free[S,R] remove S, free.count 2->1; insert used count 0->1 BEFORE scan; R payload unchanged, links may update"
+          },
+          {
+            "old_id": "C_EMPTY_SELECT",
+            "new_id": "R145_C_EMPTY_SELECT",
+            "old_label": "choose neither and list move",
+            "new_label": "used/free counts zero; local uslp=NULL; no list migration; explicit while(1), scan/update/refill NOT_REACHED"
+          },
+          {
+            "old_id": "REFILL_BOUNDARY_G",
+            "new_id": "R145_REFILL_BOUNDARY_G",
+            "old_label": "if free.count<1 (not reached in C)",
+            "new_label": "free.count<1 condition reached and FALSE for three returning C; C_EMPTY NOT_REACHED; true branch below is independent conditional boundary"
+          }
+        ],
+        "effective_graph": "total graph R145_ partition"
+      },
+      "A_OVER": {
+        "old_id": "A_OVER",
+        "class_selection_stage": "NOT_REACHED",
+        "actual_cache_walk_advances": 0,
+        "return": "NULL only under prior initiated=true"
+      },
+      "B_explicit_fields": [
+        {
+          "id": "B_ZERO",
+          "scan_before_words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ],
+          "scan_after_words": [
+            "0x0000000000000000",
+            "0x0000000000000000"
+          ],
+          "scan_changes_words": false,
+          "set_word": 0,
+          "set_shift": 0,
+          "independent_set_status": "bm_set_bit",
+          "independent_set_result": [
+            "0x0000000000000001",
+            "0x0000000000000000"
+          ]
+        },
+        {
+          "id": "B_63",
+          "scan_before_words": [
+            "0x7fffffffffffffff",
+            "0x0000000000000000"
+          ],
+          "scan_after_words": [
+            "0x7fffffffffffffff",
+            "0x0000000000000000"
+          ],
+          "scan_changes_words": false,
+          "set_word": 0,
+          "set_shift": 63,
+          "independent_set_status": "bm_set_bit",
+          "independent_set_result": [
+            "0xffffffffffffffff",
+            "0x0000000000000000"
+          ]
+        },
+        {
+          "id": "B_64",
+          "scan_before_words": [
+            "0xffffffffffffffff",
+            "0x0000000000000000"
+          ],
+          "scan_after_words": [
+            "0xffffffffffffffff",
+            "0x0000000000000000"
+          ],
+          "scan_changes_words": false,
+          "set_word": 1,
+          "set_shift": 0,
+          "independent_set_status": "bm_set_bit",
+          "independent_set_result": [
+            "0xffffffffffffffff",
+            "0x0000000000000001"
+          ]
+        },
+        {
+          "id": "B_FULL",
+          "scan_before_words": [
+            "0xffffffffffffffff",
+            "0xffffffffffffffff"
+          ],
+          "scan_after_words": [
+            "0xffffffffffffffff",
+            "0xffffffffffffffff"
+          ],
+          "scan_changes_words": false,
+          "set_word": "SKIPPED",
+          "set_shift": "SKIPPED",
+          "independent_set_status": "SKIPPED",
+          "independent_set_result": null
+        },
+        {
+          "id": "B_EMPTY",
+          "scan_before_words": [
+            "0x0123456789abcdef",
+            "0xfedcba9876543210"
+          ],
+          "scan_after_words": [
+            "0x0123456789abcdef",
+            "0xfedcba9876543210"
+          ],
+          "scan_changes_words": false,
+          "set_word": "SKIPPED",
+          "set_shift": "SKIPPED",
+          "independent_set_status": "SKIPPED",
+          "independent_set_result": null
+        }
+      ],
+      "C_explicit_fields": [
+        {
+          "id": "C_USED_MORE",
+          "normal_slab_total_before": 2,
+          "normal_slab_total_after": 2,
+          "list_counts_before": {
+            "used": 1,
+            "free": 1,
+            "full": 0
+          },
+          "list_counts_after": {
+            "used": 1,
+            "free": 1,
+            "full": 0
+          },
+          "S_list_transition": "used[S] remove head; old S.free=65 !=1; used.count 1->0->1 by add back BEFORE scan",
+          "R": {
+            "total": 128,
+            "free": 128,
+            "bitmap_before": [
+              "0x0000000000000000",
+              "0x0000000000000000"
+            ],
+            "bitmap_after": [
+              "0x0000000000000000",
+              "0x0000000000000000"
+            ],
+            "address_payload": "UNCHANGED_GIVEN",
+            "total_free_payload_unchanged": true,
+            "not_selected": true,
+            "link_pointers": "MAY_UPDATE_ON_S_REMOVAL"
+          },
+          "local_uslp": "S",
+          "scan": "REACHED",
+          "slot_update": "CONDITIONAL_NORMAL_GIVEN",
+          "gate": {
+            "id": "C_USED_MORE",
+            "gate_reached": true,
+            "condition_result": "FALSE",
+            "refill_body_entered": false
+          }
+        },
+        {
+          "id": "C_USED_LAST",
+          "normal_slab_total_before": 2,
+          "normal_slab_total_after": 2,
+          "list_counts_before": {
+            "used": 1,
+            "free": 1,
+            "full": 0
+          },
+          "list_counts_after": {
+            "used": 0,
+            "free": 1,
+            "full": 1
+          },
+          "S_list_transition": "used[S] remove head; old S.free=1; used.count 1->0, full.count 0->1 BEFORE scan and free--",
+          "R": {
+            "total": 128,
+            "free": 128,
+            "bitmap_before": [
+              "0x0000000000000000",
+              "0x0000000000000000"
+            ],
+            "bitmap_after": [
+              "0x0000000000000000",
+              "0x0000000000000000"
+            ],
+            "address_payload": "UNCHANGED_GIVEN",
+            "total_free_payload_unchanged": true,
+            "not_selected": true,
+            "link_pointers": "MAY_UPDATE_ON_S_REMOVAL"
+          },
+          "local_uslp": "S",
+          "scan": "REACHED",
+          "slot_update": "CONDITIONAL_NORMAL_GIVEN",
+          "gate": {
+            "id": "C_USED_LAST",
+            "gate_reached": true,
+            "condition_result": "FALSE",
+            "refill_body_entered": false
+          }
+        },
+        {
+          "id": "C_FREE_FIRST",
+          "normal_slab_total_before": 2,
+          "normal_slab_total_after": 2,
+          "list_counts_before": {
+            "used": 0,
+            "free": 2,
+            "full": 0
+          },
+          "list_counts_after": {
+            "used": 1,
+            "free": 1,
+            "full": 0
+          },
+          "S_list_transition": "used empty; free[S,R] remove S, free.count 2->1; insert used count 0->1 BEFORE scan; R payload unchanged, links may update",
+          "R": {
+            "total": 128,
+            "free": 128,
+            "bitmap_before": [
+              "0x0000000000000000",
+              "0x0000000000000000"
+            ],
+            "bitmap_after": [
+              "0x0000000000000000",
+              "0x0000000000000000"
+            ],
+            "address_payload": "UNCHANGED_GIVEN",
+            "total_free_payload_unchanged": true,
+            "not_selected": true,
+            "link_pointers": "MAY_UPDATE_ON_S_REMOVAL"
+          },
+          "local_uslp": "S",
+          "scan": "REACHED",
+          "slot_update": "CONDITIONAL_NORMAL_GIVEN",
+          "gate": {
+            "id": "C_FREE_FIRST",
+            "gate_reached": true,
+            "condition_result": "FALSE",
+            "refill_body_entered": false
+          }
+        },
+        {
+          "id": "C_EMPTY",
+          "normal_slab_total_before": 1,
+          "normal_slab_total_after": 1,
+          "list_counts_before": {
+            "used": 0,
+            "free": 0,
+            "full": 1
+          },
+          "list_counts_after": {
+            "used": 0,
+            "free": 0,
+            "full": 1
+          },
+          "S_list_transition": "used/free counts zero; local uslp=NULL; no list migration; explicit while(1), scan/update/refill NOT_REACHED",
+          "R": "NOT_GIVEN",
+          "local_uslp": "NULL",
+          "scan": "NOT_REACHED",
+          "slot_update": "NOT_REACHED",
+          "gate": {
+            "id": "C_EMPTY",
+            "gate_reached": false,
+            "condition_result": "NOT_REACHED",
+            "refill_body_entered": false
+          }
+        }
+      ],
+      "deferred_reclassification": [
+        {
+          "old_id": "MS145-N01",
+          "disposition": "CONDITIONAL_OBSERVATION_UNCHANGED",
+          "not_runtime_defect": true
+        },
+        {
+          "old_id": "MS145-N02",
+          "disposition": "ONLY_POST_SLOT_REFILL_ORDER_AND_PRECONDITIONS_INCREMENT",
+          "inherited_unknown": "initialization/recursive reachability and dynamic metadata/payload unknown"
+        },
+        {
+          "old_id": "MS145-N03",
+          "disposition": "INHERITED_UNCHANGED",
+          "sources": [
+            {
+              "ref": "af3fde16ba9b",
+              "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-brk-allocator-144/brk-allocator.md",
+              "selector": "actual_linked_to_sh build limitation"
+            },
+            {
+              "ref": "7f68407aec9f",
+              "path": "agent-workspace/lead/MYOS2-LEAD-002/201-user-malloc-slot-contract.md",
+              "selector": "增量、共同前提与边界"
+            }
+          ],
+          "new_finding": false,
+          "actual_linked_to_sh": "UNKNOWN"
+        }
+      ]
+    }
+  },
+  "given_model": {
+    "byte_bits": 8,
+    "bitmap_bits": 64,
+    "bitmap_sizeof_bytes": 8,
+    "size_t_unsigned_long_pointer_bits": 64,
+    "H_user_bytes": 2097152,
+    "H_distinct_from_kernel_page_size": true,
+    "arithmetic_representable": true,
+    "concurrency_model": false
+  },
+  "static_maps": [
+    {
+      "id": "A00",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 0,
+      "O_bytes": 32,
+      "N_slots": 65536,
+      "array_name": "cm_32B",
+      "array_W_words": 1024,
+      "array_storage_bytes": 8192,
+      "array_capacity_bits": 65536,
+      "required_complete_words": 1024,
+      "last_slot_index": 65535,
+      "last_word_index": 1023,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 8192,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-041",
+        "E146-042",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A01",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 1,
+      "O_bytes": 64,
+      "N_slots": 32768,
+      "array_name": "cm_64B",
+      "array_W_words": 512,
+      "array_storage_bytes": 4096,
+      "array_capacity_bits": 32768,
+      "required_complete_words": 512,
+      "last_slot_index": 32767,
+      "last_word_index": 511,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 4096,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-040",
+        "E146-042",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A02",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 2,
+      "O_bytes": 128,
+      "N_slots": 16384,
+      "array_name": "cm_128B",
+      "array_W_words": 256,
+      "array_storage_bytes": 2048,
+      "array_capacity_bits": 16384,
+      "required_complete_words": 256,
+      "last_slot_index": 16383,
+      "last_word_index": 255,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 2048,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-039",
+        "E146-042",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A03",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 3,
+      "O_bytes": 256,
+      "N_slots": 8192,
+      "array_name": "cm_256B",
+      "array_W_words": 128,
+      "array_storage_bytes": 1024,
+      "array_capacity_bits": 8192,
+      "required_complete_words": 128,
+      "last_slot_index": 8191,
+      "last_word_index": 127,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 1024,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-038",
+        "E146-042",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A04",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 4,
+      "O_bytes": 512,
+      "N_slots": 4096,
+      "array_name": "cm_512B",
+      "array_W_words": 64,
+      "array_storage_bytes": 512,
+      "array_capacity_bits": 4096,
+      "required_complete_words": 64,
+      "last_slot_index": 4095,
+      "last_word_index": 63,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 512,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-037",
+        "E146-043",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A05",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 5,
+      "O_bytes": 1024,
+      "N_slots": 2048,
+      "array_name": "cm_1KB",
+      "array_W_words": 32,
+      "array_storage_bytes": 256,
+      "array_capacity_bits": 2048,
+      "required_complete_words": 32,
+      "last_slot_index": 2047,
+      "last_word_index": 31,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 256,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-036",
+        "E146-043",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A06",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 6,
+      "O_bytes": 2048,
+      "N_slots": 1024,
+      "array_name": "cm_2KB",
+      "array_W_words": 16,
+      "array_storage_bytes": 128,
+      "array_capacity_bits": 1024,
+      "required_complete_words": 16,
+      "last_slot_index": 1023,
+      "last_word_index": 15,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 128,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-035",
+        "E146-043",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A07",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 7,
+      "O_bytes": 4096,
+      "N_slots": 512,
+      "array_name": "cm_4KB",
+      "array_W_words": 8,
+      "array_storage_bytes": 64,
+      "array_capacity_bits": 512,
+      "required_complete_words": 8,
+      "last_slot_index": 511,
+      "last_word_index": 7,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 64,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-034",
+        "E146-043",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A08",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 8,
+      "O_bytes": 8192,
+      "N_slots": 256,
+      "array_name": "cm_8KB",
+      "array_W_words": 4,
+      "array_storage_bytes": 32,
+      "array_capacity_bits": 256,
+      "required_complete_words": 4,
+      "last_slot_index": 255,
+      "last_word_index": 3,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 32,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-033",
+        "E146-043",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A09",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 9,
+      "O_bytes": 16384,
+      "N_slots": 128,
+      "array_name": "cm_16KB",
+      "array_W_words": 2,
+      "array_storage_bytes": 16,
+      "array_capacity_bits": 128,
+      "required_complete_words": 2,
+      "last_slot_index": 127,
+      "last_word_index": 1,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 16,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-032",
+        "E146-044",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A10",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 10,
+      "O_bytes": 32768,
+      "N_slots": 64,
+      "array_name": "cm_32KB",
+      "array_W_words": 1,
+      "array_storage_bytes": 8,
+      "array_capacity_bits": 64,
+      "required_complete_words": 1,
+      "last_slot_index": 63,
+      "last_word_index": 0,
+      "last_bit_index": 63,
+      "unused_capacity_bits": 0,
+      "local_cm_size_raw": 8,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-031",
+        "E146-044",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A11",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 11,
+      "O_bytes": 65536,
+      "N_slots": 32,
+      "array_name": "cm_64KB",
+      "array_W_words": 1,
+      "array_storage_bytes": 8,
+      "array_capacity_bits": 64,
+      "required_complete_words": 1,
+      "last_slot_index": 31,
+      "last_word_index": 0,
+      "last_bit_index": 31,
+      "unused_capacity_bits": 32,
+      "local_cm_size_raw": 4,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-030",
+        "E146-044",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A12",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 12,
+      "O_bytes": 131072,
+      "N_slots": 16,
+      "array_name": "cm_128KB",
+      "array_W_words": 1,
+      "array_storage_bytes": 8,
+      "array_capacity_bits": 64,
+      "required_complete_words": 1,
+      "last_slot_index": 15,
+      "last_word_index": 0,
+      "last_bit_index": 15,
+      "unused_capacity_bits": 48,
+      "local_cm_size_raw": 2,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-029",
+        "E146-044",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A13",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 13,
+      "O_bytes": 262144,
+      "N_slots": 8,
+      "array_name": "cm_256KB",
+      "array_W_words": 1,
+      "array_storage_bytes": 8,
+      "array_capacity_bits": 64,
+      "required_complete_words": 1,
+      "last_slot_index": 7,
+      "last_word_index": 0,
+      "last_bit_index": 7,
+      "unused_capacity_bits": 56,
+      "local_cm_size_raw": 1,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-028",
+        "E146-044",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A14",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 14,
+      "O_bytes": 524288,
+      "N_slots": 4,
+      "array_name": "cm_512KB",
+      "array_W_words": 1,
+      "array_storage_bytes": 8,
+      "array_capacity_bits": 64,
+      "required_complete_words": 1,
+      "last_slot_index": 3,
+      "last_word_index": 0,
+      "last_bit_index": 3,
+      "unused_capacity_bits": 60,
+      "local_cm_size_raw": 1,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-027",
+        "E146-045",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "A15",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 15,
+      "O_bytes": 1048576,
+      "N_slots": 2,
+      "array_name": "cm_1MB",
+      "array_W_words": 1,
+      "array_storage_bytes": 8,
+      "array_capacity_bits": 64,
+      "required_complete_words": 1,
+      "last_slot_index": 1,
+      "last_word_index": 0,
+      "last_bit_index": 1,
+      "unused_capacity_bits": 62,
+      "local_cm_size_raw": 1,
+      "local_cm_size_unit": "UNSPECIFIED_BY_SOURCE_EXPRESSION; raw integer",
+      "array_has_explicit_initializer": false,
+      "payload_value": "NOT_DERIVED",
+      "evidence": [
+        "E146-026",
+        "E146-045",
+        "E146-018",
+        "E146-019",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-050",
+        "E146-089"
+      ]
+    }
+  ],
+  "dynamic_requests": [
+    {
+      "id": "B00",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 0,
+      "O_bytes": 32,
+      "N_slots": 65536,
+      "B_req_bytes": 8200,
+      "min_complete_word_bytes": 8192,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 9,
+      "S_selected_object_bytes": 16384,
+      "selected_minus_requested_bytes": 8184,
+      "size_gate": "ADMITTED",
+      "while_advances": 9,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B01",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 1,
+      "O_bytes": 64,
+      "N_slots": 32768,
+      "B_req_bytes": 4104,
+      "min_complete_word_bytes": 4096,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 8,
+      "S_selected_object_bytes": 8192,
+      "selected_minus_requested_bytes": 4088,
+      "size_gate": "ADMITTED",
+      "while_advances": 8,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B02",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 2,
+      "O_bytes": 128,
+      "N_slots": 16384,
+      "B_req_bytes": 2056,
+      "min_complete_word_bytes": 2048,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 7,
+      "S_selected_object_bytes": 4096,
+      "selected_minus_requested_bytes": 2040,
+      "size_gate": "ADMITTED",
+      "while_advances": 7,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B03",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 3,
+      "O_bytes": 256,
+      "N_slots": 8192,
+      "B_req_bytes": 1032,
+      "min_complete_word_bytes": 1024,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 6,
+      "S_selected_object_bytes": 2048,
+      "selected_minus_requested_bytes": 1016,
+      "size_gate": "ADMITTED",
+      "while_advances": 6,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B04",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 4,
+      "O_bytes": 512,
+      "N_slots": 4096,
+      "B_req_bytes": 520,
+      "min_complete_word_bytes": 512,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 5,
+      "S_selected_object_bytes": 1024,
+      "selected_minus_requested_bytes": 504,
+      "size_gate": "ADMITTED",
+      "while_advances": 5,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B05",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 5,
+      "O_bytes": 1024,
+      "N_slots": 2048,
+      "B_req_bytes": 264,
+      "min_complete_word_bytes": 256,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 4,
+      "S_selected_object_bytes": 512,
+      "selected_minus_requested_bytes": 248,
+      "size_gate": "ADMITTED",
+      "while_advances": 4,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B06",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 6,
+      "O_bytes": 2048,
+      "N_slots": 1024,
+      "B_req_bytes": 136,
+      "min_complete_word_bytes": 128,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 3,
+      "S_selected_object_bytes": 256,
+      "selected_minus_requested_bytes": 120,
+      "size_gate": "ADMITTED",
+      "while_advances": 3,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B07",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 7,
+      "O_bytes": 4096,
+      "N_slots": 512,
+      "B_req_bytes": 72,
+      "min_complete_word_bytes": 64,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 2,
+      "S_selected_object_bytes": 128,
+      "selected_minus_requested_bytes": 56,
+      "size_gate": "ADMITTED",
+      "while_advances": 2,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B08",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 8,
+      "O_bytes": 8192,
+      "N_slots": 256,
+      "B_req_bytes": 40,
+      "min_complete_word_bytes": 32,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 1,
+      "S_selected_object_bytes": 64,
+      "selected_minus_requested_bytes": 24,
+      "size_gate": "ADMITTED",
+      "while_advances": 1,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B09",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 9,
+      "O_bytes": 16384,
+      "N_slots": 128,
+      "B_req_bytes": 24,
+      "min_complete_word_bytes": 16,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 0,
+      "S_selected_object_bytes": 32,
+      "selected_minus_requested_bytes": 8,
+      "size_gate": "ADMITTED",
+      "while_advances": 0,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B10",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 10,
+      "O_bytes": 32768,
+      "N_slots": 64,
+      "B_req_bytes": 16,
+      "min_complete_word_bytes": 8,
+      "requested_minus_min_bytes": 8,
+      "j_bitmap_request_cache_index": 0,
+      "S_selected_object_bytes": 32,
+      "selected_minus_requested_bytes": 16,
+      "size_gate": "ADMITTED",
+      "while_advances": 0,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B11",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 11,
+      "O_bytes": 65536,
+      "N_slots": 32,
+      "B_req_bytes": 12,
+      "min_complete_word_bytes": 8,
+      "requested_minus_min_bytes": 4,
+      "j_bitmap_request_cache_index": 0,
+      "S_selected_object_bytes": 32,
+      "selected_minus_requested_bytes": 20,
+      "size_gate": "ADMITTED",
+      "while_advances": 0,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B12",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 12,
+      "O_bytes": 131072,
+      "N_slots": 16,
+      "B_req_bytes": 10,
+      "min_complete_word_bytes": 8,
+      "requested_minus_min_bytes": 2,
+      "j_bitmap_request_cache_index": 0,
+      "S_selected_object_bytes": 32,
+      "selected_minus_requested_bytes": 22,
+      "size_gate": "ADMITTED",
+      "while_advances": 0,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B13",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 13,
+      "O_bytes": 262144,
+      "N_slots": 8,
+      "B_req_bytes": 9,
+      "min_complete_word_bytes": 8,
+      "requested_minus_min_bytes": 1,
+      "j_bitmap_request_cache_index": 0,
+      "S_selected_object_bytes": 32,
+      "selected_minus_requested_bytes": 23,
+      "size_gate": "ADMITTED",
+      "while_advances": 0,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B14",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 14,
+      "O_bytes": 524288,
+      "N_slots": 4,
+      "B_req_bytes": 8,
+      "min_complete_word_bytes": 8,
+      "requested_minus_min_bytes": 0,
+      "j_bitmap_request_cache_index": 0,
+      "S_selected_object_bytes": 32,
+      "selected_minus_requested_bytes": 24,
+      "size_gate": "ADMITTED",
+      "while_advances": 0,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    },
+    {
+      "id": "B15",
+      "evidence_class": "ARITHMETIC_MODEL",
+      "i": 15,
+      "O_bytes": 1048576,
+      "N_slots": 2,
+      "B_req_bytes": 8,
+      "min_complete_word_bytes": 8,
+      "requested_minus_min_bytes": 0,
+      "j_bitmap_request_cache_index": 0,
+      "S_selected_object_bytes": 32,
+      "selected_minus_requested_bytes": 24,
+      "size_gate": "ADMITTED",
+      "while_advances": 0,
+      "selection_endpoint": "CONDITIONAL_CLASS_SELECTED_BEFORE_SLAB",
+      "actual_malloc_return": "NOT_DERIVED",
+      "evidence": [
+        "E146-056",
+        "E146-058",
+        "E146-059",
+        "E146-060",
+        "E146-020",
+        "E146-022",
+        "E146-023",
+        "E146-024",
+        "E146-025",
+        "E146-089"
+      ]
+    }
+  ],
+  "write_boundaries": [
+    {
+      "id": "C_BASE",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "given": "one given i, valid base metadata and cache pointer; static array declaration lacks explicit initializer; actual runtime load not observed",
+      "observations": [
+        {
+          "stage": "i and O/N",
+          "effect": "scgp=&uslab_cache_groups[i], bslp=&base_uslabs[i]; obj_size O and obj_nr N, cm_size raw calculated"
+        },
+        {
+          "stage": "bitmap-related fields",
+          "effect": "bslp.colormap=base_colormaps[i]; bslp.uslabcache_p=scgp; bslp.free/total receive N via chain assignment (source expression, not machine-store timing)"
+        },
+        {
+          "stage": "explicit payload write scope",
+          "effect": "no direct store to bitmap array elements in complete init_uslab body (physical lines 174–221); other fields and calls present"
+        }
+      ],
+      "explicit_bitmap_payload_write": false,
+      "explicit_initializer_in_static_array_definitions": false,
+      "language_zero_initialization_assumed": false,
+      "static_storage_payload_after_load": "NOT_DERIVED",
+      "called_function_payload_effect": "UNKNOWN",
+      "scope": "whole fixed init_uslab text inspected; not transitive callees",
+      "evidence": [
+        "E146-046",
+        "E146-047",
+        "E146-048",
+        "E146-049",
+        "E146-050",
+        "E146-051",
+        "E146-052",
+        "E146-053",
+        "E146-054",
+        "E146-042",
+        "E146-043",
+        "E146-044",
+        "E146-045",
+        "E146-026",
+        "E146-027",
+        "E146-028",
+        "E146-029",
+        "E146-030",
+        "E146-031",
+        "E146-032",
+        "E146-033",
+        "E146-034",
+        "E146-035",
+        "E146-036",
+        "E146-037",
+        "E146-038",
+        "E146-039",
+        "E146-040",
+        "E146-041",
+        "E146-024",
+        "E146-025",
+        "E146-067",
+        "E146-068",
+        "E146-069"
+      ]
+    },
+    {
+      "id": "C_DYNAMIC",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "given": "valid cslp; its total is N at both separate source reads; two malloc calls and upage_alloc normally return sufficient distinct valid objects; node/page operations legal",
+      "metadata_request": "sizeof(uslab_s) (symbolic; no ABI layout claim)",
+      "observations": [
+        {
+          "stage": 1,
+          "write": "nslp local pointer receives metadata malloc result",
+          "source": "E146-055"
+        },
+        {
+          "stage": 2,
+          "write": "INIT_LIST_S initializes nslp.uslab_list.prev and next to node itself; helper normal return given",
+          "source": "E146-077"
+        },
+        {
+          "stage": 3,
+          "write": "nslp.colormap receives bitmap malloc result with request floor(N/8)+8",
+          "source": "E146-056"
+        },
+        {
+          "stage": 4,
+          "write": "nslp.total and nslp.free receive N via the source chain assignment from the second cslp.total read; no independently observed machine-store order",
+          "source": "E146-056"
+        },
+        {
+          "stage": 5,
+          "write": "nslp.upage_p receives normal upage_alloc result",
+          "source": "E146-057"
+        },
+        {
+          "stage": 6,
+          "write": "nslp.virt_addr=nslp.upage_p.vaddr and page.uslab_p=nslp",
+          "source": "E146-057"
+        },
+        {
+          "stage": 7,
+          "write": "return nslp (callee only)",
+          "source": "E146-057"
+        }
+      ],
+      "uslabcache_p_explicit_assignment_in_callee": false,
+      "bitmap_payload_explicit_direct_write": false,
+      "bitmap_payload_initial": "UNKNOWN",
+      "payload_effect_of_callees": "UNKNOWN",
+      "free_total_equal_N_does_not_imply_zero_bitmap": true,
+      "actual_recursive_reachability": "NOT_DERIVED",
+      "evidence": [
+        "E146-055",
+        "E146-056",
+        "E146-057",
+        "E146-077",
+        "E146-065",
+        "E146-066",
+        "E146-067",
+        "E146-068",
+        "E146-069",
+        "E146-070",
+        "E146-071",
+        "E146-072"
+      ]
+    },
+    {
+      "id": "C_PUBLISH",
+      "evidence_class": "CONDITIONAL_FRAGMENT",
+      "given": "independent entrance after normal return from uslab_alloc and before malloc line312; new_uslp valid nonNULL, total=N; list helpers valid; F_r>=1; values representable",
+      "baseline_at_callee_return": {
+        "free_header_count": "F_r",
+        "normal_slab_total": "T_r",
+        "nsobj_free_count": "C_r"
+      },
+      "observations": [
+        {
+          "stage": 1,
+          "write": "line312 free.count--",
+          "state": "F_r→F_r−1",
+          "source": "E146-062"
+        },
+        {
+          "stage": 2,
+          "condition": "line313 new_uslp==NULL",
+          "result": "FALSE",
+          "source": "E146-062"
+        },
+        {
+          "stage": 3,
+          "write": "line318 new_uslp.uslabcache_p=uscgp",
+          "source": "E146-063"
+        },
+        {
+          "stage": 4,
+          "write": "line319 add_to_head free; normal helper insertion then count++",
+          "state": "F_r−1→F_r",
+          "source": [
+            "E146-063",
+            "E146-084",
+            "E146-080",
+            "E146-081",
+            "E146-082"
+          ]
+        },
+        {
+          "stage": 5,
+          "write": "line320 total++",
+          "state": "T_r→T_r+1",
+          "source": "E146-063"
+        },
+        {
+          "stage": 6,
+          "write": "line321 nsobj_free_count += new_uslp.total",
+          "state": "C_r→C_r+N",
+          "source": "E146-063"
+        }
+      ],
+      "final_after_line321": {
+        "free_count": "F_r",
+        "normal_slab_total": "T_r+1",
+        "nsobj_free_count": "C_r+N"
+      },
+      "refill_before_call_baseline": "UNKNOWN_NOT_EQUIVALENT_TO_F_r_T_r_C_r",
+      "callee_effect_on_counts": "UNKNOWN",
+      "bitmap_payload_explicit_direct_write": false,
+      "function_return": "NOT_MODELED",
+      "evidence": [
+        "E146-061",
+        "E146-062",
+        "E146-063",
+        "E146-084",
+        "E146-080",
+        "E146-081",
+        "E146-082",
+        "E146-065",
+        "E146-066",
+        "E146-067",
+        "E146-068",
+        "E146-069",
+        "E146-070",
+        "E146-071",
+        "E146-072"
+      ]
+    }
+  ],
+  "cm_size_occurrence": {
+    "function": "init_uslab",
+    "physical_lines": [
+      174,
+      221
+    ],
+    "match_count": 1,
+    "match_line": 196,
+    "search": "exact identifier word-boundary match on entire function text",
+    "later_read_in_function": false,
+    "raw_integer_only": true,
+    "unit_intent": "UNKNOWN"
+  },
+  "build_scope": {
+    "kernel_c_flags_source": [
+      "E146-001",
+      "E146-002",
+      "E146-003",
+      "E146-004",
+      "E146-005",
+      "E146-006"
+    ],
+    "panic_canary": "E146-007",
+    "user_build_evidence": [
+      "E146-008",
+      "E146-009",
+      "E146-010",
+      "E146-011",
+      "E146-012",
+      "E146-013",
+      "E146-014",
+      "E146-015",
+      "E146-016",
+      "E146-017"
+    ],
+    "external_musl_path": "/home/cheyh/projs/musl/build",
+    "top_level_direct_subdirectories": [
+      "myinit",
+      "myshell"
+    ],
+    "standalone_mylibc_static_and_malloc_util_GLOB": true,
+    "actual_linked_to_sh": "UNKNOWN_INHERITED_UNCHANGED",
+    "actual_preprocessing_or_linking": "NOT_RUN",
+    "does_not_prove_real_selected_allocator": true
+  },
+  "source_index": [
+    {
+      "id": "E146-001",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 39,
+      "end_line": 43,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "active kernel C flag block begins: m64/kernel model/no PIE/no PIC, freestanding and no standard includes/libs",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-002",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 44,
+      "end_line": 48,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "active kernel C flags stack/unwind/static/sections/debug",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-003",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 49,
+      "end_line": 51,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "sysv ABI and no red zone, close C flags",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-004",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 58,
+      "end_line": 62,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel option definitions incl x86_64, FLATMEM, NR_CPUS, CONFIG_64BIT",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-005",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 63,
+      "end_line": 67,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "kernel zones/SLUB/syscall wrapper/BUG and GRUB support",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-006",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "configuration_directive",
+      "source_blob_short12": "6019436417ad",
+      "start_line": 68,
+      "end_line": 70,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "guest options at end of active kernel macro block",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-007",
+      "path": "mykernel/debug/panic.c",
+      "symbol": "panic",
+      "kind": "function_body",
+      "source_blob_short12": "2e9d5b195559",
+      "start_line": 79,
+      "end_line": 79,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "time branch canary uses smp_processor_id",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-008",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "CMAKE_C_FLAGS",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 26,
+      "end_line": 29,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "user initramfs C flags m64 and ggdb",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-009",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "LINK_TYPE",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 31,
+      "end_line": 33,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "static flag conditional on LINK_TYPE",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-010",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "MUSL_PATH",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 40,
+      "end_line": 40,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "external musl path literal",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-011",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "CMAKE_C_COMPILER",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 41,
+      "end_line": 41,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "compiler expression uses MUSL_PATH",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-012",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "add_subdirectory",
+      "kind": "build_directive",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 46,
+      "end_line": 48,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "include directory then direct myinit/myshell subdirectory entries",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-013",
+      "path": "myinitramfs/mylib/CMakeLists.txt",
+      "symbol": "add_subdirectory",
+      "kind": "build_directive",
+      "source_blob_short12": "8f6abc24095a",
+      "start_line": 1,
+      "end_line": 3,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "independent mylib enters myglibc/csu/util",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-014",
+      "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+      "symbol": "mylibc",
+      "kind": "build_directive",
+      "source_blob_short12": "b956957a602a",
+      "start_line": 1,
+      "end_line": 2,
+      "source_line_endings": [
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "static mylibc target and flags",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-015",
+      "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+      "symbol": "add_subdirectory",
+      "kind": "build_directive",
+      "source_blob_short12": "b956957a602a",
+      "start_line": 18,
+      "end_line": 21,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "malloc source subdir included by independent target",
+      "coverage": [
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-016",
+      "path": "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+      "symbol": "LIBC_STDLIB_C_SRCS",
+      "kind": "build_directive",
+      "source_blob_short12": "3b9f22dd9ab9",
+      "start_line": 1,
+      "end_line": 3,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "C GLOB definition and target_sources variable consumption (ASM separate)",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-017",
+      "path": "myinitramfs/mylib/util/CMakeLists.txt",
+      "symbol": "UTIL_C_SRCS",
+      "kind": "build_directive",
+      "source_blob_short12": "5fd782a35629",
+      "start_line": 1,
+      "end_line": 3,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "NONE"
+      ],
+      "render_separator": "LF",
+      "supported_claim": "C GLOB definition and target_sources variable consumption (ASM separate)",
+      "coverage": [
+        "R145-02",
+        "BUILD"
+      ]
+    },
+    {
+      "id": "E146-018",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "CONST_2M",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 15,
+      "end_line": 15,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "local numeric constant 0x200000ULL",
+      "coverage": [
+        "R145-02",
+        "A",
+        "B",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-019",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "PAGE_SIZE",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 60,
+      "end_line": 60,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "local PAGE_SIZE expands to CONST_2M",
+      "coverage": [
+        "R145-02",
+        "A",
+        "B",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-020",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "CONST_1M",
+      "kind": "macro_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 12,
+      "end_line": 12,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "local size upper bound 0x100000ULL",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E146-021",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "initiated",
+      "kind": "global_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 62,
+      "end_line": 62,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "global initiated initialized false; B independently gives true",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E146-022",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "USLAB_LEVEL",
+      "kind": "macro_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 7,
+      "end_line": 7,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "16 groups",
+      "coverage": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "E146-023",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "USLAB_SIZE_BASE",
+      "kind": "macro_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 8,
+      "end_line": 8,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "32 byte starting size under given model",
+      "coverage": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "E146-024",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "bitmap_t",
+      "kind": "typedef_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 19,
+      "end_line": 19,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "bitmap_t uses __UINT64_TYPE__; 64 bits as given model",
+      "coverage": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    {
+      "id": "E146-025",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "BITMAP_UNITSIZE",
+      "kind": "macro_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 20,
+      "end_line": 20,
+      "source_line_endings": [
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "unit is sizeof(bitmap_t)*8",
+      "coverage": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    {
+      "id": "E146-026",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_1MB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 72,
+      "end_line": 72,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[1] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-027",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_512KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 73,
+      "end_line": 73,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[1] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-028",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_256KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 74,
+      "end_line": 74,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[1] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-029",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_128KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 75,
+      "end_line": 75,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[1] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-030",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_64KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 76,
+      "end_line": 76,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[1] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-031",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_32KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 77,
+      "end_line": 77,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[1] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-032",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_16KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 78,
+      "end_line": 78,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[2] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-033",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_8KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 79,
+      "end_line": 79,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[4] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-034",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_4KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 80,
+      "end_line": 80,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[8] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-035",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_2KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 81,
+      "end_line": 81,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[16] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-036",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_1KB",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 82,
+      "end_line": 82,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[32] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-037",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_512B",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 83,
+      "end_line": 83,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[64] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-038",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_256B",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 84,
+      "end_line": 84,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[128] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-039",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_128B",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 85,
+      "end_line": 85,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[256] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-040",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_64B",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 86,
+      "end_line": 86,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[512] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-041",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "cm_32B",
+      "kind": "global_array_definition",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 87,
+      "end_line": 87,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "actual declared bitmap_t[1024] without explicit initializer; not actual payload",
+      "coverage": [
+        "A"
+      ]
+    },
+    {
+      "id": "E146-042",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "base_colormaps",
+      "kind": "global_array_initializer",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 89,
+      "end_line": 93,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "ordered pointer initializer entries; no inference of bitmap payload",
+      "coverage": [
+        "A",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-043",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "base_colormaps",
+      "kind": "global_array_initializer",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 94,
+      "end_line": 98,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "ordered pointer initializer entries; no inference of bitmap payload",
+      "coverage": [
+        "A",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-044",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "base_colormaps",
+      "kind": "global_array_initializer",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 99,
+      "end_line": 103,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "ordered pointer initializer entries; no inference of bitmap payload",
+      "coverage": [
+        "A",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-045",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "base_colormaps",
+      "kind": "global_array_initializer",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 104,
+      "end_line": 106,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "ordered pointer initializer entries; no inference of bitmap payload",
+      "coverage": [
+        "A",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-046",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 176,
+      "end_line": 179,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "brk query and list header initializations; not payload writes",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-047",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 181,
+      "end_line": 185,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "per-i cache group, node init and tail insertion",
+      "coverage": [
+        "A",
+        "B",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-048",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 187,
+      "end_line": 189,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "three slab header initializations",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-049",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 191,
+      "end_line": 195,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "base slab selection and O/N production",
+      "coverage": [
+        "A",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-050",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 194,
+      "end_line": 196,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "O=BASE<<i; N=PAGE_SIZE/O; local cm_size expression with sizeof(bitmap_t)",
+      "coverage": [
+        "A",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-051",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 198,
+      "end_line": 202,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "base free list link, base pointer and cache counts",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-052",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 204,
+      "end_line": 207,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "colormap pointer and owner pointer, free/total chain assignment",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-053",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 210,
+      "end_line": 214,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "base page metadata/list and brk-dependent writes, not a modeled runtime path",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-054",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 216,
+      "end_line": 220,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "upage_alloc output binding, vaddr/backpointer; initiated=true outside loop",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-055",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "uslab_alloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 225,
+      "end_line": 226,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "metadata malloc(sizeof(uslab_s)) then INIT_LIST_S",
+      "coverage": [
+        "C_DYNAMIC"
+      ]
+    },
+    {
+      "id": "E146-056",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "uslab_alloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 228,
+      "end_line": 230,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "bitmap malloc request first total read and free/total second total read",
+      "coverage": [
+        "B",
+        "C_DYNAMIC"
+      ]
+    },
+    {
+      "id": "E146-057",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "uslab_alloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 231,
+      "end_line": 235,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "upage_alloc, virt_addr and page backpointer then return nslp",
+      "coverage": [
+        "C_DYNAMIC"
+      ]
+    },
+    {
+      "id": "E146-058",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 251,
+      "end_line": 255,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "init gate before local result initialization and size bound",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E146-059",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 254,
+      "end_line": 258,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "size>CONST_1M empty branch with NULL initialized before it",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E146-060",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 262,
+      "end_line": 264,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "group0 and while advancement until size<=obj_size",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E146-061",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 308,
+      "end_line": 312,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "condition, temporary count++ and uslab_alloc call; count-- after return",
+      "coverage": [
+        "C_PUBLISH",
+        "R145-03"
+      ]
+    },
+    {
+      "id": "E146-062",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 312,
+      "end_line": 316,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "normal return then decrement; NULL conditional and loop",
+      "coverage": [
+        "C_PUBLISH",
+        "R145-03"
+      ]
+    },
+    {
+      "id": "E146-063",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 318,
+      "end_line": 322,
+      "source_line_endings": [
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF",
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "caller owner binding, free list insertion, total and free-count increase",
+      "coverage": [
+        "C_PUBLISH",
+        "R145-03"
+      ]
+    },
+    {
+      "id": "E146-064",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "kind": "function_body",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 327,
+      "end_line": 327,
+      "source_line_endings": [
+        "CRLF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "function return exists after refill block; C_PUBLISH stops earlier",
+      "coverage": [
+        "C_PUBLISH"
+      ]
+    },
+    {
+      "id": "E146-065",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uPage",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 19,
+      "end_line": 23,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "page list/address/owner members",
+      "coverage": [
+        "C_DYNAMIC",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-066",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uPage",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 22,
+      "end_line": 24,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "vaddr/uslab_p members and uPage_s alias",
+      "coverage": [
+        "C_DYNAMIC",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-067",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 26,
+      "end_line": 30,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "slab list and cache owner",
+      "coverage": [
+        "C_DYNAMIC",
+        "C_PUBLISH"
+      ]
+    },
+    {
+      "id": "E146-068",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 31,
+      "end_line": 35,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "total/free and upage_p/virt_addr",
+      "coverage": [
+        "C_DYNAMIC",
+        "C_PUBLISH"
+      ]
+    },
+    {
+      "id": "E146-069",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 34,
+      "end_line": 37,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "upage_p, virt_addr, colormap and alias",
+      "coverage": [
+        "C_DYNAMIC",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-070",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 39,
+      "end_line": 43,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "cache list node and obj_size",
+      "coverage": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "E146-071",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 45,
+      "end_line": 49,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "total, three slab headers, free count",
+      "coverage": [
+        "C_PUBLISH",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-072",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "kind": "struct_definition",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 49,
+      "end_line": 50,
+      "source_line_endings": [
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "object free and used aggregate fields",
+      "coverage": [
+        "C_PUBLISH",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-073",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "List",
+      "kind": "struct_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 35,
+      "end_line": 39,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "List prev/next members and List_s alias",
+      "coverage": [
+        "R145-02",
+        "C_DYNAMIC",
+        "C_PUBLISH"
+      ]
+    },
+    {
+      "id": "E146-074",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "List_hdr",
+      "kind": "struct_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 41,
+      "end_line": 45,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "List_hdr anchor/count and alias",
+      "coverage": [
+        "C_PUBLISH",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-075",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "container_of",
+      "kind": "macro_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 12,
+      "end_line": 16,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "container_of active macro expression; tail shown separately",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E146-076",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "container_of",
+      "kind": "macro_definition",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 15,
+      "end_line": 17,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "container_of macro tail",
+      "coverage": [
+        "B"
+      ]
+    },
+    {
+      "id": "E146-077",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "INIT_LIST_S",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 10,
+      "end_line": 14,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "direct prev/next self-link writes",
+      "coverage": [
+        "R145-02",
+        "C_DYNAMIC"
+      ]
+    },
+    {
+      "id": "E146-078",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_prev",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 19,
+      "end_line": 22,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "unlink then next/prev assignments",
+      "coverage": [
+        "R145-02",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-079",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_prev",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 24,
+      "end_line": 25,
+      "source_line_endings": [
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "neighbor back-links for insert prev",
+      "coverage": [
+        "R145-02",
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-080",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_next",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 31,
+      "end_line": 34,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "unlink then next/prev assignments",
+      "coverage": [
+        "R145-02",
+        "C_PUBLISH"
+      ]
+    },
+    {
+      "id": "E146-081",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_insert_next",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 36,
+      "end_line": 37,
+      "source_line_endings": [
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "neighbor back-links for insert next",
+      "coverage": [
+        "R145-02",
+        "C_PUBLISH"
+      ]
+    },
+    {
+      "id": "E146-082",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_del_init",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 40,
+      "end_line": 44,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "unlink and reinitialize entry",
+      "coverage": [
+        "C_PUBLISH",
+        "C_BASE",
+        "R145-02"
+      ]
+    },
+    {
+      "id": "E146-083",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "INIT_LIST_HEADER_S",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 73,
+      "end_line": 77,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "count=0 and nested anchor initialization",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-084",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_add_to_head",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 79,
+      "end_line": 83,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "insert next then header count++",
+      "coverage": [
+        "C_PUBLISH"
+      ]
+    },
+    {
+      "id": "E146-085",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_remove_head",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 85,
+      "end_line": 89,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "count check and head selection",
+      "coverage": [
+        "R145-03"
+      ]
+    },
+    {
+      "id": "E146-086",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_remove_head",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 89,
+      "end_line": 93,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "selected head, unlink, count-- and return",
+      "coverage": [
+        "R145-03"
+      ]
+    },
+    {
+      "id": "E146-087",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_add_to_tail",
+      "kind": "function_body",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 98,
+      "end_line": 102,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "insert prev then header count++",
+      "coverage": [
+        "C_BASE"
+      ]
+    },
+    {
+      "id": "E146-088",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_get_freebit_idx",
+      "kind": "function_body",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 24,
+      "end_line": 28,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "exclusive i<limit scan",
+      "coverage": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "E146-089",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_get_freebit_idx",
+      "kind": "function_body",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 29,
+      "end_line": 33,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "word index i/BITMAP_UNITSIZE and zero-bit condition; break and return i",
+      "coverage": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "E146-090",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_set_bit",
+      "kind": "function_body",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 14,
+      "end_line": 17,
+      "source_line_endings": [
+        "LF",
+        "LF",
+        "LF",
+        "LF"
+      ],
+      "render_separator": "NONE",
+      "supported_claim": "word and mask for separate set helper",
+      "coverage": [
+        "R145-03"
+      ]
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "R145_A_ZERO_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(0)",
+        "scenario": "R145_A_ZERO"
+      },
+      {
+        "id": "R145_A_ZERO_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_ZERO"
+      },
+      {
+        "id": "R145_A_ZERO_CLASS",
+        "kind": "STATE",
+        "label": "group 0 obj 32",
+        "scenario": "R145_A_ZERO"
+      },
+      {
+        "id": "R145_A_ZERO_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "R145_A_ZERO"
+      },
+      {
+        "id": "R145_A_ONE_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(1)",
+        "scenario": "R145_A_ONE"
+      },
+      {
+        "id": "R145_A_ONE_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_ONE"
+      },
+      {
+        "id": "R145_A_ONE_CLASS",
+        "kind": "STATE",
+        "label": "group 0 obj 32",
+        "scenario": "R145_A_ONE"
+      },
+      {
+        "id": "R145_A_ONE_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "R145_A_ONE"
+      },
+      {
+        "id": "R145_A_32_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(32)",
+        "scenario": "R145_A_32"
+      },
+      {
+        "id": "R145_A_32_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_32"
+      },
+      {
+        "id": "R145_A_32_CLASS",
+        "kind": "STATE",
+        "label": "group 0 obj 32",
+        "scenario": "R145_A_32"
+      },
+      {
+        "id": "R145_A_32_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "R145_A_32"
+      },
+      {
+        "id": "R145_A_33_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(33)",
+        "scenario": "R145_A_33"
+      },
+      {
+        "id": "R145_A_33_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_33"
+      },
+      {
+        "id": "R145_A_33_CLASS",
+        "kind": "STATE",
+        "label": "group 1 obj 64",
+        "scenario": "R145_A_33"
+      },
+      {
+        "id": "R145_A_33_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "R145_A_33"
+      },
+      {
+        "id": "R145_A_64_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(64)",
+        "scenario": "R145_A_64"
+      },
+      {
+        "id": "R145_A_64_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_64"
+      },
+      {
+        "id": "R145_A_64_CLASS",
+        "kind": "STATE",
+        "label": "group 1 obj 64",
+        "scenario": "R145_A_64"
+      },
+      {
+        "id": "R145_A_64_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "R145_A_64"
+      },
+      {
+        "id": "R145_A_65_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(65)",
+        "scenario": "R145_A_65"
+      },
+      {
+        "id": "R145_A_65_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_65"
+      },
+      {
+        "id": "R145_A_65_CLASS",
+        "kind": "STATE",
+        "label": "group 2 obj 128",
+        "scenario": "R145_A_65"
+      },
+      {
+        "id": "R145_A_65_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "R145_A_65"
+      },
+      {
+        "id": "R145_A_MAX_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(1048576)",
+        "scenario": "R145_A_MAX"
+      },
+      {
+        "id": "R145_A_MAX_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_MAX"
+      },
+      {
+        "id": "R145_A_MAX_CLASS",
+        "kind": "STATE",
+        "label": "group 15 obj 1048576",
+        "scenario": "R145_A_MAX"
+      },
+      {
+        "id": "R145_A_MAX_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "R145_A_MAX"
+      },
+      {
+        "id": "R145_A_OVER_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(1048577)",
+        "scenario": "R145_A_OVER"
+      },
+      {
+        "id": "R145_A_OVER_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "R145_A_OVER"
+      },
+      {
+        "id": "R145_A_OVER_RETURN",
+        "kind": "RETURN",
+        "label": "NULL, no class walk",
+        "scenario": "R145_A_OVER"
+      },
+      {
+        "id": "R145_B_ZERO_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "R145_B_ZERO"
+      },
+      {
+        "id": "R145_B_ZERO_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 0",
+        "scenario": "R145_B_ZERO"
+      },
+      {
+        "id": "R145_B_ZERO_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "R145_B_ZERO"
+      },
+      {
+        "id": "R145_B_ZERO_WRITE",
+        "kind": "INDEPENDENT_ACTION",
+        "label": "bm_set_bit(0)",
+        "scenario": "R145_B_ZERO"
+      },
+      {
+        "id": "R145_B_63_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "R145_B_63"
+      },
+      {
+        "id": "R145_B_63_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 63",
+        "scenario": "R145_B_63"
+      },
+      {
+        "id": "R145_B_63_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "R145_B_63"
+      },
+      {
+        "id": "R145_B_63_WRITE",
+        "kind": "INDEPENDENT_ACTION",
+        "label": "bm_set_bit(63)",
+        "scenario": "R145_B_63"
+      },
+      {
+        "id": "R145_B_64_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "R145_B_64"
+      },
+      {
+        "id": "R145_B_64_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 64",
+        "scenario": "R145_B_64"
+      },
+      {
+        "id": "R145_B_64_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "R145_B_64"
+      },
+      {
+        "id": "R145_B_64_WRITE",
+        "kind": "INDEPENDENT_ACTION",
+        "label": "bm_set_bit(64)",
+        "scenario": "R145_B_64"
+      },
+      {
+        "id": "R145_B_FULL_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "R145_B_FULL"
+      },
+      {
+        "id": "R145_B_FULL_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 128",
+        "scenario": "R145_B_FULL"
+      },
+      {
+        "id": "R145_B_FULL_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "R145_B_FULL"
+      },
+      {
+        "id": "R145_B_EMPTY_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 128 limit128",
+        "scenario": "R145_B_EMPTY"
+      },
+      {
+        "id": "R145_B_EMPTY_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 128",
+        "scenario": "R145_B_EMPTY"
+      },
+      {
+        "id": "R145_B_EMPTY_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "R145_B_EMPTY"
+      },
+      {
+        "id": "R145_C_USED_MORE_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "R145_C_USED_MORE"
+      },
+      {
+        "id": "R145_C_USED_MORE_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "used[S] remove head; old S.free=65 !=1; used.count 1->0->1 by add back BEFORE scan",
+        "scenario": "R145_C_USED_MORE"
+      },
+      {
+        "id": "R145_C_USED_MORE_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx -> 63",
+        "scenario": "R145_C_USED_MORE"
+      },
+      {
+        "id": "R145_C_USED_MORE_OBJECT",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "address 0x600fc000 then bit set",
+        "scenario": "R145_C_USED_MORE"
+      },
+      {
+        "id": "R145_C_USED_MORE_REFILL",
+        "kind": "BRANCH",
+        "label": "free.count=1 no refill",
+        "scenario": "R145_C_USED_MORE"
+      },
+      {
+        "id": "R145_C_USED_MORE_RETURN",
+        "kind": "RETURN",
+        "label": "return 0x600fc000",
+        "scenario": "R145_C_USED_MORE"
+      },
+      {
+        "id": "R145_C_USED_LAST_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "R145_C_USED_LAST"
+      },
+      {
+        "id": "R145_C_USED_LAST_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "used[S] remove head; old S.free=1; used.count 1->0, full.count 0->1 BEFORE scan and free--",
+        "scenario": "R145_C_USED_LAST"
+      },
+      {
+        "id": "R145_C_USED_LAST_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx -> 127",
+        "scenario": "R145_C_USED_LAST"
+      },
+      {
+        "id": "R145_C_USED_LAST_OBJECT",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "address 0x601fc000 then bit set",
+        "scenario": "R145_C_USED_LAST"
+      },
+      {
+        "id": "R145_C_USED_LAST_REFILL",
+        "kind": "BRANCH",
+        "label": "free.count=1 no refill",
+        "scenario": "R145_C_USED_LAST"
+      },
+      {
+        "id": "R145_C_USED_LAST_RETURN",
+        "kind": "RETURN",
+        "label": "return 0x601fc000",
+        "scenario": "R145_C_USED_LAST"
+      },
+      {
+        "id": "R145_C_FREE_FIRST_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "R145_C_FREE_FIRST"
+      },
+      {
+        "id": "R145_C_FREE_FIRST_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "used empty; free[S,R] remove S, free.count 2->1; insert used count 0->1 BEFORE scan; R payload unchanged, links may update",
+        "scenario": "R145_C_FREE_FIRST"
+      },
+      {
+        "id": "R145_C_FREE_FIRST_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx -> 0",
+        "scenario": "R145_C_FREE_FIRST"
+      },
+      {
+        "id": "R145_C_FREE_FIRST_OBJECT",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "address 0x60000000 then bit set",
+        "scenario": "R145_C_FREE_FIRST"
+      },
+      {
+        "id": "R145_C_FREE_FIRST_REFILL",
+        "kind": "BRANCH",
+        "label": "free.count=1 no refill",
+        "scenario": "R145_C_FREE_FIRST"
+      },
+      {
+        "id": "R145_C_FREE_FIRST_RETURN",
+        "kind": "RETURN",
+        "label": "return 0x60000000",
+        "scenario": "R145_C_FREE_FIRST"
+      },
+      {
+        "id": "R145_C_EMPTY_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "R145_C_EMPTY"
+      },
+      {
+        "id": "R145_C_EMPTY_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "used/free counts zero; local uslp=NULL; no list migration; explicit while(1), scan/update/refill NOT_REACHED",
+        "scenario": "R145_C_EMPTY"
+      },
+      {
+        "id": "R145_C_EMPTY_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "explicit while(1) no function return",
+        "scenario": "R145_C_EMPTY"
+      },
+      {
+        "id": "R145_REFILL_BOUNDARY_G",
+        "kind": "BRANCH",
+        "label": "free.count<1 condition reached and FALSE for three returning C; C_EMPTY NOT_REACHED; true branch below is independent conditional boundary",
+        "scenario": "R145_REFILL_BOUNDARY"
+      },
+      {
+        "id": "R145_REFILL_BOUNDARY_T",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "free.count++ temporary",
+        "scenario": "R145_REFILL_BOUNDARY"
+      },
+      {
+        "id": "R145_REFILL_BOUNDARY_U",
+        "kind": "CALL",
+        "label": "uslab_alloc(uslp)",
+        "scenario": "R145_REFILL_BOUNDARY"
+      },
+      {
+        "id": "R145_REFILL_BOUNDARY_D",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "free.count-- on normal return",
+        "scenario": "R145_REFILL_BOUNDARY"
+      },
+      {
+        "id": "R145_REFILL_BOUNDARY_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "new_uslp NULL while(1)",
+        "scenario": "R145_REFILL_BOUNDARY"
+      },
+      {
+        "id": "R145_REFILL_BOUNDARY_L",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "link new slab and add totals",
+        "scenario": "R145_REFILL_BOUNDARY"
+      },
+      {
+        "id": "R145_REFILL_BOUNDARY_R",
+        "kind": "CONTINUATION",
+        "label": "malloc return after successful callees",
+        "scenario": "R145_REFILL_BOUNDARY"
+      },
+      {
+        "id": "A_ENTRY",
+        "kind": "ENTRY",
+        "label": "given i=0..15, H=2MiB, bitmap word=64",
+        "scenario": "A_PARAMETERIZED"
+      },
+      {
+        "id": "A_MAP",
+        "kind": "SOURCE_DATA",
+        "label": "actual base_colormaps[i] and declared W",
+        "scenario": "A_PARAMETERIZED"
+      },
+      {
+        "id": "A_ARITH",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "O=32*2^i; N=H/O; 8W bytes,64W bits,ceil(N/64),last word/bit and unused bits",
+        "scenario": "A_PARAMETERIZED"
+      },
+      {
+        "id": "A_LOCAL",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "local cm_size raw floor((N+7)/8); complete init body occurrence=1",
+        "scenario": "A_PARAMETERIZED"
+      },
+      {
+        "id": "A_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "capacity only; runtime payload not derived",
+        "scenario": "A_PARAMETERIZED"
+      },
+      {
+        "id": "B_ENTRY",
+        "kind": "ENTRY",
+        "label": "given i,N; bitmap request expression",
+        "scenario": "B_PARAMETERIZED"
+      },
+      {
+        "id": "B_REQ",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "B_req=floor(N/8)+8; M=8*ceil(N/64)",
+        "scenario": "B_PARAMETERIZED"
+      },
+      {
+        "id": "B_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true and B_req<=CONST_1M",
+        "scenario": "B_PARAMETERIZED"
+      },
+      {
+        "id": "B_CLASS",
+        "kind": "ARITHMETIC_MODEL",
+        "label": "while B_req>obj_size advance; choose j,S; S-B_req",
+        "scenario": "B_PARAMETERIZED"
+      },
+      {
+        "id": "B_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "stop before slab selection; malloc return unknown",
+        "scenario": "B_PARAMETERIZED"
+      },
+      {
+        "id": "BASE_E",
+        "kind": "ENTRY",
+        "label": "one given i, valid metadata",
+        "scenario": "C_BASE"
+      },
+      {
+        "id": "BASE_BIND",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "colormap pointer, cache owner, free/total=N",
+        "scenario": "C_BASE"
+      },
+      {
+        "id": "BASE_SCOPE",
+        "kind": "SOURCE_SCOPE",
+        "label": "complete init body no direct bitmap payload store; calls not traced",
+        "scenario": "C_BASE"
+      },
+      {
+        "id": "BASE_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "actual payload NOT_DERIVED",
+        "scenario": "C_BASE"
+      },
+      {
+        "id": "DYN_E",
+        "kind": "ENTRY",
+        "label": "give valid cslp,total=N at both reads; all callees return distinct valid objects",
+        "scenario": "C_DYNAMIC"
+      },
+      {
+        "id": "DYN_META",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "malloc(sizeof(uslab_s)) result then INIT_LIST_S prev/next self-link",
+        "scenario": "C_DYNAMIC"
+      },
+      {
+        "id": "DYN_BITMAP",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "colormap receives bitmap malloc result; separate total read sets free/total=N",
+        "scenario": "C_DYNAMIC"
+      },
+      {
+        "id": "DYN_PAGE",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "upage_p, virt_addr, page.uslab_p backpointer",
+        "scenario": "C_DYNAMIC"
+      },
+      {
+        "id": "DYN_R",
+        "kind": "RETURN",
+        "label": "callee returns nslp; no uslabcache_p assignment; payload UNKNOWN",
+        "scenario": "C_DYNAMIC"
+      },
+      {
+        "id": "PUB_E",
+        "kind": "ENTRY",
+        "label": "after normal uslab_alloc return before line312; F_r>=1,T_r,C_r at return",
+        "scenario": "C_PUBLISH"
+      },
+      {
+        "id": "PUB_DEC",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "free.count F_r->F_r-1",
+        "scenario": "C_PUBLISH"
+      },
+      {
+        "id": "PUB_GATE",
+        "kind": "BRANCH",
+        "label": "given nonNULL so new_uslp==NULL is FALSE",
+        "scenario": "C_PUBLISH"
+      },
+      {
+        "id": "PUB_BIND",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "set owner, add free head; F_r-1->F_r",
+        "scenario": "C_PUBLISH"
+      },
+      {
+        "id": "PUB_TOTAL",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "T_r->T_r+1; C_r->C_r+N",
+        "scenario": "C_PUBLISH"
+      },
+      {
+        "id": "PUB_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "after line321; not function return or net full refill",
+        "scenario": "C_PUBLISH"
+      }
+    ],
+    "edges": [
+      {
+        "from": "R145_A_ZERO_ENTRY",
+        "to": "R145_A_ZERO_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_ZERO_GATE",
+        "to": "R145_A_ZERO_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "R145_A_ZERO_CLASS",
+        "to": "R145_A_ZERO_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "R145_A_ONE_ENTRY",
+        "to": "R145_A_ONE_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_ONE_GATE",
+        "to": "R145_A_ONE_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "R145_A_ONE_CLASS",
+        "to": "R145_A_ONE_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "R145_A_32_ENTRY",
+        "to": "R145_A_32_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_32_GATE",
+        "to": "R145_A_32_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "R145_A_32_CLASS",
+        "to": "R145_A_32_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "R145_A_33_ENTRY",
+        "to": "R145_A_33_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_33_GATE",
+        "to": "R145_A_33_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "R145_A_33_CLASS",
+        "to": "R145_A_33_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "R145_A_64_ENTRY",
+        "to": "R145_A_64_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_64_GATE",
+        "to": "R145_A_64_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "R145_A_64_CLASS",
+        "to": "R145_A_64_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "R145_A_65_ENTRY",
+        "to": "R145_A_65_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_65_GATE",
+        "to": "R145_A_65_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "R145_A_65_CLASS",
+        "to": "R145_A_65_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "R145_A_MAX_ENTRY",
+        "to": "R145_A_MAX_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_MAX_GATE",
+        "to": "R145_A_MAX_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "R145_A_MAX_CLASS",
+        "to": "R145_A_MAX_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "R145_A_OVER_ENTRY",
+        "to": "R145_A_OVER_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "R145_A_OVER_GATE",
+        "to": "R145_A_OVER_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "too large"
+      },
+      {
+        "from": "R145_B_ZERO_ENTRY",
+        "to": "R145_B_ZERO_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "R145_B_ZERO_SCAN",
+        "to": "R145_B_ZERO_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "R145_B_ZERO_RESULT",
+        "to": "R145_B_ZERO_WRITE",
+        "kind": "GIVEN_ACTION",
+        "label": "independent from helper"
+      },
+      {
+        "from": "R145_B_63_ENTRY",
+        "to": "R145_B_63_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "R145_B_63_SCAN",
+        "to": "R145_B_63_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "R145_B_63_RESULT",
+        "to": "R145_B_63_WRITE",
+        "kind": "GIVEN_ACTION",
+        "label": "independent from helper"
+      },
+      {
+        "from": "R145_B_64_ENTRY",
+        "to": "R145_B_64_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "R145_B_64_SCAN",
+        "to": "R145_B_64_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "R145_B_64_RESULT",
+        "to": "R145_B_64_WRITE",
+        "kind": "GIVEN_ACTION",
+        "label": "independent from helper"
+      },
+      {
+        "from": "R145_B_FULL_ENTRY",
+        "to": "R145_B_FULL_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "R145_B_FULL_SCAN",
+        "to": "R145_B_FULL_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "R145_B_EMPTY_ENTRY",
+        "to": "R145_B_EMPTY_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "R145_B_EMPTY_SCAN",
+        "to": "R145_B_EMPTY_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "R145_C_USED_MORE_ENTRY",
+        "to": "R145_C_USED_MORE_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "R145_C_USED_MORE_SELECT",
+        "to": "R145_C_USED_MORE_SCAN",
+        "kind": "SOURCE_ORDER",
+        "label": "list moves precede scan"
+      },
+      {
+        "from": "R145_C_USED_MORE_SCAN",
+        "to": "R145_C_USED_MORE_OBJECT",
+        "kind": "CONTROL_TRUE",
+        "label": "idx<total"
+      },
+      {
+        "from": "R145_C_USED_MORE_OBJECT",
+        "to": "R145_C_USED_MORE_REFILL",
+        "kind": "SOURCE_ORDER",
+        "label": "bit set before refill gate"
+      },
+      {
+        "from": "R145_C_USED_MORE_REFILL",
+        "to": "R145_C_USED_MORE_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "free.count<1 false"
+      },
+      {
+        "from": "R145_C_USED_LAST_ENTRY",
+        "to": "R145_C_USED_LAST_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "R145_C_USED_LAST_SELECT",
+        "to": "R145_C_USED_LAST_SCAN",
+        "kind": "SOURCE_ORDER",
+        "label": "list moves precede scan"
+      },
+      {
+        "from": "R145_C_USED_LAST_SCAN",
+        "to": "R145_C_USED_LAST_OBJECT",
+        "kind": "CONTROL_TRUE",
+        "label": "idx<total"
+      },
+      {
+        "from": "R145_C_USED_LAST_OBJECT",
+        "to": "R145_C_USED_LAST_REFILL",
+        "kind": "SOURCE_ORDER",
+        "label": "bit set before refill gate"
+      },
+      {
+        "from": "R145_C_USED_LAST_REFILL",
+        "to": "R145_C_USED_LAST_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "free.count<1 false"
+      },
+      {
+        "from": "R145_C_FREE_FIRST_ENTRY",
+        "to": "R145_C_FREE_FIRST_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "R145_C_FREE_FIRST_SELECT",
+        "to": "R145_C_FREE_FIRST_SCAN",
+        "kind": "SOURCE_ORDER",
+        "label": "list moves precede scan"
+      },
+      {
+        "from": "R145_C_FREE_FIRST_SCAN",
+        "to": "R145_C_FREE_FIRST_OBJECT",
+        "kind": "CONTROL_TRUE",
+        "label": "idx<total"
+      },
+      {
+        "from": "R145_C_FREE_FIRST_OBJECT",
+        "to": "R145_C_FREE_FIRST_REFILL",
+        "kind": "SOURCE_ORDER",
+        "label": "bit set before refill gate"
+      },
+      {
+        "from": "R145_C_FREE_FIRST_REFILL",
+        "to": "R145_C_FREE_FIRST_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "free.count<1 false"
+      },
+      {
+        "from": "R145_C_EMPTY_ENTRY",
+        "to": "R145_C_EMPTY_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "R145_C_EMPTY_SELECT",
+        "to": "R145_C_EMPTY_STOP",
+        "kind": "CONTROL_TRUE",
+        "label": "used/free empty"
+      },
+      {
+        "from": "R145_REFILL_BOUNDARY_G",
+        "to": "R145_REFILL_BOUNDARY_T",
+        "kind": "CONTROL_TRUE",
+        "label": "refill entered"
+      },
+      {
+        "from": "R145_REFILL_BOUNDARY_T",
+        "to": "R145_REFILL_BOUNDARY_U",
+        "kind": "CALLER_SEQUENCE",
+        "label": "invoke uslab_alloc"
+      },
+      {
+        "from": "R145_REFILL_BOUNDARY_U",
+        "to": "R145_REFILL_BOUNDARY_D",
+        "kind": "NORMAL_RETURN_ONLY",
+        "label": "callee returned"
+      },
+      {
+        "from": "R145_REFILL_BOUNDARY_D",
+        "to": "R145_REFILL_BOUNDARY_X",
+        "kind": "CONTROL_TRUE",
+        "label": "NULL"
+      },
+      {
+        "from": "R145_REFILL_BOUNDARY_D",
+        "to": "R145_REFILL_BOUNDARY_L",
+        "kind": "CONTROL_FALSE",
+        "label": "nonNULL"
+      },
+      {
+        "from": "R145_REFILL_BOUNDARY_L",
+        "to": "R145_REFILL_BOUNDARY_R",
+        "kind": "SOURCE_ORDER",
+        "label": "all steps normal"
+      },
+      {
+        "from": "A_ENTRY",
+        "to": "A_MAP",
+        "kind": "DATA_SELECTION",
+        "label": "use actual source declaration order mapping"
+      },
+      {
+        "from": "A_MAP",
+        "to": "A_ARITH",
+        "kind": "DATA_DERIVATION",
+        "label": "compute given widths"
+      },
+      {
+        "from": "A_ARITH",
+        "to": "A_LOCAL",
+        "kind": "DATA_DERIVATION",
+        "label": "local expression separate from words"
+      },
+      {
+        "from": "A_LOCAL",
+        "to": "A_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "no runtime zero state"
+      },
+      {
+        "from": "B_ENTRY",
+        "to": "B_REQ",
+        "kind": "DATA_DERIVATION",
+        "label": "request and minimum whole-word space distinct"
+      },
+      {
+        "from": "B_REQ",
+        "to": "B_GATE",
+        "kind": "MODEL_INPUT",
+        "label": "conditional new malloc request"
+      },
+      {
+        "from": "B_GATE",
+        "to": "B_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "all 16 given values admitted"
+      },
+      {
+        "from": "B_CLASS",
+        "to": "B_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "j is request class, not owning i"
+      },
+      {
+        "from": "BASE_E",
+        "to": "BASE_BIND",
+        "kind": "CONDITIONAL_FRAGMENT",
+        "label": "given valid i"
+      },
+      {
+        "from": "BASE_BIND",
+        "to": "BASE_SCOPE",
+        "kind": "SOURCE_SCOPE",
+        "label": "direct writes, other fields/calls distinct"
+      },
+      {
+        "from": "BASE_SCOPE",
+        "to": "BASE_X",
+        "kind": "MODEL_BOUNDARY",
+        "label": "no actual zero-state claim"
+      },
+      {
+        "from": "DYN_E",
+        "to": "DYN_META",
+        "kind": "CONDITIONAL_FRAGMENT",
+        "label": "normal results stipulated"
+      },
+      {
+        "from": "DYN_META",
+        "to": "DYN_BITMAP",
+        "kind": "SOURCE_ORDER",
+        "label": "metadata and list first"
+      },
+      {
+        "from": "DYN_BITMAP",
+        "to": "DYN_PAGE",
+        "kind": "SOURCE_ORDER",
+        "label": "pointer and counts then page binding"
+      },
+      {
+        "from": "DYN_PAGE",
+        "to": "DYN_R",
+        "kind": "CALLEE_RETURN",
+        "label": "no caller fields backfilled"
+      },
+      {
+        "from": "PUB_E",
+        "to": "PUB_DEC",
+        "kind": "SOURCE_ORDER",
+        "label": "baseline measured after callee"
+      },
+      {
+        "from": "PUB_DEC",
+        "to": "PUB_GATE",
+        "kind": "SOURCE_ORDER",
+        "label": "decrement before condition"
+      },
+      {
+        "from": "PUB_GATE",
+        "to": "PUB_BIND",
+        "kind": "CONTROL_FALSE",
+        "label": "new_uslp nonNULL"
+      },
+      {
+        "from": "PUB_BIND",
+        "to": "PUB_TOTAL",
+        "kind": "SOURCE_ORDER",
+        "label": "legal helper returns before count updates"
+      },
+      {
+        "from": "PUB_TOTAL",
+        "to": "PUB_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "no preceding call count assumed"
+      }
+    ]
+  },
+  "graph_coverage": {
+    "A_PARAMETERIZED": [
+      "A00",
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "A09",
+      "A10",
+      "A11",
+      "A12",
+      "A13",
+      "A14",
+      "A15"
+    ],
+    "B_PARAMETERIZED": [
+      "B00",
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B09",
+      "B10",
+      "B11",
+      "B12",
+      "B13",
+      "B14",
+      "B15"
+    ],
+    "C_BASE": [
+      "C_BASE"
+    ],
+    "C_DYNAMIC": [
+      "C_DYNAMIC"
+    ],
+    "C_PUBLISH": [
+      "C_PUBLISH"
+    ],
+    "R145_partition": "old 77 nodes and 59 edges; independent from new146 graphs",
+    "no_cross_batch_runtime_call_edges": true
+  },
+  "full_local_P9": "NOT_RUN"
+}

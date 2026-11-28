@@ -1,0 +1,388 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SMP-BOOT-PATH-100",
+  "record_type": "conditional_findings_and_unproven_gates_with_R99_append_only",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "produced_by": "GPT-6（当前可见模型家族；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-18",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "R99_01": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+  "batch99_original_verdict": "RETURN",
+  "R99_original_files_and_comment_frozen": true,
+  "new_candidates": [
+    {
+      "id": "SP100-F01",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-F01",
+      "topic": "A/C",
+      "kind": "CONDITIONAL_FIXED_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "status": "needs_evidence",
+      "distinct_root": "APIC lookup table publication gap",
+      "source_claim": "apicid_to_cpunr is initialized to -1, while scoped get_smpinfo only publishes nr_cpu_ids, AP assembler uses the map for identity matching",
+      "preconditions": "Table has not been updated by another unreviewed writer and AP validly reaches lookup",
+      "first_unproven_gate": "No whole-repository writer absence or actual APIC ID; stop at first invalid indexed read",
+      "evidence_ids": [
+        "SP100-E014",
+        "SP100-E029",
+        "SP100-E088",
+        "SP100-E089"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U04"
+      ],
+      "confirmed_runtime_failure": false,
+      "patch_authorized": false
+    },
+    {
+      "id": "SP100-F02",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-F02",
+      "topic": "C",
+      "kind": "CONDITIONAL_FIXED_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "status": "needs_evidence",
+      "distinct_root": "AP table search omits index0 and lacks bound",
+      "source_claim": "AP l1 increments rbx from zero before its indexed table fetch and loops on comparison without a length check",
+      "preconditions": "AP reaches this block, table is mapped, earlier entries legal; candidate ID matches only index0 or never matches1..N-1",
+      "first_unproven_gate": "Once rbx reaches declared array bound, subsequent read is not supported; no real trap/hang claim",
+      "evidence_ids": [
+        "SP100-E029",
+        "SP100-E088",
+        "SP100-E089"
+      ],
+      "prior_related_qualified_ids": [],
+      "confirmed_runtime_failure": false,
+      "patch_authorized": false
+    },
+    {
+      "id": "SP100-F03",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-F03",
+      "topic": "C",
+      "kind": "CONDITIONAL_FIXED_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "status": "needs_evidence",
+      "distinct_root": "AP_DEBUG stack formed from APIC table value, not idle task pointer",
+      "source_claim": "AP_DEBUG uses an indexed read from the same apicid_to_cpunr table to derive rsp, while idle_tasks pointer lookup is commented",
+      "preconditions": "Successful prior lookup, legal table object and preceding instructions; value has not been proved to be a stack pointer",
+      "first_unproven_gate": "No valid stack extent or task PCB proof; stop before certifying safe rsp-dependent execution",
+      "evidence_ids": [
+        "SP100-E090",
+        "SP100-E091",
+        "SP100-E099",
+        "SP100-E100"
+      ],
+      "prior_related_qualified_ids": [],
+      "confirmed_runtime_failure": false,
+      "patch_authorized": false
+    },
+    {
+      "id": "SP100-F04",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-F04",
+      "topic": "B/ABC",
+      "kind": "CONDITIONAL_FIXED_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "status": "needs_evidence",
+      "distinct_root": "Standalone AP copy/send functions lack a demonstrated caller in scoped BSP path",
+      "source_claim": "myos_early_init_smp and myos_startup_smp are defined, but reviewed x86_64_start_kernel/start_kernel/kernel_init_freeable don't issue live calls to them",
+      "preconditions": "These read definitions are the considered startup paths; other callers are not exhaustively ruled out",
+      "first_unproven_gate": "Cannot claim actual AP code copied then MSR send requests from existence of functions",
+      "evidence_ids": [
+        "SP100-E033",
+        "SP100-E035",
+        "SP100-E036",
+        "SP100-E038",
+        "SP100-E039",
+        "SP100-E041",
+        "SP100-E043",
+        "SP100-E044"
+      ],
+      "prior_related_qualified_ids": [],
+      "confirmed_runtime_failure": false,
+      "patch_authorized": false
+    },
+    {
+      "id": "SP100-F05",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-F05",
+      "topic": "B/C",
+      "kind": "CONDITIONAL_FIXED_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "status": "needs_evidence",
+      "distinct_root": "AP trampoline section and copied symbol/address identities unresolved",
+      "source_claim": "myos_early_init_smp copies _APboot_text.._APboot_etext toward _APboot_phys_start, AP source uses .AP_boot.text, linker shown text input .text*",
+      "preconditions": "Actual linker input, symbols and physical low memory are as expected",
+      "first_unproven_gate": "No verified section placement, byte extent, coherent CR3 data or executed trampoline",
+      "evidence_ids": [
+        "SP100-E033",
+        "SP100-E034",
+        "SP100-E035",
+        "SP100-E067",
+        "SP100-E069",
+        "SP100-E070",
+        "SP100-E071",
+        "SP100-E097"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U08"
+      ],
+      "confirmed_runtime_failure": false,
+      "patch_authorized": false
+    },
+    {
+      "id": "SP100-F06",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-F06",
+      "topic": "B/C",
+      "kind": "CONDITIONAL_FIXED_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "status": "needs_evidence",
+      "distinct_root": "Requested MSR launch, x2APIC and online acknowledgement disconnected",
+      "source_claim": "myos_startup_smp issues two wrmsrl calls; AP source has distinct MSR operations and ends with jmp dot",
+      "preconditions": "SMP functions are actually called and hardware accepts the MSR requests; all source/stack accesses legal",
+      "first_unproven_gate": "No evidence an AP accepted, finished initialization or announced online",
+      "evidence_ids": [
+        "SP100-E036",
+        "SP100-E050",
+        "SP100-E085",
+        "SP100-E086",
+        "SP100-E091",
+        "SP100-E092"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U07",
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09"
+      ],
+      "confirmed_runtime_failure": false,
+      "patch_authorized": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "SP100-U01",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U01",
+      "topic": "A",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Real MP protocol success, nCores/nRunning, each ProcessorId/StatusFlag, C ABI and 32-page MBI backing",
+      "first_proof_gate": "No valid CPU tag/core_available equivalence without external firmware evidence",
+      "evidence_ids": [
+        "SP100-E003",
+        "SP100-E004",
+        "SP100-E005",
+        "SP100-E006",
+        "SP100-E007",
+        "SP100-E009",
+        "SP100-E010",
+        "SP100-E011",
+        "SP100-E012"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F07"
+      ],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U02",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U02",
+      "topic": "A",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Verified MBI transfer, tag extent/alignment and parse_tag success; nr_cpu_ids valid count",
+      "first_proof_gate": "Stop before deriving kernel CPU count from arbitrary tag bytes",
+      "evidence_ids": [
+        "SP100-E013",
+        "SP100-E014",
+        "SP100-E015",
+        "SP100-E016",
+        "SP100-E017",
+        "SP100-E018"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U04"
+      ],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U03",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U03",
+      "topic": "A",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Actual CONFIG_NR_CPUS preprocessing/compile, dense enumeration body validity, perCPU allocation and mapping for N CPUs",
+      "first_proof_gate": "No successful all-CPU initialization from declared count or flags alone",
+      "evidence_ids": [
+        "SP100-E020",
+        "SP100-E021",
+        "SP100-E022",
+        "SP100-E024",
+        "SP100-E025",
+        "SP100-E026",
+        "SP100-E030",
+        "SP100-E031",
+        "SP100-E032"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-F07",
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U05"
+      ],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U04",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U04",
+      "topic": "A/C",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Actual APIC-ID-to-logical-CPU index mapping writer, initialization order and real table values",
+      "first_proof_gate": "Scoped initializer all -1 cannot stand in for active APIC topology map",
+      "evidence_ids": [
+        "SP100-E029",
+        "SP100-E014",
+        "SP100-E088",
+        "SP100-E089"
+      ],
+      "prior_related_qualified_ids": [],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U05",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U05",
+      "topic": "B/C",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Symbol definitions and linked placement for _APboot_text/_APboot_etext/_APboot_phys_start, actual copy destination region and cr3_paddr identity",
+      "first_proof_gate": "Section names, linker assignments and memcpy requests do not certify byte-accurate trampoline",
+      "evidence_ids": [
+        "SP100-E033",
+        "SP100-E034",
+        "SP100-E035",
+        "SP100-E067",
+        "SP100-E069",
+        "SP100-E070",
+        "SP100-E071",
+        "SP100-E097"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U08"
+      ],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U06",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U06",
+      "topic": "B",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Actual compile/link selected objects, complete callers and runtime ordering for myos_early_init_smp and myos_startup_smp",
+      "first_proof_gate": "No proof the two independent functions are invoked in the selected startup path",
+      "evidence_ids": [
+        "SP100-E033",
+        "SP100-E035",
+        "SP100-E036",
+        "SP100-E038",
+        "SP100-E039",
+        "SP100-E041",
+        "SP100-E043",
+        "SP100-E044",
+        "SP100-E061",
+        "SP100-E062",
+        "SP100-E065",
+        "SP100-E066"
+      ],
+      "prior_related_qualified_ids": [],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U07",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U07",
+      "topic": "B/C",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Vendor-versioned MSR/IPI semantics, processor capabilities, actual rdmsr/wrmsrl results, SIPI receipt and control transfer",
+      "first_proof_gate": "No external hardware manual used; do not upgrade request to hardware delivery",
+      "evidence_ids": [
+        "SP100-E036",
+        "SP100-E048",
+        "SP100-E049",
+        "SP100-E050",
+        "SP100-E054",
+        "SP100-E080",
+        "SP100-E085",
+        "SP100-E086"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U07"
+      ],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U08",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U08",
+      "topic": "C",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "AP true CR3/GDT/IDT/GS/stack physical storage, valid CPU identity/stack pointer and possible idle task publication",
+      "first_proof_gate": "AP_DEBUG indexed table read and THREAD_SIZE arithmetic are not allocation certificates",
+      "evidence_ids": [
+        "SP100-E079",
+        "SP100-E084",
+        "SP100-E088",
+        "SP100-E089",
+        "SP100-E090",
+        "SP100-E091",
+        "SP100-E093",
+        "SP100-E094",
+        "SP100-E095",
+        "SP100-E096",
+        "SP100-E097",
+        "SP100-E098",
+        "SP100-E099",
+        "SP100-E100",
+        "SP100-E101"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-PERCPU-ALLOCATION-87::PA87-F05"
+      ],
+      "not_autofix": true
+    },
+    {
+      "id": "SP100-U09",
+      "qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-U09",
+      "topic": "ABC",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_proof": "Verified multi-CPU online/acknowledgment, synchronization and AP continuation after source jmp dot",
+      "first_proof_gate": "No measured AP arrival or online state; complete BSP-to-AP path not certified",
+      "evidence_ids": [
+        "SP100-E036",
+        "SP100-E041",
+        "SP100-E042",
+        "SP100-E089",
+        "SP100-E090",
+        "SP100-E091",
+        "SP100-E092"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09"
+      ],
+      "not_autofix": true
+    }
+  ],
+  "prior_qualified_id_index": [
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U04",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U08",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U07",
+    "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09",
+    "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F07",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-F07",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U05",
+    "CORE-USER-PERCPU-ALLOCATION-87::PA87-F05"
+  ],
+  "prior_root_recounted_as_new": 0,
+  "new_counts": {
+    "conditional_candidates": 6,
+    "evidence_gaps": 9,
+    "real_runtime_confirmed": 0,
+    "source_code_edits": 0
+  },
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": []
+}

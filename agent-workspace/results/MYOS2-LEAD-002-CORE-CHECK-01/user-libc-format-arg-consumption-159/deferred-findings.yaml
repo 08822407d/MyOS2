@@ -1,0 +1,86 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-FORMAT-ARG-CONSUMPTION-159",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-27",
+  "produced_by": "GPT-6.2（会话自报；实际Sol后台与Extra/high推理档UNATTESTED）",
+  "model_per_owner": "GPT-6.2 Sol＋Extra／高推理，普通执行无需Pro",
+  "date": "2026-11-27",
+  "date_timezone": "Asia/Shanghai",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "actual_G04": "PENDING_POST_PUBLICATION",
+  "mainline_acceptance": "PENDING",
+  "D00": [],
+  "full_local_P9": "NOT_RUN",
+  "new_candidates": [],
+  "qualified_evidence_additions": [
+    {
+      "id": "CORE-USER-SHELL-DATETIME-FORMAT-129::DT129-VSNPRINTF-BOUNDARY",
+      "prior_status": "CONDITIONAL_MODEL",
+      "disposition": "EVIDENCE_APPEND_ONLY",
+      "rows": [
+        "A159_01",
+        "A159_02",
+        "A159_03",
+        "A159_04",
+        "B159_01",
+        "B159_02",
+        "B159_03",
+        "C159_01",
+        "C159_02",
+        "C159_03"
+      ],
+      "addition": "precision applied after strlen, including source extent stop before dereference; dynamic width signed int negation gate; %c data NUL and length consumer",
+      "remaining": "effective ABI, implementation, real binding and all other bounds UNKNOWN; do not close"
+    }
+  ],
+  "retained": [
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-READ-BEYOND-BUDGET",
+      "status": "STATIC_ONLY",
+      "note": "strnlen.c scope; A159_04 concerns strlen and does not close/reclassify this item"
+    },
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-ABI-ASSUMPTIONS",
+      "status": "CONDITIONAL_MODEL"
+    },
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-SH-LINK",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "CORE-USER-SHELL-DATETIME-FORMAT-129::DT129-STDIO-LINK",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "CORE-USER-SHELL-DATETIME-FORMAT-129::DT129-PRINTF-WRITE",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "CORE-USER-SYSCALL-STDIO-08::GAP-U10",
+      "status": "OPEN"
+    },
+    {
+      "id": "CORE-USER-SHELL-ERROR-DIAGNOSTICS-130::actual_sh_libc_linkage",
+      "status": "UNKNOWN"
+    },
+    {
+      "id": "CORE-USER-SHELL-ERROR-DIAGNOSTICS-130::actual_stdout_and_runtime",
+      "status": "NOT_RUN"
+    }
+  ],
+  "history": {
+    "R158_01": "CLOSED_BY_MAINLINE_GRAPH_CONSUMPTION_ADDENDUM; 158 combined PASS_PENDING_LOCAL_WITH_MAINLINE_ADDENDUM; old graph discrepancy remains recorded",
+    "R155_01": "CLOSED_BY_156_CHECKPOINT_READ_SUPPLEMENT retained",
+    "R152_01": "153 prior closure retained; old return/unknown retained",
+    "R129_01": "CLOSED_DOCUMENTATION_ONLY retained"
+  },
+  "limits": [
+    "actual sh linking/actual caller and effective ABI/compiler headers or preprocessing",
+    "real filesystem or actual input producer, memory, stdout and write/terminal effects",
+    "backend Sol/Extra/high effort UNATTESTED; no API or project program run",
+    "full local P9, preprocessing, compile/link, project scripts, C/ASM, Graphviz, QEMU/hardware/real IO NOT_RUN"
+  ]
+}

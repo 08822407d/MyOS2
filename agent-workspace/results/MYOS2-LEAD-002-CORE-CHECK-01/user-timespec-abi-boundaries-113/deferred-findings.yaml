@@ -1,0 +1,210 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMESPEC-ABI-BOUNDARIES-113",
+  "record_type": "source_bounded_findings_and_first_unverified_steps",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "date": "2026-11-20",
+  "source_pin_short12": "a039d9803ade",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "inherited": {
+    "R110_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R110_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch110": "PASS_PENDING_LOCAL",
+    "R111_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R111_02": "OPEN",
+    "batch111": "RETURN",
+    "R112_01": "OPEN",
+    "R112_02": "OPEN",
+    "batch112": "RETURN"
+  },
+  "conditional_candidates": [
+    {
+      "id": "TS113-CAND-01",
+      "root": "R111-02",
+      "kind": "HISTORICAL_DOCUMENTATION_CORRECTION",
+      "premise": "Seven original 111 matrix IDs differ from prefix-added 112 source keys; source/type IDs independently checked",
+      "evidence": [
+        "111 frozen facts seven_bounded_matrices",
+        "112 frozen facts D00.R111_02",
+        "TS113-P17",
+        "TS113-P18",
+        "TS113-E018",
+        "TS113-E017"
+      ],
+      "candidate": "Exact 7 original keys, three void model signatures, M09 CPU/array timepoints",
+      "first_unverified_step": "C07 independent reviewer confirms cross-lookup and evidence suitability",
+      "status": "SUBMITTED_PENDING_C07"
+    },
+    {
+      "id": "TS113-CAND-02",
+      "root": "R112-01",
+      "kind": "HISTORICAL_DOCUMENTATION_CORRECTION",
+      "premise": "Frozen112 53 text matches/50 qualified; three merged macro tags and missing manifest fields",
+      "evidence": [
+        "TS113-E002–E011",
+        "TS113-P23",
+        "frozen112 MANIFEST"
+      ],
+      "candidate": "Ten real single-definition macro anchors and 112-scoped inputs/open_questions/canaries overlay",
+      "first_unverified_step": "C07 checks each individual macro, actual past read scope and 112 manifest addendum",
+      "status": "SUBMITTED_PENDING_C07"
+    },
+    {
+      "id": "TS113-CAND-03",
+      "root": "R112-02",
+      "kind": "HISTORICAL_DOCUMENTATION_CORRECTION",
+      "premise": "Six old C models and unsigned quotient/typed remainder verified in source",
+      "evidence": [
+        "TS113-E049–E057",
+        "TS113-P13",
+        "TS113-P14",
+        "TS113-P15"
+      ],
+      "candidate": "Six conditional double-roundtrip models plus zero/negative branch and graph-edge corrections",
+      "first_unverified_step": "C07 independently checks C conversion and all eight graph-edge deltas",
+      "status": "SUBMITTED_PENDING_C07"
+    },
+    {
+      "id": "TS113-CAND-04",
+      "root": "A",
+      "kind": "SOURCE_BOUNDARY",
+      "premise": "get_timespec64 uses one copy_from_user return gate before kernel struct fields are assigned",
+      "evidence": [
+        "TS113-E022",
+        "TS113-E023",
+        "TS113-E024"
+      ],
+      "candidate": "reported copy ret!=0 leaves ts fields unwritten by this function; ret=0 follows sec then nsec assignment",
+      "first_unverified_step": "copy_from_user implementation, memory faults/partial byte behavior, real user layouts",
+      "status": "CONDITIONAL_SOURCE_ANALYSIS"
+    },
+    {
+      "id": "TS113-CAND-05",
+      "root": "A",
+      "kind": "SOURCE_BOUNDARY",
+      "premise": "put_timespec64 initializes local kts then one copy_to_user; clock_gettime output guard !error",
+      "evidence": [
+        "TS113-E025",
+        "TS113-E026",
+        "TS113-E028",
+        "TS113-E029"
+      ],
+      "candidate": "copy return0 -> function return0, nonzero -> -EFAULT; clock_gettime only requests put when clock provider returns zero",
+      "first_unverified_step": "actual user destination bytes, struct layout, compat build",
+      "status": "CONDITIONAL_SOURCE_ANALYSIS"
+    },
+    {
+      "id": "TS113-CAND-06",
+      "root": "B",
+      "kind": "VALIDATOR_DOMAIN",
+      "premise": "All three predicates use fixed sec/nsec types and independently sourced limits",
+      "evidence": [
+        "TS113-E030–E038"
+      ],
+      "candidate": "basic allows nonnegative sec and 0..1e9-1 ns; strict adds sec<9223372036; settod adds sec<8277292036",
+      "first_unverified_step": "call-site input validation policy and actual chosen compiled configurations",
+      "status": "CONDITIONAL_SOURCE_ANALYSIS"
+    },
+    {
+      "id": "TS113-CAND-07",
+      "root": "C",
+      "kind": "COMPARISON_DOMAIN",
+      "premise": "timespec64_equal compares both fields, compare tests seconds then returns integer nsec difference",
+      "evidence": [
+        "TS113-E039–E042"
+      ],
+      "candidate": "canonical same-second delta ±7 returned as ±7 and different-second branch as ±1",
+      "first_unverified_step": "noncanonical input subtraction may overflow long/int; caller domain and compiled behavior",
+      "status": "CONDITIONAL_SOURCE_ANALYSIS"
+    },
+    {
+      "id": "TS113-CAND-08",
+      "root": "C",
+      "kind": "NORMALIZATION_DOMAIN",
+      "premise": "carry/borrow loops and final field assignment visible, add/sub call sites located",
+      "evidence": [
+        "TS113-E043–E048"
+      ],
+      "candidate": "(0,1e9) normalized (1,0), (0,-1) normalized (-1,999999999), latter still fails basic validity",
+      "first_unverified_step": "large magnitude loop costs, signed overflow extreme sec/nsec, runtime and concurrent observations",
+      "status": "CONDITIONAL_SOURCE_ANALYSIS"
+    }
+  ],
+  "unverified_gaps": [
+    {
+      "id": "TS113-GAP-01",
+      "root": "R111-02",
+      "first_unverified_step": "Pro C07 exact row key/three signed void references/M09 historical E052 exclusion review",
+      "not_blocking": "A/B/C new static source inspection",
+      "state": "PENDING"
+    },
+    {
+      "id": "TS113-GAP-02",
+      "root": "R112-01",
+      "first_unverified_step": "Pro C07 verify 10 separate macro P2 anchors, true 112 inputs/readback and paired canaries",
+      "not_blocking": "A/B/C new static source inspection",
+      "state": "PENDING"
+    },
+    {
+      "id": "TS113-GAP-03",
+      "root": "R112-02",
+      "first_unverified_step": "Pro C07 verify graph eight deltas, zero and negative helper preconditions, double roundtrips",
+      "not_blocking": "A/B/C new static source inspection",
+      "state": "PENDING"
+    },
+    {
+      "id": "TS113-GAP-04",
+      "root": "A",
+      "first_unverified_step": "Read/compile actual copy_from_user/copy_to_user and confirm partial fault and byte semantics",
+      "not_blocking": "abstract copy return branches",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TS113-GAP-05",
+      "root": "A",
+      "first_unverified_step": "Compiler-confirm sizeof(__kernel_timespec_s), member offsets, alignment and compat/LP64 behavior",
+      "not_blocking": "field type declarations and sizeof(kts) source operand",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TS113-GAP-06",
+      "root": "B",
+      "first_unverified_step": "Confirm which call sites invoke validator before or after copying/normalizing and any runtime policy",
+      "not_blocking": "three predicate bodies and finite truth table",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TS113-GAP-07",
+      "root": "C",
+      "first_unverified_step": "Run compiled ordinary path and stress noncanonical/extreme values only with future authorization",
+      "not_blocking": "bounded signed integer calculations",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TS113-GAP-08",
+      "root": "INTEGRATION",
+      "first_unverified_step": "Full local P9, compile/preprocess/link, kernel/QEMU/real hardware and actual user pointers",
+      "not_blocking": "static source line attribution",
+      "state": "NOT_RUN"
+    }
+  ],
+  "source_preservation": "Only additive new batch113 files, frozen earlier results/comments remain unmodified",
+  "no_current_owner_decisions_required": true,
+  "actual_not_run": [
+    "full_local_P9",
+    "preprocessor",
+    "compiler",
+    "linker",
+    "repository program/script",
+    "Graphviz",
+    "QEMU",
+    "kernel",
+    "real hardware",
+    "interrupts",
+    "concurrency",
+    "external agent/model or paid service"
+  ]
+}

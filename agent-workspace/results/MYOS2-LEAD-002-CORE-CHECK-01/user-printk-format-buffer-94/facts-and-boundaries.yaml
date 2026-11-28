@@ -1,0 +1,1612 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94",
+  "record_type": "bounded_log_macro_prefix_ring_and_console_conditional_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (visible family; backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PREPUBLICATION_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "D00": "NOT_REQUIRED",
+  "pins": {
+    "lead": "3489bb6ec616",
+    "exec_parent": "2fe1ce176f4d",
+    "time": "a039d9803ade",
+    "master": "e8e60cd19540"
+  },
+  "G00": {
+    "decision": "PASS",
+    "PR16": "OPEN",
+    "PR17": "OPEN_DRAFT",
+    "open_prs": [
+      16,
+      17
+    ],
+    "six_files": "ABSENT",
+    "formal_comment94": "ABSENT",
+    "full_P9": "NOT_RUN"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/include/linux/debug/printk.h",
+      "evidence_ids": [
+        "PK94-E001",
+        "PK94-E002",
+        "PK94-E003",
+        "PK94-E004",
+        "PK94-E005",
+        "PK94-E006",
+        "PK94-E007",
+        "PK94-E008"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "evidence_ids": [
+        "PK94-E009",
+        "PK94-E010"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/printk/printk.c",
+      "evidence_ids": [
+        "PK94-E011",
+        "PK94-E012",
+        "PK94-E013",
+        "PK94-E014",
+        "PK94-E015",
+        "PK94-E016",
+        "PK94-E017",
+        "PK94-E018",
+        "PK94-E019",
+        "PK94-E020",
+        "PK94-E021",
+        "PK94-E022",
+        "PK94-E023",
+        "PK94-E024",
+        "PK94-E025",
+        "PK94-E026",
+        "PK94-E027",
+        "PK94-E028",
+        "PK94-E029",
+        "PK94-E030",
+        "PK94-E031",
+        "PK94-E032",
+        "PK94-E033",
+        "PK94-E034",
+        "PK94-E035",
+        "PK94-E036",
+        "PK94-E037",
+        "PK94-E038",
+        "PK94-E040",
+        "PK94-E041",
+        "PK94-E042",
+        "PK94-E043",
+        "PK94-E044",
+        "PK94-E045",
+        "PK94-E046",
+        "PK94-E047",
+        "PK94-E048",
+        "PK94-E049",
+        "PK94-E050",
+        "PK94-E051",
+        "PK94-E052",
+        "PK94-E053",
+        "PK94-E054",
+        "PK94-E055",
+        "PK94-E056",
+        "PK94-E057",
+        "PK94-E070",
+        "PK94-E071",
+        "PK94-E072",
+        "PK94-E073",
+        "PK94-E074",
+        "PK94-E075",
+        "PK94-E076",
+        "PK94-E077",
+        "PK94-E078",
+        "PK94-E079",
+        "PK94-E080",
+        "PK94-E081",
+        "PK94-E082",
+        "PK94-E083",
+        "PK94-E084",
+        "PK94-E085",
+        "PK94-E086",
+        "PK94-E087",
+        "PK94-E088",
+        "PK94-E089",
+        "PK94-E090",
+        "PK94-E091",
+        "PK94-E092",
+        "PK94-E093"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/include/generated/conf.h",
+      "evidence_ids": [
+        "PK94-E039"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/lib/printf/vsprintf.c",
+      "evidence_ids": [
+        "PK94-E058",
+        "PK94-E059",
+        "PK94-E060",
+        "PK94-E061",
+        "PK94-E062",
+        "PK94-E098",
+        "PK94-E099",
+        "PK94-E100",
+        "PK94-E101"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/lib/digit/kstrtox.c",
+      "evidence_ids": [
+        "PK94-E063",
+        "PK94-E064",
+        "PK94-E065",
+        "PK94-E066",
+        "PK94-E067",
+        "PK94-E068"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/lib/kstrtox.h",
+      "evidence_ids": [
+        "PK94-E069"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/include/linux/device/console.h",
+      "evidence_ids": [
+        "PK94-E094",
+        "PK94-E095"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/include/linux/sched/clock.h",
+      "evidence_ids": [
+        "PK94-E096"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/div64.h",
+      "evidence_ids": [
+        "PK94-E097"
+      ],
+      "source": "fixed time connector read; no runtime/compile"
+    }
+  ],
+  "source_soft_limit": 24,
+  "source_file_count": 10,
+  "read_account": {
+    "fresh": [
+      "132合同",
+      "110/124",
+      "93 Pro回执",
+      "94检查点",
+      "93作者评论6916378870",
+      "C06发布评论6917611448",
+      "63/79/P1–P13",
+      "time完整options_flags及time/master双canary",
+      "printk.h全文、printk.c全文",
+      "worker create_worker",
+      "vsprintf相关vscnprintf/sprintf/simple_strntoull",
+      "kstrtox.c数字解析",
+      "conf.h",
+      "console.h",
+      "clock.h",
+      "do_div宏",
+      "list宏定点"
+    ],
+    "same_effective_EXEC12_reuse": [
+      "原九规则既有同pin且实际读过的部分",
+      "128接收与Mnemosyne指导仅以前同会话实际材料为准，本次未刷新",
+      "R91/R92及R90C-S01此前已读同pin，R93本轮新读",
+      "93六件之前作者实际交付，未宣称本轮全文重新读取"
+    ],
+    "not_read": [
+      "全console注册和驱动",
+      "时钟实现及真实ABI",
+      "完整printf%p修复或日志并发",
+      "全工程构建、完整P9、QEMU、实机"
+    ]
+  },
+  "history": {
+    "batch93": "PASS_PENDING_LOCAL_WITH_R93_S01_S02_S03",
+    "batch92": "PASS_PENDING_LOCAL_WITH_R92_S01_S02_S03",
+    "batch91": "PASS_PENDING_LOCAL_WITH_R91_S01_S02_S03",
+    "R90C_S01": "DOC_CLOSED",
+    "SP93_F01": "RETAIN_FIRST_RETURN_STOP",
+    "SP93_U07": "CALL_CHAIN_SOURCE_NARROWED_NOT_FULL_LOG_OUTPUT_PROVEN"
+  },
+  "fact_to_evidence_ids": {
+    "macros": [
+      "PK94-E001",
+      "PK94-E002",
+      "PK94-E003",
+      "PK94-E004",
+      "PK94-E005",
+      "PK94-E006",
+      "PK94-E007",
+      "PK94-E008",
+      "PK94-E009",
+      "PK94-E010"
+    ],
+    "buffer": [
+      "PK94-E013",
+      "PK94-E016",
+      "PK94-E017",
+      "PK94-E021",
+      "PK94-E022",
+      "PK94-E023",
+      "PK94-E024",
+      "PK94-E025",
+      "PK94-E026",
+      "PK94-E027",
+      "PK94-E029",
+      "PK94-E031",
+      "PK94-E032",
+      "PK94-E033",
+      "PK94-E034",
+      "PK94-E035",
+      "PK94-E098",
+      "PK94-E099",
+      "PK94-E100",
+      "PK94-E101"
+    ],
+    "prefix": [
+      "PK94-E050",
+      "PK94-E051",
+      "PK94-E052",
+      "PK94-E053",
+      "PK94-E054",
+      "PK94-E055",
+      "PK94-E056",
+      "PK94-E057",
+      "PK94-E058",
+      "PK94-E059",
+      "PK94-E060",
+      "PK94-E061",
+      "PK94-E062",
+      "PK94-E063",
+      "PK94-E064",
+      "PK94-E065",
+      "PK94-E066",
+      "PK94-E067",
+      "PK94-E068",
+      "PK94-E069"
+    ],
+    "ring": [
+      "PK94-E039",
+      "PK94-E040",
+      "PK94-E041",
+      "PK94-E042",
+      "PK94-E043",
+      "PK94-E044",
+      "PK94-E045",
+      "PK94-E046",
+      "PK94-E047",
+      "PK94-E048",
+      "PK94-E049",
+      "PK94-E070",
+      "PK94-E071",
+      "PK94-E072"
+    ],
+    "console": [
+      "PK94-E073",
+      "PK94-E074",
+      "PK94-E075",
+      "PK94-E076",
+      "PK94-E077",
+      "PK94-E078",
+      "PK94-E079",
+      "PK94-E080",
+      "PK94-E081",
+      "PK94-E082",
+      "PK94-E083",
+      "PK94-E084",
+      "PK94-E085",
+      "PK94-E086",
+      "PK94-E087",
+      "PK94-E088",
+      "PK94-E089",
+      "PK94-E090",
+      "PK94-E091",
+      "PK94-E092",
+      "PK94-E093",
+      "PK94-E094",
+      "PK94-E095"
+    ]
+  },
+  "matrices": {
+    "log_entry_and_argument_chain_matrix": [
+      {
+        "id": "A-ENTRY01",
+        "scenario": "一般pr_err",
+        "preconditions": "pr_fmt未先行重定义，文本参数合法",
+        "source_path": "KERN_ERR+pr_fmt+pr_err→printk→va_start→vprintk→vscnprintf",
+        "conditional_result": "源调用链闭合，成功格式化、环写、回调另证",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E001",
+          "PK94-E002",
+          "PK94-E003",
+          "PK94-E011",
+          "PK94-E012",
+          "PK94-E017",
+          "PK94-E098"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-ENTRY02",
+        "scenario": "create_worker的%pe",
+        "preconditions": "id<0且ERR_PTR(id)合法",
+        "source_path": "pr_err_once→printk_once→printk→vprintk→vscnprintf→vsnprintf PTR",
+        "conditional_result": "必须在SP93-F01的pointer非void无return且返回值被消费处停止；不认证入环",
+        "first_stop_gate": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01",
+        "evidence_ids": [
+          "PK94-E004",
+          "PK94-E005",
+          "PK94-E006",
+          "PK94-E009",
+          "PK94-E011",
+          "PK94-E017",
+          "PK94-E098"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-ENTRY03",
+        "scenario": "纯文字once源",
+        "preconditions": "worker分配失败且无%p格式",
+        "source_path": "pr_err_once常量串展开printk链",
+        "conditional_result": "可继续独立格式化文本模型；不证明失败路径真实发生",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E004",
+          "PK94-E010",
+          "PK94-E011",
+          "PK94-E017",
+          "PK94-E098"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-ENTRY04",
+        "scenario": "返回值层级",
+        "preconditions": "所有调用正常返回",
+        "source_path": "printk以r=vprintk(fmt,args)再return r",
+        "conditional_result": "r不是console写回调返回（console write为void）",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E011",
+          "PK94-E012",
+          "PK94-E031",
+          "PK94-E095"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "once_state_and_callsite_matrix": [
+      {
+        "id": "A-ONCE01",
+        "scenario": "同一展开点首次",
+        "preconditions": "static bool初始false，单线程有效对象",
+        "source_path": "if(!mark)先赋true，再调用printk",
+        "conditional_result": "标记已写先于函数调用；不保证printk成功",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E005",
+          "PK94-E006"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-ONCE02",
+        "scenario": "同一展开点第二次",
+        "preconditions": "第一轮正常到达赋值后、无并发写冲突",
+        "source_path": "再次判断为true，跳过printk",
+        "conditional_result": "只能得顺序条件的至多一次调用",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E005",
+          "PK94-E006"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-ONCE03",
+        "scenario": "两个展开点",
+        "preconditions": "两个静态块作用域变量分别初始化",
+        "source_path": "宏展开点的同名局部static互不混为一份",
+        "conditional_result": "A点标记不使B点自动跳过",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E005",
+          "PK94-E006"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-ONCE04",
+        "scenario": "%pe首遍停证",
+        "preconditions": "先赋mark=true，再进入%pe格式",
+        "source_path": "遇到旧pointer返回缺口",
+        "conditional_result": "不从第一次未证执行推断之后第二次真实正常运行",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E006",
+          "PK94-E009",
+          "PK94-E017",
+          "PK94-E098"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-ONCE05",
+        "scenario": "并发竞争",
+        "preconditions": "未证普通bool原子/同步",
+        "source_path": "读标志和写标志是分离普通操作",
+        "conditional_result": "无多核一次性保证，亦不称真实发生两次打印",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E005",
+          "PK94-E006",
+          "PK94-E015",
+          "PK94-E074"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "temporary_buffer_and_nul_matrix": [
+      {
+        "id": "B-BUF01",
+        "scenario": "空fmt",
+        "preconditions": "recursion_bug0,new_text_line1,有效1024对象",
+        "source_path": "vscnprintf返回0、末尾NUL在index0,for扫描零字节",
+        "conditional_result": "本条消息没有emit，printed_len=0；无关积压不纳入",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E013",
+          "PK94-E017",
+          "PK94-E021",
+          "PK94-E035",
+          "PK94-E098",
+          "PK94-E100"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BUF02",
+        "scenario": "普通A换行",
+        "preconditions": "fmt=A+LF，new_text_line1，timestamp tlen15的额外前提",
+        "source_path": "格式保留2；插<4>3、时间15、正文2",
+        "conditional_result": "ring写20,printed_len20,callback前可移交17B",
+        "first_stop_gate": "sprintf对50B对象传INT_MAX的C指针合法性不获证明",
+        "evidence_ids": [
+          "PK94-E007",
+          "PK94-E017",
+          "PK94-E021",
+          "PK94-E024",
+          "PK94-E026",
+          "PK94-E027",
+          "PK94-E029",
+          "PK94-E031"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BUF03",
+        "scenario": "内嵌NUL",
+        "preconditions": "fmt=A%cB+LF，c=0,tlen15假设",
+        "source_path": "vscnprintf返回4且目标含A,NUL,B,LF；for在首个NUL停止",
+        "conditional_result": "payload扫描1B、环写19B、return22、无LF回调0次",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E017",
+          "PK94-E021",
+          "PK94-E024",
+          "PK94-E027",
+          "PK94-E029",
+          "PK94-E031",
+          "PK94-E098"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BUF04",
+        "scenario": "精确容量截断",
+        "preconditions": "fmt有1024个A及NUL，1024字节目标对象",
+        "source_path": "vsnprintf逻辑1024，末尾NUL覆盖buf[1023]，vscnprintf返回1023",
+        "conditional_result": "正文可扫描1023个A而非原1024，不能推广更长格式的C指针有效性",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E017",
+          "PK94-E021",
+          "PK94-E035",
+          "PK94-E098",
+          "PK94-E099",
+          "PK94-E100"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BUF05",
+        "scenario": "递归消息前置",
+        "preconditions": "额外假设recursion_bug非零且字符串能放入1024B",
+        "source_path": "先strcpy recursion_bug_msg并strlen，再格式化1024-used剩余",
+        "conditional_result": "先占缓冲空间；注释中的标志置1非活动生产者",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E016",
+          "PK94-E032",
+          "PK94-E033",
+          "PK94-E035",
+          "PK94-E017"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BUF06",
+        "scenario": "同次两行",
+        "preconditions": "fmt=A+LF+B+LF,new_text_line1,tlen15每行",
+        "source_path": "原格式4，行首前缀+时间18分别两次",
+        "conditional_result": "ring40，printed_len40，有条件两次17B回调区间",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E017",
+          "PK94-E021",
+          "PK94-E024",
+          "PK94-E027",
+          "PK94-E029",
+          "PK94-E031",
+          "PK94-E087"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "prefix_and_length_accounting_matrix": [
+      {
+        "id": "B-PFX01",
+        "scenario": "无级别前缀",
+        "preconditions": "线性buf A+LF",
+        "source_path": "log_prefix首字节!=<返回0，不写special，后续用默认level4",
+        "conditional_result": "添加<4>三字节与timestamp，不把头算作原格式长度",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E007",
+          "PK94-E018",
+          "PK94-E024",
+          "PK94-E050"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-PFX02",
+        "scenario": "数字前缀重复计数",
+        "preconditions": "线性<3>A+LF,new_text_line1,tlen15",
+        "source_path": "vscnprintf已计原前缀3，vprintk重新复制3并printed_len再加3",
+        "conditional_result": "源格式5，ring20，返回23，console去前缀可移交17",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E018",
+          "PK94-E022",
+          "PK94-E023",
+          "PK94-E031",
+          "PK94-E051",
+          "PK94-E057"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-PFX03",
+        "scenario": "特殊c/d",
+        "preconditions": "<c>或<d>且special出参有效",
+        "source_path": "log_prefix写special但不写level；c清plen，d清plen且可额外插LF",
+        "conditional_result": "c不是等级数字，d额外插LF路径未相应计printed_len",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E019",
+          "PK94-E020",
+          "PK94-E052",
+          "PK94-E055",
+          "PK94-E056"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-PFX04",
+        "scenario": "多位等级",
+        "preconditions": "完整'<12>A'合法源串",
+        "source_path": "p2!='>'，simple_strtoul读取12并停在>，level=12&7=4，plen4",
+        "conditional_result": "有条件按facility低3位得等级4",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E053",
+          "PK94-E054",
+          "PK94-E058",
+          "PK94-E059",
+          "PK94-E060",
+          "PK94-E061",
+          "PK94-E062",
+          "PK94-E065",
+          "PK94-E066",
+          "PK94-E068"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-PFX05",
+        "scenario": "非法字母",
+        "preconditions": "完整'<x12>A'",
+        "source_path": "p1<'0' && p1>'9'不可能成立；解析0位endp指x",
+        "conditional_result": "关闭符检查不成立，返回0；不能说所有非法前缀都被接受",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E053",
+          "PK94-E054",
+          "PK94-E065",
+          "PK94-E066"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-PFX06",
+        "scenario": "空数位被接受",
+        "preconditions": "完整'<>A'，基数10，解析器得到零位",
+        "source_path": "多数字分支的矛盾守卫不拒绝；_parse_integer_limit返回rv0,endp仍在>；检查通过",
+        "conditional_result": "plen=2，level=0，字符串正文从A开始，不要求真实日志运行",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E050",
+          "PK94-E051",
+          "PK94-E053",
+          "PK94-E054",
+          "PK94-E058",
+          "PK94-E059",
+          "PK94-E060",
+          "PK94-E065",
+          "PK94-E066",
+          "PK94-E068"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-PFX07",
+        "scenario": "带溢出的长数字",
+        "preconditions": "数字序列超过u64或源对象有效性未知",
+        "source_path": "_parse_integer_limit有overflow位，simple_strntoull屏蔽计数位而返回可能已卷绕的数",
+        "conditional_result": "不据函数名假设所有长数字都被拒绝或准确返回facility",
+        "first_stop_gate": "在第一个算术溢出或越界对象访问前停止",
+        "evidence_ids": [
+          "PK94-E058",
+          "PK94-E059",
+          "PK94-E065",
+          "PK94-E067",
+          "PK94-E068",
+          "PK94-E069"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "timestamp_and_return_matrix": [
+      {
+        "id": "B-TIME01",
+        "scenario": "clock0时间文本",
+        "preconditions": "假设local_clock返回u64 0且sprintf在50B对象中正常返回",
+        "source_path": "do_div(1e9)余0商0，格式'[%5lu.%06lu] '",
+        "conditional_result": "纯数学tlen15，tbuf内容'[    0.000000] '；不签sprintf C对象正常",
+        "first_stop_gate": "sprintf内部vsnprintf(buf,INT_MAX)的指针范围尚未证明",
+        "evidence_ids": [
+          "PK94-E025",
+          "PK94-E026",
+          "PK94-E027",
+          "PK94-E096",
+          "PK94-E097",
+          "PK94-E101"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-TIME02",
+        "scenario": "时间上界",
+        "preconditions": "u64纳秒t≤2^64-1、ulong64",
+        "source_path": "do_div余数<1e9，t变秒≤18446744073，微秒≤999999",
+        "conditional_result": "整数模型可知预期文字≤21B<50，但不证明实际编译输出路径",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E025",
+          "PK94-E026",
+          "PK94-E096",
+          "PK94-E097",
+          "PK94-E101"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-TIME03",
+        "scenario": "tlen跨对象",
+        "preconditions": "sprintf的负值/异常返回或返回长度未被证实",
+        "source_path": "unsigned tlen从sprintf int得来，再用tbuf+tlen作循环上界",
+        "conditional_result": "无合法C对象加法证明不得迭代任意字节",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E025",
+          "PK94-E027",
+          "PK94-E101"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-TIME04",
+        "scenario": "没有真实条件开关",
+        "preconditions": "源码中if(printk_time)为注释，当前new_text_line真",
+        "source_path": "local_clock/do_div/sprintf语句仍在活动分支",
+        "conditional_result": "不能以注释条件判断timestamp已关闭",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E021",
+          "PK94-E025",
+          "PK94-E026",
+          "PK94-E027"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "ring_cursor_and_wrap_matrix": [
+      {
+        "id": "C-RING01",
+        "scenario": "实际声明容量",
+        "preconditions": "固定time generated/conf.h配置23且宏未被覆盖",
+        "source_path": "__LOG_BUF_LEN=1<<23=8388608，LOG_BUF_MASK=len-1，LOG_BUF掩码访问",
+        "conditional_result": "在此2次幂与固定数组前提下物理槽为0..len-1",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E039",
+          "PK94-E040",
+          "PK94-E041",
+          "PK94-E042",
+          "PK94-E043",
+          "PK94-E048",
+          "PK94-E049"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-RING02",
+        "scenario": "一字节环写",
+        "preconditions": "固定游标、物理数组有效",
+        "source_path": "emit先写LOG_BUF(log_end)，再log_end++，超容量时先改log_start再con_start，最后logged_chars饱和增加",
+        "conditional_result": "单次emit只有1个物理写；logical游标与masked槽独立",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E044",
+          "PK94-E045",
+          "PK94-E046",
+          "PK94-E047",
+          "PK94-E070",
+          "PK94-E071",
+          "PK94-E072"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-RING03",
+        "scenario": "假定N8的第9次",
+        "preconditions": "仅教具长度8初始游标0且无console flush",
+        "source_path": "8次后end8/start0/con0/logged8；第9次覆盖物理槽0，end9/start1/con1/logged8",
+        "conditional_result": "仅纯文本模型，不声称当前真实配置容量8",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E040",
+          "PK94-E044",
+          "PK94-E045",
+          "PK94-E046",
+          "PK94-E047",
+          "PK94-E049",
+          "PK94-E070",
+          "PK94-E071",
+          "PK94-E072"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-RING04",
+        "scenario": "正常跨尾分段",
+        "preconditions": "教具N8,start6,end10,有LF且进入_call",
+        "source_path": "mask6>mask2，拆[6,8)与[0,2)两个物理连续段",
+        "conditional_result": "预期长度2+2；回调有效性另证",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E048",
+          "PK94-E049",
+          "PK94-E089",
+          "PK94-E090",
+          "PK94-E092",
+          "PK94-E093"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-RING05",
+        "scenario": "一整圈同mask",
+        "preconditions": "教具N8,start3,end11,单段末尾LF,初始前缀检查有足够连续字节",
+        "source_path": "两个mask都是3所以不拆，__call收到&buf[3]及count8",
+        "conditional_result": "物理连续余量只有5B，必须在回调长度合法性前止证",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E048",
+          "PK94-E049",
+          "PK94-E089",
+          "PK94-E091",
+          "PK94-E092",
+          "PK94-E093"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-RING06",
+        "scenario": "环尾线性前缀读取",
+        "preconditions": "教具N8,start7,end11,逻辑字节'<3>\\n',msg_level<0",
+        "source_path": "log_prefix(&LOG_BUF(7))读p0 '<'后再读p1，然而物理buf[8]不是环首buf[0]",
+        "conditional_result": "读越过实际8B对象门，不能声称完成前缀与回调",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E049",
+          "PK94-E050",
+          "PK94-E085"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-RING07",
+        "scenario": "uint游标数学回绕",
+        "preconditions": "uint32,len=2^23且有效距离受限",
+        "source_path": "uint按2^32模更新，物理掩码低23位保持正确",
+        "conditional_result": "不把逻辑cursor叫无限单调，也不保证任意超大距离合法",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E039",
+          "PK94-E040",
+          "PK94-E044",
+          "PK94-E045",
+          "PK94-E046",
+          "PK94-E048",
+          "PK94-E049",
+          "PK94-E070"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "console_handoff_interval_matrix": [
+      {
+        "id": "C-CON01",
+        "scenario": "LF完成行",
+        "preconditions": "console存在且write有效，环数据前缀连续、有效时间戳模型",
+        "source_path": "console_unlock先con_start=log_end并将旧start/end交call_console_drivers；newline处才_call",
+        "conditional_result": "例如A LF，header去除3字节，回调前time15+正文2=17B",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E030",
+          "PK94-E081",
+          "PK94-E082",
+          "PK94-E084",
+          "PK94-E085",
+          "PK94-E086",
+          "PK94-E087",
+          "PK94-E093",
+          "PK94-E095"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-CON02",
+        "scenario": "没有LF",
+        "preconditions": "console有有效write且只有X无换行，初始无积压",
+        "source_path": "console_unlock先推进con_start，call_console_drivers扫描到end，末尾flush语句被注释",
+        "conditional_result": "本次无console回调，旧未完行不在下次待移交区间",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E021",
+          "PK94-E030",
+          "PK94-E081",
+          "PK94-E082",
+          "PK94-E084",
+          "PK94-E086",
+          "PK94-E087",
+          "PK94-E088"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-CON03",
+        "scenario": "没有控制台",
+        "preconditions": "console_list_hdr.count=0",
+        "source_path": "can_use_console返回0，console_trylock_for_printk将retval清0",
+        "conditional_result": "vprintk不调用console_unlock；日志仍可能存在环中",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E073",
+          "PK94-E076",
+          "PK94-E077",
+          "PK94-E078",
+          "PK94-E079",
+          "PK94-E030"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-CON04",
+        "scenario": "trylock名不代表持锁",
+        "preconditions": "console_list_hdr.count>0",
+        "source_path": "console_trylock_for_printk直接赋retval=1，真实console_trylock以及相关spin_unlock注释",
+        "conditional_result": "返回真不构成已成功取得锁证明",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E074",
+          "PK94-E075",
+          "PK94-E077",
+          "PK94-E078",
+          "PK94-E079",
+          "PK94-E080"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-CON05",
+        "scenario": "NULL回调前提",
+        "preconditions": "列表里con->write为NULL，且执行到__call_console_drivers",
+        "source_path": "原过滤可选回调的条件已注释，活动无条件调用con->write",
+        "conditional_result": "不能断言已安全执行设备写；未审真实注册器是否允许NULL",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E092",
+          "PK94-E093",
+          "PK94-E094",
+          "PK94-E095"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-CON06",
+        "scenario": "等级过滤被注释",
+        "preconditions": "任意msg_log_level和控制台等级",
+        "source_path": "_call中的level过滤if为注释，活动仅按mask关系分支",
+        "conditional_result": "不能把注释或函数名当已实施等级过滤",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E008",
+          "PK94-E089",
+          "PK94-E090",
+          "PK94-E091"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-CON07",
+        "scenario": "先标记已移交",
+        "preconditions": "__con_start/_log_end快照对象有效",
+        "source_path": "console_unlock先赋con_start=log_end再进入call_console_drivers",
+        "conditional_result": "回调未成功时状态也已前进；不认证所有失败/并发情景",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E081",
+          "PK94-E082",
+          "PK94-E084"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC01",
+        "scenario": "普通短文本全链",
+        "preconditions": "A LF、初始line=1、tlen15、console回调有效与C对象门独立假定",
+        "source_path": "printk→vprintk→vscnprintf→log_prefix→emit→console_unlock→call_console_drivers→con->write",
+        "conditional_result": "本数学模型格式2/环写20/返回20/回调入参17，四个长度不同",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E003",
+          "PK94-E011",
+          "PK94-E017",
+          "PK94-E021",
+          "PK94-E024",
+          "PK94-E026",
+          "PK94-E029",
+          "PK94-E031",
+          "PK94-E070",
+          "PK94-E081",
+          "PK94-E082",
+          "PK94-E087",
+          "PK94-E093"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "ABC02",
+        "scenario": "%pe旧停止门",
+        "preconditions": "create_worker的ID失败与%pe实参条件成立",
+        "source_path": "pr_err_once宏→printk→vprintk→vscnprintf→vsnprintf PTR→pointer",
+        "conditional_result": "在CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01停止，不推断环写或回调",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E009",
+          "PK94-E004",
+          "PK94-E005",
+          "PK94-E006",
+          "PK94-E011",
+          "PK94-E017",
+          "PK94-E098"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "ABC03",
+        "scenario": "明确前缀计数偏差",
+        "preconditions": "<3>A LF，时间戳模型tlen15",
+        "source_path": "原格式已含3B标签，复制标签时又printed_len+=3",
+        "conditional_result": "格式5/环写20/返回23/回调长度17，均为条件数学",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E018",
+          "PK94-E022",
+          "PK94-E023",
+          "PK94-E027",
+          "PK94-E031",
+          "PK94-E054",
+          "PK94-E057",
+          "PK94-E082",
+          "PK94-E087",
+          "PK94-E093"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "ABC04",
+        "scenario": "含NUL不送换行",
+        "preconditions": "A%cB LF,int0,tlen15,无之前积压",
+        "source_path": "vscnprintf算4，但for首NUL停止;只写prefix+time+A而无LF，console无行尾回调",
+        "conditional_result": "环写19/返回22/callback0，不是运行证明",
+        "first_stop_gate": "STATIC_ONLY：需先有合法C对象、形参、类型、调用顺序及选定实现；NOT_RUN",
+        "evidence_ids": [
+          "PK94-E017",
+          "PK94-E021",
+          "PK94-E024",
+          "PK94-E027",
+          "PK94-E029",
+          "PK94-E031",
+          "PK94-E081",
+          "PK94-E084",
+          "PK94-E088"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 8,
+  "matrix_rows": 44,
+  "finite_models": [
+    {
+      "id": "PK94-M01",
+      "topic": "A once同点",
+      "input": "首次mark=false，随后顺序第二次",
+      "intermediate_steps": [
+        "第一次先mark=true后调用printk",
+        "第二次if(!mark)为假"
+      ],
+      "conditional_result": "单点顺序只调用一次，不等于多核原子一次",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E005",
+        "PK94-E006"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M02",
+      "topic": "A once不同点",
+      "input": "两个独立展开点",
+      "intermediate_steps": [
+        "各自static局部初值false",
+        "各自可以分别首次进入"
+      ],
+      "conditional_result": "A点不自动抑制B点",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E004",
+        "PK94-E005",
+        "PK94-E006"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M03",
+      "topic": "A %pe停止",
+      "input": "worker ID失败后产生%pe",
+      "intermediate_steps": [
+        "mark写true",
+        "正常日志链进入vsnprintf PTR",
+        "pointer无活动return、外层使用结果"
+      ],
+      "conditional_result": "止于SP93-F01，不能认证环写",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E009",
+        "PK94-E004",
+        "PK94-E006",
+        "PK94-E011",
+        "PK94-E017",
+        "PK94-E098"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M04",
+      "topic": "B 空文本",
+      "input": "fmt空、recursion_bug0",
+      "intermediate_steps": [
+        "vscnprintf返回0并正常写首NUL",
+        "扫描条件第一次即为假"
+      ],
+      "conditional_result": "本次ring emit0，返回0",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E013",
+        "PK94-E017",
+        "PK94-E021",
+        "PK94-E035",
+        "PK94-E100"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M05",
+      "topic": "B A换行",
+      "input": "'A\\n',tlen15,初始行首",
+      "intermediate_steps": [
+        "格式保留2",
+        "synthetic<4>3",
+        "timestamp15",
+        "payload A LF2"
+      ],
+      "conditional_result": "环20、返回20、回调17",
+      "first_stop_gate": "sprintf INT_MAX与50B真实对象不自动合法",
+      "evidence_ids": [
+        "PK94-E017",
+        "PK94-E024",
+        "PK94-E026",
+        "PK94-E027",
+        "PK94-E029",
+        "PK94-E031",
+        "PK94-E087"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M06",
+      "topic": "B 显式<3>",
+      "input": "'<3>A\\n',tlen15",
+      "intermediate_steps": [
+        "格式保留5",
+        "标签拷贝3再累加3",
+        "timestamp15、正文2"
+      ],
+      "conditional_result": "环20、返回23、console有效载荷17",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E018",
+        "PK94-E022",
+        "PK94-E023",
+        "PK94-E026",
+        "PK94-E027",
+        "PK94-E031"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M07",
+      "topic": "B 内嵌NUL",
+      "input": "'A%cB\\n',c0,tlen15",
+      "intermediate_steps": [
+        "格式返回4,buffer A NUL B LF NUL",
+        "loop只消费A",
+        "前缀3+timestamp15+A1"
+      ],
+      "conditional_result": "环19、返回22、无LF回调0",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E017",
+        "PK94-E021",
+        "PK94-E024",
+        "PK94-E027",
+        "PK94-E029",
+        "PK94-E031"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M08",
+      "topic": "B 双行",
+      "input": "'A\\nB\\n',tlen15每行",
+      "intermediate_steps": [
+        "格式4",
+        "两行各前缀3+时间15+正文2"
+      ],
+      "conditional_result": "环40、return40、回调两次各17",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E017",
+        "PK94-E021",
+        "PK94-E024",
+        "PK94-E027",
+        "PK94-E029",
+        "PK94-E031"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M09",
+      "topic": "B 边界1024字面",
+      "input": "1024个A构成有效fmt，缓冲1024",
+      "intermediate_steps": [
+        "需求1024，结尾覆盖index1023",
+        "vscnprintf返回1023",
+        "只扫描保留1023个A"
+      ],
+      "conditional_result": "不带LF，不能认为console收到这一行",
+      "first_stop_gate": "必须满足真实指针对象门；不能推广更长字面",
+      "evidence_ids": [
+        "PK94-E017",
+        "PK94-E021",
+        "PK94-E035",
+        "PK94-E098",
+        "PK94-E099",
+        "PK94-E100"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M10",
+      "topic": "B 多数字级别",
+      "input": "'<12>A'",
+      "intermediate_steps": [
+        "识别为非短3字节",
+        "读12并停在>",
+        "12&7=4"
+      ],
+      "conditional_result": "plen4、level4",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E053",
+        "PK94-E054",
+        "PK94-E058",
+        "PK94-E059",
+        "PK94-E065",
+        "PK94-E066",
+        "PK94-E068"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M11",
+      "topic": "B 空数字级别",
+      "input": "'<>A'",
+      "intermediate_steps": [
+        "p2='A'进入多数字",
+        "守卫不可能真",
+        "解析0位，endp指向>"
+      ],
+      "conditional_result": "plen2、level0的有条件局部接受",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E050",
+        "PK94-E053",
+        "PK94-E054",
+        "PK94-E065",
+        "PK94-E066",
+        "PK94-E068"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M12",
+      "topic": "B 时间戳",
+      "input": "local_clock假设0",
+      "intermediate_steps": [
+        "do_div得t=0，rem=0",
+        "sprintf数学格式[%5lu.%06lu]"
+      ],
+      "conditional_result": "tlen15、预期文本'[    0.000000] '",
+      "first_stop_gate": "sprintf采用INT_MAX容量不证明50B对象有合法C执行",
+      "evidence_ids": [
+        "PK94-E025",
+        "PK94-E026",
+        "PK94-E027",
+        "PK94-E096",
+        "PK94-E097",
+        "PK94-E101"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M13",
+      "topic": "C 8槽第9字节",
+      "input": "假设N8初始游标0且不调用console",
+      "intermediate_steps": [
+        "第8次end8、start0、con0、logged8",
+        "第9次写物理index0, end9",
+        "start1、con1、logged8"
+      ],
+      "conditional_result": "每emit1写，不代表console回调",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E040",
+        "PK94-E044",
+        "PK94-E045",
+        "PK94-E046",
+        "PK94-E047",
+        "PK94-E070",
+        "PK94-E071",
+        "PK94-E072"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M14",
+      "topic": "C 正常跨环",
+      "input": "N8,start6,end10并形成LF完成区间",
+      "intermediate_steps": [
+        "mask6>mask2",
+        "拆[6,8)长度2、[0,2)长度2"
+      ],
+      "conditional_result": "两个可独立移交的连续区间",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E048",
+        "PK94-E049",
+        "PK94-E089",
+        "PK94-E090",
+        "PK94-E093"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M15",
+      "topic": "C 相同mask整圈",
+      "input": "N8,start3,end11, LF触发回调",
+      "intermediate_steps": [
+        "mask两者3",
+        "不拆：&buf[3],len8",
+        "物理剩余仅5"
+      ],
+      "conditional_result": "在回调物理范围前停止证合法性",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E048",
+        "PK94-E049",
+        "PK94-E089",
+        "PK94-E091",
+        "PK94-E093"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M16",
+      "topic": "C 环尾前缀",
+      "input": "N8,start7,end11,逻辑<3>LF",
+      "intermediate_steps": [
+        "条件剩余4>2",
+        "线性log_prefix收到&buf[7]",
+        "p0是<后p1越出物理对象"
+      ],
+      "conditional_result": "不能以逻辑环的下一字节位于index0救活p[1]",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E049",
+        "PK94-E050",
+        "PK94-E085"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M17",
+      "topic": "C 无换行损失",
+      "input": "只有文本X,有console且进入console_unlock",
+      "intermediate_steps": [
+        "con_start先推进至end",
+        "scan没有LF",
+        "末尾flush被注释"
+      ],
+      "conditional_result": "本轮回调0、先前X已不在待移交区间",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E021",
+        "PK94-E030",
+        "PK94-E081",
+        "PK94-E082",
+        "PK94-E084",
+        "PK94-E088"
+      ],
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "PK94-M18",
+      "topic": "C NULL write条件",
+      "input": "console列表包含write=NULL节点，且LF进入回调",
+      "intermediate_steps": [
+        "安全性筛选注释",
+        "实际con->write调用"
+      ],
+      "conditional_result": "在空函数指针调用门停止；注册可达性未证",
+      "first_stop_gate": "本模型为独立有限整数/字节演算，仓库实现未运行；C对象、构建选择及真实回调另证",
+      "evidence_ids": [
+        "PK94-E092",
+        "PK94-E093",
+        "PK94-E094",
+        "PK94-E095"
+      ],
+      "execution": "NOT_RUN"
+    }
+  ],
+  "finite_model_count": 18,
+  "quantities": {
+    "physical_ring_if_config_selected": 8388608,
+    "ring_mask": 8388607,
+    "conditional_clock0_timestamp_length": 15,
+    "source_quote_count": 101,
+    "full_C_object_runtime_certified": false
+  },
+  "limits": {
+    "full_local_P9": "NOT_RUN",
+    "build_compiler_linker": "NOT_RUN",
+    "repository_programs_scripts": "NOT_RUN",
+    "Graphviz_QEMU_hardware_real_concurrency": "NOT_RUN",
+    "backend_identity": "UNATTESTED",
+    "next_batch": "NOT_AUTHORIZED"
+  },
+  "graph_alignment": {
+    "dot_file": "printk-format-buffer-paths.dot",
+    "node_to_fact_rows": {
+      "source": [
+        "A-ENTRY02",
+        "A-ENTRY03"
+      ],
+      "onceMacro": [
+        "A-ENTRY02"
+      ],
+      "mark": [
+        "A-ONCE01",
+        "A-ONCE02"
+      ],
+      "printfn": [
+        "A-ENTRY04"
+      ],
+      "vf": [
+        "A-ENTRY01",
+        "B-BUF02"
+      ],
+      "vsc": [
+        "A-ENTRY01",
+        "B-BUF03"
+      ],
+      "vsn": [
+        "A-ENTRY02",
+        "B-BUF04"
+      ],
+      "ptr": [
+        "ABC02"
+      ],
+      "fmt": [
+        "A-ENTRY01"
+      ],
+      "buf": [
+        "B-BUF01",
+        "B-BUF04"
+      ],
+      "written": [
+        "B-BUF03"
+      ],
+      "lprefix": [
+        "B-PFX04",
+        "B-PFX06"
+      ],
+      "parse": [
+        "B-PFX06"
+      ],
+      "tag": [
+        "B-PFX02",
+        "B-PFX03"
+      ],
+      "scan": [
+        "B-BUF03"
+      ],
+      "stamp": [
+        "B-TIME01",
+        "B-TIME03"
+      ],
+      "count": [
+        "B-PFX02",
+        "B-TIME02"
+      ],
+      "emit": [
+        "C-RING02"
+      ],
+      "cfg": [
+        "C-RING01"
+      ],
+      "ring": [
+        "C-RING02",
+        "C-RING03"
+      ],
+      "tryCon": [
+        "C-CON03",
+        "C-CON04"
+      ],
+      "flush": [
+        "C-CON01",
+        "C-CON07"
+      ],
+      "scanRing": [
+        "C-CON02",
+        "C-RING06"
+      ],
+      "line": [
+        "C-CON01",
+        "C-CON02"
+      ],
+      "wrap": [
+        "C-RING04",
+        "C-RING05"
+      ],
+      "cb": [
+        "C-CON05",
+        "C-CON01"
+      ],
+      "tail": [
+        "C-CON02"
+      ],
+      "ub1": [
+        "C-RING06"
+      ],
+      "ub2": [
+        "C-RING05"
+      ],
+      "notes": [
+        "ABC02",
+        "C-RING05"
+      ]
+    },
+    "source_snapshot": "time@a039d9803ade",
+    "nodes_checked": 30,
+    "edges_checked": 38,
+    "semantics": {
+      "blue_solid": "direct active function CALL with preconditions",
+      "green_dashed": "macro expansion, NOT a function call",
+      "black_solid": "data/parameter/array dependency, NOT a call",
+      "violet_dotted": "callee return flow or out-parameter update, NOT a call",
+      "gray_dotted": "local source order, NOT global happens-before",
+      "red_dashed": "conditional stop/hypothetical, cannot certify normal execution"
+    },
+    "real_graphviz": "NOT_RUN",
+    "full_cfg_certified": false
+  }
+}

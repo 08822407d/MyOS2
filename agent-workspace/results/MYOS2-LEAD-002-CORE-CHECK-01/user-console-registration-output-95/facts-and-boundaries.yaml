@@ -1,0 +1,2242 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95",
+  "record_type": "bounded_console_registration_builtin_output_video_readiness_static_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-13",
+  "produced_by": "GPT-6（visible; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra（Owner instruction）",
+  "date": "2026-11-17",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PREPUBLICATION_PENDING_INDEPENDENT_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "D00": "NOT_REQUIRED",
+  "pins_short12": {
+    "handoff": "1c7352f6a06f",
+    "contract": "48656d77e260",
+    "batch94": "665aea0f7afd",
+    "source": "a039d9803ade",
+    "master": "e8e60cd19540"
+  },
+  "source_file_count": 17,
+  "source_soft_limit": 24,
+  "read_account": {
+    "receiver": "134三件全文@1c7352f6a06f；接收报告早期先如实标pending",
+    "constraints": "九份MyOS2规则独立全文，包括v2 P1-P13 @48656d77e260",
+    "owner": "110、124全文独立@48656d77e260",
+    "mnemosyne": "load命令与适用指导独立刷新@ee65de8a255d；不导入跨项目工作",
+    "G00": "之后再次核PR16/17、四direct refs、time/master canary及95六件/双身份正式marker，无重复",
+    "history": "94六件@665aea0f7afd及R94-S01/S02/S03@48656d77e260；91/92/93审查回执限定独立读取；90关闭/53撤回不重开",
+    "not_read": "全console驱动、硬件FB模式及映射、源代码真实预处理ABI与运行"
+  },
+  "fixed_source_ledger": [
+    {
+      "path": "mykernel/printk/printk.c",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E001",
+        "CN95-E009",
+        "CN95-E010",
+        "CN95-E011",
+        "CN95-E012",
+        "CN95-E013",
+        "CN95-E014",
+        "CN95-E015",
+        "CN95-E016",
+        "CN95-E017",
+        "CN95-E018",
+        "CN95-E019",
+        "CN95-E024",
+        "CN95-E025",
+        "CN95-E026",
+        "CN95-E065",
+        "CN95-E066",
+        "CN95-E070"
+      ]
+    },
+    {
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E002",
+        "CN95-E003",
+        "CN95-E023"
+      ]
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E004",
+        "CN95-E005",
+        "CN95-E006",
+        "CN95-E007",
+        "CN95-E008",
+        "CN95-E067",
+        "CN95-E068",
+        "CN95-E069"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/device/console.h",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E020",
+        "CN95-E021",
+        "CN95-E022",
+        "CN95-E064"
+      ]
+    },
+    {
+      "path": "mykernel/drivers/char/myos_tty.c",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E027",
+        "CN95-E028",
+        "CN95-E029",
+        "CN95-E030",
+        "CN95-E031",
+        "CN95-E032",
+        "CN95-E033",
+        "CN95-E034",
+        "CN95-E035",
+        "CN95-E036",
+        "CN95-E037",
+        "CN95-E038",
+        "CN95-E039",
+        "CN95-E046",
+        "CN95-E047",
+        "CN95-E048",
+        "CN95-E049"
+      ]
+    },
+    {
+      "path": "mykernel/include/obsolete/printk.h",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E040",
+        "CN95-E041"
+      ]
+    },
+    {
+      "path": "mykernel/klib/printk.c",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E042",
+        "CN95-E043",
+        "CN95-E044"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E045"
+      ]
+    },
+    {
+      "path": "mykernel/include/klib/font.h",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E050"
+      ]
+    },
+    {
+      "path": "mykernel/klib/font.c",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E051"
+      ]
+    },
+    {
+      "path": "mykernel/include/obsolete/ktypes.h",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E052"
+      ]
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E053",
+        "CN95-E054"
+      ]
+    },
+    {
+      "path": "mykernel/drivers/char/tty_io.c",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E055",
+        "CN95-E056",
+        "CN95-E057",
+        "CN95-E058",
+        "CN95-E059"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "read_ref": "a039d9803ade",
+      "read_channel": "connector",
+      "evidence_ids": [
+        "CN95-E060",
+        "CN95-E061",
+        "CN95-E062",
+        "CN95-E063"
+      ]
+    }
+  ],
+  "quote_index": [
+    {
+      "id": "CN95-E001",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_list_hdr",
+      "line_start": 78,
+      "line_end": 78
+    },
+    {
+      "id": "CN95-E002",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "definition": "LIST_HEADER_INIT",
+      "line_start": 9,
+      "line_end": 12
+    },
+    {
+      "id": "CN95-E003",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "definition": "DECLARE_LIST_HDR_S",
+      "line_start": 16,
+      "line_end": 17
+    },
+    {
+      "id": "CN95-E004",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "list_header_contains",
+      "line_start": 635,
+      "line_end": 639
+    },
+    {
+      "id": "CN95-E005",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "list_header_add_to_tail",
+      "line_start": 663,
+      "line_end": 667
+    },
+    {
+      "id": "CN95-E006",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "list_add_to_prev",
+      "line_start": 220,
+      "line_end": 223
+    },
+    {
+      "id": "CN95-E007",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "__list_add_between",
+      "line_start": 189,
+      "line_end": 193
+    },
+    {
+      "id": "CN95-E008",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "INIT_LIST_S",
+      "line_start": 148,
+      "line_end": 152
+    },
+    {
+      "id": "CN95-E009",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "register_console",
+      "line_start": 601,
+      "line_end": 605
+    },
+    {
+      "id": "CN95-E010",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "register_console",
+      "line_start": 607,
+      "line_end": 610
+    },
+    {
+      "id": "CN95-E011",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "register_console",
+      "line_start": 615,
+      "line_end": 619
+    },
+    {
+      "id": "CN95-E012",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "register_console",
+      "line_start": 639,
+      "line_end": 643
+    },
+    {
+      "id": "CN95-E013",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "unregister_console",
+      "line_start": 749,
+      "line_end": 753
+    },
+    {
+      "id": "CN95-E014",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "unregister_console",
+      "line_start": 774,
+      "line_end": 778
+    },
+    {
+      "id": "CN95-E015",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_init",
+      "line_start": 790,
+      "line_end": 794
+    },
+    {
+      "id": "CN95-E016",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_init",
+      "line_start": 817,
+      "line_end": 821
+    },
+    {
+      "id": "CN95-E017",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "myos_tempcon_write",
+      "line_start": 825,
+      "line_end": 828
+    },
+    {
+      "id": "CN95-E018",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "myos_tempcon_read",
+      "line_start": 830,
+      "line_end": 833
+    },
+    {
+      "id": "CN95-E019",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "myos_tempcon",
+      "line_start": 835,
+      "line_end": 839
+    },
+    {
+      "id": "CN95-E020",
+      "source_path": "mykernel/include/linux/device/console.h",
+      "definition": "console_s",
+      "line_start": 194,
+      "line_end": 198
+    },
+    {
+      "id": "CN95-E021",
+      "source_path": "mykernel/include/linux/device/console.h",
+      "definition": "console_s",
+      "line_start": 207,
+      "line_end": 211
+    },
+    {
+      "id": "CN95-E022",
+      "source_path": "mykernel/include/linux/device/console.h",
+      "definition": "for_each_console",
+      "line_start": 337,
+      "line_end": 340
+    },
+    {
+      "id": "CN95-E023",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "definition": "list_header_foreach",
+      "line_start": 340,
+      "line_end": 342
+    },
+    {
+      "id": "CN95-E024",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "can_use_console",
+      "line_start": 323,
+      "line_end": 326
+    },
+    {
+      "id": "CN95-E025",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "__call_console_drivers",
+      "line_start": 124,
+      "line_end": 128
+    },
+    {
+      "id": "CN95-E026",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_unlock",
+      "line_start": 554,
+      "line_end": 558
+    },
+    {
+      "id": "CN95-E027",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "Pos",
+      "line_start": 15,
+      "line_end": 15
+    },
+    {
+      "id": "CN95-E028",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 112,
+      "line_end": 116
+    },
+    {
+      "id": "CN95-E029",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 117,
+      "line_end": 120
+    },
+    {
+      "id": "CN95-E030",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 121,
+      "line_end": 125
+    },
+    {
+      "id": "CN95-E031",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 126,
+      "line_end": 130
+    },
+    {
+      "id": "CN95-E032",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 132,
+      "line_end": 135
+    },
+    {
+      "id": "CN95-E033",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 136,
+      "line_end": 139
+    },
+    {
+      "id": "CN95-E034",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 141,
+      "line_end": 142
+    },
+    {
+      "id": "CN95-E035",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 144,
+      "line_end": 148
+    },
+    {
+      "id": "CN95-E036",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 148,
+      "line_end": 152
+    },
+    {
+      "id": "CN95-E037",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 155,
+      "line_end": 158
+    },
+    {
+      "id": "CN95-E038",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 161,
+      "line_end": 165
+    },
+    {
+      "id": "CN95-E039",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "myos_tty_write_color",
+      "line_start": 166,
+      "line_end": 170
+    },
+    {
+      "id": "CN95-E040",
+      "source_path": "mykernel/include/obsolete/printk.h",
+      "definition": "position_t",
+      "line_start": 49,
+      "line_end": 53
+    },
+    {
+      "id": "CN95-E041",
+      "source_path": "mykernel/include/obsolete/printk.h",
+      "definition": "position_t",
+      "line_start": 55,
+      "line_end": 59
+    },
+    {
+      "id": "CN95-E042",
+      "source_path": "mykernel/klib/printk.c",
+      "definition": "color_printk",
+      "line_start": 28,
+      "line_end": 32
+    },
+    {
+      "id": "CN95-E043",
+      "source_path": "mykernel/klib/printk.c",
+      "definition": "color_printk",
+      "line_start": 34,
+      "line_end": 38
+    },
+    {
+      "id": "CN95-E044",
+      "source_path": "mykernel/klib/printk.c",
+      "definition": "color_printk",
+      "line_start": 39,
+      "line_end": 43
+    },
+    {
+      "id": "CN95-E045",
+      "source_path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "definition": "PAGE_SIZE",
+      "line_start": 8,
+      "line_end": 11
+    },
+    {
+      "id": "CN95-E046",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "kputchar",
+      "line_start": 86,
+      "line_end": 90
+    },
+    {
+      "id": "CN95-E047",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "kputchar",
+      "line_start": 93,
+      "line_end": 97
+    },
+    {
+      "id": "CN95-E048",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "kputchar",
+      "line_start": 98,
+      "line_end": 102
+    },
+    {
+      "id": "CN95-E049",
+      "source_path": "mykernel/drivers/char/myos_tty.c",
+      "definition": "kputchar",
+      "line_start": 103,
+      "line_end": 107
+    },
+    {
+      "id": "CN95-E050",
+      "source_path": "mykernel/include/klib/font.h",
+      "definition": "font_ascii",
+      "line_start": 20,
+      "line_end": 20
+    },
+    {
+      "id": "CN95-E051",
+      "source_path": "mykernel/klib/font.c",
+      "definition": "font_ascii",
+      "line_start": 3,
+      "line_end": 6
+    },
+    {
+      "id": "CN95-E052",
+      "source_path": "mykernel/include/obsolete/ktypes.h",
+      "definition": "framebuffer_s",
+      "line_start": 22,
+      "line_end": 26
+    },
+    {
+      "id": "CN95-E053",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "line_start": 132,
+      "line_end": 136
+    },
+    {
+      "id": "CN95-E054",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "line_start": 172,
+      "line_end": 175
+    },
+    {
+      "id": "CN95-E055",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_video",
+      "line_start": 193,
+      "line_end": 197
+    },
+    {
+      "id": "CN95-E056",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_video",
+      "line_start": 200,
+      "line_end": 204
+    },
+    {
+      "id": "CN95-E057",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_video",
+      "line_start": 208,
+      "line_end": 211
+    },
+    {
+      "id": "CN95-E058",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_video",
+      "line_start": 212,
+      "line_end": 215
+    },
+    {
+      "id": "CN95-E059",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_VBE_mapping",
+      "line_start": 221,
+      "line_end": 225
+    },
+    {
+      "id": "CN95-E060",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "framebuffer",
+      "line_start": 18,
+      "line_end": 18
+    },
+    {
+      "id": "CN95-E061",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "get_framebuffer_info",
+      "line_start": 29,
+      "line_end": 33
+    },
+    {
+      "id": "CN95-E062",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "get_framebuffer_info",
+      "line_start": 34,
+      "line_end": 37
+    },
+    {
+      "id": "CN95-E063",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "parse_tag",
+      "line_start": 95,
+      "line_end": 99
+    },
+    {
+      "id": "CN95-E064",
+      "source_path": "mykernel/include/linux/device/console.h",
+      "definition": "for_each_console",
+      "line_start": 327,
+      "line_end": 331
+    },
+    {
+      "id": "CN95-E065",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_init",
+      "line_start": 793,
+      "line_end": 797
+    },
+    {
+      "id": "CN95-E066",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "__call_console_drivers",
+      "line_start": 129,
+      "line_end": 133
+    },
+    {
+      "id": "CN95-E067",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "__list_add_valid",
+      "line_start": 162,
+      "line_end": 165
+    },
+    {
+      "id": "CN95-E068",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "list_header_contains",
+      "line_start": 640,
+      "line_end": 642
+    },
+    {
+      "id": "CN95-E069",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "__list_add_between",
+      "line_start": 193,
+      "line_end": 197
+    },
+    {
+      "id": "CN95-E070",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_unlock",
+      "line_start": 558,
+      "line_end": 562
+    }
+  ],
+  "source_quote_recheck": {
+    "anchor_count": 70,
+    "source_paths": 14,
+    "raw_tags_evidence_file": 70,
+    "all_literal_and_one_to_five_lines": true,
+    "failed_quote_ids": []
+  },
+  "fact_to_evidence_ids": {
+    "console_registration": [
+      "CN95-E001",
+      "CN95-E002",
+      "CN95-E003",
+      "CN95-E004",
+      "CN95-E005",
+      "CN95-E006",
+      "CN95-E007",
+      "CN95-E008",
+      "CN95-E009",
+      "CN95-E010",
+      "CN95-E011",
+      "CN95-E012",
+      "CN95-E013",
+      "CN95-E014",
+      "CN95-E015",
+      "CN95-E016",
+      "CN95-E017",
+      "CN95-E018",
+      "CN95-E019",
+      "CN95-E020",
+      "CN95-E021",
+      "CN95-E022",
+      "CN95-E023",
+      "CN95-E024",
+      "CN95-E025",
+      "CN95-E026",
+      "CN95-E065",
+      "CN95-E066",
+      "CN95-E067",
+      "CN95-E068",
+      "CN95-E069",
+      "CN95-E070"
+    ],
+    "builtin_writer": [
+      "CN95-E027",
+      "CN95-E028",
+      "CN95-E029",
+      "CN95-E030",
+      "CN95-E031",
+      "CN95-E032",
+      "CN95-E033",
+      "CN95-E034",
+      "CN95-E035",
+      "CN95-E036",
+      "CN95-E037",
+      "CN95-E038",
+      "CN95-E039",
+      "CN95-E040",
+      "CN95-E041"
+    ],
+    "direct_format": [
+      "CN95-E017",
+      "CN95-E042",
+      "CN95-E043",
+      "CN95-E044",
+      "CN95-E045"
+    ],
+    "boot_video": [
+      "CN95-E015",
+      "CN95-E016",
+      "CN95-E027",
+      "CN95-E052",
+      "CN95-E053",
+      "CN95-E054",
+      "CN95-E055",
+      "CN95-E056",
+      "CN95-E057",
+      "CN95-E058",
+      "CN95-E059",
+      "CN95-E060",
+      "CN95-E061",
+      "CN95-E062",
+      "CN95-E063",
+      "CN95-E065"
+    ],
+    "glyph_math": [
+      "CN95-E040",
+      "CN95-E041",
+      "CN95-E046",
+      "CN95-E047",
+      "CN95-E048",
+      "CN95-E049",
+      "CN95-E050",
+      "CN95-E051",
+      "CN95-E052",
+      "CN95-E056",
+      "CN95-E062"
+    ]
+  },
+  "matrices": {
+    "console_object_and_registration_matrix": [
+      {
+        "id": "A-REG01",
+        "scenario": "空表首次注册",
+        "preconditions": "静态header count=0；有效已初始化myos_tempcon.node",
+        "source_trace": "contains返回false→add_to_tail→prev/next链接→count++",
+        "conditional_result": "count数学模型为1；注册函数void且不执行回调",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E001",
+          "CN95-E002",
+          "CN95-E003",
+          "CN95-E004",
+          "CN95-E005",
+          "CN95-E006",
+          "CN95-E007",
+          "CN95-E008",
+          "CN95-E010",
+          "CN95-E019",
+          "CN95-E065",
+          "CN95-E069"
+        ],
+        "graph_nodes": [
+          "register",
+          "list",
+          "temp"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-REG02",
+        "scenario": "同一对象再次register",
+        "preconditions": "保持首轮有效链接且无并行改动",
+        "source_trace": "contains逐地址比较当前node，命中则提前return",
+        "conditional_result": "count维持1；不再次入链/不回放消息",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E004",
+          "CN95-E010",
+          "CN95-E068"
+        ],
+        "graph_nodes": [
+          "register",
+          "list"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-REG03",
+        "scenario": "两个不同有效对象",
+        "preconditions": "各自node已合法初始化，第一对象未销毁",
+        "source_trace": "第二node在地址比对不相等时add_to_tail",
+        "conditional_result": "count由1到2；两者均进入for_each_console遍历",
+        "first_stop_gate": "假设第二对象有效且不会使list校验循环停滞；不是实际内置启动对象数",
+        "evidence_ids": [
+          "CN95-E004",
+          "CN95-E005",
+          "CN95-E006",
+          "CN95-E007",
+          "CN95-E022",
+          "CN95-E023",
+          "CN95-E067",
+          "CN95-E069"
+        ],
+        "graph_nodes": [
+          "register",
+          "list",
+          "iterate"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-REG04",
+        "scenario": "假设console.write为NULL",
+        "preconditions": "任意对象有效node但write字段NULL，能到回调flush",
+        "source_trace": "register不检查write；__call内原guard注释且间接调用",
+        "conditional_result": "能入链；仅当后来遍历触达此对象时存在缺失回调的停止门",
+        "first_stop_gate": "与实际myos_tempcon.write非NULL必须严格区分",
+        "evidence_ids": [
+          "CN95-E010",
+          "CN95-E019",
+          "CN95-E020",
+          "CN95-E025",
+          "CN95-E066"
+        ],
+        "graph_nodes": [
+          "register",
+          "iterate",
+          "stop_callback"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-REG05",
+        "scenario": "启动内置静态对象",
+        "preconditions": "单次console_init，静态myos_tempcon且同身份",
+        "source_trace": "myos_init_video→INIT_LIST_S→register_console",
+        "conditional_result": "注册时write已有静态指向myos_tempcon_write；未见节点在注册前直接调用",
+        "first_stop_gate": "设备效果、并发与完整入口可达性未运行",
+        "evidence_ids": [
+          "CN95-E015",
+          "CN95-E017",
+          "CN95-E019",
+          "CN95-E065"
+        ],
+        "graph_nodes": [
+          "console_init",
+          "temp",
+          "register"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-REG06",
+        "scenario": "set up、CON_ENABLED与日志回放",
+        "preconditions": "register_console有效活动体固定time",
+        "source_trace": "其余early_setup/setup/flags/bootconsole/旧driver链/日志回放/console_unlock为注释",
+        "conditional_result": "void返回只说明该C调用结束，不构成输出成功证明",
+        "first_stop_gate": "不凭旧Linux注释承认实际功能",
+        "evidence_ids": [
+          "CN95-E009",
+          "CN95-E010",
+          "CN95-E011",
+          "CN95-E012"
+        ],
+        "graph_nodes": [
+          "register"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-REG07",
+        "scenario": "再次调用console_init",
+        "preconditions": "若人为安排已链接node再次INIT_LIST_S",
+        "source_trace": "直接重置当前node prev/next再查重，可能破坏原header拓扑",
+        "conditional_result": "只列条件性对象生命周期风险，不断言正常启动重复调用",
+        "first_stop_gate": "真实re-entry生产者未知，禁止把二次调用当既成事实",
+        "evidence_ids": [
+          "CN95-E008",
+          "CN95-E015",
+          "CN95-E065",
+          "CN95-E067"
+        ],
+        "graph_nodes": [
+          "console_init",
+          "list"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "list_publication_and_removal_matrix": [
+      {
+        "id": "A-LIST01",
+        "scenario": "静态header构造",
+        "preconditions": "DECLARE_LIST_HDR_S按所读宏展开",
+        "source_trace": "anchor互指，count=0；独立节点在console_init才INIT",
+        "conditional_result": "count不是独立设备登记数或输出完成计数",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E001",
+          "CN95-E002",
+          "CN95-E003",
+          "CN95-E008"
+        ],
+        "graph_nodes": [
+          "list"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-LIST02",
+        "scenario": "contains与地址身份",
+        "preconditions": "header拓扑有效",
+        "source_trace": "list_header_foreach逐node指针比较",
+        "conditional_result": "按node地址去重，不依name/index字符串",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E004",
+          "CN95-E023",
+          "CN95-E068"
+        ],
+        "graph_nodes": [
+          "list",
+          "register"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-LIST03",
+        "scenario": "插入操作和次序",
+        "preconditions": "节点、prev/next无无效邻接",
+        "source_trace": "add_to_tail→list_add_to_prev→__list_add_between→count++",
+        "conditional_result": "插入真正修改prev/next，count在调用返回后增加",
+        "first_stop_gate": "__list_add_valid有无界while；若停滞则不能推到count++",
+        "evidence_ids": [
+          "CN95-E005",
+          "CN95-E006",
+          "CN95-E007",
+          "CN95-E067",
+          "CN95-E069"
+        ],
+        "graph_nodes": [
+          "list"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-LIST04",
+        "scenario": "计数与消费",
+        "preconditions": "count>0，进入vprintk后续flush",
+        "source_trace": "can_use_console只读count；for_each_console按header链迭代",
+        "conditional_result": "count>0可令trylock返回真，但不能证明已获取console锁",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E022",
+          "CN95-E023",
+          "CN95-E024",
+          "CN95-E025"
+        ],
+        "graph_nodes": [
+          "list",
+          "iterate"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-LIST05",
+        "scenario": "unregister_console接口",
+        "preconditions": "假设某处调用int返回的unregister",
+        "source_trace": "现活动体仅声明a,b,res=1；删除/计数--/return res均被注释",
+        "conditional_result": "没有可证明的unlink；若调用者使用缺失返回值存在C语义门",
+        "first_stop_gate": "本范围未找到具体使用返回值者，不能虚构已发生崩溃",
+        "evidence_ids": [
+          "CN95-E013",
+          "CN95-E014"
+        ],
+        "graph_nodes": [
+          "unregister",
+          "list"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-LIST06",
+        "scenario": "内置read与循环消费者",
+        "preconditions": "静态对象read指向空函数",
+        "source_trace": "myos_tempcon_read活动体空且无return；注册/日志回调仅使用write",
+        "conditional_result": "不能签有有效读值或被日志链使用",
+        "first_stop_gate": "无有效read消费者证据，按接口缺口管理",
+        "evidence_ids": [
+          "CN95-E018",
+          "CN95-E019",
+          "CN95-E020",
+          "CN95-E066"
+        ],
+        "graph_nodes": [
+          "read",
+          "temp"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "A-LIST07",
+        "scenario": "无锁性质",
+        "preconditions": "仅所读vprintk/console调用及list插入实现",
+        "source_trace": "注释的console锁、日志锁不构成活动同步；list操作为普通指针更新",
+        "conditional_result": "无真实并发保证，也不把一次顺序模型扩大为竞争执行",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E007",
+          "CN95-E024",
+          "CN95-E025",
+          "CN95-E026",
+          "CN95-E064",
+          "CN95-E067",
+          "CN95-E069"
+        ],
+        "graph_nodes": [
+          "list",
+          "iterate"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "builtin_write_and_control_character_matrix": [
+      {
+        "id": "B-BYTE01",
+        "scenario": "normal ASCII A",
+        "preconditions": "count=1，buf有效，位置/FB有效",
+        "source_trace": "同一buf[count]经LF/BS/TAB判定再到绘字；kputchar 16×8",
+        "conditional_result": "消费输入1字节、绘字1次、条件像素写128次；回调void",
+        "first_stop_gate": "不等于显示确认或返回128",
+        "evidence_ids": [
+          "CN95-E017",
+          "CN95-E028",
+          "CN95-E029",
+          "CN95-E031",
+          "CN95-E032",
+          "CN95-E035",
+          "CN95-E037",
+          "CN95-E046",
+          "CN95-E048",
+          "CN95-E049"
+        ],
+        "graph_nodes": [
+          "adapter",
+          "tty",
+          "glyph"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE02",
+        "scenario": "内嵌NUL直接回调",
+        "preconditions": "count=3且字节序A,0,B，源线性可读",
+        "source_trace": "tty并不使用strlen，NUL走普通字体font_ascii[0]",
+        "conditional_result": "条件绘字3次/源消耗3B；不同于上游vprintk遇首NUL截断",
+        "first_stop_gate": "不得把printk下游当已交这三个字节",
+        "evidence_ids": [
+          "CN95-E028",
+          "CN95-E029",
+          "CN95-E037",
+          "CN95-E047",
+          "CN95-E050",
+          "CN95-E051"
+        ],
+        "graph_nodes": [
+          "tty",
+          "glyph"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE03",
+        "scenario": "LF换行",
+        "preconditions": "count=1且字节LF",
+        "source_trace": "只改YPosition及XPosition=0，随后检查行回卷",
+        "conditional_result": "绘字0次；一输入字节不等于一次glyph",
+        "first_stop_gate": "需要字符尺寸非零，所做整数运算有效",
+        "evidence_ids": [
+          "CN95-E031",
+          "CN95-E038",
+          "CN95-E039",
+          "CN95-E040"
+        ],
+        "graph_nodes": [
+          "tty",
+          "pos"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE04",
+        "scenario": "退格，X>0",
+        "preconditions": "当前XPos为正且glyph映射有效",
+        "source_trace": "XPosition--→绘制空格→事后几何调整",
+        "conditional_result": "一输入产生空格覆盖glyph一次，无光标字体存储器可见确认",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E032",
+          "CN95-E033",
+          "CN95-E034",
+          "CN95-E037",
+          "CN95-E040",
+          "CN95-E047"
+        ],
+        "graph_nodes": [
+          "tty",
+          "glyph"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE05",
+        "scenario": "退格，X=0",
+        "preconditions": "position_t.XPosition为unsigned；字节BS",
+        "source_trace": "XPosition--按无符号回绕，XPosition<0永不真；先调用kputchar再末尾回卷",
+        "conditional_result": "存在绘字目标偏离合法列的条件路径；必须先停在乘法/转换/地址门",
+        "first_stop_gate": "不能从循环尾部XPosition归0推出先前绘制安全",
+        "evidence_ids": [
+          "CN95-E032",
+          "CN95-E033",
+          "CN95-E034",
+          "CN95-E040"
+        ],
+        "graph_nodes": [
+          "tty",
+          "stop_geo"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE06",
+        "scenario": "TAB在列5",
+        "preconditions": "count=1，Xpos5，合法80px宽",
+        "source_trace": "line=((5+8)&~7)-5=3；首绘空格后，后续line>0时count--及goto",
+        "conditional_result": "消耗TAB一字节但绘制3个空格glyph；额外循环不读取新buf字节",
+        "first_stop_gate": "long input/整数溢出/边界仍单列",
+        "evidence_ids": [
+          "CN95-E029",
+          "CN95-E030",
+          "CN95-E035",
+          "CN95-E036",
+          "CN95-E038"
+        ],
+        "graph_nodes": [
+          "tty",
+          "glyph"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE07",
+        "scenario": "TAB在列0及列7",
+        "preconditions": "XPos在合法列0或7",
+        "source_trace": "line分别为8与1；每空格后Xpos+1再后置归一",
+        "conditional_result": "列0画8次，列7画1次；非strlen或八个源字节",
+        "first_stop_gate": "屏幕宽不足8字符时首绘可能跨行，需逐步有效检查",
+        "evidence_ids": [
+          "CN95-E035",
+          "CN95-E036",
+          "CN95-E038"
+        ],
+        "graph_nodes": [
+          "tty"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE08",
+        "scenario": "count=0",
+        "preconditions": "局部line初值0；buf可为空但无读操作",
+        "source_trace": "spin_lock之后for条件count<length||line为假",
+        "conditional_result": "0源读取/0glyph，进入并退出spin_lock",
+        "first_stop_gate": "不认证锁对象在调用前已初始化",
+        "evidence_ids": [
+          "CN95-E027",
+          "CN95-E028",
+          "CN95-E029"
+        ],
+        "graph_nodes": [
+          "tty",
+          "pos"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE09",
+        "scenario": "多字节组合A TAB B",
+        "preconditions": "起始Xpos0，列容量≥10，3字节有效",
+        "source_trace": "A一glyph；TAB从列1推进7个空格；B一glyph",
+        "conditional_result": "3输入字节、9字形、1152个条件像素写入",
+        "first_stop_gate": "真实逐绘位置/映射必须有效；不使用vprintk NUL截断模型",
+        "evidence_ids": [
+          "CN95-E035",
+          "CN95-E036",
+          "CN95-E037",
+          "CN95-E038",
+          "CN95-E046",
+          "CN95-E049"
+        ],
+        "graph_nodes": [
+          "tty",
+          "glyph"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-BYTE10",
+        "scenario": "size_t length超过int计数域",
+        "preconditions": "假定long合法源且一直执行for",
+        "source_trace": "局部int count++可能到INT_MAX之后发生有符号溢出",
+        "conditional_result": "只构成有条件输入域停止门，不确定实际可达",
+        "first_stop_gate": "需要实际length生产与完整对象，不能签运行bug",
+        "evidence_ids": [
+          "CN95-E028",
+          "CN95-E029",
+          "CN95-E030"
+        ],
+        "graph_nodes": [
+          "tty",
+          "stop_count"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "format_to_count_consumption_matrix": [
+      {
+        "id": "B-FMT01",
+        "scenario": "控制台con->write适配",
+        "preconditions": "传入unsigned int count和有效span",
+        "source_trace": "myos_tempcon_write→myos_tty_write_color(s,count,WHITE,BLACK)",
+        "conditional_result": "转换为size_t length（目标宽度/提升由实现前提支配），无成功字节数回传",
+        "first_stop_gate": "仍须保证上游环区间线性可读",
+        "evidence_ids": [
+          "CN95-E017",
+          "CN95-E020",
+          "CN95-E066"
+        ],
+        "graph_nodes": [
+          "adapter",
+          "tty",
+          "stop_span"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-FMT02",
+        "scenario": "直接color_printk",
+        "preconditions": "传格式、va_list合法，PAGE_SIZE按x86页宏",
+        "source_trace": "静态buf[4096]，vsnprintf(buf,PAGE_SIZE,...)，用返回i作实际tty length",
+        "conditional_result": "不走日志printk环形回放；返回逻辑需求不必等于实际保存字节",
+        "first_stop_gate": "原先逻辑指针运算的KN91/PF92停止门仍在",
+        "evidence_ids": [
+          "CN95-E042",
+          "CN95-E043",
+          "CN95-E044",
+          "CN95-E045"
+        ],
+        "graph_nodes": [
+          "color",
+          "tty"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-FMT03",
+        "scenario": "短普通字面",
+        "preconditions": "格式正常输出2字节Hi，无嵌入NUL",
+        "source_trace": "假设vsnprintf正常返回i=2，buf保存Hi与NUL",
+        "conditional_result": "tty恰消耗两源字节绘两glyph；不是物理屏幕成功证明",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E042",
+          "CN95-E043",
+          "CN95-E044",
+          "CN95-E045",
+          "CN95-E037"
+        ],
+        "graph_nodes": [
+          "color",
+          "tty"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-FMT04",
+        "scenario": "正好PAGE_SIZE数量",
+        "preconditions": "假设正常输出4096可定义良好且返回4096",
+        "source_trace": "物理buf[0..4094]保存可见输出，buf[4095]=NUL；再送length4096",
+        "conditional_result": "第4096次读取是NUL字形，仍位于数组内；不可把i=4096直接称立即越界",
+        "first_stop_gate": "先证vsnprintf返回阶段C指针门和实参正确",
+        "evidence_ids": [
+          "CN95-E042",
+          "CN95-E043",
+          "CN95-E044",
+          "CN95-E045"
+        ],
+        "graph_nodes": [
+          "color",
+          "stop_count"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-FMT05",
+        "scenario": "需求超过4096",
+        "preconditions": "隔离地假设vsnprintf在需求4097时按合同正常返回4097",
+        "source_trace": "向4096B对象交付length4097，则buf[4096]已不在对象内",
+        "conditional_result": "存在消费者超长读取条件；不签该同次实际C轨迹",
+        "first_stop_gate": "既有KN91-U01/PF92-U06于格式化阶段先行未证",
+        "evidence_ids": [
+          "CN95-E042",
+          "CN95-E043",
+          "CN95-E044",
+          "CN95-E045",
+          "CN95-E029"
+        ],
+        "graph_nodes": [
+          "color",
+          "stop_count"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-FMT06",
+        "scenario": "格式化负值/异常返回",
+        "preconditions": "仅假设vsnprintf返回负int值，不证明真有路径",
+        "source_trace": "负i转换给size_t可成为很大正数",
+        "conditional_result": "拒绝将负值转换后绘字视为安全，更不认证异常返回真实产生",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E043",
+          "CN95-E044",
+          "CN95-E028"
+        ],
+        "graph_nodes": [
+          "color",
+          "stop_count"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "B-FMT07",
+        "scenario": "PK94消费者连接",
+        "preconditions": "由vprintk以LF触发有效线性回调区间",
+        "source_trace": "环扫描/解标签/分段→con->write→内置tty",
+        "conditional_result": "本95补充回调的字节消费者，不抹掉PK94环首标签/等mask区间反例",
+        "first_stop_gate": "先通过PK94-F05/F06与SP93-F01需要的源前提",
+        "evidence_ids": [
+          "CN95-E025",
+          "CN95-E066",
+          "CN95-E017",
+          "CN95-E029"
+        ],
+        "graph_nodes": [
+          "printk",
+          "adapter",
+          "stop_span"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "boot_readiness_and_first_output_matrix": [
+      {
+        "id": "C-BOOT01",
+        "scenario": "启动次序",
+        "preconditions": "选中固定start_kernel源码路径",
+        "source_trace": "setup_arch等→timekeeping_init→console_init→late_time_init",
+        "conditional_result": "console_init发生在后续设备初始化之前",
+        "first_stop_gate": "未运行启动或证明具体引导模式",
+        "evidence_ids": [
+          "CN95-E053",
+          "CN95-E054"
+        ],
+        "graph_nodes": [
+          "boot",
+          "console_init"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-BOOT02",
+        "scenario": "视频赋值与位置",
+        "preconditions": "framebuffer值来自有条件producer，Pos为静态对象",
+        "source_trace": "myos_init_video先复制FB_virbase/size/width/height，再Pos坐标0/0、尺寸8/16、spin_lock_init",
+        "conditional_result": "读取和赋值不能证明FB映射或像素格式有效",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E027",
+          "CN95-E040",
+          "CN95-E041",
+          "CN95-E052",
+          "CN95-E055",
+          "CN95-E056",
+          "CN95-E060",
+          "CN95-E061"
+        ],
+        "graph_nodes": [
+          "video",
+          "pos"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-BOOT03",
+        "scenario": "linebuf填充容量",
+        "preconditions": "cols=floor(XResolution/8)，4096B自动数组初始全零",
+        "source_trace": "for i<cols 写空格，随后以%s交color_printk",
+        "conditional_result": "cols≤4095时有内置NUL；cols=4096时全填无NUL；cols>4096写越界",
+        "first_stop_gate": "cols>4096首次非法写先于format；cols=4096格式先于其他绘制步骤",
+        "evidence_ids": [
+          "CN95-E057",
+          "CN95-E058"
+        ],
+        "graph_nodes": [
+          "video",
+          "stop_linebuf"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-BOOT04",
+        "scenario": "首次两次彩色输出",
+        "preconditions": "前置初始化未停止且输入有效",
+        "source_trace": "video内color_printk(\"%s\",linebuf)→color_printk(\"\\n\")，直接调用myos_tty_write_color",
+        "conditional_result": "二者发生在myos_tempcon注册之前，不能当console回调结果",
+        "first_stop_gate": "仍可能先遇格式化/FB对象停止门",
+        "evidence_ids": [
+          "CN95-E015",
+          "CN95-E056",
+          "CN95-E057",
+          "CN95-E058",
+          "CN95-E042",
+          "CN95-E043",
+          "CN95-E044",
+          "CN95-E065"
+        ],
+        "graph_nodes": [
+          "video",
+          "color"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-BOOT05",
+        "scenario": "视频函数内pr_info",
+        "preconditions": "视频初始化继续到该行",
+        "source_trace": "pr_info宏→日志printk而非color_printk；尚未调用register_console",
+        "conditional_result": "console_list_hdr.count数学初始0时本次不会因列表计数而立即flush；消息可能在环中",
+        "first_stop_gate": "实际日志前置对象/格式化和后继回放仍受PK94停止门",
+        "evidence_ids": [
+          "CN95-E001",
+          "CN95-E015",
+          "CN95-E016",
+          "CN95-E024",
+          "CN95-E058",
+          "CN95-E065"
+        ],
+        "graph_nodes": [
+          "video",
+          "printk",
+          "list"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-BOOT06",
+        "scenario": "注册后pr_info",
+        "preconditions": "console_init返回video，初始化node→register→pr_info",
+        "source_trace": "注册后count若为1，vprintk有进入console_unlock的可能",
+        "conditional_result": "可能消费之前环中的完整LF行，不认证所有旧日志都成功显示",
+        "first_stop_gate": "仍须保证环物理区间、回调和像素写前提",
+        "evidence_ids": [
+          "CN95-E015",
+          "CN95-E016",
+          "CN95-E017",
+          "CN95-E019",
+          "CN95-E024",
+          "CN95-E065",
+          "CN95-E066"
+        ],
+        "graph_nodes": [
+          "console_init",
+          "register",
+          "printk",
+          "adapter"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-BOOT07",
+        "scenario": "framebuffer生产者与tag缺席",
+        "preconditions": "parse_tag已到FRAMEBUFFER分支且信息对象有效",
+        "source_trace": "get_framebuffer_info写物理、phys_to_virt、size、width/height及pitch像素",
+        "conditional_result": "无tag时仅有静态零对象，无真实几何; 有赋值亦不证明映射",
+        "first_stop_gate": "上游bpp/8可能为零、乘积溢出、实际地址/映射未证",
+        "evidence_ids": [
+          "CN95-E052",
+          "CN95-E060",
+          "CN95-E061",
+          "CN95-E062",
+          "CN95-E063"
+        ],
+        "graph_nodes": [
+          "fbprod",
+          "fb",
+          "stop_fb"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-BOOT08",
+        "scenario": "VBE映射helper的角色",
+        "preconditions": "myos_init_VBE_mapping另有源定义",
+        "source_trace": "计算物理页区间，调用myos_ioremap，刷新TLB",
+        "conditional_result": "未读取/认证真实映射效果或其在console_init前实际被调用",
+        "first_stop_gate": "不可把helper存在等同Pos.FB_addr有效",
+        "evidence_ids": [
+          "CN95-E059",
+          "CN95-E061"
+        ],
+        "graph_nodes": [
+          "fb",
+          "stop_fb"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "glyph_address_and_geometry_matrix": [
+      {
+        "id": "C-GLYPH01",
+        "scenario": "字体数组与字符号",
+        "preconditions": "unsigned char font输入0..255，字体表声明[256][16]",
+        "source_trace": "font_ascii[font]→每行16次读字节、每行8次测试位",
+        "conditional_result": "合法字体下标及理论128像素写；实际字模数据源有固定代表行",
+        "first_stop_gate": "字体对象是否以实际选中构建映射仍未证",
+        "evidence_ids": [
+          "CN95-E046",
+          "CN95-E047",
+          "CN95-E048",
+          "CN95-E049",
+          "CN95-E050",
+          "CN95-E051"
+        ],
+        "graph_nodes": [
+          "glyph",
+          "font"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-GLYPH02",
+        "scenario": "地址公式",
+        "preconditions": "fb为真实u32像素数组，Xresol=W，x,y为int",
+        "source_trace": "每行addr=fb+W*(y+i)+x，8次*addr、addr++",
+        "conditional_result": "最后访问索引W*(y+15)+x+7；需数学/实际C两层单独验证",
+        "first_stop_gate": "先证int表达式不溢出、指针仍指同分配对象",
+        "evidence_ids": [
+          "CN95-E046",
+          "CN95-E048",
+          "CN95-E049"
+        ],
+        "graph_nodes": [
+          "glyph",
+          "fb"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-GLYPH03",
+        "scenario": "屏幕几何必要条件",
+        "preconditions": "x≥0,y≥0,W>0,H>0，字符框8×16",
+        "source_trace": "若x+7<W且y+15<H，各行横向不越屏幕理论区域",
+        "conditional_result": "真实还需FB_length、stride、像素格式及映射",
+        "first_stop_gate": "理论屏幕索引不等于有效C指针或可写设备",
+        "evidence_ids": [
+          "CN95-E040",
+          "CN95-E041",
+          "CN95-E046",
+          "CN95-E049",
+          "CN95-E052"
+        ],
+        "graph_nodes": [
+          "glyph",
+          "stop_geo"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-GLYPH04",
+        "scenario": "正常最后列行",
+        "preconditions": "假设W=80,H=32，bpp32,pitch=80，x72,y16",
+        "source_trace": "最大像素下标80*31+79=2559，需求字节10240",
+        "conditional_result": "在FB_length≥10240且对象真实u32数组前提下数学足够",
+        "first_stop_gate": "默认可见Framebuffer_size并不独立认证对象大小或运行",
+        "evidence_ids": [
+          "CN95-E041",
+          "CN95-E046",
+          "CN95-E049",
+          "CN95-E052",
+          "CN95-E062"
+        ],
+        "graph_nodes": [
+          "glyph",
+          "fb"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-GLYPH05",
+        "scenario": "右侧余数",
+        "preconditions": "W=100，CharWidth8，cols12",
+        "source_trace": "最后合法列x88，绘x88..95，剩余96..99不使用",
+        "conditional_result": "cols整除取下界不代表所有部分列都绘制",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E041",
+          "CN95-E046",
+          "CN95-E049",
+          "CN95-E056"
+        ],
+        "graph_nodes": [
+          "glyph",
+          "pos"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-GLYPH06",
+        "scenario": "后置坐标回卷限制",
+        "preconditions": "有效最后列/行，当前可绘坐标",
+        "source_trace": "先kputchar后Pos.XPosition++和X/ Y回卷",
+        "conditional_result": "前一次glyph写已经发生；回卷不能补救此前越界",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E034",
+          "CN95-E035",
+          "CN95-E037",
+          "CN95-E038",
+          "CN95-E039"
+        ],
+        "graph_nodes": [
+          "tty",
+          "pos",
+          "stop_geo"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-GLYPH07",
+        "scenario": "行步长/像素大小不一致",
+        "preconditions": "有pitch!=W或者bpp!=32的条件设备",
+        "source_trace": "生产者保存PixperScanline；glyph却按W和u32指针步长寻址",
+        "conditional_result": "屏幕宽和Framebuffer.FB_size本身不足证明每个*addr目标正确",
+        "first_stop_gate": "不得声称实际硬件配置必为24bpp或具体缺陷已触发",
+        "evidence_ids": [
+          "CN95-E046",
+          "CN95-E049",
+          "CN95-E052",
+          "CN95-E062"
+        ],
+        "graph_nodes": [
+          "fbprod",
+          "glyph",
+          "stop_fb"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "C-GLYPH08",
+        "scenario": "不合法几何/未初始化",
+        "preconditions": "XCharSize=0或YCharSize=0的独立调用前提",
+        "source_trace": "writer多处除以字符大小；正常video将其赋为8/16",
+        "conditional_result": "必须在除零或非法范围第一个门停止",
+        "first_stop_gate": "不能默认未知独立调用曾绕开video初始化",
+        "evidence_ids": [
+          "CN95-E040",
+          "CN95-E041",
+          "CN95-E056",
+          "CN95-E038",
+          "CN95-E039"
+        ],
+        "graph_nodes": [
+          "tty",
+          "stop_geo"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "scenario": "启动产线接到注册",
+        "preconditions": "boot到video真实顺序且条件均满足",
+        "source_trace": "framebuffer→Pos→color_printk→tty绘字→INIT_LIST_S→register",
+        "conditional_result": "直接彩色首绘先于注册；日志后续才可走内置注册回调",
+        "first_stop_gate": "任一format/FB/源区间门失败，不签后续整链正常",
+        "evidence_ids": [
+          "CN95-E053",
+          "CN95-E054",
+          "CN95-E055",
+          "CN95-E056",
+          "CN95-E058",
+          "CN95-E065",
+          "CN95-E017",
+          "CN95-E066"
+        ],
+        "graph_nodes": [
+          "boot",
+          "video",
+          "console_init",
+          "register"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "ABC-02",
+        "scenario": "printk到画字",
+        "preconditions": "已有合法console节点、日志LF和物理连续区间",
+        "source_trace": "can_use_console→console_unlock→for_each_console→write→tty→glyph",
+        "conditional_result": "CALL区别macro、data和返回值；硬件成功未证",
+        "first_stop_gate": "PK94环首及等mask风险与PK94-U03/U07只得到局部补证",
+        "evidence_ids": [
+          "CN95-E024",
+          "CN95-E025",
+          "CN95-E026",
+          "CN95-E066",
+          "CN95-E017",
+          "CN95-E029",
+          "CN95-E046"
+        ],
+        "graph_nodes": [
+          "printk",
+          "iterate",
+          "adapter",
+          "glyph"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "ABC-03",
+        "scenario": "错误/缺口去重",
+        "preconditions": "旧SP93/KN91/PF92/PK94证明门保持",
+        "source_trace": "本批只增内置消费者/位置/字体和FB条件",
+        "conditional_result": "同根因旧qualified_id不重登记，原审查限额保持",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E043",
+          "CN95-E044",
+          "CN95-E066",
+          "CN95-E046",
+          "CN95-E049"
+        ],
+        "graph_nodes": [
+          "stop_span",
+          "stop_fb"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      },
+      {
+        "id": "ABC-04",
+        "scenario": "退出和生命周期",
+        "preconditions": "没有额外注册/注销运行入口证明",
+        "source_trace": "register只入链；unregister和read空活动体，内置node静态",
+        "conditional_result": "不能从接口名推导资源释放或屏幕显示闭环",
+        "first_stop_gate": "仅固定源码条件链；未编译、运行，调用者、对象与参数有效性仍为前提",
+        "evidence_ids": [
+          "CN95-E010",
+          "CN95-E013",
+          "CN95-E014",
+          "CN95-E018",
+          "CN95-E019",
+          "CN95-E065"
+        ],
+        "graph_nodes": [
+          "register",
+          "unregister",
+          "read"
+        ],
+        "execution": "STATIC_ONLY_NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows": 51,
+  "finite_models": [
+    {
+      "id": "CN95-M01",
+      "topic": "A",
+      "input": "empty→one",
+      "preconditions_or_trace": "header.count=0 and fresh node",
+      "conditional_result": "contains false; add_to_tail returns; count becomes 1",
+      "first_stop_gate": "无运行/重复或并发证明",
+      "evidence_ids": [
+        "CN95-E001",
+        "CN95-E002",
+        "CN95-E004",
+        "CN95-E005",
+        "CN95-E008",
+        "CN95-E010"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M02",
+      "topic": "A",
+      "input": "same object twice",
+      "preconditions_or_trace": "count1 and same linked node",
+      "conditional_result": "contains true; return before append; count remains1",
+      "first_stop_gate": "节点关系必须保持有效",
+      "evidence_ids": [
+        "CN95-E004",
+        "CN95-E010",
+        "CN95-E068"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M03",
+      "topic": "A",
+      "input": "two nodes",
+      "preconditions_or_trace": "count1 and distinct valid initialized node",
+      "conditional_result": "new node append, count2, iteration sees2",
+      "first_stop_gate": "不是实际启动已注册两个",
+      "evidence_ids": [
+        "CN95-E004",
+        "CN95-E005",
+        "CN95-E022",
+        "CN95-E069"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M04",
+      "topic": "A",
+      "input": "NULL hypothetical",
+      "preconditions_or_trace": "node.write=NULL but well-formed list",
+      "conditional_result": "registration still inserts; later CALL would need valid write",
+      "first_stop_gate": "实际myos_tempcon.write非NULL",
+      "evidence_ids": [
+        "CN95-E010",
+        "CN95-E019",
+        "CN95-E066"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M05",
+      "topic": "B",
+      "input": "zero length",
+      "preconditions_or_trace": "length0, line0",
+      "conditional_result": "loop0; glyph0; still spinlock call",
+      "first_stop_gate": "lock state not proven",
+      "evidence_ids": [
+        "CN95-E027",
+        "CN95-E028",
+        "CN95-E029"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M06",
+      "topic": "B",
+      "input": "ASCII A",
+      "preconditions_or_trace": "length1, valid glyph FB",
+      "conditional_result": "1 input byte; 1 glyph; 128 conditional pixel stores",
+      "first_stop_gate": "signed x/y and array mapped valid",
+      "evidence_ids": [
+        "CN95-E029",
+        "CN95-E037",
+        "CN95-E046",
+        "CN95-E049"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M07",
+      "topic": "B",
+      "input": "NUL as byte",
+      "preconditions_or_trace": "direct length3 bytes A,\\0,B",
+      "conditional_result": "3 input bytes,3 glyphs incl font index0",
+      "first_stop_gate": "not obtainable from PK94 vprintk first-NUL scan",
+      "evidence_ids": [
+        "CN95-E037",
+        "CN95-E047",
+        "CN95-E050",
+        "CN95-E051"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M08",
+      "topic": "B",
+      "input": "LF",
+      "preconditions_or_trace": "length1 LF",
+      "conditional_result": "1 input byte; X0; Y+1 modulo char rows; glyph0",
+      "first_stop_gate": "division and initial geometry",
+      "evidence_ids": [
+        "CN95-E031",
+        "CN95-E038",
+        "CN95-E039"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M09",
+      "topic": "B",
+      "input": "TAB X5",
+      "preconditions_or_trace": "length1 TAB, X5",
+      "conditional_result": "line=3; draw blank 3 times; source byte consumed once",
+      "first_stop_gate": "repeat count correction if loop remains valid",
+      "evidence_ids": [
+        "CN95-E030",
+        "CN95-E035",
+        "CN95-E036"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M10",
+      "topic": "B",
+      "input": "TAB X0/X7",
+      "preconditions_or_trace": "length1 TAB, X0 or X7",
+      "conditional_result": "X0 line8; X7 line1; 8 or1 blank glyph",
+      "first_stop_gate": "drawing each step needs valid geometry",
+      "evidence_ids": [
+        "CN95-E035",
+        "CN95-E036",
+        "CN95-E038"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M11",
+      "topic": "B",
+      "input": "A TAB B",
+      "preconditions_or_trace": "X0 and capacity≥10",
+      "conditional_result": "normal A +7 tab spaces +B =9 glyph / 3 source bytes",
+      "first_stop_gate": "not a logger ring output trace",
+      "evidence_ids": [
+        "CN95-E035",
+        "CN95-E036",
+        "CN95-E037"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M12",
+      "topic": "B",
+      "input": "backspace at unsigned zero",
+      "preconditions_or_trace": "uint32 X0 and BS",
+      "conditional_result": "X--→UINT_MAX; X<0 false; kputchar before wrap",
+      "first_stop_gate": "stop before x conversion and FB pointer",
+      "evidence_ids": [
+        "CN95-E032",
+        "CN95-E033",
+        "CN95-E034",
+        "CN95-E040"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M13",
+      "topic": "B",
+      "input": "too long loop count",
+      "preconditions_or_trace": "length>INT_MAX, enough underlying bytes",
+      "conditional_result": "when count reaches INT_MAX and loop continues, count++ signed overflow potential",
+      "first_stop_gate": "actual huge count not proven",
+      "evidence_ids": [
+        "CN95-E028",
+        "CN95-E029"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M14",
+      "topic": "B",
+      "input": "direct Hi",
+      "preconditions_or_trace": "normal vsnprintf result2",
+      "conditional_result": "buf[0,1]='H','i', buf[2]=NUL; writer length2",
+      "first_stop_gate": "C pointer and page macro selection required",
+      "evidence_ids": [
+        "CN95-E042",
+        "CN95-E043",
+        "CN95-E044",
+        "CN95-E045"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M15",
+      "topic": "B",
+      "input": "exact buffer bound",
+      "preconditions_or_trace": "isolated normal format demand4096",
+      "conditional_result": "buf[4095] NUL, i4096, writer reads 4096 incl NUL; no array OOB yet",
+      "first_stop_gate": "earlier vsnprintf pointer semantics still unproven",
+      "evidence_ids": [
+        "CN95-E042",
+        "CN95-E043",
+        "CN95-E044",
+        "CN95-E045"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M16",
+      "topic": "B",
+      "input": "beyond buffer",
+      "preconditions_or_trace": "isolated normal format demand4097",
+      "conditional_result": "writer length4097; first out-of-array read index4096",
+      "first_stop_gate": "old KN91/PF92 first format proof gate",
+      "evidence_ids": [
+        "CN95-E042",
+        "CN95-E043",
+        "CN95-E044"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M17",
+      "topic": "C",
+      "input": "linebuf boundary",
+      "preconditions_or_trace": "cols4095,4096,4097",
+      "conditional_result": "4095 leaves NUL; 4096 fills last slot no NUL; 4097 first out-of-bounds write at index4096",
+      "first_stop_gate": "format stops first for4096, producer loop first for4097",
+      "evidence_ids": [
+        "CN95-E057",
+        "CN95-E058"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M18",
+      "topic": "C",
+      "input": "80×32 last glyph",
+      "preconditions_or_trace": "W80 H32 bpp32 pitch80, x72 y16",
+      "conditional_result": "max index=80*(16+15)+72+7=2559, byte-exclusive10240",
+      "first_stop_gate": "requires FB_length≥10240, valid array and mapping",
+      "evidence_ids": [
+        "CN95-E046",
+        "CN95-E049",
+        "CN95-E052",
+        "CN95-E062"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M19",
+      "topic": "C",
+      "input": "100px nondivisible",
+      "preconditions_or_trace": "W100, 8px chars",
+      "conditional_result": "floor(100/8)=12, x_last=88 covers pixels88..95",
+      "first_stop_gate": "rightmost 4 pixels unused, not overflow",
+      "evidence_ids": [
+        "CN95-E041",
+        "CN95-E046",
+        "CN95-E056"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M20",
+      "topic": "C",
+      "input": "24bpp counterexample",
+      "preconditions_or_trace": "W80 H32 actual framebuffer bpp24 tight rows",
+      "conditional_result": "producer size=7680; 4B/pixel full 80×32 index budget10240",
+      "first_stop_gate": "only if such boot info/pixel mapping; cannot claim hardware seen",
+      "evidence_ids": [
+        "CN95-E046",
+        "CN95-E049",
+        "CN95-E052",
+        "CN95-E062"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M21",
+      "topic": "C",
+      "input": "no framebuffer tag",
+      "preconditions_or_trace": "no parse_tag framebuffer case; static global zero",
+      "conditional_result": "Pos Xres=0 and FB_addr0; linebuf0 spaces, first direct% s may be empty",
+      "first_stop_gate": "need not claim immediate dereference; later output cannot be certified",
+      "evidence_ids": [
+        "CN95-E055",
+        "CN95-E057",
+        "CN95-E060",
+        "CN95-E063"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    },
+    {
+      "id": "CN95-M22",
+      "topic": "C",
+      "input": "bad char dimensions",
+      "preconditions_or_trace": "hypothetical direct writer with XCharSize0",
+      "conditional_result": "writer's XResolution/XCharSize is undefined if reached",
+      "first_stop_gate": "normal video sets dimensions8 and16, not this input",
+      "evidence_ids": [
+        "CN95-E038",
+        "CN95-E041",
+        "CN95-E056"
+      ],
+      "execution": "NOT_RUN_PURE_MATH_OR_TEXT"
+    }
+  ],
+  "finite_model_count": 22,
+  "math_and_C_boundaries": {
+    "column_count": "XResolution / 8，向零截断，XResolution为unsigned",
+    "linebuf": "char[4096]，cols=4096失去NUL，cols>4096首先写越界",
+    "backspace": "Pos.XPosition是unsigned int，<0分支不可达；在绘制前回绕",
+    "tabs": "line重复空格绘制，count回退使后续绘制不消耗额外buf字节",
+    "format": "PAGE_SHIFT12⇒PAGE_SIZE4096（固定x86宏，最终构建选择未运行）；color_printk返回需求长度i，不等于实际保存字节",
+    "glyph": "16 rows × 8 pixels; source glyph [256][16]，fb+Xresol*(y+i)+x，再+0..7；需要int算术、u32指针、真实FB_length和pitch/像素模式分别有效",
+    "producer": "FB_size=width*height*bpp/8，PixperScanline=pitch/(bpp/8)；需非零除数、无乘积溢出且真实映射有效"
+  },
+  "history_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U03",
+      "status": "PARTIALLY_NARROWED",
+      "note": "实际tempcon静态write非NULL，register按node无write校验；假设其他con NULL仍有未证访问，不整体关闭"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U07",
+      "status": "PARTIALLY_NARROWED",
+      "note": "实际tempcon_write→myos_tty_write_color→kputchar；只到条件性源码绘字，不证明设备显示"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01",
+      "status": "RETAIN_FIRST_STOP",
+      "note": "%pe进入pointer未证活动return；95不复审修复"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "status": "RETAIN_FIRST_C_POINTER_GATE",
+      "note": "vsnprintf逻辑前进与实际对象界仍未证"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U06",
+      "status": "RETAIN_ALIAS_KN91",
+      "note": "沿用既有C对象门不重复登记"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F05",
+      "status": "RETAIN_CONDITIONAL_RING_INTERVAL"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F06",
+      "status": "RETAIN_CONDITIONAL_RING_TAIL_PREFIX"
+    }
+  ],
+  "graph_alignment": {
+    "dot_file": "console-registration-output-paths.dot",
+    "node_names": [
+      "boot",
+      "video",
+      "fbprod",
+      "fb",
+      "pos",
+      "color",
+      "printk",
+      "console_init",
+      "register",
+      "list",
+      "temp",
+      "iterate",
+      "adapter",
+      "tty",
+      "glyph",
+      "font",
+      "unregister",
+      "read",
+      "stop_callback",
+      "stop_span",
+      "stop_count",
+      "stop_geo",
+      "stop_linebuf",
+      "stop_fb"
+    ],
+    "call_edges_are_only_real_function_calls": true,
+    "macro_expansion_and_source_order_not_labeled_CALL": true,
+    "not_full_CFG": true,
+    "Graphviz": "NOT_RUN"
+  },
+  "selfcheck_raw_anchor_count": 70,
+  "full_local_P9": "NOT_RUN",
+  "execution_and_compiler_abi_hardware_concurrency": "NOT_RUN"
+}

@@ -1,0 +1,333 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-MEMORY-MAP-80",
+  "record_type": "batch80_conditional_findings_and_open_evidence_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "source_pin_short12": "a039d9803ade",
+  "execution_start_short12": "c10d0447940e",
+  "read_channel": "connector",
+  "phase": 2,
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "type": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+    "R78_01": "CLOSED_DOCUMENTATION_ONLY_BY_C06",
+    "batch78": "PASS_PENDING_LOCAL",
+    "R79_01": {
+      "state": "submitted_for_C06_recheck",
+      "original_manifest_fields_missing": 11,
+      "original_receive_refresh_transient": "NOT_AVAILABLE",
+      "present_appendage": "new80/MANIFEST.md and facts.historical79_manifest_supplement; 2026-11-13 current refresh clearly marked",
+      "old79_six_files_immutable": true
+    },
+    "R79_02": {
+      "state": "submitted_for_C06_recheck",
+      "old_bad_labels": [
+        "79/A06 macro preceded by #ifndef",
+        "79/A07 macro preceded by #ifndef"
+      ],
+      "new_only_definition_quotes": [
+        "80/D01",
+        "80/D02"
+      ],
+      "original_raw95_unchanged": true,
+      "original95_wholly_P2_qualified": false
+    },
+    "R79_S01_S02_S03": "see facts.prior_return_disposition; 29 source cases+1 documentary; actual 79 graph not redrawn; prior old evidence unchanged",
+    "R79_01_02_closed_by_executor": false
+  },
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F01",
+      "id": "BM80-F01",
+      "topic": "G01/A",
+      "qualified_type": "tag_walk_extent_and_nonprogress",
+      "observation": "parse_tag读取total_size但不以它约束END遍历；非END tag.size零或加7回绕导致不前进，或输入缺END时越出已证extent",
+      "anchors": [
+        "A06",
+        "A16",
+        "A17"
+      ],
+      "conditions": "有效magic/addr及每次tag访问的真实源存储界限；缺失合法END或产生零步长",
+      "earliest_stop": "tag指针形成或非进展时立即停止",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F02",
+      "id": "BM80-F02",
+      "topic": "G01/A",
+      "qualified_type": "ram_map_provenance_and_early_source_copy",
+      "observation": "缺MMAP、提前return或重复调用可令ram_map未更新/沿用旧值；另有固定sizeof(multiboot_MBI) memcpy而非按total_size的C路径",
+      "anchors": [
+        "A02",
+        "A04",
+        "A05",
+        "A07",
+        "A08",
+        "A10",
+        "A26"
+      ],
+      "conditions": "有效实际copy调用、源extent、后续parse调用、MMAP可达条件",
+      "earliest_stop": "第一个无效ram_map读或源复制读取",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F03",
+      "id": "BM80-F03",
+      "topic": "G01/A",
+      "qualified_type": "e820_fixed_capacity_without_precheck",
+      "observation": "e820__memory_setup目标entries为128条，i=128时先形成entries[128]地址、没有前置容量门；对真实129条输入是否出现不作断言",
+      "anchors": [
+        "A23",
+        "A24",
+        "A26",
+        "A27"
+      ],
+      "conditions": "至少129个连续、type和len非零的可读C结构且先前路径合法",
+      "earliest_stop": "目标数组越界指针形成前，不能声称nr_entries最终为129",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F04",
+      "id": "BM80-F04",
+      "topic": "G01/A",
+      "qualified_type": "entry_stride_sentinel_mismatch",
+      "observation": "MMAP tag含entry_size/entry_version，但ram_map指针和mmap_entp++按本地mbi_mmap_ent_s步进，以len/type零作终止而非tag bounds",
+      "anchors": [
+        "A07",
+        "A18",
+        "A20",
+        "A26"
+      ],
+      "conditions": "实际生产者entry_size/entries排列、C对象可读、合法终止记录",
+      "earliest_stop": "先行无效源对象形成/读取",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F05",
+      "id": "BM80-F05",
+      "topic": "G02/B",
+      "qualified_type": "typed_endpoint_wrap_and_floor",
+      "observation": "end_pfn的addr+size先按u64求和再右移12；端点回绕可能使上界低估；非页对齐尾端采用向下取整",
+      "anchors": [
+        "B05",
+        "B11",
+        "B12",
+        "B14"
+      ],
+      "conditions": "有限有效已发布E820表；相关端点无回绕时才作正常PFN上界推导",
+      "earliest_stop": "u64求和回绕与PFN转换分账",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F06",
+      "id": "BM80-F06",
+      "topic": "G02/B",
+      "qualified_type": "zero_pfn_high_memory_expression",
+      "observation": "空表或无RAM/ACPI可得max_pfn0，setup_arch仍形成max_pfn*PAGE_SIZE-1及__va地址表达式，不能由此认证合法mapped high_memory",
+      "anchors": [
+        "B08",
+        "B10",
+        "B18",
+        "B19"
+      ],
+      "conditions": "setup_arch先行函数正常返回、地址算术及GNU指针表达的实际编译语义",
+      "earliest_stop": "最早异常算术或指针形成点",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F07",
+      "id": "BM80-F07",
+      "topic": "G03/C",
+      "qualified_type": "brk_alignment_and_closure",
+      "observation": "extend_brk对align0计算mask=SIZE_MAX，但align&mask为0，随后对齐_end可能回绕；reserve_brk不消费reserve返回值而清零_start",
+      "anchors": [
+        "C09",
+        "C10",
+        "C11",
+        "C13",
+        "C14"
+      ],
+      "conditions": "合法_linker brk范围、合法size/align、BUG_ON和目标地址可用性",
+      "earliest_stop": "align0及其他非法条件的第一地址形成或检查门",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F08",
+      "id": "BM80-F08",
+      "topic": "G03/C",
+      "qualified_type": "memblock_route_result_and_endpoint_cast",
+      "observation": "e820_memblock_setup先做u64端点加法，再比较同宽resource_size_t强转；SOFT_RESERVED的reserve、RAM的add返回未消费，后续trim依赖79存疑变形",
+      "anchors": [
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C29",
+        "C30"
+      ],
+      "conditions": "e820有限合法输入、端点有效、每个memblock路径满足79合法性门",
+      "earliest_stop": "一旦end回绕或79首次未证指针门立即停推",
+      "evidence_class": "static_conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_requested": false,
+      "owner_decision_requested": false
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U01",
+      "id": "BM80-U01",
+      "topic": "G01",
+      "name": "external_boot_producer_and_multiboot_conformance",
+      "unknown": "未读取外部协议规范、UEFI/固件真实生产者，不能推断multiboot2.h与输入版本一致",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02",
+      "id": "BM80-U02",
+      "topic": "G01",
+      "name": "mbi_source_real_extent_and_copy_execution",
+      "unknown": "__startup_64是否实际运行、mbi_base源是否至少32*PAGE_SIZE字节连续可读和目标映射未证明",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U03",
+      "id": "BM80-U03",
+      "topic": "G01",
+      "name": "tag_validity_total_size_and_end",
+      "unknown": "真实total_size、tag.length/align/END是否完整有效未知",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U04",
+      "id": "BM80-U04",
+      "topic": "G01",
+      "name": "ram_map_lifetime_duplicates_and_other_writers",
+      "unknown": "缺MMAP/重复MMAP或重复parse下的指针身份/初值和外部修改未知",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U05",
+      "id": "BM80-U05",
+      "topic": "G01",
+      "name": "mmap_entry_size_version_and_zero_sentinel",
+      "unknown": "没有证据证明entry_size==sizeof(mbi_mmap_ent_s)、version适配或存在len/type零哨兵",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U06",
+      "id": "BM80-U06",
+      "topic": "G01",
+      "name": "e820_table_capacity_input_count",
+      "unknown": "真实有效记录数不超过128以及终止记录在源extent内的前提待证",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U07",
+      "id": "BM80-U07",
+      "topic": "G01/G02/G03",
+      "name": "firmware_e820_ordering_overlap_type_semantics",
+      "unknown": "真实E820表类型数值、排序、重叠及是否有重复区间均未独立证实",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U08",
+      "id": "BM80-U08",
+      "topic": "G02",
+      "name": "typed_endpoint_abi_and_address_space",
+      "unknown": "ulong宽度假定、u64端点不回绕、PFN页对齐及high_memory地址映射权限未实测",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U09",
+      "id": "BM80-U09",
+      "topic": "G03",
+      "name": "linker_brk_phys_bounds_and_zero_align",
+      "unknown": "_text/__brk_base/__brk_limit真实运行链接值及brk请求的size/align条件未建立",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U10",
+      "id": "BM80-U10",
+      "topic": "G03",
+      "name": "memblock_region_preconditions_and_earlier_failures",
+      "unknown": "旧MR79指针/计数/merge/trim条件、保留请求实际返回和后续真实启动成功均未证明",
+      "status": "needs_evidence",
+      "no_automatic_implementation": true
+    }
+  ],
+  "counts": {
+    "conditional_findings": 8,
+    "distinct_candidate_records_not_proven_root_causes": 8,
+    "evidence_gaps": 10,
+    "original79_candidates_unchanged": 8,
+    "original79_gaps_unchanged": 10,
+    "observed_runtime_defects": 0,
+    "patches": 0
+  },
+  "prior_findings_immutable": [
+    "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F01..F08",
+    "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U01..U10",
+    "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F01..F06",
+    "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F01/F02",
+    "CORE-MM-BASELINE-04::MC-01/MC-05/LB-01/LB-08/GAP-M08",
+    "MR-02 narrowed and older closure unchanged"
+  ],
+  "prohibited_now": [
+    "kernel edits",
+    "loader edits",
+    "patch",
+    "preprocessing",
+    "compile",
+    "Graphviz",
+    "QEMU",
+    "real boot",
+    "real memory test",
+    "PR merge",
+    "extra branch or PR",
+    "phase3"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "status": "READY_FOR_MAINLINE_REVIEW"
+}

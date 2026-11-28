@@ -1,0 +1,131 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-MM-CONTEXT-15
+record_type: incremental_deferred_mm_context_findings
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-10-31"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+results_base: "dd8e81ba6fc7"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+policy_ref: "18-deferred-findings-and-resume.md; ordinary problems log only"
+counts: {new_findings: 6, evidence_appends: 4, errata_candidates: 0}
+owner_decisions_requested_now: []
+findings:
+  - qualified_id: CORE-USER-MM-CONTEXT-15::MC15-F01
+    id: MC15-F01
+    title: "mm_users归零后__mmput不执行VMA/页表/对象归还"
+    kind: [source_fact,conditional_lifetime_gap]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-context-15/facts-and-boundaries.yaml::anchors"
+    claim: "mmput递减mm_users，归零即调用__mmput；后者exit_mmap和mmdrop均为注释。新mm失败/exec旧mm归还/非共享复制失败等会调用mmput，但当前函数体不能证明VMA/PTE/pgd/mm对象释放。"
+    premises: ["持有有效mm且原用户计数通过本次mmput降到0"]
+    counter_evidence: ["直接mmdrop(mm)另可释放pgd/mm，不能因此断言全系统永远不释放；它不是mmput的活动下游"]
+    unknown: ["运行中的mm_users归零频率、是否有其它全树释放者均未穷尽"]
+    evidence: [MC15-A019, MC15-A020, MC15-A021, MC15-A022, MC15-A030, MC15-A076]
+    related: ["CORE-USER-VMA-LIFETIME-14::VL14-F04"]
+    owner_action_now: none
+    blocks: {static_analysis: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并按固定当前源另行授权修复或运行专项"
+  - qualified_id: CORE-USER-MM-CONTEXT-15::MC15-F02
+    id: MC15-F02
+    title: "mmdrop未按mm_refcount递减判零即直接归还pgd/mm"
+    kind: [source_fact,conditional_ownership_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-context-15/facts-and-boundaries.yaml::anchors"
+    claim: "mm_init把mm_refcount设为1，但mmdrop未读取或atomic_dec它，而是对非init mm直接调用mm_free_pgd/pgd_free和free_mm；无法从本API调用证明最后一份结构引用已被正确判定。"
+    premises: ["非init且可用mm被某合法路径传入mmdrop；存在潜在的其他borrower或引用时才可能形成早释放问题"]
+    counter_evidence: ["mmdrop有init_mm BUG/while及current.mm/active_mm WARN；这些不等于正确的mm_refcount门；具体是否悬挂仍未知"]
+    unknown: ["所有mmdrop调用者及借用并发、页面底层释放结果NOT_RUN"]
+    evidence: [MC15-A014, MC15-A009, MC15-A010, MC15-A011, MC15-A057]
+    related: ["CORE-USER-VMA-LIFETIME-14::VL14-F04"]
+    owner_action_now: none
+    blocks: {static_analysis: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并按固定当前源另行授权修复或运行专项"
+  - qualified_id: CORE-USER-MM-CONTEXT-15::MC15-F03
+    id: MC15-F03
+    title: "context_switch内核任务借用mm_users计数，延后归还代码注释"
+    kind: [source_fact,conditional_reference_imbalance]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-context-15/facts-and-boundaries.yaml::anchors"
+    claim: "next.mm为空且prev.mm非NULL时context_switch执行mmget(prev.active_mm)，增加的是mm_users而非mm_refcount；后续kernel→user把旧active_mm放到rq.prev_mm，finish_task_switch虽清空该字段，原mmdrop_lazy_tlb_sched调用为注释，没有在这条直接路径配对归还借用计数。"
+    premises: ["用户→无mm任务→用户的真实调度序列到达所读分支，且指针有效"]
+    counter_evidence: ["kernel→kernel仅转移指针不新加计数；其它未核路径可能有释放动作，不能用此推断实际增长次数"]
+    unknown: ["调度执行、真实计数轨迹、其他显式put和跨CPU同步未知"]
+    evidence: [MC15-A087, MC15-A088, MC15-A089, MC15-A092, MC15-A096, MC15-A097, MC15-A098, MC15-A005]
+    related: ["CORE-USER-VMA-LIFETIME-14::VL14-F04"]
+    owner_action_now: none
+    blocks: {static_analysis: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并按固定当前源另行授权修复或运行专项"
+  - qualified_id: CORE-USER-MM-CONTEXT-15::MC15-F04
+    id: MC15-F04
+    title: "exec old_mm为空时mm_release及mmdrop(active_mm)带额外无效对象前提"
+    kind: [source_fact,conditional_language_and_lifetime_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-context-15/facts-and-boundaries.yaml::anchors"
+    claim: "exec_mmap不管old_mm是否NULL都会执行exec_mm_release(tsk,old_mm)；mm_release在clear_child_tid非NULL时读mm->mm_users。若old_mm为NULL且满足此分支，便有NULL deref前提；若正常安装新mm并进入old_mm NULL末端，则mmdrop(active_mm)，初始CPU任务的active_mm可能指向被mmdrop禁止的init_mm。"
+    premises: ["exec入口真实以old_mm=NULL运行；按各风险还需clear_child_tid非NULL或prior active_mm=&init_mm等附加条件"]
+    counter_evidence: ["clear_child_tid为NULL会绕过前一NULL deref，active_mm不是init_mm时也不能直接假定BUG；本轮没有动态执行"]
+    unknown: ["真实exec来自内核线程的状态、编译行为、异常处理和运行结果NOT_RUN"]
+    evidence: [MC15-A068, MC15-A069, MC15-A081, MC15-A077, MC15-A009, MC15-A061]
+    related: ["CORE-USER-VMA-LIFETIME-14::VL14-F04"]
+    owner_action_now: none
+    blocks: {static_analysis: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并按固定当前源另行授权修复或运行专项"
+  - qualified_id: CORE-USER-MM-CONTEXT-15::MC15-F05
+    id: MC15-F05
+    title: "fork非共享dup_mmap失败沿mmput错误路径不完成已发生对象回滚"
+    kind: [source_fact,conditional_failure_rollback_gap]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-context-15/facts-and-boundaries.yaml::anchors"
+    claim: "dup_mm先memcpy旧mm再mm_init，并经dup_mmap复制VMA/get_file及copy_page_range；其部分失败时转free_pt只调用mmput。由于__mmput缺exit_mmap/mmdrop，已产生的VMA、file引用和新pgd不因错误返回自动释放。"
+    premises: ["mm_init成功，dup_mmap在至少部分VMA/file/page副作用后返回非零"]
+    counter_evidence: ["更早allocate_mm/pgd失败走单独的mm_init/free_mm路径；不能把所有fork失败都算作本问题"]
+    unknown: ["实际失败点、VMA复制分支和资源保留率没有运行证据"]
+    evidence: [MC15-A027, MC15-A028, MC15-A029, MC15-A045, MC15-A046, MC15-A047, MC15-A030, MC15-A021]
+    related: ["CORE-USER-VMA-LIFETIME-14::VL14-F03"]
+    owner_action_now: none
+    blocks: {static_analysis: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并按固定当前源另行授权修复或运行专项"
+  - qualified_id: CORE-USER-MM-CONTEXT-15::MC15-F06
+    id: MC15-F06
+    title: "switch_mm同指针跳过CR3与跨CPU/TLB状态未验证"
+    kind: [source_fact,evidence_gap]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-mm-context-15/facts-and-boundaries.yaml::anchors"
+    claim: "switch_mm_irqs_off对prev==next直接return；不同mm时调用load_new_mm_cr3(next->pgd)和write_cr3，而真实loaded_mm/ASID/TLB校验、cpumask/shootdown辅助路径大多为注释。因此同指针不验证CPU当前CR3，写CR3的源码存在也不提供运行中跨CPU失效及PCID协议正确性证据。"
+    premises: ["实际调度执行switch_mm_irqs_off且硬件已有或需要同步地址转换状态"]
+    counter_evidence: ["正常内核在同mm无需重载CR3的情形可成立；本批未观察真实失效，不能当作已复现安全漏洞"]
+    unknown: ["CR3实际值、运行指令、TLB PCID及跨CPU协议NOT_RUN"]
+    evidence: [MC15-A104, MC15-A105, MC15-A106, MC15-A107, MC15-A108, MC15-A109]
+    related: ["CORE-USER-VMA-LIFETIME-14::VL14-F04"]
+    owner_action_now: none
+    blocks: {static_analysis: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并按固定当前源另行授权修复或运行专项"
+evidence_appends:
+  - target: CORE-USER-VMA-LIFETIME-14::VL14-F04
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "本批直接补足mmput→__mmput和mmdrop→mm_free_pgd→pgd_free两种不同资源出口；前者exit_mmap/mmdrop注释，后者没有mm_refcount归零门；调度active_mm借用与真实write_cr3不等于VMA/PTE释放。"
+    evidence: [MC15-A019, MC15-A021, MC15-A022, MC15-A010, MC15-A011, MC15-A089, MC15-A106]
+  - target: CORE-USER-VMA-LIFETIME-14::VL14-F03
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "fork非共享dup_mmap和copy_page_range完成部分VMA/file副作用后失败，dup_mm只调用mmput；__mmput缺失VMA释放端点，不重新推导14区间拆链。"
+    evidence: [MC15-A045, MC15-A046, MC15-A047, MC15-A029, MC15-A030, MC15-A021]
+  - target: CORE-USER-FILE-CACHE-13::FC13-F05
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "文件/缓存引用与mm释放区分：mm_users归零后__mmput未释放VMA，mmdrop会释放mm/pgd但没有对应缓存页槽清理。R13-S03的源页put与私有COW页put不变。"
+    evidence: [MC15-A019, MC15-A021, MC15-A010, MC15-A011]
+  - target: CORE-USER-VFS-BASELINE-05::UV-15
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "进程do_exit的exit_mm仍注释；exec替换旧mm时可mmput但__mmput缺实际exit_mmap和mmdrop，不能从任务退出或换页表推定资源回收。"
+    evidence: [MC15-A110, MC15-A076, MC15-A021, MC15-A022]
+errata_candidates: []
+not_covered: ["complete MM/VMA/PTE/page release", "all fork and exec cleanup", "all mm reference holders", "real scheduling/CR3/TLB runtime", "external libc, build or QEMU"]

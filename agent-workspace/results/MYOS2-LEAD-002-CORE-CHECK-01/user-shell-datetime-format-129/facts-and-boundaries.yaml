@@ -1,0 +1,4456 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-DATETIME-FORMAT-129",
+  "record_type": "phase2_datetime_shell_format_and_D00_machine_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "conversation_display_name": "MYOS2-A-C08b 代码分析执行",
+  "produced_by": "GPT-6（会话可知；实际后台模型/推理档UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra（180号固定任务书指定）",
+  "date": "2026-11-22",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "4a8952c6c956",
+  "lead_release_short12": "0b52728d0314",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "R127_02": {
+      "id": "R127-02",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_fixed_commit_short12": "4a8952c6c956",
+      "supersedes": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/libc-dest-aligned-word-copy-paths.dot",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/facts-and-boundaries.yaml::D00.R127_02.graph"
+      ],
+      "old_facts": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-aligned-word-copy-127/facts-and-boundaries.yaml::A_entry.cases",
+      "application": "change label for each of 43 existing WRITE nodes and description for its existing DATA_REGISTER edge; change 12 B/C summary node labels; preserve original edge kinds, IDs and every other old node/edge",
+      "register_pairs": [
+        {
+          "case_id": "A127-01",
+          "source_word": 0,
+          "dest_word": 0,
+          "source_READ_node": "A127_01_op0",
+          "dest_WRITE_node": "A127_01_op3",
+          "register": "a1",
+          "read_site": "case1.prefetch:83",
+          "write_site": "do0.final_store:127",
+          "old_node_label": "WRITE D-word 0 from undefined at do0.final_store:127",
+          "new_node_label": "WRITE D-word 0 from a1 at do0.final_store:127",
+          "old_edge_detail": "S0 stored in undefined; first read precedes write",
+          "new_edge_detail": "S0 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-02",
+          "source_word": 0,
+          "dest_word": 0,
+          "source_READ_node": "A127_02_op0",
+          "dest_WRITE_node": "A127_02_op4",
+          "register": "a0",
+          "read_site": "case2.prefetch:39",
+          "write_site": "do1.write:117",
+          "old_node_label": "WRITE D-word 0 from undefined at do1.write:117",
+          "new_node_label": "WRITE D-word 0 from a0 at do1.write:117",
+          "old_edge_detail": "S0 stored in undefined; first read precedes write",
+          "new_edge_detail": "S0 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-02",
+          "source_word": 1,
+          "dest_word": 1,
+          "source_READ_node": "A127_02_op3",
+          "dest_WRITE_node": "A127_02_op6",
+          "register": "a1",
+          "read_site": "do1.read:116",
+          "write_site": "do0.final_store:127",
+          "old_node_label": "WRITE D-word 1 from undefined at do0.final_store:127",
+          "new_node_label": "WRITE D-word 1 from a1 at do0.final_store:127",
+          "old_edge_detail": "S1 stored in undefined; first read precedes write",
+          "new_edge_detail": "S1 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-07",
+          "source_word": 0,
+          "dest_word": 0,
+          "source_READ_node": "A127_07_op0",
+          "dest_WRITE_node": "A127_07_op4",
+          "register": "a1",
+          "read_site": "case7.prefetch:69",
+          "write_site": "do6.write:102",
+          "old_node_label": "WRITE D-word 0 from undefined at do6.write:102",
+          "new_node_label": "WRITE D-word 0 from a1 at do6.write:102",
+          "old_edge_detail": "S0 stored in undefined; first read precedes write",
+          "new_edge_detail": "S0 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-07",
+          "source_word": 1,
+          "dest_word": 1,
+          "source_READ_node": "A127_07_op3",
+          "dest_WRITE_node": "A127_07_op6",
+          "register": "a0",
+          "read_site": "do6.read:101",
+          "write_site": "do5.write:105",
+          "old_node_label": "WRITE D-word 1 from undefined at do5.write:105",
+          "new_node_label": "WRITE D-word 1 from a0 at do5.write:105",
+          "old_edge_detail": "S1 stored in undefined; first read precedes write",
+          "new_edge_detail": "S1 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-07",
+          "source_word": 2,
+          "dest_word": 2,
+          "source_READ_node": "A127_07_op5",
+          "dest_WRITE_node": "A127_07_op8",
+          "register": "a1",
+          "read_site": "do5.read:104",
+          "write_site": "do4.write:108",
+          "old_node_label": "WRITE D-word 2 from undefined at do4.write:108",
+          "new_node_label": "WRITE D-word 2 from a1 at do4.write:108",
+          "old_edge_detail": "S2 stored in undefined; first read precedes write",
+          "new_edge_detail": "S2 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-07",
+          "source_word": 3,
+          "dest_word": 3,
+          "source_READ_node": "A127_07_op7",
+          "dest_WRITE_node": "A127_07_op10",
+          "register": "a0",
+          "read_site": "do4.read:107",
+          "write_site": "do3.write:111",
+          "old_node_label": "WRITE D-word 3 from undefined at do3.write:111",
+          "new_node_label": "WRITE D-word 3 from a0 at do3.write:111",
+          "old_edge_detail": "S3 stored in undefined; first read precedes write",
+          "new_edge_detail": "S3 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-07",
+          "source_word": 4,
+          "dest_word": 4,
+          "source_READ_node": "A127_07_op9",
+          "dest_WRITE_node": "A127_07_op12",
+          "register": "a1",
+          "read_site": "do3.read:110",
+          "write_site": "do2.write:114",
+          "old_node_label": "WRITE D-word 4 from undefined at do2.write:114",
+          "new_node_label": "WRITE D-word 4 from a1 at do2.write:114",
+          "old_edge_detail": "S4 stored in undefined; first read precedes write",
+          "new_edge_detail": "S4 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-07",
+          "source_word": 5,
+          "dest_word": 5,
+          "source_READ_node": "A127_07_op11",
+          "dest_WRITE_node": "A127_07_op14",
+          "register": "a0",
+          "read_site": "do2.read:113",
+          "write_site": "do1.write:117",
+          "old_node_label": "WRITE D-word 5 from undefined at do1.write:117",
+          "new_node_label": "WRITE D-word 5 from a0 at do1.write:117",
+          "old_edge_detail": "S5 stored in undefined; first read precedes write",
+          "new_edge_detail": "S5 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-07",
+          "source_word": 6,
+          "dest_word": 6,
+          "source_READ_node": "A127_07_op13",
+          "dest_WRITE_node": "A127_07_op16",
+          "register": "a1",
+          "read_site": "do1.read:116",
+          "write_site": "do0.final_store:127",
+          "old_node_label": "WRITE D-word 6 from undefined at do0.final_store:127",
+          "new_node_label": "WRITE D-word 6 from a1 at do0.final_store:127",
+          "old_edge_detail": "S6 stored in undefined; first read precedes write",
+          "new_edge_detail": "S6 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 0,
+          "dest_word": 0,
+          "source_READ_node": "A127_08_op0",
+          "dest_WRITE_node": "A127_08_op4",
+          "register": "a0",
+          "read_site": "case0.prefetch:78",
+          "write_site": "do7.write:99",
+          "old_node_label": "WRITE D-word 0 from undefined at do7.write:99",
+          "new_node_label": "WRITE D-word 0 from a0 at do7.write:99",
+          "old_edge_detail": "S0 stored in undefined; first read precedes write",
+          "new_edge_detail": "S0 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 1,
+          "dest_word": 1,
+          "source_READ_node": "A127_08_op3",
+          "dest_WRITE_node": "A127_08_op6",
+          "register": "a1",
+          "read_site": "do7.read:98",
+          "write_site": "do6.write:102",
+          "old_node_label": "WRITE D-word 1 from undefined at do6.write:102",
+          "new_node_label": "WRITE D-word 1 from a1 at do6.write:102",
+          "old_edge_detail": "S1 stored in undefined; first read precedes write",
+          "new_edge_detail": "S1 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 2,
+          "dest_word": 2,
+          "source_READ_node": "A127_08_op5",
+          "dest_WRITE_node": "A127_08_op8",
+          "register": "a0",
+          "read_site": "do6.read:101",
+          "write_site": "do5.write:105",
+          "old_node_label": "WRITE D-word 2 from undefined at do5.write:105",
+          "new_node_label": "WRITE D-word 2 from a0 at do5.write:105",
+          "old_edge_detail": "S2 stored in undefined; first read precedes write",
+          "new_edge_detail": "S2 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 3,
+          "dest_word": 3,
+          "source_READ_node": "A127_08_op7",
+          "dest_WRITE_node": "A127_08_op10",
+          "register": "a1",
+          "read_site": "do5.read:104",
+          "write_site": "do4.write:108",
+          "old_node_label": "WRITE D-word 3 from undefined at do4.write:108",
+          "new_node_label": "WRITE D-word 3 from a1 at do4.write:108",
+          "old_edge_detail": "S3 stored in undefined; first read precedes write",
+          "new_edge_detail": "S3 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 4,
+          "dest_word": 4,
+          "source_READ_node": "A127_08_op9",
+          "dest_WRITE_node": "A127_08_op12",
+          "register": "a0",
+          "read_site": "do4.read:107",
+          "write_site": "do3.write:111",
+          "old_node_label": "WRITE D-word 4 from undefined at do3.write:111",
+          "new_node_label": "WRITE D-word 4 from a0 at do3.write:111",
+          "old_edge_detail": "S4 stored in undefined; first read precedes write",
+          "new_edge_detail": "S4 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 5,
+          "dest_word": 5,
+          "source_READ_node": "A127_08_op11",
+          "dest_WRITE_node": "A127_08_op14",
+          "register": "a1",
+          "read_site": "do3.read:110",
+          "write_site": "do2.write:114",
+          "old_node_label": "WRITE D-word 5 from undefined at do2.write:114",
+          "new_node_label": "WRITE D-word 5 from a1 at do2.write:114",
+          "old_edge_detail": "S5 stored in undefined; first read precedes write",
+          "new_edge_detail": "S5 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 6,
+          "dest_word": 6,
+          "source_READ_node": "A127_08_op13",
+          "dest_WRITE_node": "A127_08_op16",
+          "register": "a0",
+          "read_site": "do2.read:113",
+          "write_site": "do1.write:117",
+          "old_node_label": "WRITE D-word 6 from undefined at do1.write:117",
+          "new_node_label": "WRITE D-word 6 from a0 at do1.write:117",
+          "old_edge_detail": "S6 stored in undefined; first read precedes write",
+          "new_edge_detail": "S6 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-08",
+          "source_word": 7,
+          "dest_word": 7,
+          "source_READ_node": "A127_08_op15",
+          "dest_WRITE_node": "A127_08_op18",
+          "register": "a1",
+          "read_site": "do1.read:116",
+          "write_site": "do0.final_store:127",
+          "old_node_label": "WRITE D-word 7 from undefined at do0.final_store:127",
+          "new_node_label": "WRITE D-word 7 from a1 at do0.final_store:127",
+          "old_edge_detail": "S7 stored in undefined; first read precedes write",
+          "new_edge_detail": "S7 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 0,
+          "dest_word": 0,
+          "source_READ_node": "A127_09_op0",
+          "dest_WRITE_node": "A127_09_op4",
+          "register": "a1",
+          "read_site": "case1.prefetch:83",
+          "write_site": "do8.write:96",
+          "old_node_label": "WRITE D-word 0 from undefined at do8.write:96",
+          "new_node_label": "WRITE D-word 0 from a1 at do8.write:96",
+          "old_edge_detail": "S0 stored in undefined; first read precedes write",
+          "new_edge_detail": "S0 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 1,
+          "dest_word": 1,
+          "source_READ_node": "A127_09_op3",
+          "dest_WRITE_node": "A127_09_op6",
+          "register": "a0",
+          "read_site": "do8.read:95",
+          "write_site": "do7.write:99",
+          "old_node_label": "WRITE D-word 1 from undefined at do7.write:99",
+          "new_node_label": "WRITE D-word 1 from a0 at do7.write:99",
+          "old_edge_detail": "S1 stored in undefined; first read precedes write",
+          "new_edge_detail": "S1 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 2,
+          "dest_word": 2,
+          "source_READ_node": "A127_09_op5",
+          "dest_WRITE_node": "A127_09_op8",
+          "register": "a1",
+          "read_site": "do7.read:98",
+          "write_site": "do6.write:102",
+          "old_node_label": "WRITE D-word 2 from undefined at do6.write:102",
+          "new_node_label": "WRITE D-word 2 from a1 at do6.write:102",
+          "old_edge_detail": "S2 stored in undefined; first read precedes write",
+          "new_edge_detail": "S2 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 3,
+          "dest_word": 3,
+          "source_READ_node": "A127_09_op7",
+          "dest_WRITE_node": "A127_09_op10",
+          "register": "a0",
+          "read_site": "do6.read:101",
+          "write_site": "do5.write:105",
+          "old_node_label": "WRITE D-word 3 from undefined at do5.write:105",
+          "new_node_label": "WRITE D-word 3 from a0 at do5.write:105",
+          "old_edge_detail": "S3 stored in undefined; first read precedes write",
+          "new_edge_detail": "S3 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 4,
+          "dest_word": 4,
+          "source_READ_node": "A127_09_op9",
+          "dest_WRITE_node": "A127_09_op12",
+          "register": "a1",
+          "read_site": "do5.read:104",
+          "write_site": "do4.write:108",
+          "old_node_label": "WRITE D-word 4 from undefined at do4.write:108",
+          "new_node_label": "WRITE D-word 4 from a1 at do4.write:108",
+          "old_edge_detail": "S4 stored in undefined; first read precedes write",
+          "new_edge_detail": "S4 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 5,
+          "dest_word": 5,
+          "source_READ_node": "A127_09_op11",
+          "dest_WRITE_node": "A127_09_op14",
+          "register": "a0",
+          "read_site": "do4.read:107",
+          "write_site": "do3.write:111",
+          "old_node_label": "WRITE D-word 5 from undefined at do3.write:111",
+          "new_node_label": "WRITE D-word 5 from a0 at do3.write:111",
+          "old_edge_detail": "S5 stored in undefined; first read precedes write",
+          "new_edge_detail": "S5 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 6,
+          "dest_word": 6,
+          "source_READ_node": "A127_09_op13",
+          "dest_WRITE_node": "A127_09_op16",
+          "register": "a1",
+          "read_site": "do3.read:110",
+          "write_site": "do2.write:114",
+          "old_node_label": "WRITE D-word 6 from undefined at do2.write:114",
+          "new_node_label": "WRITE D-word 6 from a1 at do2.write:114",
+          "old_edge_detail": "S6 stored in undefined; first read precedes write",
+          "new_edge_detail": "S6 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 7,
+          "dest_word": 7,
+          "source_READ_node": "A127_09_op15",
+          "dest_WRITE_node": "A127_09_op18",
+          "register": "a0",
+          "read_site": "do2.read:113",
+          "write_site": "do1.write:117",
+          "old_node_label": "WRITE D-word 7 from undefined at do1.write:117",
+          "new_node_label": "WRITE D-word 7 from a0 at do1.write:117",
+          "old_edge_detail": "S7 stored in undefined; first read precedes write",
+          "new_edge_detail": "S7 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-09",
+          "source_word": 8,
+          "dest_word": 8,
+          "source_READ_node": "A127_09_op17",
+          "dest_WRITE_node": "A127_09_op20",
+          "register": "a1",
+          "read_site": "do1.read:116",
+          "write_site": "do0.final_store:127",
+          "old_node_label": "WRITE D-word 8 from undefined at do0.final_store:127",
+          "new_node_label": "WRITE D-word 8 from a1 at do0.final_store:127",
+          "old_edge_detail": "S8 stored in undefined; first read precedes write",
+          "new_edge_detail": "S8 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 0,
+          "dest_word": 0,
+          "source_READ_node": "A127_16_op0",
+          "dest_WRITE_node": "A127_16_op4",
+          "register": "a0",
+          "read_site": "case0.prefetch:78",
+          "write_site": "do7.write:99",
+          "old_node_label": "WRITE D-word 0 from undefined at do7.write:99",
+          "new_node_label": "WRITE D-word 0 from a0 at do7.write:99",
+          "old_edge_detail": "S0 stored in undefined; first read precedes write",
+          "new_edge_detail": "S0 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 1,
+          "dest_word": 1,
+          "source_READ_node": "A127_16_op3",
+          "dest_WRITE_node": "A127_16_op6",
+          "register": "a1",
+          "read_site": "do7.read:98",
+          "write_site": "do6.write:102",
+          "old_node_label": "WRITE D-word 1 from undefined at do6.write:102",
+          "new_node_label": "WRITE D-word 1 from a1 at do6.write:102",
+          "old_edge_detail": "S1 stored in undefined; first read precedes write",
+          "new_edge_detail": "S1 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 2,
+          "dest_word": 2,
+          "source_READ_node": "A127_16_op5",
+          "dest_WRITE_node": "A127_16_op8",
+          "register": "a0",
+          "read_site": "do6.read:101",
+          "write_site": "do5.write:105",
+          "old_node_label": "WRITE D-word 2 from undefined at do5.write:105",
+          "new_node_label": "WRITE D-word 2 from a0 at do5.write:105",
+          "old_edge_detail": "S2 stored in undefined; first read precedes write",
+          "new_edge_detail": "S2 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 3,
+          "dest_word": 3,
+          "source_READ_node": "A127_16_op7",
+          "dest_WRITE_node": "A127_16_op10",
+          "register": "a1",
+          "read_site": "do5.read:104",
+          "write_site": "do4.write:108",
+          "old_node_label": "WRITE D-word 3 from undefined at do4.write:108",
+          "new_node_label": "WRITE D-word 3 from a1 at do4.write:108",
+          "old_edge_detail": "S3 stored in undefined; first read precedes write",
+          "new_edge_detail": "S3 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 4,
+          "dest_word": 4,
+          "source_READ_node": "A127_16_op9",
+          "dest_WRITE_node": "A127_16_op12",
+          "register": "a0",
+          "read_site": "do4.read:107",
+          "write_site": "do3.write:111",
+          "old_node_label": "WRITE D-word 4 from undefined at do3.write:111",
+          "new_node_label": "WRITE D-word 4 from a0 at do3.write:111",
+          "old_edge_detail": "S4 stored in undefined; first read precedes write",
+          "new_edge_detail": "S4 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 5,
+          "dest_word": 5,
+          "source_READ_node": "A127_16_op11",
+          "dest_WRITE_node": "A127_16_op14",
+          "register": "a1",
+          "read_site": "do3.read:110",
+          "write_site": "do2.write:114",
+          "old_node_label": "WRITE D-word 5 from undefined at do2.write:114",
+          "new_node_label": "WRITE D-word 5 from a1 at do2.write:114",
+          "old_edge_detail": "S5 stored in undefined; first read precedes write",
+          "new_edge_detail": "S5 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 6,
+          "dest_word": 6,
+          "source_READ_node": "A127_16_op13",
+          "dest_WRITE_node": "A127_16_op16",
+          "register": "a0",
+          "read_site": "do2.read:113",
+          "write_site": "do1.write:117",
+          "old_node_label": "WRITE D-word 6 from undefined at do1.write:117",
+          "new_node_label": "WRITE D-word 6 from a0 at do1.write:117",
+          "old_edge_detail": "S6 stored in undefined; first read precedes write",
+          "new_edge_detail": "S6 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 7,
+          "dest_word": 7,
+          "source_READ_node": "A127_16_op15",
+          "dest_WRITE_node": "A127_16_op20",
+          "register": "a1",
+          "read_site": "do1.read:116",
+          "write_site": "do8.write:96",
+          "old_node_label": "WRITE D-word 7 from undefined at do8.write:96",
+          "new_node_label": "WRITE D-word 7 from a1 at do8.write:96",
+          "old_edge_detail": "S7 stored in undefined; first read precedes write",
+          "new_edge_detail": "S7 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 8,
+          "dest_word": 8,
+          "source_READ_node": "A127_16_op19",
+          "dest_WRITE_node": "A127_16_op22",
+          "register": "a0",
+          "read_site": "do8.read:95",
+          "write_site": "do7.write:99",
+          "old_node_label": "WRITE D-word 8 from undefined at do7.write:99",
+          "new_node_label": "WRITE D-word 8 from a0 at do7.write:99",
+          "old_edge_detail": "S8 stored in undefined; first read precedes write",
+          "new_edge_detail": "S8 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 9,
+          "dest_word": 9,
+          "source_READ_node": "A127_16_op21",
+          "dest_WRITE_node": "A127_16_op24",
+          "register": "a1",
+          "read_site": "do7.read:98",
+          "write_site": "do6.write:102",
+          "old_node_label": "WRITE D-word 9 from undefined at do6.write:102",
+          "new_node_label": "WRITE D-word 9 from a1 at do6.write:102",
+          "old_edge_detail": "S9 stored in undefined; first read precedes write",
+          "new_edge_detail": "S9 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 10,
+          "dest_word": 10,
+          "source_READ_node": "A127_16_op23",
+          "dest_WRITE_node": "A127_16_op26",
+          "register": "a0",
+          "read_site": "do6.read:101",
+          "write_site": "do5.write:105",
+          "old_node_label": "WRITE D-word 10 from undefined at do5.write:105",
+          "new_node_label": "WRITE D-word 10 from a0 at do5.write:105",
+          "old_edge_detail": "S10 stored in undefined; first read precedes write",
+          "new_edge_detail": "S10 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 11,
+          "dest_word": 11,
+          "source_READ_node": "A127_16_op25",
+          "dest_WRITE_node": "A127_16_op28",
+          "register": "a1",
+          "read_site": "do5.read:104",
+          "write_site": "do4.write:108",
+          "old_node_label": "WRITE D-word 11 from undefined at do4.write:108",
+          "new_node_label": "WRITE D-word 11 from a1 at do4.write:108",
+          "old_edge_detail": "S11 stored in undefined; first read precedes write",
+          "new_edge_detail": "S11 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 12,
+          "dest_word": 12,
+          "source_READ_node": "A127_16_op27",
+          "dest_WRITE_node": "A127_16_op30",
+          "register": "a0",
+          "read_site": "do4.read:107",
+          "write_site": "do3.write:111",
+          "old_node_label": "WRITE D-word 12 from undefined at do3.write:111",
+          "new_node_label": "WRITE D-word 12 from a0 at do3.write:111",
+          "old_edge_detail": "S12 stored in undefined; first read precedes write",
+          "new_edge_detail": "S12 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 13,
+          "dest_word": 13,
+          "source_READ_node": "A127_16_op29",
+          "dest_WRITE_node": "A127_16_op32",
+          "register": "a1",
+          "read_site": "do3.read:110",
+          "write_site": "do2.write:114",
+          "old_node_label": "WRITE D-word 13 from undefined at do2.write:114",
+          "new_node_label": "WRITE D-word 13 from a1 at do2.write:114",
+          "old_edge_detail": "S13 stored in undefined; first read precedes write",
+          "new_edge_detail": "S13 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 14,
+          "dest_word": 14,
+          "source_READ_node": "A127_16_op31",
+          "dest_WRITE_node": "A127_16_op34",
+          "register": "a0",
+          "read_site": "do2.read:113",
+          "write_site": "do1.write:117",
+          "old_node_label": "WRITE D-word 14 from undefined at do1.write:117",
+          "new_node_label": "WRITE D-word 14 from a0 at do1.write:117",
+          "old_edge_detail": "S14 stored in undefined; first read precedes write",
+          "new_edge_detail": "S14 stored in a0; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        },
+        {
+          "case_id": "A127-16",
+          "source_word": 15,
+          "dest_word": 15,
+          "source_READ_node": "A127_16_op33",
+          "dest_WRITE_node": "A127_16_op36",
+          "register": "a1",
+          "read_site": "do1.read:116",
+          "write_site": "do0.final_store:127",
+          "old_node_label": "WRITE D-word 15 from undefined at do0.final_store:127",
+          "new_node_label": "WRITE D-word 15 from a1 at do0.final_store:127",
+          "old_edge_detail": "S15 stored in undefined; first read precedes write",
+          "new_edge_detail": "S15 stored in a1; first read precedes write",
+          "edge_type": "DATA_REGISTER"
+        }
+      ],
+      "additional_node_labels": [
+        {
+          "node_id": "B127_02_switch",
+          "case_id": "B127-02",
+          "old_label": "switch selects do1",
+          "new_label": "switch(len%8)=2 selects case 2, then prefetch, adjust, explicit goto do1"
+        },
+        {
+          "node_id": "B127_02_iteration",
+          "case_id": "B127-02",
+          "old_label": "body summary: prefetch S0 as a0, do1 reads S1 as a1 and writes D0 from a0, do0 writes D1 from a1",
+          "new_label": "body only: do1 reads S1 writes D0; do0 writes D1 only after loop exit"
+        },
+        {
+          "node_id": "B127_02_footer",
+          "case_id": "B127-02",
+          "old_label": "do/while checks len after footer; false",
+          "new_label": "do/while: loop len0 false => out-of-loop do0"
+        },
+        {
+          "node_id": "B127_08_switch",
+          "case_id": "B127-08",
+          "old_label": "switch selects do7",
+          "new_label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7"
+        },
+        {
+          "node_id": "B127_08_iteration",
+          "case_id": "B127-08",
+          "old_label": "body summary: prefetch S0, do7..do1 pipeline 7 writes, do0 writes D7",
+          "new_label": "body only: do7..do1 writes D0..D6; outside-loop do0 writes D7"
+        },
+        {
+          "node_id": "B127_08_footer",
+          "case_id": "B127-08",
+          "old_label": "do/while checks len after footer; false",
+          "new_label": "do/while: loop len0 false => out-of-loop do0"
+        },
+        {
+          "node_id": "B127_16_switch",
+          "case_id": "B127-16",
+          "old_label": "switch selects do7",
+          "new_label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7"
+        },
+        {
+          "node_id": "B127_16_iteration",
+          "case_id": "B127-16",
+          "old_label": "body summary: prefetch S0; first partial do7..do1 writes D0..D6; second full do8..do1 writes D7..D14; do0 writes D15",
+          "new_label": "body only: first do7..do1 D0..D6; footer len8 true; do8..do1 D7..D14; footer len0 false; do0 D15"
+        },
+        {
+          "node_id": "B127_16_footer",
+          "case_id": "B127-16",
+          "old_label": "do/while checks len after footer; one true, then false",
+          "new_label": "do/while: first len8 true loops back do8; second len0 false falls through"
+        },
+        {
+          "node_id": "C127_M16_U3_switch",
+          "case_id": "C127-M16-U3",
+          "old_label": "switch len%8 selects remainder 1",
+          "new_label": "switch(len%8)=1 selects case1; not already at do0 before prefetch"
+        },
+        {
+          "node_id": "C127_M16_U3_goto",
+          "case_id": "C127-M16-U3",
+          "old_label": "explicit case goto do0 after prefetch",
+          "new_label": "explicit goto do0 after case1 prefetch and local cursor+len adjustments"
+        },
+        {
+          "node_id": "C127_M16_U3_body",
+          "case_id": "C127-M16-U3",
+          "old_label": "body alternating reads/stores, footer and do0 (summary, see A)",
+          "new_label": "1-word case1: no do8..do1 loop; direct outside-loop do0 writes D[136,144) from preloaded a1, then helper void return"
+        }
+      ],
+      "case_index": [
+        {
+          "case_id": "A127-00",
+          "rows": []
+        },
+        {
+          "case_id": "A127-01",
+          "rows": [
+            {
+              "dest_word": 0,
+              "read_node": "A127_01_op0",
+              "write_node": "A127_01_op3",
+              "register": "a1"
+            }
+          ]
+        },
+        {
+          "case_id": "A127-02",
+          "rows": [
+            {
+              "dest_word": 0,
+              "read_node": "A127_02_op0",
+              "write_node": "A127_02_op4",
+              "register": "a0"
+            },
+            {
+              "dest_word": 1,
+              "read_node": "A127_02_op3",
+              "write_node": "A127_02_op6",
+              "register": "a1"
+            }
+          ]
+        },
+        {
+          "case_id": "A127-07",
+          "rows": [
+            {
+              "dest_word": 0,
+              "read_node": "A127_07_op0",
+              "write_node": "A127_07_op4",
+              "register": "a1"
+            },
+            {
+              "dest_word": 1,
+              "read_node": "A127_07_op3",
+              "write_node": "A127_07_op6",
+              "register": "a0"
+            },
+            {
+              "dest_word": 2,
+              "read_node": "A127_07_op5",
+              "write_node": "A127_07_op8",
+              "register": "a1"
+            },
+            {
+              "dest_word": 3,
+              "read_node": "A127_07_op7",
+              "write_node": "A127_07_op10",
+              "register": "a0"
+            },
+            {
+              "dest_word": 4,
+              "read_node": "A127_07_op9",
+              "write_node": "A127_07_op12",
+              "register": "a1"
+            },
+            {
+              "dest_word": 5,
+              "read_node": "A127_07_op11",
+              "write_node": "A127_07_op14",
+              "register": "a0"
+            },
+            {
+              "dest_word": 6,
+              "read_node": "A127_07_op13",
+              "write_node": "A127_07_op16",
+              "register": "a1"
+            }
+          ]
+        },
+        {
+          "case_id": "A127-08",
+          "rows": [
+            {
+              "dest_word": 0,
+              "read_node": "A127_08_op0",
+              "write_node": "A127_08_op4",
+              "register": "a0"
+            },
+            {
+              "dest_word": 1,
+              "read_node": "A127_08_op3",
+              "write_node": "A127_08_op6",
+              "register": "a1"
+            },
+            {
+              "dest_word": 2,
+              "read_node": "A127_08_op5",
+              "write_node": "A127_08_op8",
+              "register": "a0"
+            },
+            {
+              "dest_word": 3,
+              "read_node": "A127_08_op7",
+              "write_node": "A127_08_op10",
+              "register": "a1"
+            },
+            {
+              "dest_word": 4,
+              "read_node": "A127_08_op9",
+              "write_node": "A127_08_op12",
+              "register": "a0"
+            },
+            {
+              "dest_word": 5,
+              "read_node": "A127_08_op11",
+              "write_node": "A127_08_op14",
+              "register": "a1"
+            },
+            {
+              "dest_word": 6,
+              "read_node": "A127_08_op13",
+              "write_node": "A127_08_op16",
+              "register": "a0"
+            },
+            {
+              "dest_word": 7,
+              "read_node": "A127_08_op15",
+              "write_node": "A127_08_op18",
+              "register": "a1"
+            }
+          ]
+        },
+        {
+          "case_id": "A127-09",
+          "rows": [
+            {
+              "dest_word": 0,
+              "read_node": "A127_09_op0",
+              "write_node": "A127_09_op4",
+              "register": "a1"
+            },
+            {
+              "dest_word": 1,
+              "read_node": "A127_09_op3",
+              "write_node": "A127_09_op6",
+              "register": "a0"
+            },
+            {
+              "dest_word": 2,
+              "read_node": "A127_09_op5",
+              "write_node": "A127_09_op8",
+              "register": "a1"
+            },
+            {
+              "dest_word": 3,
+              "read_node": "A127_09_op7",
+              "write_node": "A127_09_op10",
+              "register": "a0"
+            },
+            {
+              "dest_word": 4,
+              "read_node": "A127_09_op9",
+              "write_node": "A127_09_op12",
+              "register": "a1"
+            },
+            {
+              "dest_word": 5,
+              "read_node": "A127_09_op11",
+              "write_node": "A127_09_op14",
+              "register": "a0"
+            },
+            {
+              "dest_word": 6,
+              "read_node": "A127_09_op13",
+              "write_node": "A127_09_op16",
+              "register": "a1"
+            },
+            {
+              "dest_word": 7,
+              "read_node": "A127_09_op15",
+              "write_node": "A127_09_op18",
+              "register": "a0"
+            },
+            {
+              "dest_word": 8,
+              "read_node": "A127_09_op17",
+              "write_node": "A127_09_op20",
+              "register": "a1"
+            }
+          ]
+        },
+        {
+          "case_id": "A127-16",
+          "rows": [
+            {
+              "dest_word": 0,
+              "read_node": "A127_16_op0",
+              "write_node": "A127_16_op4",
+              "register": "a0"
+            },
+            {
+              "dest_word": 1,
+              "read_node": "A127_16_op3",
+              "write_node": "A127_16_op6",
+              "register": "a1"
+            },
+            {
+              "dest_word": 2,
+              "read_node": "A127_16_op5",
+              "write_node": "A127_16_op8",
+              "register": "a0"
+            },
+            {
+              "dest_word": 3,
+              "read_node": "A127_16_op7",
+              "write_node": "A127_16_op10",
+              "register": "a1"
+            },
+            {
+              "dest_word": 4,
+              "read_node": "A127_16_op9",
+              "write_node": "A127_16_op12",
+              "register": "a0"
+            },
+            {
+              "dest_word": 5,
+              "read_node": "A127_16_op11",
+              "write_node": "A127_16_op14",
+              "register": "a1"
+            },
+            {
+              "dest_word": 6,
+              "read_node": "A127_16_op13",
+              "write_node": "A127_16_op16",
+              "register": "a0"
+            },
+            {
+              "dest_word": 7,
+              "read_node": "A127_16_op15",
+              "write_node": "A127_16_op20",
+              "register": "a1"
+            },
+            {
+              "dest_word": 8,
+              "read_node": "A127_16_op19",
+              "write_node": "A127_16_op22",
+              "register": "a0"
+            },
+            {
+              "dest_word": 9,
+              "read_node": "A127_16_op21",
+              "write_node": "A127_16_op24",
+              "register": "a1"
+            },
+            {
+              "dest_word": 10,
+              "read_node": "A127_16_op23",
+              "write_node": "A127_16_op26",
+              "register": "a0"
+            },
+            {
+              "dest_word": 11,
+              "read_node": "A127_16_op25",
+              "write_node": "A127_16_op28",
+              "register": "a1"
+            },
+            {
+              "dest_word": 12,
+              "read_node": "A127_16_op27",
+              "write_node": "A127_16_op30",
+              "register": "a0"
+            },
+            {
+              "dest_word": 13,
+              "read_node": "A127_16_op29",
+              "write_node": "A127_16_op32",
+              "register": "a1"
+            },
+            {
+              "dest_word": 14,
+              "read_node": "A127_16_op31",
+              "write_node": "A127_16_op34",
+              "register": "a0"
+            },
+            {
+              "dest_word": 15,
+              "read_node": "A127_16_op33",
+              "write_node": "A127_16_op36",
+              "register": "a1"
+            }
+          ]
+        }
+      ],
+      "counts": {
+        "write_node_replacements": 43,
+        "DATA_REGISTER_edge_detail_replacements": 43,
+        "register_a0": 20,
+        "register_a1": 23,
+        "extra_B_C_node_labels": 12,
+        "original_graph_nodes": 224,
+        "original_graph_edges": 254,
+        "corrected_graph_nodes": 224,
+        "corrected_graph_edges": 254,
+        "corrected_missing_registers": 0
+      },
+      "retained": [
+        "all existing source-owned direct calls, macro positions, pointer-order corrections",
+        "A127-16 footer and while-true loop back",
+        "C127-M16-U3 one-word case returns void, not cursor"
+      ],
+      "closure_authority": "C08 Pro independent"
+    },
+    "R128_01": {
+      "id": "R128-01",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_fixed_commit_short12": "4a8952c6c956",
+      "supersedes": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/facts-and-boundaries.yaml::C_outer_memcpy.cases[].byte_copy_trace",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/libc-dest-aligned-word-copy-paths.dot::C128_*"
+      ],
+      "cases": [
+        {
+          "case_id": "C128-M16-S129-D128",
+          "old_fixed_commit_short12": "4a8952c6c956",
+          "old_selectors": {
+            "facts_path": "C_outer_memcpy.cases[0].byte_copy_trace",
+            "graph_cluster": "C128_M16_S129_D128"
+          },
+          "old_account": {
+            "helper_entry_count": 2,
+            "abstract_write_bytes": 32,
+            "old_entry_count": 2
+          },
+          "replacement_account": {
+            "events": [
+              {
+                "event_id": "C128-M16-S129-D128-WORD-ONE",
+                "kind": "WORD_COPY_FWD_HELPER_ONCE",
+                "source_owner": "MEMCPY via memcopy.h:127",
+                "source_site": "memcpy.c:51",
+                "call_count": 1,
+                "width": 16,
+                "write_half_open": [
+                  128,
+                  144
+                ],
+                "source_effective_half_open": [
+                  129,
+                  145
+                ],
+                "helper_word_writes": [
+                  {
+                    "write_half_open": [
+                      128,
+                      136
+                    ],
+                    "source_effective_half_open": [
+                      129,
+                      137
+                    ]
+                  },
+                  {
+                    "write_half_open": [
+                      136,
+                      144
+                    ],
+                    "source_effective_half_open": [
+                      137,
+                      145
+                    ]
+                  }
+                ],
+                "old_indices_replaced": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "helper_call_count": 1,
+            "helper_word_store_count": 2,
+            "abstract_write_bytes": 16,
+            "unique_dest_positions": 16,
+            "dest_half_open": [
+              128,
+              144
+            ],
+            "fully_covered": true,
+            "helper_source_full_aligned_reads": [
+              [
+                128,
+                136
+              ],
+              [
+                136,
+                144
+              ],
+              [
+                144,
+                152
+              ]
+            ],
+            "outer_four_macro_sites": [
+              "memcpy.c:40",
+              "memcpy.c:45",
+              "memcpy.c:51",
+              "memcpy.c:57"
+            ],
+            "direct_C_helper_call_site": "memcopy.h:127 inside WORD_COPY_FWD; owned by MEMCPY"
+          },
+          "preserve": [
+            "source helper value/slice trace",
+            "second case five valid prealign byte events + three valid trailing byte events",
+            "actual return value independent of write result"
+          ]
+        },
+        {
+          "case_id": "C128-M16-S130-D131",
+          "old_fixed_commit_short12": "4a8952c6c956",
+          "old_selectors": {
+            "facts_path": "C_outer_memcpy.cases[1].byte_copy_trace",
+            "graph_cluster": "C128_M16_S130_D131"
+          },
+          "old_account": {
+            "helper_entry_count": 1,
+            "abstract_write_bytes": 16,
+            "old_entry_count": 9
+          },
+          "replacement_account": {
+            "events": [
+              {
+                "kind": "memcpy.c:40 BYTE_COPY_FWD leading",
+                "source_offset": 130,
+                "destination_offset": 131,
+                "byte_value_hex": "82",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-0",
+                "source_site": "memcpy.c:40"
+              },
+              {
+                "kind": "memcpy.c:40 BYTE_COPY_FWD leading",
+                "source_offset": 131,
+                "destination_offset": 132,
+                "byte_value_hex": "83",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-1",
+                "source_site": "memcpy.c:40"
+              },
+              {
+                "kind": "memcpy.c:40 BYTE_COPY_FWD leading",
+                "source_offset": 132,
+                "destination_offset": 133,
+                "byte_value_hex": "84",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-2",
+                "source_site": "memcpy.c:40"
+              },
+              {
+                "kind": "memcpy.c:40 BYTE_COPY_FWD leading",
+                "source_offset": 133,
+                "destination_offset": 134,
+                "byte_value_hex": "85",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-3",
+                "source_site": "memcpy.c:40"
+              },
+              {
+                "kind": "memcpy.c:40 BYTE_COPY_FWD leading",
+                "source_offset": 134,
+                "destination_offset": 135,
+                "byte_value_hex": "86",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-4",
+                "source_site": "memcpy.c:40"
+              },
+              {
+                "event_id": "C128-M16-S130-D131-WORD-ONE",
+                "kind": "WORD_COPY_FWD_HELPER_ONCE",
+                "source_owner": "MEMCPY via memcopy.h:127",
+                "source_site": "memcpy.c:51",
+                "call_count": 1,
+                "width": 8,
+                "write_half_open": [
+                  136,
+                  144
+                ],
+                "source_effective_half_open": [
+                  135,
+                  143
+                ],
+                "helper_word_writes": [
+                  {
+                    "write_half_open": [
+                      136,
+                      144
+                    ],
+                    "source_effective_half_open": [
+                      135,
+                      143
+                    ]
+                  }
+                ],
+                "old_indices_replaced": [
+                  5
+                ]
+              },
+              {
+                "kind": "memcpy.c:57 BYTE_COPY_FWD tail",
+                "source_offset": 143,
+                "destination_offset": 144,
+                "byte_value_hex": "8f",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-6",
+                "source_site": "memcpy.c:57"
+              },
+              {
+                "kind": "memcpy.c:57 BYTE_COPY_FWD tail",
+                "source_offset": 144,
+                "destination_offset": 145,
+                "byte_value_hex": "90",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-7",
+                "source_site": "memcpy.c:57"
+              },
+              {
+                "kind": "memcpy.c:57 BYTE_COPY_FWD tail",
+                "source_offset": 145,
+                "destination_offset": 146,
+                "byte_value_hex": "91",
+                "byte_width": 1,
+                "event_id": "C128-M16-S130-D131-BYTE-8",
+                "source_site": "memcpy.c:57"
+              }
+            ],
+            "helper_call_count": 1,
+            "helper_word_store_count": 1,
+            "abstract_write_bytes": 16,
+            "unique_dest_positions": 16,
+            "dest_half_open": [
+              131,
+              147
+            ],
+            "fully_covered": true,
+            "helper_source_full_aligned_reads": [
+              [
+                128,
+                136
+              ],
+              [
+                136,
+                144
+              ]
+            ],
+            "outer_four_macro_sites": [
+              "memcpy.c:40",
+              "memcpy.c:45",
+              "memcpy.c:51",
+              "memcpy.c:57"
+            ],
+            "direct_C_helper_call_site": "memcopy.h:127 inside WORD_COPY_FWD; owned by MEMCPY"
+          },
+          "preserve": [
+            "source helper value/slice trace",
+            "second case five valid prealign byte events + three valid trailing byte events",
+            "actual return value independent of write result"
+          ]
+        },
+        {
+          "case_id": "C128-M41-S131-D128",
+          "old_fixed_commit_short12": "4a8952c6c956",
+          "old_selectors": {
+            "facts_path": "C_outer_memcpy.cases[2].byte_copy_trace",
+            "graph_cluster": "C128_M41_S131_D128"
+          },
+          "old_account": {
+            "helper_entry_count": 5,
+            "abstract_write_bytes": 201,
+            "old_entry_count": 6
+          },
+          "replacement_account": {
+            "events": [
+              {
+                "event_id": "C128-M41-S131-D128-WORD-ONE",
+                "kind": "WORD_COPY_FWD_HELPER_ONCE",
+                "source_owner": "MEMCPY via memcopy.h:127",
+                "source_site": "memcpy.c:51",
+                "call_count": 1,
+                "width": 40,
+                "write_half_open": [
+                  128,
+                  168
+                ],
+                "source_effective_half_open": [
+                  131,
+                  171
+                ],
+                "helper_word_writes": [
+                  {
+                    "write_half_open": [
+                      128,
+                      136
+                    ],
+                    "source_effective_half_open": [
+                      131,
+                      139
+                    ]
+                  },
+                  {
+                    "write_half_open": [
+                      136,
+                      144
+                    ],
+                    "source_effective_half_open": [
+                      139,
+                      147
+                    ]
+                  },
+                  {
+                    "write_half_open": [
+                      144,
+                      152
+                    ],
+                    "source_effective_half_open": [
+                      147,
+                      155
+                    ]
+                  },
+                  {
+                    "write_half_open": [
+                      152,
+                      160
+                    ],
+                    "source_effective_half_open": [
+                      155,
+                      163
+                    ]
+                  },
+                  {
+                    "write_half_open": [
+                      160,
+                      168
+                    ],
+                    "source_effective_half_open": [
+                      163,
+                      171
+                    ]
+                  }
+                ],
+                "old_indices_replaced": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              },
+              {
+                "kind": "memcpy.c:57 BYTE_COPY_FWD tail",
+                "source_offset": 171,
+                "destination_offset": 168,
+                "byte_value_hex": "ab",
+                "byte_width": 1,
+                "event_id": "C128-M41-S131-D128-BYTE-5",
+                "source_site": "memcpy.c:57"
+              }
+            ],
+            "helper_call_count": 1,
+            "helper_word_store_count": 5,
+            "abstract_write_bytes": 41,
+            "unique_dest_positions": 41,
+            "dest_half_open": [
+              128,
+              169
+            ],
+            "fully_covered": true,
+            "helper_source_full_aligned_reads": [
+              [
+                128,
+                136
+              ],
+              [
+                136,
+                144
+              ],
+              [
+                144,
+                152
+              ],
+              [
+                152,
+                160
+              ],
+              [
+                160,
+                168
+              ],
+              [
+                168,
+                176
+              ]
+            ],
+            "outer_four_macro_sites": [
+              "memcpy.c:40",
+              "memcpy.c:45",
+              "memcpy.c:51",
+              "memcpy.c:57"
+            ],
+            "direct_C_helper_call_site": "memcopy.h:127 inside WORD_COPY_FWD; owned by MEMCPY"
+          },
+          "preserve": [
+            "source helper value/slice trace",
+            "second case five valid prealign byte events + three valid trailing byte events",
+            "actual return value independent of write result"
+          ]
+        }
+      ],
+      "graph_patch": {
+        "edge_retype_replacements": [
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_threshold",
+            "to": "C128_M16_S129_D128_prefix",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "long branch enters leading BYTE macro"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_prefix",
+            "to": "C128_M16_S129_D128_page",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after prefix, PAGE macro site reached"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_page",
+            "to": "C128_M16_S129_D128_word",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after empty PAGE, WORD macro site reached"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_callerupdate",
+            "to": "C128_M16_S129_D128_tail",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after WORD macro updated outer pointers, tail BYTE macro reached"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_returnvoid",
+            "to": "C128_M16_S129_D128_callerupdate",
+            "old_kind": "CALLER_DATA",
+            "new_kind": "SEQUENCE_AFTER_VOID_RETURN",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "helper returns void; outer WORD macro executes its own cursor/len update"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_tail",
+            "to": "C128_M16_S129_D128_result",
+            "old_kind": "RETURN_DATA",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "tail completes before MEMCPY returns; does not supply pointer return value"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_threshold",
+            "to": "C128_M16_S130_D131_prefix",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "long branch enters leading BYTE macro"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_prefix",
+            "to": "C128_M16_S130_D131_page",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after prefix, PAGE macro site reached"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_page",
+            "to": "C128_M16_S130_D131_word",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after empty PAGE, WORD macro site reached"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_callerupdate",
+            "to": "C128_M16_S130_D131_tail",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after WORD macro updated outer pointers, tail BYTE macro reached"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_returnvoid",
+            "to": "C128_M16_S130_D131_callerupdate",
+            "old_kind": "CALLER_DATA",
+            "new_kind": "SEQUENCE_AFTER_VOID_RETURN",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "helper returns void; outer WORD macro executes its own cursor/len update"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_tail",
+            "to": "C128_M16_S130_D131_result",
+            "old_kind": "RETURN_DATA",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "tail completes before MEMCPY returns; does not supply pointer return value"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_threshold",
+            "to": "C128_M41_S131_D128_prefix",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "long branch enters leading BYTE macro"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_prefix",
+            "to": "C128_M41_S131_D128_page",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after prefix, PAGE macro site reached"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_page",
+            "to": "C128_M41_S131_D128_word",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after empty PAGE, WORD macro site reached"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_callerupdate",
+            "to": "C128_M41_S131_D128_tail",
+            "old_kind": "MACRO_EXPANSION",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "after WORD macro updated outer pointers, tail BYTE macro reached"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_returnvoid",
+            "to": "C128_M41_S131_D128_callerupdate",
+            "old_kind": "CALLER_DATA",
+            "new_kind": "SEQUENCE_AFTER_VOID_RETURN",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "helper returns void; outer WORD macro executes its own cursor/len update"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_tail",
+            "to": "C128_M41_S131_D128_result",
+            "old_kind": "RETURN_DATA",
+            "new_kind": "SEQUENCE",
+            "old_label": "bounded layer-specific source-level step",
+            "new_label": "tail completes before MEMCPY returns; does not supply pointer return value"
+          }
+        ],
+        "added_nodes": [
+          {
+            "id": "C128_M16_S129_D128_original_dstpp",
+            "label": "original MEMCPY argument dstpp=D+128",
+            "case_id": "C128-M16-S129-D128",
+            "kind": "ARGUMENT_SOURCE"
+          },
+          {
+            "id": "C128_M16_S130_D131_original_dstpp",
+            "label": "original MEMCPY argument dstpp=D+131",
+            "case_id": "C128-M16-S130-D131",
+            "kind": "ARGUMENT_SOURCE"
+          },
+          {
+            "id": "C128_M41_S131_D128_original_dstpp",
+            "label": "original MEMCPY argument dstpp=D+128",
+            "case_id": "C128-M41-S131-D128",
+            "kind": "ARGUMENT_SOURCE"
+          }
+        ],
+        "added_edges": [
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_owner",
+            "to": "C128_M16_S129_D128_original_dstpp",
+            "kind": "ARGUMENT_DATA",
+            "label": "save original dstpp at function entry"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_original_dstpp",
+            "to": "C128_M16_S129_D128_result",
+            "kind": "RETURN_DATA",
+            "label": "memcpy.c:59 returns original dstpp, not tail or helper result"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_owner",
+            "to": "C128_M16_S129_D128_callerupdate",
+            "kind": "CALLER_LOCAL_DATA",
+            "label": "caller-local srcp,dstp are updated only by WORD_COPY_FWD macro after void helper"
+          },
+          {
+            "case_id": "C128-M16-S129-D128",
+            "from": "C128_M16_S129_D128_word",
+            "to": "C128_M16_S129_D128_callerupdate",
+            "kind": "WORD_LENGTH_DATA",
+            "label": "caller obtains word-aligned byte count and byte remainder (memcopy.h:128-130)"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_owner",
+            "to": "C128_M16_S130_D131_original_dstpp",
+            "kind": "ARGUMENT_DATA",
+            "label": "save original dstpp at function entry"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_original_dstpp",
+            "to": "C128_M16_S130_D131_result",
+            "kind": "RETURN_DATA",
+            "label": "memcpy.c:59 returns original dstpp, not tail or helper result"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_owner",
+            "to": "C128_M16_S130_D131_callerupdate",
+            "kind": "CALLER_LOCAL_DATA",
+            "label": "caller-local srcp,dstp are updated only by WORD_COPY_FWD macro after void helper"
+          },
+          {
+            "case_id": "C128-M16-S130-D131",
+            "from": "C128_M16_S130_D131_word",
+            "to": "C128_M16_S130_D131_callerupdate",
+            "kind": "WORD_LENGTH_DATA",
+            "label": "caller obtains word-aligned byte count and byte remainder (memcopy.h:128-130)"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_owner",
+            "to": "C128_M41_S131_D128_original_dstpp",
+            "kind": "ARGUMENT_DATA",
+            "label": "save original dstpp at function entry"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_original_dstpp",
+            "to": "C128_M41_S131_D128_result",
+            "kind": "RETURN_DATA",
+            "label": "memcpy.c:59 returns original dstpp, not tail or helper result"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_owner",
+            "to": "C128_M41_S131_D128_callerupdate",
+            "kind": "CALLER_LOCAL_DATA",
+            "label": "caller-local srcp,dstp are updated only by WORD_COPY_FWD macro after void helper"
+          },
+          {
+            "case_id": "C128-M41-S131-D128",
+            "from": "C128_M41_S131_D128_word",
+            "to": "C128_M41_S131_D128_callerupdate",
+            "kind": "WORD_LENGTH_DATA",
+            "label": "caller obtains word-aligned byte count and byte remainder (memcopy.h:128-130)"
+          }
+        ],
+        "old_C128_macro_owners": 12,
+        "old_C128_direct_C_call_owners": 3,
+        "corrected_macro_source_sites": 12,
+        "corrected_direct_calls": 3,
+        "graph_edge_retypes": 18,
+        "new_nodes": 3,
+        "new_edges": 12
+      },
+      "summary": {
+        "old_abstract_write_bytes": [
+          32,
+          16,
+          201
+        ],
+        "corrected_unique_write_bytes": [
+          16,
+          16,
+          41
+        ],
+        "helper_call_count": [
+          1,
+          1,
+          1
+        ],
+        "helper_op_t_words": [
+          2,
+          1,
+          5
+        ],
+        "old_helper_events": [
+          2,
+          1,
+          5
+        ],
+        "source_model_only": true
+      },
+      "closure_authority": "C08 Pro independent"
+    },
+    "already_closed_R127_01": "CLOSED_DOCUMENTATION_ONLY_BY_C08",
+    "prior_127_composite": "RETURN",
+    "prior_128_review": "RETURN",
+    "all_legacy_source_files_preserved": true
+  },
+  "model_assumptions": {
+    "source_branch": "time（分支名）",
+    "source_implementation_selection": "C functions in inrepo myglibc; actual linked sh libc UNKNOWN",
+    "gettimeofday": "success in four normal samples, assumed negative-one in error sample",
+    "tm_info": "localtime valid return provided; actual timezone not inferred",
+    "strftime": {
+      "buffer_capacity_bytes": 64,
+      "format": "%Y-%m-%d %H:%M:%S",
+      "given_result": "2026-11-22 09:08:07",
+      "given_success_count": 19,
+      "terminator_offset": 19,
+      "test_does_not_check_return": true
+    },
+    "printf": {
+      "format": "DateTime Now: %s.%06ld\n",
+      "format_length": 23,
+      "number_of_format_specifiers": 2,
+      "va_arg_index_0": "const char*",
+      "va_arg_index_1": "signed long compatible nonnegative value",
+      "char_buffer_size_bytes": 4096,
+      "stdout_fd_numeric": "UNKNOWN",
+      "actual_write_result": "UNKNOWN"
+    },
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_operations": "NOT_RUN"
+  },
+  "A_main_and_time_call": {
+    "source_main": "myinitramfs/myshell/myshell.c::main:66-76",
+    "source_test": "myinitramfs/myshell/tests.c::test_PrintDateTime:104-127",
+    "success_sequence": [
+      {
+        "step": 1,
+        "owner": "main",
+        "event": "direct call test_PrintDateTime()",
+        "consumer_of_test_return": "NONE"
+      },
+      {
+        "step": 2,
+        "owner": "test_PrintDateTime",
+        "event": "struct timeval tv and char buffer[64] allocated"
+      },
+      {
+        "step": 3,
+        "owner": "test_PrintDateTime",
+        "event": "gettimeofday(&tv,NULL) success (return != -1)",
+        "timeval_fields": [
+          "tv_sec",
+          "tv_usec"
+        ]
+      },
+      {
+        "step": 4,
+        "owner": "test_PrintDateTime",
+        "event": "tm_info=localtime(&tv.tv_sec); valid pointer assumed"
+      },
+      {
+        "step": 5,
+        "owner": "test_PrintDateTime",
+        "event": "strftime(buffer,64,'%Y-%m-%d %H:%M:%S',tm_info)",
+        "result_given": "2026-11-22 09:08:07",
+        "NUL_at": 19,
+        "strftime_return_ignored": true
+      },
+      {
+        "step": 6,
+        "owner": "test_PrintDateTime",
+        "event": "printf('DateTime Now: %s.%06ld\\n',buffer,tv.tv_usec)",
+        "printf_return_ignored": true
+      },
+      {
+        "step": 7,
+        "owner": "test_PrintDateTime",
+        "event": "return 0",
+        "main_ignores_value": true
+      }
+    ],
+    "failure_branch": {
+      "guard": "gettimeofday(&tv,NULL) == -1",
+      "action": "perror('gettimeofday failed')",
+      "test_return": 1,
+      "main_consumer": "ignores",
+      "excluded_subsequent_calls": [
+        "localtime",
+        "strftime",
+        "printf"
+      ],
+      "perror_actual_effect": "UNKNOWN"
+    },
+    "format_ownership": {
+      "strftime": "%Y-%m-%d %H:%M:%S",
+      "printf": "DateTime Now: %s.%06ld\n"
+    }
+  },
+  "B_vsnprintf_and_format_int": {
+    "source_vsnprintf": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c::vsnprintf",
+    "source_format_int": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c::format_int",
+    "source_EMIT": "vsnprintf.c::EMIT:39",
+    "parser_format": "DateTime Now: %s.%06ld\n",
+    "parser_trace_shared": [
+      {
+        "iter": 0,
+        "format_char_offset": 0,
+        "char": "D",
+        "hex": "44",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 1,
+        "p_after_state": 1,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 0,
+        "q_after": 1,
+        "o_before": 0,
+        "o_after": 1,
+        "consumed_arg": null
+      },
+      {
+        "iter": 1,
+        "format_char_offset": 1,
+        "char": "a",
+        "hex": "61",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 2,
+        "p_after_state": 2,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 1,
+        "q_after": 2,
+        "o_before": 1,
+        "o_after": 2,
+        "consumed_arg": null
+      },
+      {
+        "iter": 2,
+        "format_char_offset": 2,
+        "char": "t",
+        "hex": "74",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 3,
+        "p_after_state": 3,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 2,
+        "q_after": 3,
+        "o_before": 2,
+        "o_after": 3,
+        "consumed_arg": null
+      },
+      {
+        "iter": 3,
+        "format_char_offset": 3,
+        "char": "e",
+        "hex": "65",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 4,
+        "p_after_state": 4,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 3,
+        "q_after": 4,
+        "o_before": 3,
+        "o_after": 4,
+        "consumed_arg": null
+      },
+      {
+        "iter": 4,
+        "format_char_offset": 4,
+        "char": "T",
+        "hex": "54",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 5,
+        "p_after_state": 5,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 4,
+        "q_after": 5,
+        "o_before": 4,
+        "o_after": 5,
+        "consumed_arg": null
+      },
+      {
+        "iter": 5,
+        "format_char_offset": 5,
+        "char": "i",
+        "hex": "69",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 6,
+        "p_after_state": 6,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 5,
+        "q_after": 6,
+        "o_before": 5,
+        "o_after": 6,
+        "consumed_arg": null
+      },
+      {
+        "iter": 6,
+        "format_char_offset": 6,
+        "char": "m",
+        "hex": "6d",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 7,
+        "p_after_state": 7,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 6,
+        "q_after": 7,
+        "o_before": 6,
+        "o_after": 7,
+        "consumed_arg": null
+      },
+      {
+        "iter": 7,
+        "format_char_offset": 7,
+        "char": "e",
+        "hex": "65",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 8,
+        "p_after_state": 8,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 7,
+        "q_after": 8,
+        "o_before": 7,
+        "o_after": 8,
+        "consumed_arg": null
+      },
+      {
+        "iter": 8,
+        "format_char_offset": 8,
+        "char": " ",
+        "hex": "20",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 9,
+        "p_after_state": 9,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 8,
+        "q_after": 9,
+        "o_before": 8,
+        "o_after": 9,
+        "consumed_arg": null
+      },
+      {
+        "iter": 9,
+        "format_char_offset": 9,
+        "char": "N",
+        "hex": "4e",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 10,
+        "p_after_state": 10,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 9,
+        "q_after": 10,
+        "o_before": 9,
+        "o_after": 10,
+        "consumed_arg": null
+      },
+      {
+        "iter": 10,
+        "format_char_offset": 10,
+        "char": "o",
+        "hex": "6f",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 11,
+        "p_after_state": 11,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 10,
+        "q_after": 11,
+        "o_before": 10,
+        "o_after": 11,
+        "consumed_arg": null
+      },
+      {
+        "iter": 11,
+        "format_char_offset": 11,
+        "char": "w",
+        "hex": "77",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 12,
+        "p_after_state": 12,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 11,
+        "q_after": 12,
+        "o_before": 11,
+        "o_after": 12,
+        "consumed_arg": null
+      },
+      {
+        "iter": 12,
+        "format_char_offset": 12,
+        "char": ":",
+        "hex": "3a",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 13,
+        "p_after_state": 13,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 12,
+        "q_after": 13,
+        "o_before": 12,
+        "o_after": 13,
+        "consumed_arg": null
+      },
+      {
+        "iter": 13,
+        "format_char_offset": 13,
+        "char": " ",
+        "hex": "20",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 14,
+        "p_after_state": 14,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 13,
+        "q_after": 14,
+        "o_before": 13,
+        "o_after": 14,
+        "consumed_arg": null
+      },
+      {
+        "iter": 14,
+        "format_char_offset": 14,
+        "char": "%",
+        "hex": "25",
+        "state_before": "st_normal",
+        "state_after": "st_flags",
+        "p_after_read": 15,
+        "p_after_state": 15,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "reset current directive flags/rank/width/prec",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 14,
+        "q_after": 14,
+        "o_before": 14,
+        "o_after": 14,
+        "consumed_arg": null
+      },
+      {
+        "iter": 15,
+        "format_char_offset": 15,
+        "char": "s",
+        "hex": "73",
+        "state_before": "st_flags",
+        "state_after": "st_width",
+        "p_after_read": 16,
+        "p_after_state": 15,
+        "reprocessed_by_p_decrement": true,
+        "meaning": "unrecognized flag, p-- then re-read same char in st_width",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 14,
+        "q_after": 14,
+        "o_before": 14,
+        "o_after": 14,
+        "consumed_arg": null
+      },
+      {
+        "iter": 16,
+        "format_char_offset": 15,
+        "char": "s",
+        "hex": "73",
+        "state_before": "st_width",
+        "state_after": "st_modifiers",
+        "p_after_read": 16,
+        "p_after_state": 15,
+        "reprocessed_by_p_decrement": true,
+        "meaning": "non-width char, p-- then re-read in st_modifiers",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 14,
+        "q_after": 14,
+        "o_before": 14,
+        "o_after": 14,
+        "consumed_arg": null
+      },
+      {
+        "iter": 17,
+        "format_char_offset": 15,
+        "char": "s",
+        "hex": "73",
+        "state_before": "st_modifiers",
+        "state_after": "st_normal",
+        "p_after_read": 16,
+        "p_after_state": 16,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "consume const char*; strlen then copy 19 bytes via EMIT",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 14,
+        "q_after": 33,
+        "o_before": 14,
+        "o_after": 33,
+        "consumed_arg": {
+          "index": 0,
+          "type": "const char *",
+          "chars": 19,
+          "strlen": 19
+        }
+      },
+      {
+        "iter": 18,
+        "format_char_offset": 16,
+        "char": ".",
+        "hex": "2e",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 17,
+        "p_after_state": 17,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal character",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 33,
+        "q_after": 34,
+        "o_before": 33,
+        "o_after": 34,
+        "consumed_arg": null
+      },
+      {
+        "iter": 19,
+        "format_char_offset": 17,
+        "char": "%",
+        "hex": "25",
+        "state_before": "st_normal",
+        "state_after": "st_flags",
+        "p_after_read": 18,
+        "p_after_state": 18,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "reset current directive flags/rank/width/prec",
+        "flags_after": 0,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 34,
+        "q_after": 34,
+        "o_before": 34,
+        "o_after": 34,
+        "consumed_arg": null
+      },
+      {
+        "iter": 20,
+        "format_char_offset": 18,
+        "char": "0",
+        "hex": "30",
+        "state_before": "st_flags",
+        "state_after": "st_flags",
+        "p_after_read": 19,
+        "p_after_state": 19,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "FL_ZERO flag",
+        "flags_after": 1,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 34,
+        "q_after": 34,
+        "o_before": 34,
+        "o_after": 34,
+        "consumed_arg": null
+      },
+      {
+        "iter": 21,
+        "format_char_offset": 19,
+        "char": "6",
+        "hex": "36",
+        "state_before": "st_flags",
+        "state_after": "st_width",
+        "p_after_read": 20,
+        "p_after_state": 19,
+        "reprocessed_by_p_decrement": true,
+        "meaning": "unrecognized flag, p-- then re-read same char in st_width",
+        "flags_after": 1,
+        "rank_after": 0,
+        "width_after": 0,
+        "prec_after": -1,
+        "q_before": 34,
+        "q_after": 34,
+        "o_before": 34,
+        "o_after": 34,
+        "consumed_arg": null
+      },
+      {
+        "iter": 22,
+        "format_char_offset": 19,
+        "char": "6",
+        "hex": "36",
+        "state_before": "st_width",
+        "state_after": "st_width",
+        "p_after_read": 20,
+        "p_after_state": 20,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "decimal width digit",
+        "flags_after": 1,
+        "rank_after": 0,
+        "width_after": 6,
+        "prec_after": -1,
+        "q_before": 34,
+        "q_after": 34,
+        "o_before": 34,
+        "o_after": 34,
+        "consumed_arg": null
+      },
+      {
+        "iter": 23,
+        "format_char_offset": 20,
+        "char": "l",
+        "hex": "6c",
+        "state_before": "st_width",
+        "state_after": "st_modifiers",
+        "p_after_read": 21,
+        "p_after_state": 20,
+        "reprocessed_by_p_decrement": true,
+        "meaning": "non-width char, p-- then re-read in st_modifiers",
+        "flags_after": 1,
+        "rank_after": 0,
+        "width_after": 6,
+        "prec_after": -1,
+        "q_before": 34,
+        "q_after": 34,
+        "o_before": 34,
+        "o_after": 34,
+        "consumed_arg": null
+      },
+      {
+        "iter": 24,
+        "format_char_offset": 20,
+        "char": "l",
+        "hex": "6c",
+        "state_before": "st_modifiers",
+        "state_after": "st_modifiers",
+        "p_after_read": 21,
+        "p_after_state": 21,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "length modifier: rank increment to signed long",
+        "flags_after": 1,
+        "rank_after": 1,
+        "width_after": 6,
+        "prec_after": -1,
+        "q_before": 34,
+        "q_after": 34,
+        "o_before": 34,
+        "o_after": 34,
+        "consumed_arg": null
+      },
+      {
+        "iter": 25,
+        "format_char_offset": 21,
+        "char": "d",
+        "hex": "64",
+        "state_before": "st_modifiers",
+        "state_after": "st_normal",
+        "p_after_read": 22,
+        "p_after_state": 22,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "signed decimal via rank_long; va_arg(signed long); format_int returns 6; q and o each advance 6",
+        "flags_after": 65,
+        "rank_after": 1,
+        "width_after": 6,
+        "prec_after": -1,
+        "q_before": 34,
+        "q_after": 40,
+        "o_before": 34,
+        "o_after": 40,
+        "consumed_arg": {
+          "index": 1,
+          "type": "signed long",
+          "value": 0
+        }
+      },
+      {
+        "iter": 26,
+        "format_char_offset": 22,
+        "char": "LF",
+        "hex": "0a",
+        "state_before": "st_normal",
+        "state_after": "st_normal",
+        "p_after_read": 23,
+        "p_after_state": 23,
+        "reprocessed_by_p_decrement": false,
+        "meaning": "literal LF",
+        "flags_after": 65,
+        "rank_after": 1,
+        "width_after": 6,
+        "prec_after": -1,
+        "q_before": 40,
+        "q_after": 41,
+        "o_before": 40,
+        "o_after": 41,
+        "consumed_arg": null
+      }
+    ],
+    "reset_on_percent": {
+      "flags": 0,
+      "rank": "rank_int",
+      "width": 0,
+      "prec": -1,
+      "state": "st_flags"
+    },
+    "reprocessing_examples": [
+      {
+        "format_offset": 15,
+        "char": "s",
+        "from": "st_flags",
+        "to": "st_width",
+        "p_after": 15
+      },
+      {
+        "format_offset": 15,
+        "char": "s",
+        "from": "st_width",
+        "to": "st_modifiers",
+        "p_after": 15
+      },
+      {
+        "format_offset": 19,
+        "char": "6",
+        "from": "st_flags",
+        "to": "st_width",
+        "p_after": 19
+      },
+      {
+        "format_offset": 20,
+        "char": "l",
+        "from": "st_width",
+        "to": "st_modifiers",
+        "p_after": 20
+      }
+    ],
+    "string_spec": {
+      "consumes_va_arg_index": 0,
+      "type": "const char *",
+      "strlen": 19,
+      "bytes_copied": 19,
+      "does_not_copy_terminating_NUL": true
+    },
+    "micro_spec": {
+      "consumes_va_arg_index": 1,
+      "type": "signed long",
+      "FL_ZERO": true,
+      "FL_SIGNED": true,
+      "base": 10,
+      "width": 6,
+      "prec": -1,
+      "rank": "rank_long",
+      "flags_value_at_d": 65,
+      "percent_0_6_l_d_source_positions": [
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    "samples": [
+      {
+        "case_id": "DT129-000000",
+        "microseconds": 0,
+        "format_int": {
+          "microseconds": 0,
+          "input_type": "signed long",
+          "base": 10,
+          "rank_long": 1,
+          "flags": [
+            "FL_ZERO",
+            "FL_SIGNED"
+          ],
+          "width": 6,
+          "prec": -1,
+          "raw_digit_count": 0,
+          "post_zero_case_digit_count": 1,
+          "tickskip": 1,
+          "nchars": 1,
+          "width_zero_padding_bytes": 5,
+          "zero_value_special_handling": "ndigits=0 initially then ndigits=1 at format_int:91-94",
+          "paddingWrite": [
+            {
+              "offset": 0,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 1,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 2,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 3,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 4,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            }
+          ],
+          "after_early_zero_EMIT_local_q": 5,
+          "digits_number_of_reverse_writes": 1,
+          "reverse_digit_writes": [
+            {
+              "iteration": 0,
+              "write_local_offset": 5,
+              "absolute_dest_offset": 39,
+              "char": "0",
+              "value_mod_10": 0,
+              "remaining_value_after": 0
+            }
+          ],
+          "local_return_sz": 6,
+          "result_six_ascii": "000000",
+          "six_hex": [
+            "30",
+            "30",
+            "30",
+            "30",
+            "30",
+            "30"
+          ],
+          "final_val_after_reverse": 0,
+          "padding_zero_bytes": 5,
+          "zero_value_digit_behavior": "ndigits initially 0, forced to 1, then 5 width padding zeros plus 1 digit zero"
+        },
+        "q_o_at_numeric_parse": {
+          "before": 34,
+          "after": 40
+        }
+      },
+      {
+        "case_id": "DT129-000007",
+        "microseconds": 7,
+        "format_int": {
+          "microseconds": 7,
+          "input_type": "signed long",
+          "base": 10,
+          "rank_long": 1,
+          "flags": [
+            "FL_ZERO",
+            "FL_SIGNED"
+          ],
+          "width": 6,
+          "prec": -1,
+          "raw_digit_count": 1,
+          "post_zero_case_digit_count": 1,
+          "tickskip": 1,
+          "nchars": 1,
+          "width_zero_padding_bytes": 5,
+          "zero_value_special_handling": null,
+          "paddingWrite": [
+            {
+              "offset": 0,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 1,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 2,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 3,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            },
+            {
+              "offset": 4,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            }
+          ],
+          "after_early_zero_EMIT_local_q": 5,
+          "digits_number_of_reverse_writes": 1,
+          "reverse_digit_writes": [
+            {
+              "iteration": 0,
+              "write_local_offset": 5,
+              "absolute_dest_offset": 39,
+              "char": "7",
+              "value_mod_10": 7,
+              "remaining_value_after": 0
+            }
+          ],
+          "local_return_sz": 6,
+          "result_six_ascii": "000007",
+          "six_hex": [
+            "30",
+            "30",
+            "30",
+            "30",
+            "30",
+            "37"
+          ],
+          "final_val_after_reverse": 0,
+          "padding_zero_bytes": 5,
+          "zero_value_digit_behavior": "ordinary nonzero digit count"
+        },
+        "q_o_at_numeric_parse": {
+          "before": 34,
+          "after": 40
+        }
+      },
+      {
+        "case_id": "DT129-012345",
+        "microseconds": 12345,
+        "format_int": {
+          "microseconds": 12345,
+          "input_type": "signed long",
+          "base": 10,
+          "rank_long": 1,
+          "flags": [
+            "FL_ZERO",
+            "FL_SIGNED"
+          ],
+          "width": 6,
+          "prec": -1,
+          "raw_digit_count": 5,
+          "post_zero_case_digit_count": 5,
+          "tickskip": 5,
+          "nchars": 5,
+          "width_zero_padding_bytes": 1,
+          "zero_value_special_handling": null,
+          "paddingWrite": [
+            {
+              "offset": 0,
+              "char": "0",
+              "role": "FL_ZERO padding",
+              "digit_value_source": false
+            }
+          ],
+          "after_early_zero_EMIT_local_q": 1,
+          "digits_number_of_reverse_writes": 5,
+          "reverse_digit_writes": [
+            {
+              "iteration": 0,
+              "write_local_offset": 5,
+              "absolute_dest_offset": 39,
+              "char": "5",
+              "value_mod_10": 5,
+              "remaining_value_after": 1234
+            },
+            {
+              "iteration": 1,
+              "write_local_offset": 4,
+              "absolute_dest_offset": 38,
+              "char": "4",
+              "value_mod_10": 4,
+              "remaining_value_after": 123
+            },
+            {
+              "iteration": 2,
+              "write_local_offset": 3,
+              "absolute_dest_offset": 37,
+              "char": "3",
+              "value_mod_10": 3,
+              "remaining_value_after": 12
+            },
+            {
+              "iteration": 3,
+              "write_local_offset": 2,
+              "absolute_dest_offset": 36,
+              "char": "2",
+              "value_mod_10": 2,
+              "remaining_value_after": 1
+            },
+            {
+              "iteration": 4,
+              "write_local_offset": 1,
+              "absolute_dest_offset": 35,
+              "char": "1",
+              "value_mod_10": 1,
+              "remaining_value_after": 0
+            }
+          ],
+          "local_return_sz": 6,
+          "result_six_ascii": "012345",
+          "six_hex": [
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35"
+          ],
+          "final_val_after_reverse": 0,
+          "padding_zero_bytes": 1,
+          "zero_value_digit_behavior": "ordinary nonzero digit count"
+        },
+        "q_o_at_numeric_parse": {
+          "before": 34,
+          "after": 40
+        }
+      },
+      {
+        "case_id": "DT129-999999",
+        "microseconds": 999999,
+        "format_int": {
+          "microseconds": 999999,
+          "input_type": "signed long",
+          "base": 10,
+          "rank_long": 1,
+          "flags": [
+            "FL_ZERO",
+            "FL_SIGNED"
+          ],
+          "width": 6,
+          "prec": -1,
+          "raw_digit_count": 6,
+          "post_zero_case_digit_count": 6,
+          "tickskip": 6,
+          "nchars": 6,
+          "width_zero_padding_bytes": 0,
+          "zero_value_special_handling": null,
+          "paddingWrite": [],
+          "after_early_zero_EMIT_local_q": 0,
+          "digits_number_of_reverse_writes": 6,
+          "reverse_digit_writes": [
+            {
+              "iteration": 0,
+              "write_local_offset": 5,
+              "absolute_dest_offset": 39,
+              "char": "9",
+              "value_mod_10": 9,
+              "remaining_value_after": 99999
+            },
+            {
+              "iteration": 1,
+              "write_local_offset": 4,
+              "absolute_dest_offset": 38,
+              "char": "9",
+              "value_mod_10": 9,
+              "remaining_value_after": 9999
+            },
+            {
+              "iteration": 2,
+              "write_local_offset": 3,
+              "absolute_dest_offset": 37,
+              "char": "9",
+              "value_mod_10": 9,
+              "remaining_value_after": 999
+            },
+            {
+              "iteration": 3,
+              "write_local_offset": 2,
+              "absolute_dest_offset": 36,
+              "char": "9",
+              "value_mod_10": 9,
+              "remaining_value_after": 99
+            },
+            {
+              "iteration": 4,
+              "write_local_offset": 1,
+              "absolute_dest_offset": 35,
+              "char": "9",
+              "value_mod_10": 9,
+              "remaining_value_after": 9
+            },
+            {
+              "iteration": 5,
+              "write_local_offset": 0,
+              "absolute_dest_offset": 34,
+              "char": "9",
+              "value_mod_10": 9,
+              "remaining_value_after": 0
+            }
+          ],
+          "local_return_sz": 6,
+          "result_six_ascii": "999999",
+          "six_hex": [
+            "39",
+            "39",
+            "39",
+            "39",
+            "39",
+            "39"
+          ],
+          "final_val_after_reverse": 0,
+          "padding_zero_bytes": 0,
+          "zero_value_digit_behavior": "ordinary nonzero digit count"
+        },
+        "q_o_at_numeric_parse": {
+          "before": 34,
+          "after": 40
+        }
+      }
+    ]
+  },
+  "C_line_and_write": {
+    "cases": [
+      {
+        "case_id": "DT129-000000",
+        "microseconds": 0,
+        "source_time_text": "2026-11-22 09:08:07",
+        "result_text": "DateTime Now: 2026-11-22 09:08:07.000000\n",
+        "result_hex": "44 61 74 65 54 69 6d 65 20 4e 6f 77 3a 20 32 30 32 36 2d 31 31 2d 32 32 20 30 39 3a 30 38 3a 30 37 2e 30 30 30 30 30 30 0a",
+        "sections": [
+          {
+            "name": "prefix",
+            "source": "vsnprintf st_normal EMIT",
+            "range": [
+              0,
+              14
+            ],
+            "bytes": "DateTime Now: "
+          },
+          {
+            "name": "datetime_string",
+            "source": "strftime-produced input buffer, vsnprintf %s EMIT",
+            "range": [
+              14,
+              33
+            ],
+            "bytes": "2026-11-22 09:08:07"
+          },
+          {
+            "name": "period",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              33,
+              34
+            ],
+            "bytes": "."
+          },
+          {
+            "name": "micro_6",
+            "source": "format_int under %06ld",
+            "range": [
+              34,
+              40
+            ],
+            "bytes": "000000"
+          },
+          {
+            "name": "LF",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              40,
+              41
+            ],
+            "bytes": "\n"
+          }
+        ],
+        "terminating_NUL_offset": 41,
+        "terminating_NUL_value": 0,
+        "printf_local_buf_size": 4096,
+        "strlen_date": 19,
+        "vsnprintf_o": 41,
+        "vsnprintf_q_offset": 41,
+        "vsnprintf_result": 41,
+        "write_call": {
+          "function": "printf",
+          "source": "printf.c:22",
+          "fd_expression": "stdout->_fileno",
+          "fd_numeric_value": "UNKNOWN",
+          "buf": "printf local char buf[4096]",
+          "length_argument": 41,
+          "write_return_result": "IGNORED",
+          "syscall_outcome": "UNKNOWN"
+        },
+        "EMIT_byte_log": [
+          {
+            "write_index": 0,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 0,
+            "char": "D",
+            "hex": "44"
+          },
+          {
+            "write_index": 1,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 1,
+            "char": "a",
+            "hex": "61"
+          },
+          {
+            "write_index": 2,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 2,
+            "char": "t",
+            "hex": "74"
+          },
+          {
+            "write_index": 3,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 3,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 4,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 4,
+            "char": "T",
+            "hex": "54"
+          },
+          {
+            "write_index": 5,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 5,
+            "char": "i",
+            "hex": "69"
+          },
+          {
+            "write_index": 6,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 6,
+            "char": "m",
+            "hex": "6d"
+          },
+          {
+            "write_index": 7,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 7,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 8,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 8,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 9,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 9,
+            "char": "N",
+            "hex": "4e"
+          },
+          {
+            "write_index": 10,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 10,
+            "char": "o",
+            "hex": "6f"
+          },
+          {
+            "write_index": 11,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 11,
+            "char": "w",
+            "hex": "77"
+          },
+          {
+            "write_index": 12,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 12,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 13,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 13,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 14,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 14,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 15,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 15,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 16,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 16,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 17,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 17,
+            "char": "6",
+            "hex": "36"
+          },
+          {
+            "write_index": 18,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 18,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 19,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 19,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 20,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 20,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 21,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 21,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 22,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 22,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 23,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 23,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 24,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 24,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 25,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 25,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 26,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 26,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 27,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 27,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 28,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 28,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 29,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 29,
+            "char": "8",
+            "hex": "38"
+          },
+          {
+            "write_index": 30,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 30,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 31,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 31,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 32,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 32,
+            "char": "7",
+            "hex": "37"
+          },
+          {
+            "write_index": 33,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 33,
+            "char": ".",
+            "hex": "2e"
+          },
+          {
+            "write_index": 34,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 34,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 35,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 35,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 36,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 36,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 37,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 37,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 38,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 38,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 39,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 39,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 40,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 40,
+            "char": "\n",
+            "hex": "0a"
+          }
+        ],
+        "write_return_what_if": [],
+        "printf_return": 41,
+        "test_PrintDateTime_return": 0,
+        "main_ignores_test_return": true,
+        "validation": {
+          "all_five_spans_disjoint_complete": true,
+          "NUL_at41": true,
+          "write_payload_excludes_NUL": true,
+          "all_41_bytes_ASCII": true,
+          "source_strftime_buffer_NUL_not_in_s": true
+        }
+      },
+      {
+        "case_id": "DT129-000007",
+        "microseconds": 7,
+        "source_time_text": "2026-11-22 09:08:07",
+        "result_text": "DateTime Now: 2026-11-22 09:08:07.000007\n",
+        "result_hex": "44 61 74 65 54 69 6d 65 20 4e 6f 77 3a 20 32 30 32 36 2d 31 31 2d 32 32 20 30 39 3a 30 38 3a 30 37 2e 30 30 30 30 30 37 0a",
+        "sections": [
+          {
+            "name": "prefix",
+            "source": "vsnprintf st_normal EMIT",
+            "range": [
+              0,
+              14
+            ],
+            "bytes": "DateTime Now: "
+          },
+          {
+            "name": "datetime_string",
+            "source": "strftime-produced input buffer, vsnprintf %s EMIT",
+            "range": [
+              14,
+              33
+            ],
+            "bytes": "2026-11-22 09:08:07"
+          },
+          {
+            "name": "period",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              33,
+              34
+            ],
+            "bytes": "."
+          },
+          {
+            "name": "micro_6",
+            "source": "format_int under %06ld",
+            "range": [
+              34,
+              40
+            ],
+            "bytes": "000007"
+          },
+          {
+            "name": "LF",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              40,
+              41
+            ],
+            "bytes": "\n"
+          }
+        ],
+        "terminating_NUL_offset": 41,
+        "terminating_NUL_value": 0,
+        "printf_local_buf_size": 4096,
+        "strlen_date": 19,
+        "vsnprintf_o": 41,
+        "vsnprintf_q_offset": 41,
+        "vsnprintf_result": 41,
+        "write_call": {
+          "function": "printf",
+          "source": "printf.c:22",
+          "fd_expression": "stdout->_fileno",
+          "fd_numeric_value": "UNKNOWN",
+          "buf": "printf local char buf[4096]",
+          "length_argument": 41,
+          "write_return_result": "IGNORED",
+          "syscall_outcome": "UNKNOWN"
+        },
+        "EMIT_byte_log": [
+          {
+            "write_index": 0,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 0,
+            "char": "D",
+            "hex": "44"
+          },
+          {
+            "write_index": 1,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 1,
+            "char": "a",
+            "hex": "61"
+          },
+          {
+            "write_index": 2,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 2,
+            "char": "t",
+            "hex": "74"
+          },
+          {
+            "write_index": 3,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 3,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 4,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 4,
+            "char": "T",
+            "hex": "54"
+          },
+          {
+            "write_index": 5,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 5,
+            "char": "i",
+            "hex": "69"
+          },
+          {
+            "write_index": 6,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 6,
+            "char": "m",
+            "hex": "6d"
+          },
+          {
+            "write_index": 7,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 7,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 8,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 8,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 9,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 9,
+            "char": "N",
+            "hex": "4e"
+          },
+          {
+            "write_index": 10,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 10,
+            "char": "o",
+            "hex": "6f"
+          },
+          {
+            "write_index": 11,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 11,
+            "char": "w",
+            "hex": "77"
+          },
+          {
+            "write_index": 12,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 12,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 13,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 13,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 14,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 14,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 15,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 15,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 16,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 16,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 17,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 17,
+            "char": "6",
+            "hex": "36"
+          },
+          {
+            "write_index": 18,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 18,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 19,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 19,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 20,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 20,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 21,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 21,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 22,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 22,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 23,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 23,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 24,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 24,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 25,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 25,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 26,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 26,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 27,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 27,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 28,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 28,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 29,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 29,
+            "char": "8",
+            "hex": "38"
+          },
+          {
+            "write_index": 30,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 30,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 31,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 31,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 32,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 32,
+            "char": "7",
+            "hex": "37"
+          },
+          {
+            "write_index": 33,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 33,
+            "char": ".",
+            "hex": "2e"
+          },
+          {
+            "write_index": 34,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 34,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 35,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 35,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 36,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 36,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 37,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 37,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 38,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 38,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 39,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 39,
+            "char": "7",
+            "hex": "37"
+          },
+          {
+            "write_index": 40,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 40,
+            "char": "\n",
+            "hex": "0a"
+          }
+        ],
+        "write_return_what_if": [
+          {
+            "assumed_write_result": 41,
+            "printf_return": 41,
+            "test_function_return": 0,
+            "main_consumes_test_result": false,
+            "write_requested_count": 41,
+            "write_reported_bytes": 41,
+            "actual_screen_bytes": "UNKNOWN"
+          },
+          {
+            "assumed_write_result": 12,
+            "printf_return": 41,
+            "test_function_return": 0,
+            "main_consumes_test_result": false,
+            "write_requested_count": 41,
+            "write_reported_bytes": 12,
+            "actual_screen_bytes": "UNKNOWN"
+          }
+        ],
+        "printf_return": 41,
+        "test_PrintDateTime_return": 0,
+        "main_ignores_test_return": true,
+        "validation": {
+          "all_five_spans_disjoint_complete": true,
+          "NUL_at41": true,
+          "write_payload_excludes_NUL": true,
+          "all_41_bytes_ASCII": true,
+          "source_strftime_buffer_NUL_not_in_s": true
+        }
+      },
+      {
+        "case_id": "DT129-012345",
+        "microseconds": 12345,
+        "source_time_text": "2026-11-22 09:08:07",
+        "result_text": "DateTime Now: 2026-11-22 09:08:07.012345\n",
+        "result_hex": "44 61 74 65 54 69 6d 65 20 4e 6f 77 3a 20 32 30 32 36 2d 31 31 2d 32 32 20 30 39 3a 30 38 3a 30 37 2e 30 31 32 33 34 35 0a",
+        "sections": [
+          {
+            "name": "prefix",
+            "source": "vsnprintf st_normal EMIT",
+            "range": [
+              0,
+              14
+            ],
+            "bytes": "DateTime Now: "
+          },
+          {
+            "name": "datetime_string",
+            "source": "strftime-produced input buffer, vsnprintf %s EMIT",
+            "range": [
+              14,
+              33
+            ],
+            "bytes": "2026-11-22 09:08:07"
+          },
+          {
+            "name": "period",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              33,
+              34
+            ],
+            "bytes": "."
+          },
+          {
+            "name": "micro_6",
+            "source": "format_int under %06ld",
+            "range": [
+              34,
+              40
+            ],
+            "bytes": "012345"
+          },
+          {
+            "name": "LF",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              40,
+              41
+            ],
+            "bytes": "\n"
+          }
+        ],
+        "terminating_NUL_offset": 41,
+        "terminating_NUL_value": 0,
+        "printf_local_buf_size": 4096,
+        "strlen_date": 19,
+        "vsnprintf_o": 41,
+        "vsnprintf_q_offset": 41,
+        "vsnprintf_result": 41,
+        "write_call": {
+          "function": "printf",
+          "source": "printf.c:22",
+          "fd_expression": "stdout->_fileno",
+          "fd_numeric_value": "UNKNOWN",
+          "buf": "printf local char buf[4096]",
+          "length_argument": 41,
+          "write_return_result": "IGNORED",
+          "syscall_outcome": "UNKNOWN"
+        },
+        "EMIT_byte_log": [
+          {
+            "write_index": 0,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 0,
+            "char": "D",
+            "hex": "44"
+          },
+          {
+            "write_index": 1,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 1,
+            "char": "a",
+            "hex": "61"
+          },
+          {
+            "write_index": 2,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 2,
+            "char": "t",
+            "hex": "74"
+          },
+          {
+            "write_index": 3,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 3,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 4,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 4,
+            "char": "T",
+            "hex": "54"
+          },
+          {
+            "write_index": 5,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 5,
+            "char": "i",
+            "hex": "69"
+          },
+          {
+            "write_index": 6,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 6,
+            "char": "m",
+            "hex": "6d"
+          },
+          {
+            "write_index": 7,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 7,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 8,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 8,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 9,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 9,
+            "char": "N",
+            "hex": "4e"
+          },
+          {
+            "write_index": 10,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 10,
+            "char": "o",
+            "hex": "6f"
+          },
+          {
+            "write_index": 11,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 11,
+            "char": "w",
+            "hex": "77"
+          },
+          {
+            "write_index": 12,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 12,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 13,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 13,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 14,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 14,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 15,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 15,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 16,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 16,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 17,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 17,
+            "char": "6",
+            "hex": "36"
+          },
+          {
+            "write_index": 18,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 18,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 19,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 19,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 20,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 20,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 21,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 21,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 22,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 22,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 23,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 23,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 24,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 24,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 25,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 25,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 26,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 26,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 27,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 27,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 28,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 28,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 29,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 29,
+            "char": "8",
+            "hex": "38"
+          },
+          {
+            "write_index": 30,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 30,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 31,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 31,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 32,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 32,
+            "char": "7",
+            "hex": "37"
+          },
+          {
+            "write_index": 33,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 33,
+            "char": ".",
+            "hex": "2e"
+          },
+          {
+            "write_index": 34,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 34,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 35,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 35,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 36,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 36,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 37,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 37,
+            "char": "3",
+            "hex": "33"
+          },
+          {
+            "write_index": 38,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 38,
+            "char": "4",
+            "hex": "34"
+          },
+          {
+            "write_index": 39,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 39,
+            "char": "5",
+            "hex": "35"
+          },
+          {
+            "write_index": 40,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 40,
+            "char": "\n",
+            "hex": "0a"
+          }
+        ],
+        "write_return_what_if": [],
+        "printf_return": 41,
+        "test_PrintDateTime_return": 0,
+        "main_ignores_test_return": true,
+        "validation": {
+          "all_five_spans_disjoint_complete": true,
+          "NUL_at41": true,
+          "write_payload_excludes_NUL": true,
+          "all_41_bytes_ASCII": true,
+          "source_strftime_buffer_NUL_not_in_s": true
+        }
+      },
+      {
+        "case_id": "DT129-999999",
+        "microseconds": 999999,
+        "source_time_text": "2026-11-22 09:08:07",
+        "result_text": "DateTime Now: 2026-11-22 09:08:07.999999\n",
+        "result_hex": "44 61 74 65 54 69 6d 65 20 4e 6f 77 3a 20 32 30 32 36 2d 31 31 2d 32 32 20 30 39 3a 30 38 3a 30 37 2e 39 39 39 39 39 39 0a",
+        "sections": [
+          {
+            "name": "prefix",
+            "source": "vsnprintf st_normal EMIT",
+            "range": [
+              0,
+              14
+            ],
+            "bytes": "DateTime Now: "
+          },
+          {
+            "name": "datetime_string",
+            "source": "strftime-produced input buffer, vsnprintf %s EMIT",
+            "range": [
+              14,
+              33
+            ],
+            "bytes": "2026-11-22 09:08:07"
+          },
+          {
+            "name": "period",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              33,
+              34
+            ],
+            "bytes": "."
+          },
+          {
+            "name": "micro_6",
+            "source": "format_int under %06ld",
+            "range": [
+              34,
+              40
+            ],
+            "bytes": "999999"
+          },
+          {
+            "name": "LF",
+            "source": "vsnprintf literal EMIT",
+            "range": [
+              40,
+              41
+            ],
+            "bytes": "\n"
+          }
+        ],
+        "terminating_NUL_offset": 41,
+        "terminating_NUL_value": 0,
+        "printf_local_buf_size": 4096,
+        "strlen_date": 19,
+        "vsnprintf_o": 41,
+        "vsnprintf_q_offset": 41,
+        "vsnprintf_result": 41,
+        "write_call": {
+          "function": "printf",
+          "source": "printf.c:22",
+          "fd_expression": "stdout->_fileno",
+          "fd_numeric_value": "UNKNOWN",
+          "buf": "printf local char buf[4096]",
+          "length_argument": 41,
+          "write_return_result": "IGNORED",
+          "syscall_outcome": "UNKNOWN"
+        },
+        "EMIT_byte_log": [
+          {
+            "write_index": 0,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 0,
+            "char": "D",
+            "hex": "44"
+          },
+          {
+            "write_index": 1,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 1,
+            "char": "a",
+            "hex": "61"
+          },
+          {
+            "write_index": 2,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 2,
+            "char": "t",
+            "hex": "74"
+          },
+          {
+            "write_index": 3,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 3,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 4,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 4,
+            "char": "T",
+            "hex": "54"
+          },
+          {
+            "write_index": 5,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 5,
+            "char": "i",
+            "hex": "69"
+          },
+          {
+            "write_index": 6,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 6,
+            "char": "m",
+            "hex": "6d"
+          },
+          {
+            "write_index": 7,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 7,
+            "char": "e",
+            "hex": "65"
+          },
+          {
+            "write_index": 8,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 8,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 9,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 9,
+            "char": "N",
+            "hex": "4e"
+          },
+          {
+            "write_index": 10,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 10,
+            "char": "o",
+            "hex": "6f"
+          },
+          {
+            "write_index": 11,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 11,
+            "char": "w",
+            "hex": "77"
+          },
+          {
+            "write_index": 12,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 12,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 13,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 13,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 14,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 14,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 15,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 15,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 16,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 16,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 17,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 17,
+            "char": "6",
+            "hex": "36"
+          },
+          {
+            "write_index": 18,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 18,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 19,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 19,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 20,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 20,
+            "char": "1",
+            "hex": "31"
+          },
+          {
+            "write_index": 21,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 21,
+            "char": "-",
+            "hex": "2d"
+          },
+          {
+            "write_index": 22,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 22,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 23,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 23,
+            "char": "2",
+            "hex": "32"
+          },
+          {
+            "write_index": 24,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 24,
+            "char": " ",
+            "hex": "20"
+          },
+          {
+            "write_index": 25,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 25,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 26,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 26,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 27,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 27,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 28,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 28,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 29,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 29,
+            "char": "8",
+            "hex": "38"
+          },
+          {
+            "write_index": 30,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 30,
+            "char": ":",
+            "hex": "3a"
+          },
+          {
+            "write_index": 31,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 31,
+            "char": "0",
+            "hex": "30"
+          },
+          {
+            "write_index": 32,
+            "from": "is_string %s copy EMIT",
+            "dest_offset": 32,
+            "char": "7",
+            "hex": "37"
+          },
+          {
+            "write_index": 33,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 33,
+            "char": ".",
+            "hex": "2e"
+          },
+          {
+            "write_index": 34,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 34,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 35,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 35,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 36,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 36,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 37,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 37,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 38,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 38,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 39,
+            "from": "format_int local zero-padding EMIT or reverse digit assignment; vsnprintf caller advances q/o by returned sz",
+            "dest_offset": 39,
+            "char": "9",
+            "hex": "39"
+          },
+          {
+            "write_index": 40,
+            "from": "st_normal literal EMIT",
+            "dest_offset": 40,
+            "char": "\n",
+            "hex": "0a"
+          }
+        ],
+        "write_return_what_if": [],
+        "printf_return": 41,
+        "test_PrintDateTime_return": 0,
+        "main_ignores_test_return": true,
+        "validation": {
+          "all_five_spans_disjoint_complete": true,
+          "NUL_at41": true,
+          "write_payload_excludes_NUL": true,
+          "all_41_bytes_ASCII": true,
+          "source_strftime_buffer_NUL_not_in_s": true
+        }
+      }
+    ],
+    "same_41_byte_size_each": true,
+    "byte_region_coverage": [
+      [
+        "prefix",
+        0,
+        14
+      ],
+      [
+        "date",
+        14,
+        33
+      ],
+      [
+        "dot",
+        33,
+        34
+      ],
+      [
+        "microseconds",
+        34,
+        40
+      ],
+      [
+        "LF",
+        40,
+        41
+      ]
+    ],
+    "terminating_NUL_offset": 41,
+    "write_submits_NUL": false,
+    "stdout_fd_value": "UNKNOWN"
+  },
+  "graph_verification": {
+    "D00_R127_source_and_data_edge_delta": {
+      "register_pairs": 43,
+      "a0": 20,
+      "a1": 23,
+      "old_nodes": 224,
+      "old_edges": 254
+    },
+    "D00_R128_C_stage_graph_delta": {
+      "old_account_widths": [
+        32,
+        16,
+        201
+      ],
+      "corrected_widths": [
+        16,
+        16,
+        41
+      ],
+      "edge_retypes": 18,
+      "new_data_source_nodes": 3,
+      "new_source_edges": 12
+    },
+    "corrected_bounded_D00_graph": {
+      "nodes": 171,
+      "edges": 153
+    },
+    "new_datetime_graph": {
+      "cases": 5,
+      "nodes": 154,
+      "edges": 218
+    },
+    "combined_graph": {
+      "nodes": 325,
+      "edges": 371
+    },
+    "Graphviz": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

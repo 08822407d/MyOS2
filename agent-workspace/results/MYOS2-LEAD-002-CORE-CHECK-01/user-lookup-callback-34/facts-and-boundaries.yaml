@@ -1,0 +1,524 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LOOKUP-CALLBACK-34",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "mainline_owner": "MYOS2-A-C04",
+  "date": "2026-11-03",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "a6d39cdb22f0",
+  "fixed_contract58_short12": "a87124c1cf6c",
+  "mandatory_supplements": [
+    "R33-S01",
+    "R33-S02"
+  ],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "record_type": "bounded_callback_typed_controlflow_matrix",
+  "binding": [
+    {
+      "stage": "VFS caller",
+      "path": "mykernel/fs/vfs/namei.c",
+      "symbol": "__lookup_slow",
+      "expression": "dir->d_inode->i_op->lookup(dir->d_inode, dentry, flags)",
+      "role": "indirect call",
+      "anchors": [
+        "CB34-A001",
+        "CB34-A002"
+      ],
+      "premises": [
+        "dir and inode/i_op valid",
+        "lookup pointer bound to selected table",
+        "callback normal return"
+      ]
+    },
+    {
+      "stage": "pointer member",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "inode_ops_s",
+      "expression": "dentry_s* (*lookup)(inode_s*,dentry_s*,unsigned int)",
+      "role": "type contract",
+      "anchors": [
+        "CB34-A005"
+      ],
+      "premises": [
+        "type match does not establish actual runtime target"
+      ]
+    },
+    {
+      "stage": "FAT table",
+      "path": "mykernel/fs/fat/myos_fat32_namei.c",
+      "symbol": "vfat_dir_inode_operations",
+      "expression": ".lookup = FAT32_lookup",
+      "role": "static table initialization",
+      "anchors": [
+        "CB34-A008"
+      ],
+      "premises": [
+        "only if inode.i_op points to this table"
+      ]
+    },
+    {
+      "stage": "inode constructor directory",
+      "path": "mykernel/fs/fat/inode.c",
+      "symbol": "fat_fill_inode",
+      "expression": "directory branch inode->i_op=&vfat_dir_inode_operations",
+      "role": "conditional field assignment",
+      "anchors": [
+        "CB34-A009",
+        "CB34-A010"
+      ],
+      "premises": [
+        "valid de and !FAT32_IS_FREE(de->name)"
+      ]
+    },
+    {
+      "stage": "inode constructor non-directory",
+      "path": "mykernel/fs/fat/inode.c",
+      "symbol": "fat_fill_inode",
+      "expression": "non-dir branch inode->i_op=&vfat_dir_inode_operations",
+      "role": "conditional field assignment",
+      "anchors": [
+        "CB34-A011",
+        "CB34-A012"
+      ],
+      "premises": [
+        "valid inode/de/i_mapping"
+      ]
+    },
+    {
+      "stage": "VFAT setup",
+      "path": "mykernel/fs/fat/namei_vfat.c",
+      "symbol": "setup",
+      "expression": "MSDOS_SB(sb)->dir_ops=&vfat_dir_inode_operations",
+      "role": "setup assignment",
+      "anchors": [
+        "CB34-A016"
+      ],
+      "premises": [
+        "setup selected and executed"
+      ]
+    },
+    {
+      "stage": "root inode",
+      "path": "mykernel/fs/fat/inode.c",
+      "symbol": "fat_read_root",
+      "expression": "inode->i_op=(inode_ops_s*)sbi->dir_ops",
+      "role": "root assignment",
+      "anchors": [
+        "CB34-A017"
+      ],
+      "premises": [
+        "fat_read_root entered with valid sbi; no global reachability attested"
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "id": "parent_inode",
+      "type": "inode_s*",
+      "origin": "__lookup_slow calls through dir->d_inode",
+      "identity": "borrowed parent inode",
+      "requires": [
+        "i_sb",
+        "i_op",
+        "i_op->lookup"
+      ],
+      "anchor": "CB34-A002"
+    },
+    {
+      "id": "parent_superblock",
+      "type": "super_block_s*",
+      "origin": "parent_inode->i_sb",
+      "identity": "borrowed; has distinct private_sb_info and s_fs_info",
+      "requires": [
+        "private_sb_info valid FAT32_SBinfo_s* to use numeric fields"
+      ],
+      "anchor": "CB34-A007"
+    },
+    {
+      "id": "fsbi",
+      "type": "FAT32_SBinfo_s*",
+      "origin": "parent_inode->i_sb->private_sb_info",
+      "identity": "borrowed typed cast/assignment",
+      "requires": [
+        "bytes_per_sector nonzero",
+        "cluster-size arithmetic valid"
+      ],
+      "anchor": "CB34-A019"
+    },
+    {
+      "id": "dest_dentry",
+      "type": "dentry_s*",
+      "origin": "original object allocated by __myos_d_alloc in __lookup_slow",
+      "identity": "same pointer passed to callback and eventually returned on success",
+      "requires": [
+        "valid live dentry during callback"
+      ],
+      "anchor": "CB34-A001"
+    },
+    {
+      "id": "dest_dentry.d_name",
+      "type": "qstr_s",
+      "origin": "name bytes copied in the 33 allocator",
+      "identity": "field of original dest_dentry, not independent returned name",
+      "requires": [
+        "len fits int if narrowed",
+        "name readable for compare"
+      ],
+      "anchor": "CB34-A020"
+    },
+    {
+      "id": "p",
+      "type": "inode_s*",
+      "origin": "fat_build_inode() local result",
+      "identity": "new inode distinct from dentry; ERR_PTR on selected allocation failure",
+      "requires": [
+        "IS_ERR(p)==false before dereference",
+        "new_inode and fat_fill_inode valid"
+      ],
+      "anchor": "CB34-A029"
+    },
+    {
+      "id": "tmpde",
+      "type": "const msdos_dirent_s*",
+      "origin": "FAT32_get_full_ent(iobuf) only when second while operand evaluated",
+      "identity": "temporary directory entry view borrowed from iobuf process",
+      "requires": [
+        "not encoded error",
+        "valid entry for field read",
+        "lifetime through inode/private-info copy"
+      ],
+      "anchor": "CB34-A022"
+    },
+    {
+      "id": "tmplde",
+      "type": "const msdos_dirslot_s*",
+      "origin": "FAT32_iobuf_readent on each loop iteration",
+      "identity": "auxiliary borrowed long entry; IS_ERR tested but NULL not rejected",
+      "requires": [
+        "valid nonERR pointer before attr deref"
+      ],
+      "anchor": "CB34-A023"
+    },
+    {
+      "id": "iobuf",
+      "type": "FAT32_iobuf_s*",
+      "origin": "FAT32_iobuf_init(parent_inode)",
+      "identity": "separate iobuf object (actual allocation/lifetime opaque)",
+      "requires": [
+        "valid pointer",
+        "iter_init valid and normally returns",
+        "buffers/iter_cursor/clusters/bufsize valid"
+      ],
+      "anchor": "CB34-A021"
+    },
+    {
+      "id": "name",
+      "type": "char*",
+      "origin": "FAT32_parse_long/short result on nonempty entry",
+      "identity": "temporary parsed-name pointer released by kfree(name)",
+      "requires": [
+        "nonerror readable bytes",
+        "namelen valid",
+        "kfree ownership appropriate"
+      ],
+      "anchor": "CB34-A026"
+    },
+    {
+      "id": "namelen",
+      "type": "int",
+      "origin": "address passed to parse_long/short per iteration",
+      "identity": "parsed name length",
+      "requires": [
+        "nonnegative, within allocated bytes",
+        "int semantics valid"
+      ],
+      "anchor": "CB34-A024"
+    },
+    {
+      "id": "destlen",
+      "type": "int",
+      "origin": "dest_dentry->d_name.len (size_t) converted to int",
+      "identity": "narrowing length variable",
+      "requires": [
+        "value in representable int range"
+      ],
+      "anchor": "CB34-A020"
+    },
+    {
+      "id": "de_start",
+      "type": "loff_t",
+      "origin": "first while operand assigns iobuf->iter_cursor",
+      "identity": "cursor sampled on every condition check",
+      "requires": [
+        "cursor value meaningful",
+        "compare with FAT_MAX_DIR_SIZE"
+      ],
+      "anchor": "CB34-A022"
+    },
+    {
+      "id": "off",
+      "type": "loff_t",
+      "origin": "iobuf->iter_cursor in entered loop body",
+      "identity": "last body cursor, not necessarily match witness",
+      "requires": [
+        "iobuf valid",
+        "off-de_start meaningful for selected iteration"
+      ],
+      "anchor": "CB34-A023"
+    },
+    {
+      "id": "finode",
+      "type": "FAT32_inode_info_s*",
+      "origin": "p->private_idx_info = kzalloc(sizeof(FAT32_inode_info_s))",
+      "identity": "separate inode private-info allocation",
+      "requires": [
+        "allocation nonNULL before finode fields",
+        "source tmpde/iobuf valid"
+      ],
+      "anchor": "CB34-A031"
+    },
+    {
+      "id": "dest_dentry.d_inode",
+      "type": "inode_s*",
+      "origin": "assignment near bottom FAT32_lookup",
+      "identity": "field mutation on original callback argument",
+      "requires": [
+        "all prior uses well-defined",
+        "p still valid",
+        "callback reaches assignment"
+      ],
+      "anchor": "CB34-A035"
+    },
+    {
+      "id": "callback_return",
+      "type": "dentry_s*",
+      "origin": "FAT32_lookup final return dest_dentry",
+      "identity": "NULL if local dest_dentry reset; otherwise original passed pointer",
+      "requires": [
+        "iobuf_release normal return"
+      ],
+      "anchor": "CB34-A036"
+    }
+  ],
+  "source_conditions": {
+    "while_expression": "(de_start=iobuf->iter_cursor)<FAT_MAX_DIR_SIZE && !IS_ERR(tmpde=FAT32_get_full_ent(iobuf))",
+    "bound_macro": "FAT_MAX_DIR_ENTRIES << MSDOS_DIR_BITS",
+    "bound_constants": {
+      "FAT_MAX_DIR_ENTRIES": 65536,
+      "MSDOS_DIR_BITS": 5,
+      "FAT_MAX_DIR_SIZE_bytes": 2097152
+    },
+    "bound_only_applies_to_de_start": true,
+    "term1_false_skips_get_full_ent": true,
+    "error_pointer_term2_exits_and_updates_tmpde": true,
+    "local_match_break": "if(equal) break after name comparison and kfree",
+    "local_found_flag": false,
+    "post_loop_test": "if (IS_ERR(tmpde))",
+    "first_bound_false_state": {
+      "tmpde": "initial NULL",
+      "is_err_null_in_target_model": false,
+      "subsequent": "fat_build_inode with NULL unless earlier failure; stop on invalid de consumption"
+    },
+    "bound_after_scans_state": {
+      "tmpde": "last assigned nonerror pointer, may not correspond to a match",
+      "subsequent": "may enter fat_build_inode; needs unproven validity/lifetime before claiming return"
+    },
+    "flags_parameter_consumed_in_selected_function": false,
+    "iter_init_return_checked": false,
+    "parsed_name_compare": "len=(namelen>destlen?namelen:destlen); strncmp(name,destname,len); kfree(name)",
+    "count_type_caution": "len is int, but strncmp third formal is size_t; negative int may convert to large unsigned count; only helper invalid-length hypothesis, not proven actual producer",
+    "parser_opaque": true
+  },
+  "callback_cases": [
+    {
+      "id": "B34-C01",
+      "trigger": "matches in entered loop; break",
+      "tmpde_state": "last matching valid directory entry",
+      "new_inode": "success and fat_fill_inode completes",
+      "private_info": "allocation valid and data copy valid",
+      "original_dentry_fields_before": "d_inode initially NULL per selected allocator",
+      "original_dentry_fields_after": "d_inode=p",
+      "callback_return": "same original nonNULL",
+      "upper_next": "__lookup_slow compares nonNULL, then reads original d_inode/mapping, sets nrpages and publishes original",
+      "stop": "requires real valid inode mapping/size, iobuf release normal, no runtime certified"
+    },
+    {
+      "id": "B34-C02",
+      "trigger": "FAT32_get_full_ent returns an IS_ERR-coded pointer",
+      "tmpde_state": "encoded error pointer",
+      "new_inode": "not called",
+      "original_dentry_fields_after": "d_inode not assigned by callback",
+      "callback_return": "NULL after iobuf_release normal",
+      "upper_next": "__lookup_slow kfree(original dentry); ERR_PTR(-ENOENT)",
+      "stop": "original downstream error code is not directly preserved"
+    },
+    {
+      "id": "B34-C03",
+      "trigger": "fat_build_inode returns ERR_PTR (e.g. new_inode NULL => -ENOMEM)",
+      "tmpde_state": "nonerror usable entry premise",
+      "new_inode": "failed",
+      "original_dentry_fields_after": "d_inode not assigned by callback",
+      "callback_return": "NULL after iobuf_release normal",
+      "upper_next": "__lookup_slow kfree(original dentry); ERR_PTR(-ENOENT)",
+      "stop": "failure class coalesced to -ENOENT; no real allocation failure executed"
+    },
+    {
+      "id": "B34-C04",
+      "trigger": "condition first checks iter_cursor >= bound on initial evaluation",
+      "tmpde_state": "still NULL",
+      "new_inode": "fat_build_inode called with NULL unless other earlier return, then fat_fill_inode may access de",
+      "original_dentry_fields_after": "unestablished",
+      "callback_return": "unestablished",
+      "upper_next": "unestablished",
+      "stop": "first invalid de access if new_inode succeeds; do not infer CPU result"
+    },
+    {
+      "id": "B34-C05",
+      "trigger": "bound reached after one or more nonmatching valid entries",
+      "tmpde_state": "previous nonerror entry retained; no new get_full_ent call",
+      "new_inode": "may be called on stale nonmatching tmpde",
+      "original_dentry_fields_after": "may be assigned under further valid pointer/arithmetic/allocation premises",
+      "callback_return": "could be original without matched name",
+      "upper_next": "conditional upper consumption; not proven actual wrong file",
+      "stop": "needs bound-reach producer, entry lifetime, valid data and normal return"
+    },
+    {
+      "id": "B34-C06",
+      "trigger": "empty entry => continue, subsequent cursor reaches bound",
+      "tmpde_state": "retains previous empty entry pointer",
+      "new_inode": "may be called if pointer nonERR",
+      "original_dentry_fields_after": "unestablished",
+      "callback_return": "unestablished",
+      "upper_next": "unestablished",
+      "stop": "fat_fill_inode validity/metadata and actual parser behavior not proven"
+    },
+    {
+      "id": "B34-C07",
+      "trigger": "FAT32_get_full_ent returns NULL (not ERR_PTR)",
+      "tmpde_state": "NULL, IS_ERR(NULL) false in selected encoding",
+      "new_inode": "not yet called",
+      "original_dentry_fields_after": "unestablished",
+      "callback_return": "unestablished",
+      "upper_next": "unestablished",
+      "stop": "enters body and passes NULL to FAT32_ent_empty; no valid argument premise; helper-only"
+    },
+    {
+      "id": "B34-C08",
+      "trigger": "FAT32_iobuf_init returns NULL/ERR_PTR or iter_init invalid",
+      "tmpde_state": "not reached",
+      "new_inode": "not reached",
+      "original_dentry_fields_after": "unestablished",
+      "callback_return": "unestablished",
+      "upper_next": "unestablished",
+      "stop": "at iobuf->iter_init dereference; actual bad return producer not established"
+    },
+    {
+      "id": "B34-C09",
+      "trigger": "parser gives NULL/ERR_PTR or invalid negative length",
+      "tmpde_state": "nonerror valid entry",
+      "new_inode": "not yet reached",
+      "original_dentry_fields_after": "unestablished",
+      "callback_return": "unestablished",
+      "upper_next": "unestablished",
+      "stop": "strncmp source pointer/count validity first; parsers opaque, helper-only bad outputs"
+    },
+    {
+      "id": "B34-C10",
+      "trigger": "fat_build_inode valid p, private_idx_info kzalloc returns NULL",
+      "tmpde_state": "valid",
+      "new_inode": "success",
+      "original_dentry_fields_after": "d_inode still unwritten in selected callback",
+      "callback_return": "unestablished",
+      "upper_next": "unestablished",
+      "stop": "first finode->field write, no return or kernel fault assertion"
+    },
+    {
+      "id": "B34-C11",
+      "trigger": "valid p but fsbi->bytes_per_sector==0, or arithmetic invalid",
+      "tmpde_state": "valid",
+      "new_inode": "success",
+      "original_dentry_fields_after": "not yet assigned",
+      "callback_return": "unestablished",
+      "upper_next": "unestablished",
+      "stop": "at i_blocks division or earlier invalid value; do not infer later write"
+    },
+    {
+      "id": "B34-C12",
+      "trigger": "iobuf_release does not normally return after dest_dentry->d_inode=p",
+      "tmpde_state": "valid matched entry",
+      "new_inode": "valid",
+      "original_dentry_fields_after": "inode assigned before cleanup call",
+      "callback_return": "unestablished",
+      "upper_next": "not executed",
+      "stop": "release effect opaque, no automatic propagation to upper"
+    }
+  ],
+  "inode_construction": {
+    "fat_build_inode": {
+      "new_inode_null": "ERR_PTR(-ENOMEM)",
+      "fat_fill_inode_nonzero": "iput(inode), return ERR_PTR(err)",
+      "defined_normal_return": "same inode pointer from new_inode",
+      "scope": "new_inode/iput inner operation opaque"
+    },
+    "fat_fill_inode": {
+      "entry": "inode->i_mode=0; MSDOS_I(inode)->i_pos=0",
+      "dir_condition": "(de->attr & ATTR_DIR) && !FAT32_IS_FREE(de->name)",
+      "dir_branch": [
+        "i_op=&vfat_dir_inode_operations",
+        "i_fop=&FAT32_file_ops"
+      ],
+      "file_branch": [
+        "i_size=de->size",
+        "i_op=&vfat_dir_inode_operations",
+        "i_fop=&FAT32_file_ops",
+        "i_mapping->a_ops=&fat_aops"
+      ],
+      "returns": "int0 on selected normal completion",
+      "gaps": [
+        "directory arm does not locally write i_size or i_mapping->a_ops",
+        "new_inode initial state and i_mapping validity opaque",
+        "mode stays zero on selected active body except unrelated later conditional"
+      ]
+    },
+    "callback_after_p": [
+      "p->i_blocks arithmetic using fsbi sizes",
+      "p->private_idx_info=kzalloc",
+      "finode copied fields from tmpde and iobuf",
+      "conditional mode adjustment",
+      "dest_dentry->d_inode=p",
+      "both labels FAT32_iobuf_release",
+      "return local dest_dentry"
+    ],
+    "field_order": "d_inode assignment is after private-info dereference, so return of nonNULL on selected valid path includes this assignment; failures and undefined prefixes cannot be promoted to completed callbacks"
+  },
+  "upper_mapping": {
+    "callback_NULL": "__lookup_slow checks ==NULL; kfree original; returns ERR_PTR(-ENOENT), even if original callback failure was -ENOMEM or directory-entry error",
+    "callback_orig": "__lookup_slow uses original dentry->d_inode, mapping and size; calls step_into after optional page_array and list publication; requires complete validity",
+    "callback_ERR_PTR": "no direct ERR_PTR return branch in selected FAT32_lookup well-defined exits",
+    "callback_other_dentry": "no direct other-dentry return branch in selected FAT32_lookup well-defined exits",
+    "selected_slow_normal_NULL": "still absent; LC32-F03 narrowed helper-only double-NULL theory",
+    "prior_issue_links": [
+      "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "CORE-USER-DENTRY-LOOKUP-33::DL33-F04",
+      "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "CORE-USER-VFS-BASELINE-05::UV-04",
+      "CORE-USER-OPEN-FLAGS-30::OF30-F01"
+    ]
+  },
+  "finite_arithmetic": {
+    "FAT_MAX_DIR_SIZE": 2097152,
+    "ENOMEN_12": 12,
+    "ENOENT_2": 2,
+    "signed_to_size_t": "negative int count may become huge unsigned; no actual output producer audited"
+  },
+  "limitations": [
+    "fixed source only, no C/ASM/preprocessor/build execution",
+    "iterator/get_full_ent/parse_new_inode/iput/iobuf_release and disk algorithms opaque",
+    "no real callback producer or disk-layout confirmation",
+    "no complete FAT or permissions/mount/RCU/lock/ref lifecycle audit"
+  ]
+}

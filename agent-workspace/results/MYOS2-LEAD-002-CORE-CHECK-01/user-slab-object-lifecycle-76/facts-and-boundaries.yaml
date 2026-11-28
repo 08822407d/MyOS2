@@ -1,0 +1,1096 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "executor_display_name": "MYOS2-A-C05c 代码分析执行",
+  "model_per_owner": "next-tier GPT-6 + Extra",
+  "produced_by": "GPT-6 (self-reported)",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "bfb6578ca8c2",
+  "initial_execution_head_short12": "0681d7186406",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "NOT_APPLICABLE",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/mm/kmalloc/slub.c",
+      "source_blob_short12": "a2b4390f8f7b",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub_types.h",
+      "source_blob_short12": "8203fb4e63d7",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub_const.h",
+      "source_blob_short12": "282d6ffa765d",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slab_common.c",
+      "source_blob_short12": "2ce4f5932db5",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "source_blob_short12": "6e3e1aa8e724",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "source_blob_short12": "985a8262e578",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/lib/list/double_list_types.h",
+      "source_blob_short12": "2ef93df3fe63",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/align.h",
+      "source_blob_short12": "ddd63ec4b93f",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/log2.h",
+      "source_blob_short12": "2a356cdf8877",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "source_blob_short12": "d22095ba1acc",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/getorder.h",
+      "source_blob_short12": "af126779d473",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "source_blob_short12": "b10e280f26f0",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub.h",
+      "source_blob_short12": "b07c81bfc978",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/const.h",
+      "source_blob_short12": "d8bcaf7e3151",
+      "read_channel": "connector",
+      "source_pin": "time@a039d9803ade",
+      "ledger_kind": "direct_or_nearest_dependency"
+    }
+  ],
+  "slot_initialization_matrix": [
+    {
+      "stage": "cache layout producer",
+      "operation": "create_cache/create_boot_cache set object_size/size/align/ctor",
+      "anchors": [
+        "A35",
+        "A36"
+      ],
+      "scope": "valid returned cache; not universal offset initialization"
+    },
+    {
+      "stage": "size alignment",
+      "operation": "simple_calculate_sizes: object_size -> ALIGN(...sizeof(void*)) -> cache.inuse -> ALIGN(...cache.align) -> cache.size",
+      "anchors": [
+        "A16",
+        "A17",
+        "A18",
+        "A19",
+        "A37",
+        "A38"
+      ],
+      "scope": "valid power-of-two align; no sizeof probe"
+    },
+    {
+      "stage": "order and objects",
+      "operation": "simple_calculate_order uses min_objnr4, fraction64, get_order and rem; oo_make stores .obj_nr & .order; 16-bit fields",
+      "anchors": [
+        "A10",
+        "A11",
+        "A12",
+        "A14",
+        "A15",
+        "A08",
+        "A43",
+        "A46",
+        "A47"
+      ],
+      "scope": "unsigned shift, multiply/mod, bitfield capacities; no zero-size or overflow assumption"
+    },
+    {
+      "stage": "cache metadata",
+      "operation": "simple_kmem_cache_open uses calculate_sizes, sets min_partial then initializes partial/full headers; cache.inuse is byte-layout value",
+      "anchors": [
+        "A21",
+        "A22",
+        "A23",
+        "A04",
+        "A44",
+        "A45"
+      ],
+      "scope": "object source and prior cache allocation valid"
+    },
+    {
+      "stage": "new slab metadata",
+      "operation": "alloc_init_new_slab after successful alloc_slab assigns slab.objects=oo_objects, inuse=0,frozen=0,slab_cache=s; freelist=start",
+      "anchors": [
+        "A30",
+        "A31",
+        "A47"
+      ],
+      "scope": "slab object valid and fields representable"
+    },
+    {
+      "stage": "slot0",
+      "operation": "for initialized at p=start; does not call setup_object(s,start); does set_freepointer for first slot",
+      "anchors": [
+        "A31",
+        "A32",
+        "A33",
+        "A34"
+      ],
+      "scope": "if objects>=1 and loop/last writes valid"
+    },
+    {
+      "stage": "slots1..n-1",
+      "operation": "next=p+s.size, setup_object(s,next) when valid, set_freepointer(s,p,next), p=next; final p pointer=last writes NULL",
+      "anchors": [
+        "A27",
+        "A32",
+        "A33",
+        "A34"
+      ],
+      "scope": "ctor runs for these slots if s.ctor, but not for slot0"
+    },
+    {
+      "stage": "ctor/freepointer overlap",
+      "operation": "set_freepointer writes pointer at object+cache.offset; if offset0 this overwrites pointer-size prefix after ctor on slots1..n-1",
+      "anchors": [
+        "A27",
+        "A29",
+        "A01"
+      ],
+      "scope": "only overlapping ctor state is overwritten; cannot imply all ctor state or users harmed"
+    },
+    {
+      "stage": "slab count width",
+      "operation": "oo.obj_nr 16bit; slab.objects 15bit; slab.inuse 16bit; cache.inuse is uint layout",
+      "anchors": [
+        "A08",
+        "A05",
+        "A04",
+        "A26"
+      ],
+      "scope": "bounds/convertibility need producer proof"
+    }
+  ],
+  "allocation_transition_matrix": [
+    {
+      "case": "fresh slab creation",
+      "before": "alloc_slab returned valid",
+      "event": "alloc_init_new_slab initializes metadata, wires freelist, returns slab; not object",
+      "after": "new slab not yet listed",
+      "anchors": [
+        "A30",
+        "A31",
+        "A33",
+        "A34",
+        "B15"
+      ],
+      "stop": "count>=1, writable backing, valid ctor/freeptr"
+    },
+    {
+      "case": "online empty slab",
+      "before": "partial count P, nr_slabs N, total_objects T",
+      "event": "spin_lock; add_to_partial; atomic_long_inc; atomic_long_add(objects); unlock",
+      "after": "conditional P+1,N+1,T+objects",
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "B19",
+        "B21"
+      ],
+      "stop": "list insertion and counters legal"
+    },
+    {
+      "case": "take object",
+      "before": "slab freelist=object, inuse=i, objects=n, 0<=i<n",
+      "event": "get_freepointer(s,object); slab.inuse++; return object",
+      "after": "inuse=i+1, freelist=next",
+      "anchors": [
+        "B04",
+        "B05",
+        "A28",
+        "B32"
+      ],
+      "stop": "get_freepointer happens before post-call object!=NULL"
+    },
+    {
+      "case": "partial stays partial",
+      "before": "0<=i<n-1",
+      "event": "alloc_single_from_partial succeeds, inuse i+1<n",
+      "after": "no full migration",
+      "anchors": [
+        "B07",
+        "B08",
+        "B09"
+      ],
+      "stop": "valid list & pointer"
+    },
+    {
+      "case": "partial to full",
+      "before": "i=n-1, n>0, partial membership valid",
+      "event": "inuse++ to n; remove_from_partial; add_to_full",
+      "after": "partial.count−1; full.count+1",
+      "anchors": [
+        "B08",
+        "B18",
+        "B17",
+        "B22",
+        "B21"
+      ],
+      "stop": "delete returns nonNULL and list adds succeed"
+    },
+    {
+      "case": "partial empty",
+      "before": "no valid object found in partial",
+      "event": "get_from_partial_list returns NULL",
+      "after": "slab_alloc calls alloc_init_new_slab",
+      "anchors": [
+        "B12",
+        "B31"
+      ],
+      "stop": "not immediate allocation failure"
+    },
+    {
+      "case": "new slab failed",
+      "before": "partial miss and alloc_slab returned NULL",
+      "event": "alloc_init_new_slab returns NULL",
+      "after": "slab_alloc returns NULL before hook",
+      "anchors": [
+        "B12",
+        "B15",
+        "B16"
+      ],
+      "stop": "no object return"
+    },
+    {
+      "case": "new slab success",
+      "before": "partial miss and new slab valid",
+      "event": "online_new_empty_slab; while condition re-evaluates get_from_partial_list",
+      "after": "only successful later get produces object and post-hook",
+      "anchors": [
+        "B12",
+        "B13",
+        "B14"
+      ],
+      "stop": "no guaranteed successful object retrieval"
+    },
+    {
+      "case": "iterator and list count",
+      "before": "valid partial list",
+      "event": "iter_partial_list alias expands list_for_each_entry_safe; contains/add/delete use actual links",
+      "after": "only successful list operations update expected membership",
+      "anchors": [
+        "B24",
+        "B25",
+        "B23",
+        "B21",
+        "B22",
+        "B27"
+      ],
+      "stop": "inconsistent link or invalid container pointer stops"
+    },
+    {
+      "case": "bad freelist",
+      "before": "listed slab but freelist NULL/stale",
+      "event": "alloc_single_from_partial reads get_freepointer before caller checks object!=NULL",
+      "after": "ANALYSIS_STOP",
+      "anchors": [
+        "B04",
+        "B07",
+        "B19"
+      ],
+      "stop": "post-check cannot retroactively guard invalid read"
+    }
+  ],
+  "free_transition_matrix": [
+    {
+      "case": "full slab return",
+      "before": "slab.inuse==slab.objects and slab on full",
+      "event": "under list_lock remove_from_full then add_to_partial; then inuse-- and prepend object",
+      "after": "partial.count+1; full.count−1; inuse=objects−1; freelist=object",
+      "anchors": [
+        "C02",
+        "C03",
+        "C01",
+        "B20",
+        "B19"
+      ],
+      "stop": "valid membership and no duplicate frees"
+    },
+    {
+      "case": "partial slab return",
+      "before": "slab.inuse<slab.objects, already partial",
+      "event": "free_single_to_partial",
+      "after": "inuse−1, freelist=object, partial membership unchanged",
+      "anchors": [
+        "C01",
+        "C20"
+      ],
+      "stop": "inuse>=1, object start/lifetime valid"
+    },
+    {
+      "case": "free last live",
+      "before": "slab.inuse==1, partial.count>=1",
+      "event": "inuse becomes0, slab_free OR gate",
+      "after": "offline requested regardless threshold count",
+      "anchors": [
+        "C01",
+        "C06",
+        "C07"
+      ],
+      "stop": "not physical reclaim"
+    },
+    {
+      "case": "threshold reached with live slab",
+      "before": "post-free slab.inuse>0, partial.count>=min_partial",
+      "event": "OR gate selects offline and free_slab",
+      "after": "conditional live object references may remain",
+      "anchors": [
+        "C06",
+        "C07",
+        "C17"
+      ],
+      "stop": "historical MC-07, not newly discovered nor runtime UAF"
+    },
+    {
+      "case": "threshold below",
+      "before": "post-free inuse>0, partial.count<min_partial",
+      "event": "OR gate false",
+      "after": "no discard in selected source invocation",
+      "anchors": [
+        "C06"
+      ],
+      "stop": "other actors unexamined"
+    },
+    {
+      "case": "offline attempt",
+      "before": "valid member partial and stats",
+      "event": "re-lock, remove_from_partial, nr_slabs--, total_objects-=slab.objects, unlock",
+      "after": "conditional partial.count−1, stats adjusted",
+      "anchors": [
+        "C08",
+        "C09",
+        "C10",
+        "B22"
+      ],
+      "stop": "source ignores remove result; no on-heap physical claim"
+    },
+    {
+      "case": "offline invalid membership",
+      "before": "slab not in partial, yet called offline",
+      "event": "list_header_delete_node returns NULL; stats still decremented",
+      "after": "counter/list invariant not conserved",
+      "anchors": [
+        "C16",
+        "C25"
+      ],
+      "stop": "precondition invalid; reachability unresolved"
+    },
+    {
+      "case": "free_slab call",
+      "before": "valid folio, while(oo_order==0&&PG_head!=0) not sustained",
+      "event": "folio_order, mapping NULL, smp_wmb, __folio_clear_slab, __free_pages",
+      "after": "page free request handed off",
+      "anchors": [
+        "C11",
+        "C12",
+        "C13",
+        "C14"
+      ],
+      "stop": "not buddy completion or physical release"
+    },
+    {
+      "case": "unknown pointer",
+      "before": "kmem_cache_free called with invalid x",
+      "event": "virt_to_slab(x) argument evaluation",
+      "after": "ANALYSIS_STOP before slab_free body",
+      "anchors": [
+        "C15"
+      ],
+      "stop": "R75-S02 argument first; source does not guarantee correct cache"
+    }
+  ],
+  "discard_gate_matrix": [
+    {
+      "inuse_after": 0,
+      "partial_count_relation": "below minimum",
+      "OR_result": true,
+      "reason": "inuse==0",
+      "anchor": "C06"
+    },
+    {
+      "inuse_after": 0,
+      "partial_count_relation": "equal minimum",
+      "OR_result": true,
+      "reason": "both may be true",
+      "anchor": "C06"
+    },
+    {
+      "inuse_after": 1,
+      "partial_count_relation": "below minimum",
+      "OR_result": false,
+      "reason": "both false",
+      "anchor": "C06"
+    },
+    {
+      "inuse_after": 1,
+      "partial_count_relation": "equal minimum",
+      "OR_result": true,
+      "reason": "partial.count>=min_partial",
+      "anchor": "C06"
+    },
+    {
+      "inuse_after": 41,
+      "partial_count_relation": "4 vs 4 under size96 model",
+      "OR_result": true,
+      "reason": "MC-07 finite witness with four previously full slabs, one free from each",
+      "anchors": [
+        "A22",
+        "C06",
+        "C07"
+      ]
+    },
+    {
+      "inuse_after": 3,
+      "partial_count_relation": "5 vs 6 under size4096 model",
+      "OR_result": false,
+      "reason": "threshold not reached",
+      "anchors": [
+        "A22",
+        "C06"
+      ]
+    },
+    {
+      "inuse_after": 3,
+      "partial_count_relation": "6 vs 6 under size4096 model",
+      "OR_result": true,
+      "reason": "sixth of distinct full slabs returned one; threshold reached with live objects",
+      "anchors": [
+        "A22",
+        "C06",
+        "C07"
+      ]
+    },
+    {
+      "inuse_after": "invalid",
+      "partial_count_relation": "unknown",
+      "OR_result": "ANALYSIS_STOP",
+      "reason": "inuse underflow/bitfield invalid or list corrupted before test",
+      "anchors": [
+        "C01",
+        "C06"
+      ]
+    }
+  ],
+  "lock_window_matrix": [
+    {
+      "sequence": 1,
+      "function": "free_to_partial_list",
+      "scope": "lock IRQ save, full-to-partial add/delete, free_single_to_partial (inuse--/freelist), unlock IRQ restore",
+      "anchors": [
+        "C02",
+        "C03",
+        "C04",
+        "C27"
+      ],
+      "limit": "observed source locking requests, not real-time synchronization proof"
+    },
+    {
+      "sequence": 2,
+      "function": "slab_free",
+      "scope": "after free_to_partial_list returns: reads slab.inuse and n.partial.count>=s.min_partial without retaining previous list_lock",
+      "anchors": [
+        "C05",
+        "C06",
+        "C21",
+        "C22"
+      ],
+      "limit": "threshold may change before later re-lock"
+    },
+    {
+      "sequence": 3,
+      "function": "offline_exceeded_empty_slab",
+      "scope": "fresh lock IRQ save, remove_from_partial, stats decrement, unlock",
+      "anchors": [
+        "C08",
+        "C09",
+        "C10",
+        "C25"
+      ],
+      "limit": "remove_from_partial return not tested"
+    },
+    {
+      "sequence": 4,
+      "function": "free_slab",
+      "scope": "outside offline lock, check page-head condition and clear mapping/flag, request __free_pages",
+      "anchors": [
+        "C07",
+        "C11",
+        "C13",
+        "C14"
+      ],
+      "limit": "not page allocator/buddy correctness"
+    },
+    {
+      "sequence": 5,
+      "function": "get_from_partial_list",
+      "scope": "separate allocation lock, list iteration, extract/inuse++, full migration, unlock",
+      "anchors": [
+        "B06",
+        "B07",
+        "B08",
+        "B10"
+      ],
+      "limit": "interleavings not simulated"
+    },
+    {
+      "sequence": 6,
+      "function": "single_thread_cross_slab",
+      "scope": "multiple full slabs freed sequentially once each; partial.count grows across calls",
+      "anchors": [
+        "C03",
+        "C06",
+        "C17"
+      ],
+      "limit": "demonstrates conditional threshold without requiring multithreading"
+    }
+  ],
+  "earliest_stop_matrix": [
+    {
+      "case": "cache pointer invalid",
+      "first_stop": "simple_calculate_sizes at s->object_size or other cache field",
+      "anchors": [
+        "A16",
+        "A19"
+      ]
+    },
+    {
+      "case": "size=0 / nonpositive effective size",
+      "first_stop": "division/remainder or get_order invalid; no valid positive-size model",
+      "anchors": [
+        "A10",
+        "A14",
+        "A15"
+      ]
+    },
+    {
+      "case": "size/align overflow or not power of two",
+      "first_stop": "ALIGN/get_order/uint shifts and arithmetic assumptions fail",
+      "anchors": [
+        "A17",
+        "A19",
+        "A37",
+        "A38"
+      ]
+    },
+    {
+      "case": "oo fields truncation vs slab.objects 15bits",
+      "first_stop": "cannot guarantee objects>0 and representable for slot loop",
+      "anchors": [
+        "A08",
+        "A05",
+        "A26"
+      ]
+    },
+    {
+      "case": "new slab alloc_pages NULL",
+      "first_stop": "alloc_slab returns NULL, alloc_init returns NULL, slab_alloc may return NULL",
+      "anchors": [
+        "B16",
+        "B15",
+        "B12"
+      ]
+    },
+    {
+      "case": "new slab NULL/vaddr invalid",
+      "first_stop": "page_to_virt or writing freelist/slot pointer",
+      "anchors": [
+        "A31",
+        "A33",
+        "A29"
+      ]
+    },
+    {
+      "case": "get_freepointer invalid/NULL head",
+      "first_stop": "get_freepointer(s,object) called before post-check of object",
+      "anchors": [
+        "B04",
+        "B07",
+        "B32"
+      ]
+    },
+    {
+      "case": "list membership inconsistent",
+      "first_stop": "contains/iterator and insert/remove validity; no guaranteed count changes",
+      "anchors": [
+        "B22",
+        "B23",
+        "B28"
+      ]
+    },
+    {
+      "case": "duplicate free or inuse=0",
+      "first_stop": "inuse-- would underflow; no normal state transition certified",
+      "anchors": [
+        "C01"
+      ]
+    },
+    {
+      "case": "offline target absent from partial",
+      "first_stop": "list_header_delete_node returns NULL, stats change anyway; unsupported precondition",
+      "anchors": [
+        "B30",
+        "C25"
+      ]
+    },
+    {
+      "case": "cache s/virt_to_slab bad",
+      "first_stop": "kmem_cache_free actual argument conversion before slab_free body",
+      "anchors": [
+        "C15"
+      ]
+    },
+    {
+      "case": "free_slab order0 and PG_head nonzero",
+      "first_stop": "while may remain true before clearing flags or calling __free_pages",
+      "anchors": [
+        "C11"
+      ]
+    },
+    {
+      "case": "free_slab __free_pages",
+      "first_stop": "page allocator handoff; nothing here proves physical reclaim/coalescing",
+      "anchors": [
+        "C14"
+      ]
+    },
+    {
+      "case": "lock-gap hypothetical concurrent mutation",
+      "first_stop": "source does not prove unchanged membership/count between unlock/OR/re-lock",
+      "anchors": [
+        "C27",
+        "C06",
+        "C08"
+      ]
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "SL76-M01",
+      "kind": "layout_8",
+      "input": "object_size=8; sizeof(pointer)=8; s.align=8; slub_min_objects=4",
+      "expected": "size=8; get_order(32)=0; slab_size=4096; rem=0; oo.obj_nr=512; min_partial=4",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M02",
+      "kind": "layout_96",
+      "input": "object_size=96; sizeof(pointer)=8; s.align=16; min_objects=4",
+      "expected": "inuse=96; size=96; get_order(384)=0; rem=4096%96=64 <= 64; objects=42; min_partial=4",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M03",
+      "kind": "layout_128",
+      "input": "object_size=128; s.align=16; min_objects=4",
+      "expected": "size128; order0; objects32; min_partial4",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M04",
+      "kind": "layout_1024",
+      "input": "object_size=1024; s.align=16; min_objects=4",
+      "expected": "size1024; get_order(4096)=0; objects4; floor(log2(1024))/2=5 -> min_partial5",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M05",
+      "kind": "layout_2048",
+      "input": "object_size=2048; s.align=16; min_objects=4",
+      "expected": "size2048; get_order(8192)=1; objects4; min_partial5",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M06",
+      "kind": "layout_4096",
+      "input": "object_size=4096; s.align=16; min_objects=4",
+      "expected": "size4096; get_order(16384)=2; objects4; min_partial6",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M07",
+      "kind": "layout_align_change",
+      "input": "object_size=65; pointer size8; s.align=64 (power of two)",
+      "expected": "cache.inuse=ALIGN(65,8)=72; s.size=ALIGN(72,64)=128; order0; objects32; min_partial4",
+      "assumptions": "hypothetical valid cache alignment; no assertion it is every real 65-byte kmalloc cache"
+    },
+    {
+      "id": "SL76-M08",
+      "kind": "layout_zero_invalid",
+      "input": "size=0 before get_order/rem/size",
+      "expected": "no valid 0-object slab producer demonstrated; divide or modulo by size cannot be evaluated as valid positive-size model",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M09",
+      "kind": "slot_one_with_ctor",
+      "input": "slab.objects=1; valid start, offset0, ctor!=NULL",
+      "expected": "iteration false; setup_object count0; set_freepointer(slot0,NULL) once; no ctor for slot0",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M10",
+      "kind": "slot_two_with_ctor",
+      "input": "slab.objects=2; valid distinct slots, offset0, ctor!=NULL",
+      "expected": "setup_object(slot1) once, write link in slot0, then write slot1 NULL; slot0 ctor not called; slot1 pointer-sized prefix overwritten if ctor used it",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M11",
+      "kind": "slot_four_with_ctor",
+      "input": "slab.objects=4; size valid, offset0, ctor!=NULL",
+      "expected": "setup_object on slots 1,2,3; freepointer writes slot0->1->2->3->NULL; each freepointer location at offset0",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M12",
+      "kind": "slot_four_without_ctor",
+      "input": "slab.objects=4; ctor=NULL, valid layout",
+      "expected": "setup_object invoked for 1,2,3 but ctor calls=0; freepointer writes=4",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M13",
+      "kind": "slot_four_with_offset8",
+      "input": "slab.objects=4; ctor!=NULL; valid offset8 writable",
+      "expected": "each free pointer write targets per-object offset8; not proof ctor-initialized offset0 is overwritten",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M14",
+      "kind": "slot_four_freelist",
+      "input": "slots0..3 valid distinct at start+i*size; count4",
+      "expected": "freelist initially slot0; next slot1,slot2,slot3,NULL; no object allocated before partial extraction",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M15",
+      "kind": "slot_invalid_storage",
+      "input": "slab.objects>0 but capacity or s.size/offset invalid",
+      "expected": "cannot certify setup_object/freepointer write; ANALYSIS_STOP before claiming complete slots",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M16",
+      "kind": "online_empty_n4",
+      "input": "nr_slabs=N; total_objects=T; partial.count=0; new slab.objects4 valid",
+      "expected": "after online add_to_partial count1; nr_slabs=N+1; total_objects=T+4; inuse0, freelist slot0",
+      "assumptions": "assumes list insertion succeeds and counters valid; no physical state proof"
+    },
+    {
+      "id": "SL76-M17",
+      "kind": "alloc_first_n4",
+      "input": "valid partial slab.objects4,inuse0,freelist slot0",
+      "expected": "return slot0; freelist slot1; inuse1; partial count unchanged",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M18",
+      "kind": "alloc_middle_n4",
+      "input": "valid partial slab.objects4,inuse1,freelist slot1",
+      "expected": "return slot1; freelist slot2; inuse2; stays partial",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M19",
+      "kind": "alloc_last_n4",
+      "input": "valid partial slab.objects4,inuse3,freelist slot3",
+      "expected": "return slot3; freelist NULL; inuse4 equals objects; remove partial, add full; partial count -1, full count+1",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M20",
+      "kind": "partial_miss",
+      "input": "valid empty partial, valid cache",
+      "expected": "get_from_partial_list returns NULL; slab_alloc enters alloc_init_new_slab; not immediate slab_alloc NULL",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M21",
+      "kind": "new_slab_fail",
+      "input": "valid cache; alloc_slab alloc_pages returned NULL",
+      "expected": "alloc_init_new_slab returns NULL; slab_alloc returns NULL; post alloc hook not reached",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M22",
+      "kind": "new_slab_success",
+      "input": "valid cache, new slab objects4, online succeeds",
+      "expected": "slab_alloc while retries get_from_partial_list after online; object not returned by online helper itself",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M23",
+      "kind": "invalid_freelist",
+      "input": "listed slab.freelist=NULL before alloc_single_from_partial",
+      "expected": "get_freepointer(s,NULL) requested before object!=NULL post-check; invalid address/loop STOP",
+      "assumptions": "do not assert this invalid listed state is reachable from valid producers"
+    },
+    {
+      "id": "SL76-M24",
+      "kind": "invalid_list_head",
+      "input": "partial.count or list links inconsistent",
+      "expected": "safe iterator and list_add/delete preconditions cannot be certified; not a runtime reproducer",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M25",
+      "kind": "free_full_one",
+      "input": "valid full slab objects4,inuse4, partial.count0, min_partial6",
+      "expected": "remove from full/add to partial first, then inuse3; partial.count1; OR false",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M26",
+      "kind": "free_partial_one",
+      "input": "valid partial slab objects4,inuse3, partial.count1,min_partial6",
+      "expected": "inuse2; freelist prepended; partial count1; OR false",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M27",
+      "kind": "free_last_one",
+      "input": "valid partial slab objects4,inuse1, partial.count1,min_partial6",
+      "expected": "inuse0; OR true by zero; offline remove from partial then nr_slabs-1,total_objects-4; free_slab requested",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M28",
+      "kind": "MC07_96_three_full_slabs",
+      "input": "valid size96/objects42/minpartial4; three full slabs, each one object returned sequentially",
+      "expected": "partial counts1,2,3; each returned slab retains41 live; no threshold yet",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M29",
+      "kind": "MC07_96_four_full_slabs",
+      "input": "valid size96/objects42/minpartial4; four full slabs, one object from each, sequential single-thread",
+      "expected": "on fourth free partial.count=4, target inuse=41>0; OR true; offline/free_slab requested on still-live slab",
+      "assumptions": "conditional source-level witness; not an observed UAF, requires preceding allocation/list preconditions"
+    },
+    {
+      "id": "SL76-M30",
+      "kind": "MC07_4096_five_full_slabs",
+      "input": "valid size4096/objects4/minpartial6; five full slabs, one free each",
+      "expected": "partial counts1..5; inuse3 each; threshold false for these five",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M31",
+      "kind": "MC07_4096_six_full_slabs",
+      "input": "valid size4096/objects4/minpartial6; six full slabs, one free each sequentially",
+      "expected": "on sixth free partial.count6 and target inuse3>0; OR true and offline/free_slab requested",
+      "assumptions": "not necessarily multi-core concurrency; underlying prior steps must succeed"
+    },
+    {
+      "id": "SL76-M32",
+      "kind": "threshold_below",
+      "input": "partial.count=3,min_partial4,slab.inuse=2 after return",
+      "expected": "OR false; no discard requested in this local body",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M33",
+      "kind": "threshold_equal",
+      "input": "partial.count=4,min_partial4,slab.inuse=2 after return",
+      "expected": "OR true even though inuse positive; historical MC-07 mechanism",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M34",
+      "kind": "threshold_above",
+      "input": "partial.count=5,min_partial4,slab.inuse=1 after return",
+      "expected": "OR true, but such state might be disallowed by prior cleanup; model is branch evaluation only",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M35",
+      "kind": "remove_failure",
+      "input": "slab not in partial when offline called; list_header_delete_node returns NULL",
+      "expected": "nr_slabs and total_objects decremented anyway by offline function as source steps",
+      "assumptions": "invalid membership may be unproducible in valid single-thread flow, do not assert runtime occurrence"
+    },
+    {
+      "id": "SL76-M36",
+      "kind": "lock_gap",
+      "input": "free_to_partial_list completed/unlocked, then slab_free tests OR before offline re-lock",
+      "expected": "two distinct critical sections; no lock across test and offline; other writers possible only as hypothetical",
+      "assumptions": "no claim an actual concurrent mutation happened"
+    },
+    {
+      "id": "SL76-M37",
+      "kind": "folio_spin",
+      "input": "valid slab with oo_order==0 and folio.page.flag_defs.PG_head !=0 stable",
+      "expected": "free_slab while condition true; cannot certify later folio_order or __free_pages",
+      "assumptions": "no claims about prevalence of this metadata state"
+    },
+    {
+      "id": "SL76-M38",
+      "kind": "folio_normal_request",
+      "input": "valid slab, oo_order!=0, folio valid, all helpers return",
+      "expected": "free_slab sets mapping NULL, barrier, clears slab flag, requests __free_pages with folio_order",
+      "assumptions": "physical reclaim/coalescing NOT_RUN"
+    },
+    {
+      "id": "SL76-M39",
+      "kind": "bitfield_boundary",
+      "input": "slab.objects is 15-bit, slab.inuse 16-bit; oo.obj_nr 16-bit",
+      "expected": "a hypothetical value >32767 may not fit slab.objects even when it fits oo.obj_nr; valid producer/cast/overflow reachability unproven",
+      "assumptions": "local finite arithmetic/source transition only; valid objects, list state, no concurrent change; no kernel runtime"
+    },
+    {
+      "id": "SL76-M40",
+      "kind": "invalid_slab_pointer",
+      "input": "kmem_cache_free(s,x) with bad x or cache; invalid virt_to_slab",
+      "expected": "ANALYSIS_STOP during actual-argument conversion before slab_free body; do not assume s.node dereference happens first",
+      "assumptions": "R75-S02"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "static_concern",
+      "disposition": "extended with count, type and single-thread cross-slab threshold witness; no duplicate new root; physical UAF not proven"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-08",
+      "status": "static_concern",
+      "disposition": "slot0 lacks ctor and next slots initialized before free pointer writes; offset0 via bounded producer, not all callers or harmful outcomes"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-09",
+      "status": "static_concern",
+      "disposition": "direct __kmalloc overlarge spin outside this 76 internal lifecycle"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::DR-04",
+      "status": "historical_dependency_risk",
+      "disposition": "copy_sighand allocation/publication bounded historically; no reclassification"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-02",
+      "status": "refuted_original_claim",
+      "disposition": "fork siglock always fails claim remains refuted; new 76 does not revive"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-05",
+      "status": "refuted_original_claim",
+      "disposition": "sighand cache not sole ctor consumer, no universal claim"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U07",
+      "status": "needs_evidence",
+      "disposition": "free_slab page handoff expanded, allocator correctness and buddy still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U06",
+      "status": "needs_evidence",
+      "disposition": "direct cache free invalid provenance boundary retained"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "status": "needs_evidence",
+      "disposition": "sighand failure cleanup remains unrelated to 76 internal object lifecycle"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF",
+      "disposition": "old negative whole-tree conclusions not reactivated"
+    },
+    {
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74-DOC-CLOSURE-001",
+      "status": "CLOSED_DOCUMENTATION_ONLY",
+      "disposition": "R74-01 closed independently; 74 composite PASS_PENDING_LOCAL"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75-REVIEW-001",
+      "status": "PASS_PENDING_LOCAL",
+      "disposition": "R75-S01/S02/S03 continue to limit numeric/actual argument and partial miss sequence"
+    }
+  ],
+  "new_findings_count": 0,
+  "new_evidence_gaps_count": 9,
+  "source_budget": {
+    "core_and_nearest_files": 14,
+    "soft_limit": 14,
+    "overrun": 0,
+    "quoted_source_files": 12
+  },
+  "methods": {
+    "direct_pinned_source_files": 14,
+    "source_pin": "time@a039d9803ade",
+    "new_verified_anchors": 107,
+    "new_quote_reconfirmations": 107,
+    "pure_finite_models": 40,
+    "preprocessor_or_build": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "full_local_P9": "NOT_RUN",
+    "Graphviz": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": []
+}

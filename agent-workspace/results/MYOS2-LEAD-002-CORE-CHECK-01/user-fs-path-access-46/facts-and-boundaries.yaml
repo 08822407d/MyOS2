@@ -1,0 +1,867 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FS-PATH-ACCESS-46",
+  "record_type": "source_bounded_root_pwd_direct_access_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-06",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "content_format": "JSON syntax is YAML 1.2 compatible",
+  "evidence_count": 59,
+  "evidence_ids": [
+    "FP46-A001",
+    "FP46-A002",
+    "FP46-A003",
+    "FP46-A004",
+    "FP46-A005",
+    "FP46-A006",
+    "FP46-A007",
+    "FP46-A008",
+    "FP46-A009",
+    "FP46-A010",
+    "FP46-A011",
+    "FP46-A012",
+    "FP46-A013",
+    "FP46-A014",
+    "FP46-A015",
+    "FP46-A016",
+    "FP46-A017",
+    "FP46-A018",
+    "FP46-A019",
+    "FP46-A020",
+    "FP46-A021",
+    "FP46-A022",
+    "FP46-A023",
+    "FP46-A024",
+    "FP46-A025",
+    "FP46-A026",
+    "FP46-A027",
+    "FP46-A028",
+    "FP46-A029",
+    "FP46-A030",
+    "FP46-A031",
+    "FP46-A032",
+    "FP46-A033",
+    "FP46-A034",
+    "FP46-A035",
+    "FP46-A036",
+    "FP46-A037",
+    "FP46-A038",
+    "FP46-A039",
+    "FP46-A040",
+    "FP46-A041",
+    "FP46-A042",
+    "FP46-A043",
+    "FP46-A044",
+    "FP46-A045",
+    "FP46-A046",
+    "FP46-A047",
+    "FP46-A048",
+    "FP46-A049",
+    "FP46-A050",
+    "FP46-A051",
+    "FP46-A052",
+    "FP46-A053",
+    "FP46-A054",
+    "FP46-A055",
+    "FP46-A056",
+    "FP46-A057",
+    "FP46-A058",
+    "FP46-A059"
+  ],
+  "object_identities": [
+    {
+      "name": "taskfs_s",
+      "storage": "fs context struct with embedded root,pwd path_s",
+      "fields": [
+        "int users",
+        "spinlock_t lock",
+        "path_s root,pwd"
+      ],
+      "evidence": [
+        "FP46-A040",
+        "FP46-A041"
+      ]
+    },
+    {
+      "name": "path_s",
+      "storage": "struct value with vfsmount_s* mnt and dentry_s* dentry",
+      "value_copy": "copies pointer members only",
+      "evidence": "FP46-A001"
+    },
+    {
+      "name": "dentry_s",
+      "storage": "referenced pointee",
+      "active_refcount_field_in_read_struct": false,
+      "d_lockref_comment_only": true,
+      "other_lifetime_mechanisms": "UNKNOWN",
+      "evidence": [
+        "FP46-A002",
+        "FP46-A003",
+        "FP46-A004"
+      ]
+    },
+    {
+      "name": "caller_input_output",
+      "storage": "path_s value passed via valid pointer",
+      "validity": "readable path input for setter; writable path output for getter; fs object/lock valid",
+      "evidence": [
+        "FP46-A018",
+        "FP46-A026"
+      ]
+    }
+  ],
+  "four_layers": [
+    "VALUE_COPY: path_s pointer member values copied",
+    "CALL_REQUEST: path_get/path_put invoked at real source point",
+    "DIRECT_EFFECT: dget returns same pointer; dput has no activity; mntget/mntput commented",
+    "OBJECT_LIFETIME: dentry/mount refcount and physical survival unverified"
+  ],
+  "selected_functions": [
+    {
+      "symbol": "dget",
+      "path": "mykernel/include/linux/fs/dcache.h",
+      "signature": "static inline dentry_s* dget(dentry_s*)",
+      "active": [
+        "return dentry"
+      ],
+      "actual_ref_delta": 0,
+      "evidence": [
+        "FP46-A005",
+        "FP46-A007",
+        "FP46-A059"
+      ]
+    },
+    {
+      "symbol": "dput",
+      "path": "mykernel/fs/vfs/dcache.c",
+      "signature": "void dput(dentry_s*)",
+      "active": [],
+      "actual_ref_delta": 0,
+      "dentry_kill_called": false,
+      "evidence": [
+        "FP46-A008",
+        "FP46-A011",
+        "FP46-A058"
+      ]
+    },
+    {
+      "symbol": "path_get",
+      "path": "mykernel/fs/vfs/namei.c",
+      "signature": "void path_get(const path_s*)",
+      "active": [
+        "dget(path->dentry)"
+      ],
+      "mnt_read": false,
+      "dget_result_used": false,
+      "active_ref_delta": 0,
+      "evidence": [
+        "FP46-A012",
+        "FP46-A013",
+        "FP46-A014"
+      ]
+    },
+    {
+      "symbol": "path_put",
+      "path": "mykernel/fs/vfs/namei.c",
+      "signature": "void path_put(const path_s*)",
+      "active": [
+        "dput(path->dentry)"
+      ],
+      "mnt_read": false,
+      "active_ref_delta": 0,
+      "evidence": [
+        "FP46-A015",
+        "FP46-A016",
+        "FP46-A017"
+      ]
+    },
+    {
+      "symbol": "get_fs_root",
+      "path": "mykernel/sched/misc/fs_struct.h",
+      "signature": "void get_fs_root(taskfs_s*,path_s*)",
+      "steps": [
+        "spin_lock(fs.lock)",
+        "*root=fs.root",
+        "path_get(root)",
+        "spin_unlock(fs.lock)"
+      ],
+      "input_null_guards": false,
+      "old_output_put": false,
+      "evidence": [
+        "FP46-A018",
+        "FP46-A019",
+        "FP46-A020",
+        "FP46-A021"
+      ]
+    },
+    {
+      "symbol": "get_fs_pwd",
+      "path": "mykernel/sched/misc/fs_struct.h",
+      "signature": "void get_fs_pwd(taskfs_s*,path_s*)",
+      "steps": [
+        "spin_lock(fs.lock)",
+        "*pwd=fs.pwd",
+        "path_get(pwd)",
+        "spin_unlock(fs.lock)"
+      ],
+      "input_null_guards": false,
+      "old_output_put": false,
+      "evidence": [
+        "FP46-A022",
+        "FP46-A023",
+        "FP46-A024",
+        "FP46-A025"
+      ]
+    },
+    {
+      "symbol": "set_fs_root",
+      "path": "mykernel/sched/misc/fs_struct.c",
+      "signature": "void set_fs_root(taskfs_s*,const path_s*)",
+      "steps": [
+        "path_get(input) BEFORE lock",
+        "spin_lock(fs.lock)",
+        "old_root=fs.root",
+        "fs.root=*input",
+        "spin_unlock(fs.lock)",
+        "if(old_root.dentry) path_put(&old_root)"
+      ],
+      "old_mnt_test": false,
+      "evidence": [
+        "FP46-A026",
+        "FP46-A027",
+        "FP46-A028",
+        "FP46-A030",
+        "FP46-A032"
+      ]
+    },
+    {
+      "symbol": "set_fs_pwd",
+      "path": "mykernel/sched/misc/fs_struct.c",
+      "signature": "void set_fs_pwd(taskfs_s*,const path_s*)",
+      "steps": [
+        "path_get(input) BEFORE lock",
+        "spin_lock(fs.lock)",
+        "old_pwd=fs.pwd",
+        "fs.pwd=*input",
+        "spin_unlock(fs.lock)",
+        "if(old_pwd.dentry) path_put(&old_pwd)"
+      ],
+      "old_mnt_test": false,
+      "evidence": [
+        "FP46-A033",
+        "FP46-A034",
+        "FP46-A035",
+        "FP46-A037",
+        "FP46-A039"
+      ]
+    }
+  ],
+  "real_caller_example": {
+    "symbol": "init_mount_tree",
+    "path": "mykernel/fs/vfs/namespace.c",
+    "source_steps": [
+      "mnt=vfs_kern_mount(...)",
+      "if(IS_ERR(mnt)) error branch",
+      "root.mnt=mnt",
+      "root.dentry=mnt->mnt_root",
+      "set_fs_pwd(curr->fs,&root)",
+      "set_fs_root(curr->fs,&root)"
+    ],
+    "evidence": [
+      "FP46-A044",
+      "FP46-A045",
+      "FP46-A046",
+      "FP46-A047",
+      "FP46-A048"
+    ]
+  },
+  "getter_callsite_search": {
+    "scope": "default-branch GitHub code search",
+    "queries": [
+      "get_fs_root(",
+      "get_fs_pwd("
+    ],
+    "independent_caller_found": false,
+    "fixed_source_full_repository_exhaustive": false,
+    "absence_of_callers_certified": false
+  },
+  "definition_selection": {
+    "getters_source": "fs_struct.h under #if defined(FS_STRUCT_DEFINATION) || !(DEBUG)",
+    "prefix_macro_context": [
+      "FP46-A050",
+      "FP46-A051"
+    ],
+    "actual_preprocessing_linkage": "NOT_RUN"
+  },
+  "finite_models": [
+    {
+      "id": "G01",
+      "scope": "getter",
+      "input": "root getter, valid fs/out",
+      "source_event_or_outcome": "copy fs.root and call no-op get then unlock",
+      "stop_or_unknown": "lifetime unknown",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G02",
+      "scope": "getter",
+      "input": "pwd getter, valid fs/out",
+      "source_event_or_outcome": "copy fs.pwd and call no-op get then unlock",
+      "stop_or_unknown": "lifetime unknown",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G03",
+      "scope": "getter",
+      "input": "fs NULL",
+      "source_event_or_outcome": "spin_lock attempts fs.lock",
+      "stop_or_unknown": "invalid fs member",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G04",
+      "scope": "getter",
+      "input": "out NULL",
+      "source_event_or_outcome": "lock then attempted store",
+      "stop_or_unknown": "invalid output target",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G05",
+      "scope": "getter",
+      "input": "root dentry NULL in valid path",
+      "source_event_or_outcome": "out copy and dget(NULL) ignored",
+      "stop_or_unknown": "no count change",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G06",
+      "scope": "getter",
+      "input": "out initially holds another path",
+      "source_event_or_outcome": "output overwritten with no old path_put",
+      "stop_or_unknown": "previous ownership unknown",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G07",
+      "scope": "getter",
+      "input": "out aliases fs.root in get_fs_root",
+      "source_event_or_outcome": "self-copy and no-op get",
+      "stop_or_unknown": "only helper model",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G08",
+      "scope": "getter",
+      "input": "out aliases fs.pwd in get_fs_root",
+      "source_event_or_outcome": "pwd overwritten with root value",
+      "stop_or_unknown": "no real caller evidence",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G09",
+      "scope": "getter",
+      "input": "out aliases fs.root in get_fs_pwd",
+      "source_event_or_outcome": "root overwritten with pwd value",
+      "stop_or_unknown": "no real caller evidence",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G10",
+      "scope": "getter",
+      "input": "different mnt, equal dentry",
+      "source_event_or_outcome": "two pointer values copied, get sees dentry only",
+      "stop_or_unknown": "mount lifetime unknown",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G11",
+      "scope": "getter",
+      "input": "lock does not return",
+      "source_event_or_outcome": "no output copy reached",
+      "stop_or_unknown": "stop at lock",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G12",
+      "scope": "getter",
+      "input": "out nonwritable",
+      "source_event_or_outcome": "invalid assignment after lock",
+      "stop_or_unknown": "no get/unlock proved",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G13",
+      "scope": "getter",
+      "input": "uninitialized trap pointer members",
+      "source_event_or_outcome": "no defined input representation established",
+      "stop_or_unknown": "no safety from no-op dget",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "G14",
+      "scope": "getter",
+      "input": "DEBUG conditional selection",
+      "source_event_or_outcome": "source definition available",
+      "stop_or_unknown": "no compiled binding proof",
+      "evidence": [
+        "FP46-A019",
+        "FP46-A023",
+        "FP46-A005"
+      ]
+    },
+    {
+      "id": "S01",
+      "scope": "setter",
+      "input": "root valid new path, old dentry nonNULL",
+      "source_event_or_outcome": "get-request, lock, copy, publish, unlock, put-request",
+      "stop_or_unknown": "no ref delta in helper",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S02",
+      "scope": "setter",
+      "input": "pwd valid new path, old dentry nonNULL",
+      "source_event_or_outcome": "get-request, lock, copy, publish, unlock, put-request",
+      "stop_or_unknown": "no ref delta in helper",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S03",
+      "scope": "setter",
+      "input": "old root dentry NULL, mnt nonNULL",
+      "source_event_or_outcome": "publish new value then skip old put",
+      "stop_or_unknown": "mount unexamined",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S04",
+      "scope": "setter",
+      "input": "old pwd dentry NULL",
+      "source_event_or_outcome": "publish new pwd then skip old put",
+      "stop_or_unknown": "no old request",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S05",
+      "scope": "setter",
+      "input": "new equals old root pointer values",
+      "source_event_or_outcome": "get and put requested, value unchanged",
+      "stop_or_unknown": "not numeric +1/-1",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S06",
+      "scope": "setter",
+      "input": "new mnt differs, dentry same",
+      "source_event_or_outcome": "publish new mnt, old dentry gate true",
+      "stop_or_unknown": "mount ref unchanged locally",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S07",
+      "scope": "setter",
+      "input": "new path pointer NULL",
+      "source_event_or_outcome": "path_get invalid before lock",
+      "stop_or_unknown": "no publication",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S08",
+      "scope": "setter",
+      "input": "fs NULL, path valid",
+      "source_event_or_outcome": "path_get completes then fs.lock invalid",
+      "stop_or_unknown": "no publication",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S09",
+      "scope": "setter",
+      "input": "new path dentry NULL",
+      "source_event_or_outcome": "dget(NULL), then copy NULL dentry",
+      "stop_or_unknown": "valid destination semantics unknown",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S10",
+      "scope": "setter",
+      "input": "input aliases fs.root in root setter",
+      "source_event_or_outcome": "self-assign after prelock get",
+      "stop_or_unknown": "concurrency not verified",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S11",
+      "scope": "setter",
+      "input": "input aliases fs.pwd in root setter",
+      "source_event_or_outcome": "copy pwd value into root",
+      "stop_or_unknown": "no caller proof",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S12",
+      "scope": "setter",
+      "input": "input aliases fs.root in pwd setter",
+      "source_event_or_outcome": "copy root value into pwd",
+      "stop_or_unknown": "no caller proof",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S13",
+      "scope": "setter",
+      "input": "lock does not return normally",
+      "source_event_or_outcome": "new path_get attempted before lock",
+      "stop_or_unknown": "no publication",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S14",
+      "scope": "setter",
+      "input": "old dentry nonNULL, dput empty",
+      "source_event_or_outcome": "path_put requested without count decrement",
+      "stop_or_unknown": "actual dentry lifetime unknown",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S15",
+      "scope": "setter",
+      "input": "old dentry NULL, new nonNULL",
+      "source_event_or_outcome": "new value assigned, no old path_put",
+      "stop_or_unknown": "new ref not acquired",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "S16",
+      "scope": "setter",
+      "input": "old path field representation invalid",
+      "source_event_or_outcome": "no normal completion after invalid access",
+      "stop_or_unknown": "stop at first invalid expression",
+      "evidence": [
+        "FP46-A028",
+        "FP46-A035",
+        "FP46-A031",
+        "FP46-A038"
+      ]
+    },
+    {
+      "id": "C01",
+      "scope": "caller",
+      "input": "mount result IS_ERR in init_mount_tree",
+      "source_event_or_outcome": "branch prints error and loops",
+      "stop_or_unknown": "setter path not reached",
+      "evidence": [
+        "FP46-A045",
+        "FP46-A047",
+        "FP46-A048"
+      ]
+    },
+    {
+      "id": "C02",
+      "scope": "caller",
+      "input": "valid mount and current fs",
+      "source_event_or_outcome": "root.mnt and root.dentry set; pwd then root setter called",
+      "stop_or_unknown": "true lifetime unverified",
+      "evidence": [
+        "FP46-A045",
+        "FP46-A047",
+        "FP46-A048"
+      ]
+    },
+    {
+      "id": "C03",
+      "scope": "caller",
+      "input": "root and pwd set to same local path",
+      "source_event_or_outcome": "two distinct get requests, zero count increments",
+      "stop_or_unknown": "old puts conditional",
+      "evidence": [
+        "FP46-A045",
+        "FP46-A047",
+        "FP46-A048"
+      ]
+    },
+    {
+      "id": "C04",
+      "scope": "caller",
+      "input": "default indexed search getter symbols",
+      "source_event_or_outcome": "no independent getter callers identified",
+      "stop_or_unknown": "not exhaustive time search",
+      "evidence": [
+        "FP46-A045",
+        "FP46-A047",
+        "FP46-A048"
+      ]
+    },
+    {
+      "id": "D01",
+      "scope": "helper",
+      "input": "dget valid pointer",
+      "source_event_or_outcome": "returns same dentry",
+      "stop_or_unknown": "no count change",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D02",
+      "scope": "helper",
+      "input": "dget NULL",
+      "source_event_or_outcome": "returns NULL",
+      "stop_or_unknown": "not trap pointer proof",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D03",
+      "scope": "helper",
+      "input": "dput valid pointer",
+      "source_event_or_outcome": "empty active body",
+      "stop_or_unknown": "no destruction",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D04",
+      "scope": "helper",
+      "input": "dput NULL",
+      "source_event_or_outcome": "empty active body",
+      "stop_or_unknown": "no destructor or errno",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D05",
+      "scope": "helper",
+      "input": "path_get path NULL",
+      "source_event_or_outcome": "path member deref invalid before dget",
+      "stop_or_unknown": "no normal completion",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D06",
+      "scope": "helper",
+      "input": "path_put path NULL",
+      "source_event_or_outcome": "path member deref invalid before dput",
+      "stop_or_unknown": "no normal completion",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D07",
+      "scope": "helper",
+      "input": "valid path, dentry NULL, get",
+      "source_event_or_outcome": "dget(NULL) returns ignored; mntget commented",
+      "stop_or_unknown": "no mount or dentry increment",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D08",
+      "scope": "helper",
+      "input": "valid path, dentry NULL, put",
+      "source_event_or_outcome": "dput(NULL) empty; mntput commented",
+      "stop_or_unknown": "no mount or dentry decrement",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D09",
+      "scope": "helper",
+      "input": "selected dentry struct d_lockref commented",
+      "source_event_or_outcome": "no active d_lockref field",
+      "stop_or_unknown": "no whole-system claim",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    },
+    {
+      "id": "D10",
+      "scope": "helper",
+      "input": "path_get/put called by getter/setter",
+      "source_event_or_outcome": "request passes to no-op dget/dput",
+      "stop_or_unknown": "already FS45-F02 issue family",
+      "evidence": [
+        "FP46-A005",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ]
+    }
+  ],
+  "finite_model_count": 44,
+  "new_finding_count": 0,
+  "history_preserved": [
+    "CORE-USER-FS-CONTEXT-45::FS45-F01",
+    "CORE-USER-FS-CONTEXT-45::FS45-F02",
+    "CORE-USER-PATH-INIT-31::PI31-F05",
+    "CORE-USER-VFS-BASELINE-05::UV-10",
+    "CORE-USER-FS-CONTEXT-45-REVIEW-001::R45-S01",
+    "CORE-USER-FS-CONTEXT-45-REVIEW-001::R45-S02"
+  ],
+  "runtime_evidence": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "graphviz": "NOT_RUN"
+}

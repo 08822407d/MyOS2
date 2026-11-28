@@ -1,0 +1,2047 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "batch145_static_conditional_models",
+  "date": "2026-11-24",
+  "produced_by": "GPT-6 (system visible; backend/effort unattested)",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested, not independently attested",
+  "snapshot": "time@a039d9803ade",
+  "contract": "201-user-malloc-slot-contract.md@7f68407aec9f",
+  "status": "AUTHOR_PENDING_MAINLINE_REVIEW",
+  "model_type": "static_given_inputs_not_execution",
+  "page_span_H_bytes": 2097152,
+  "local_H_distinct_from_kernel_PAGE_SIZE": true,
+  "class_selection": [
+    {
+      "id": "A_ZERO",
+      "initiated": true,
+      "size": 0,
+      "maximum_size": 1048576,
+      "size_gate": "ADMIT",
+      "group_index": 0,
+      "selected_object_size": 32,
+      "cache_link_advances": 0,
+      "while_condition_evaluations": 1,
+      "terminal": "CLASS_SELECTED_STOP_BEFORE_SLAB_BITMAP",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    },
+    {
+      "id": "A_ONE",
+      "initiated": true,
+      "size": 1,
+      "maximum_size": 1048576,
+      "size_gate": "ADMIT",
+      "group_index": 0,
+      "selected_object_size": 32,
+      "cache_link_advances": 0,
+      "while_condition_evaluations": 1,
+      "terminal": "CLASS_SELECTED_STOP_BEFORE_SLAB_BITMAP",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    },
+    {
+      "id": "A_32",
+      "initiated": true,
+      "size": 32,
+      "maximum_size": 1048576,
+      "size_gate": "ADMIT",
+      "group_index": 0,
+      "selected_object_size": 32,
+      "cache_link_advances": 0,
+      "while_condition_evaluations": 1,
+      "terminal": "CLASS_SELECTED_STOP_BEFORE_SLAB_BITMAP",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    },
+    {
+      "id": "A_33",
+      "initiated": true,
+      "size": 33,
+      "maximum_size": 1048576,
+      "size_gate": "ADMIT",
+      "group_index": 1,
+      "selected_object_size": 64,
+      "cache_link_advances": 1,
+      "while_condition_evaluations": 2,
+      "terminal": "CLASS_SELECTED_STOP_BEFORE_SLAB_BITMAP",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    },
+    {
+      "id": "A_64",
+      "initiated": true,
+      "size": 64,
+      "maximum_size": 1048576,
+      "size_gate": "ADMIT",
+      "group_index": 1,
+      "selected_object_size": 64,
+      "cache_link_advances": 1,
+      "while_condition_evaluations": 2,
+      "terminal": "CLASS_SELECTED_STOP_BEFORE_SLAB_BITMAP",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    },
+    {
+      "id": "A_65",
+      "initiated": true,
+      "size": 65,
+      "maximum_size": 1048576,
+      "size_gate": "ADMIT",
+      "group_index": 2,
+      "selected_object_size": 128,
+      "cache_link_advances": 2,
+      "while_condition_evaluations": 3,
+      "terminal": "CLASS_SELECTED_STOP_BEFORE_SLAB_BITMAP",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    },
+    {
+      "id": "A_MAX",
+      "initiated": true,
+      "size": 1048576,
+      "maximum_size": 1048576,
+      "size_gate": "ADMIT",
+      "group_index": 15,
+      "selected_object_size": 1048576,
+      "cache_link_advances": 15,
+      "while_condition_evaluations": 16,
+      "terminal": "CLASS_SELECTED_STOP_BEFORE_SLAB_BITMAP",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    },
+    {
+      "id": "A_OVER",
+      "initiated": true,
+      "size": 1048577,
+      "maximum_size": 1048576,
+      "size_gate": "REJECT",
+      "group_index": null,
+      "selected_object_size": null,
+      "cache_link_advances": 0,
+      "while_condition_evaluations": 0,
+      "terminal": "RETVAL_NULL_NO_CACHE_TRAVERSE",
+      "source_evidence": [
+        "E145-001",
+        "E145-003",
+        "E145-010",
+        "E145-011",
+        "E145-012"
+      ]
+    }
+  ],
+  "bitmap_cases": [
+    {
+      "id": "B_ZERO",
+      "word_bits": 64,
+      "word_count": 2,
+      "start": 0,
+      "limit_exclusive": 128,
+      "initial_words": [
+        "0x0000000000000000",
+        "0x0000000000000000"
+      ],
+      "returned_index": 0,
+      "bit_tests": 1,
+      "distinct_word_indices_read": [
+        0
+      ],
+      "out_of_bounds_word_access": false,
+      "scan_does_not_set_bits": true,
+      "separate_set_action": "bm_set_bit",
+      "separate_set_idx": 0,
+      "separate_set_mask": "0x0000000000000001",
+      "words_after_separate_set": [
+        "0x0000000000000001",
+        "0x0000000000000000"
+      ],
+      "source_evidence": [
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039"
+      ]
+    },
+    {
+      "id": "B_63",
+      "word_bits": 64,
+      "word_count": 2,
+      "start": 0,
+      "limit_exclusive": 128,
+      "initial_words": [
+        "0x7fffffffffffffff",
+        "0x0000000000000000"
+      ],
+      "returned_index": 63,
+      "bit_tests": 64,
+      "distinct_word_indices_read": [
+        0
+      ],
+      "out_of_bounds_word_access": false,
+      "scan_does_not_set_bits": true,
+      "separate_set_action": "bm_set_bit",
+      "separate_set_idx": 63,
+      "separate_set_mask": "0x8000000000000000",
+      "words_after_separate_set": [
+        "0xffffffffffffffff",
+        "0x0000000000000000"
+      ],
+      "source_evidence": [
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039"
+      ]
+    },
+    {
+      "id": "B_64",
+      "word_bits": 64,
+      "word_count": 2,
+      "start": 0,
+      "limit_exclusive": 128,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0x0000000000000000"
+      ],
+      "returned_index": 64,
+      "bit_tests": 65,
+      "distinct_word_indices_read": [
+        0,
+        1
+      ],
+      "out_of_bounds_word_access": false,
+      "scan_does_not_set_bits": true,
+      "separate_set_action": "bm_set_bit",
+      "separate_set_idx": 64,
+      "separate_set_mask": "0x0000000000000001",
+      "words_after_separate_set": [
+        "0xffffffffffffffff",
+        "0x0000000000000001"
+      ],
+      "source_evidence": [
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039"
+      ]
+    },
+    {
+      "id": "B_FULL",
+      "word_bits": 64,
+      "word_count": 2,
+      "start": 0,
+      "limit_exclusive": 128,
+      "initial_words": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "returned_index": 128,
+      "bit_tests": 128,
+      "distinct_word_indices_read": [
+        0,
+        1
+      ],
+      "out_of_bounds_word_access": false,
+      "scan_does_not_set_bits": true,
+      "separate_set_action": "SKIPPED",
+      "separate_set_idx": null,
+      "separate_set_mask": null,
+      "words_after_separate_set": null,
+      "source_evidence": [
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039"
+      ]
+    },
+    {
+      "id": "B_EMPTY",
+      "word_bits": 64,
+      "word_count": 2,
+      "start": 128,
+      "limit_exclusive": 128,
+      "initial_words": [
+        "0x0123456789abcdef",
+        "0xfedcba9876543210"
+      ],
+      "returned_index": 128,
+      "bit_tests": 0,
+      "distinct_word_indices_read": [],
+      "out_of_bounds_word_access": false,
+      "scan_does_not_set_bits": true,
+      "separate_set_action": "SKIPPED",
+      "separate_set_idx": null,
+      "separate_set_mask": null,
+      "words_after_separate_set": null,
+      "source_evidence": [
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039"
+      ]
+    }
+  ],
+  "allocation_cases": [
+    {
+      "requested_size": 16384,
+      "cache_group_index": 9,
+      "object_size": 16384,
+      "local_H_bytes": 2097152,
+      "slab_S_total": 128,
+      "S_base": "0x60000000",
+      "bitmap_words": 2,
+      "given_valid_metadata": true,
+      "no_other_writers": true,
+      "independent_conditional_model": true,
+      "actual_runtime": false,
+      "id": "C_USED_MORE",
+      "initial_lists": {
+        "used": [
+          "S"
+        ],
+        "free": [
+          "R"
+        ],
+        "full": []
+      },
+      "S_free_initial": 65,
+      "S_bitmap_initial": [
+        "0x7fffffffffffffff",
+        "0x0000000000000000"
+      ],
+      "cache_initial": {
+        "free": 193,
+        "used": 63
+      },
+      "source_selection": "used",
+      "list_transition": [
+        "remove_head used[S], used.count 1→0",
+        "S.free!=1, add_head used[S], used.count 0→1"
+      ],
+      "slot_index": 63,
+      "offset": 1032192,
+      "result_address": "0x600fc000",
+      "S_free_final": 64,
+      "S_bitmap_final": [
+        "0xffffffffffffffff",
+        "0x0000000000000000"
+      ],
+      "cache_final": {
+        "free": 192,
+        "used": 64
+      },
+      "lists_final": {
+        "used": [
+          "S"
+        ],
+        "free": [
+          "R"
+        ],
+        "full": []
+      },
+      "refill_guard": "free.count==1, FALSE",
+      "terminal": "return_address_integer_projection_under_assumptions",
+      "source_evidence": [
+        "E145-003",
+        "E145-013",
+        "E145-014",
+        "E145-015",
+        "E145-016",
+        "E145-017",
+        "E145-018",
+        "E145-019",
+        "E145-020",
+        "E145-028",
+        "E145-029",
+        "E145-030",
+        "E145-031",
+        "E145-032",
+        "E145-033",
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039",
+        "E145-040",
+        "E145-041",
+        "E145-042",
+        "E145-043",
+        "E145-044",
+        "E145-045"
+      ]
+    },
+    {
+      "requested_size": 16384,
+      "cache_group_index": 9,
+      "object_size": 16384,
+      "local_H_bytes": 2097152,
+      "slab_S_total": 128,
+      "S_base": "0x60000000",
+      "bitmap_words": 2,
+      "given_valid_metadata": true,
+      "no_other_writers": true,
+      "independent_conditional_model": true,
+      "actual_runtime": false,
+      "id": "C_USED_LAST",
+      "initial_lists": {
+        "used": [
+          "S"
+        ],
+        "free": [
+          "R"
+        ],
+        "full": []
+      },
+      "S_free_initial": 1,
+      "S_bitmap_initial": [
+        "0xffffffffffffffff",
+        "0x7fffffffffffffff"
+      ],
+      "cache_initial": {
+        "free": 129,
+        "used": 127
+      },
+      "source_selection": "used",
+      "list_transition": [
+        "remove_head used[S], used.count 1→0",
+        "S.free==1, add_head full[S], full.count 0→1 BEFORE scan"
+      ],
+      "slot_index": 127,
+      "offset": 2080768,
+      "result_address": "0x601fc000",
+      "S_free_final": 0,
+      "S_bitmap_final": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "cache_final": {
+        "free": 128,
+        "used": 128
+      },
+      "lists_final": {
+        "used": [],
+        "free": [
+          "R"
+        ],
+        "full": [
+          "S"
+        ]
+      },
+      "refill_guard": "free.count==1, FALSE",
+      "terminal": "return_address_integer_projection_under_assumptions",
+      "source_evidence": [
+        "E145-003",
+        "E145-013",
+        "E145-014",
+        "E145-015",
+        "E145-016",
+        "E145-017",
+        "E145-018",
+        "E145-019",
+        "E145-020",
+        "E145-028",
+        "E145-029",
+        "E145-030",
+        "E145-031",
+        "E145-032",
+        "E145-033",
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039",
+        "E145-040",
+        "E145-041",
+        "E145-042",
+        "E145-043",
+        "E145-044",
+        "E145-045"
+      ]
+    },
+    {
+      "requested_size": 16384,
+      "cache_group_index": 9,
+      "object_size": 16384,
+      "local_H_bytes": 2097152,
+      "slab_S_total": 128,
+      "S_base": "0x60000000",
+      "bitmap_words": 2,
+      "given_valid_metadata": true,
+      "no_other_writers": true,
+      "independent_conditional_model": true,
+      "actual_runtime": false,
+      "id": "C_FREE_FIRST",
+      "initial_lists": {
+        "used": [],
+        "free": [
+          "S",
+          "R"
+        ],
+        "full": []
+      },
+      "S_free_initial": 128,
+      "S_bitmap_initial": [
+        "0x0000000000000000",
+        "0x0000000000000000"
+      ],
+      "cache_initial": {
+        "free": 256,
+        "used": 0
+      },
+      "source_selection": "free",
+      "list_transition": [
+        "remove_head free[S,R], free.count 2→1",
+        "add_head used[S], used.count 0→1 BEFORE scan"
+      ],
+      "slot_index": 0,
+      "offset": 0,
+      "result_address": "0x60000000",
+      "S_free_final": 127,
+      "S_bitmap_final": [
+        "0x0000000000000001",
+        "0x0000000000000000"
+      ],
+      "cache_final": {
+        "free": 255,
+        "used": 1
+      },
+      "lists_final": {
+        "used": [
+          "S"
+        ],
+        "free": [
+          "R"
+        ],
+        "full": []
+      },
+      "refill_guard": "free.count==1, FALSE",
+      "terminal": "return_address_integer_projection_under_assumptions",
+      "source_evidence": [
+        "E145-003",
+        "E145-013",
+        "E145-014",
+        "E145-015",
+        "E145-016",
+        "E145-017",
+        "E145-018",
+        "E145-019",
+        "E145-020",
+        "E145-028",
+        "E145-029",
+        "E145-030",
+        "E145-031",
+        "E145-032",
+        "E145-033",
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039",
+        "E145-040",
+        "E145-041",
+        "E145-042",
+        "E145-043",
+        "E145-044",
+        "E145-045"
+      ]
+    },
+    {
+      "requested_size": 16384,
+      "cache_group_index": 9,
+      "object_size": 16384,
+      "local_H_bytes": 2097152,
+      "slab_S_total": 128,
+      "S_base": "0x60000000",
+      "bitmap_words": 2,
+      "given_valid_metadata": true,
+      "no_other_writers": true,
+      "independent_conditional_model": true,
+      "actual_runtime": false,
+      "id": "C_EMPTY",
+      "initial_lists": {
+        "used": [],
+        "free": [],
+        "full": [
+          "S"
+        ]
+      },
+      "S_free_initial": 0,
+      "S_bitmap_initial": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "cache_initial": {
+        "free": 0,
+        "used": 128
+      },
+      "source_selection": "neither",
+      "list_transition": [],
+      "slot_index": null,
+      "offset": null,
+      "result_address": null,
+      "S_free_final": 0,
+      "S_bitmap_final": [
+        "0xffffffffffffffff",
+        "0xffffffffffffffff"
+      ],
+      "cache_final": {
+        "free": 0,
+        "used": 128
+      },
+      "lists_final": {
+        "used": [],
+        "free": [],
+        "full": [
+          "S"
+        ]
+      },
+      "refill_guard": "NOT_REACHED",
+      "bitmap_scan": "NOT_REACHED",
+      "bitmap_update": "NOT_REACHED",
+      "function_return": "NOT_REACHED",
+      "terminal": "source_explicit_while_1_static_stop_not_NULL",
+      "source_evidence": [
+        "E145-003",
+        "E145-013",
+        "E145-014",
+        "E145-015",
+        "E145-016",
+        "E145-017",
+        "E145-018",
+        "E145-019",
+        "E145-020",
+        "E145-028",
+        "E145-029",
+        "E145-030",
+        "E145-031",
+        "E145-032",
+        "E145-033",
+        "E145-034",
+        "E145-037",
+        "E145-038",
+        "E145-039",
+        "E145-040",
+        "E145-041",
+        "E145-042",
+        "E145-043",
+        "E145-044",
+        "E145-045"
+      ]
+    }
+  ],
+  "refill_boundary": {
+    "guard": "after object scan and guarded update: normal_slab_free.count < 1",
+    "reached_by_any_C": false,
+    "nonreach_reason": "returning C each retain free[R] count1; C_EMPTY loops before scan",
+    "conditional_steps": [
+      "temporary free.count++",
+      "call uslab_alloc(uslp)",
+      "after normal callee return temporary free.count--",
+      "new_uslp=NULL => explicit while(1)",
+      "nonNULL: set owning cache, add to free list, normal_slab_total++, nsobj_free_count+=new.total"
+    ],
+    "uslab_alloc_calls": [
+      "malloc(sizeof(uslab_s))",
+      "malloc(cslp->total/sizeof(bitmap_t)+sizeof(bitmap_t))",
+      "upage_alloc()"
+    ],
+    "unknowns": [
+      "recursive allocator on first init",
+      "metadata and page allocation success",
+      "real dynamic page address"
+    ],
+    "source_evidence": [
+      "E145-021",
+      "E145-022",
+      "E145-023",
+      "E145-025",
+      "E145-026",
+      "E145-027"
+    ]
+  },
+  "build_scope": {
+    "top_level": "myinitramfs/CMakeLists.txt",
+    "top_level_subdirectories": [
+      "myinit",
+      "myshell"
+    ],
+    "top_level_subdirectory_mylib": false,
+    "external_musl_path": "/home/cheyh/projs/musl/build",
+    "external_compiler": "${MUSL_PATH}/exec/bin/musl-gcc",
+    "standalone_mylibc_static": true,
+    "mylib_malloc_and_util_c_GLOB": true,
+    "actual_linked_to_sh": "UNKNOWN",
+    "actual_linked_to_init": "UNKNOWN",
+    "preprocess_compile_link_run": "NOT_RUN",
+    "source_evidence": [
+      "E145-046",
+      "E145-047",
+      "E145-048",
+      "E145-049",
+      "E145-050",
+      "E145-051",
+      "E145-052",
+      "E145-053",
+      "E145-054",
+      "E145-055"
+    ]
+  },
+  "source_index": [
+    {
+      "id": "E145-001",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "CONST_1M",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 12,
+      "end_line": 12,
+      "kind": "macro_definition"
+    },
+    {
+      "id": "E145-002",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "PAGE_SIZE",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 58,
+      "end_line": 60,
+      "kind": "macro_definition"
+    },
+    {
+      "id": "E145-003",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "USLAB_LEVEL",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 7,
+      "end_line": 8,
+      "kind": "macro_definition"
+    },
+    {
+      "id": "E145-004",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 181,
+      "end_line": 185,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-005",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 187,
+      "end_line": 189,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-006",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 191,
+      "end_line": 195,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-007",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 198,
+      "end_line": 202,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-008",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 204,
+      "end_line": 208,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-009",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "init_uslab",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 216,
+      "end_line": 220,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-010",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 249,
+      "end_line": 252,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-011",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 254,
+      "end_line": 258,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-012",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 261,
+      "end_line": 265,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-013",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 268,
+      "end_line": 272,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-014",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 274,
+      "end_line": 278,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-015",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 280,
+      "end_line": 283,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-016",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 284,
+      "end_line": 286,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-017",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 288,
+      "end_line": 292,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-018",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 294,
+      "end_line": 297,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-019",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 298,
+      "end_line": 302,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-020",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 301,
+      "end_line": 305,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-021",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 307,
+      "end_line": 311,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-022",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 312,
+      "end_line": 316,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-023",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 318,
+      "end_line": 322,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-024",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "malloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 324,
+      "end_line": 327,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-025",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "uslab_alloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 223,
+      "end_line": 226,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-026",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "uslab_alloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 228,
+      "end_line": 232,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-027",
+      "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+      "symbol": "uslab_alloc",
+      "source_blob_short12": "44db9ea9d7f7",
+      "start_line": 231,
+      "end_line": 235,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-028",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 26,
+      "end_line": 30,
+      "kind": "struct_member"
+    },
+    {
+      "id": "E145-029",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 31,
+      "end_line": 35,
+      "kind": "struct_member"
+    },
+    {
+      "id": "E145-030",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 34,
+      "end_line": 37,
+      "kind": "struct_member"
+    },
+    {
+      "id": "E145-031",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 39,
+      "end_line": 43,
+      "kind": "struct_member"
+    },
+    {
+      "id": "E145-032",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 45,
+      "end_line": 49,
+      "kind": "struct_member"
+    },
+    {
+      "id": "E145-033",
+      "path": "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+      "symbol": "uslab_cache",
+      "source_blob_short12": "2dea1f8fc05c",
+      "start_line": 49,
+      "end_line": 53,
+      "kind": "struct_member"
+    },
+    {
+      "id": "E145-034",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "bitmap_t",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 19,
+      "end_line": 20,
+      "kind": "type_definition"
+    },
+    {
+      "id": "E145-035",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "container_of",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 12,
+      "end_line": 16,
+      "kind": "macro_definition"
+    },
+    {
+      "id": "E145-036",
+      "path": "myinitramfs/mylib/include/utils.h",
+      "symbol": "List_hdr",
+      "source_blob_short12": "4e3e8910ac00",
+      "start_line": 41,
+      "end_line": 45,
+      "kind": "struct_member"
+    },
+    {
+      "id": "E145-037",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_get_freebit_idx",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 24,
+      "end_line": 28,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-038",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_get_freebit_idx",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 29,
+      "end_line": 33,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-039",
+      "path": "myinitramfs/mylib/util/bitmap.c",
+      "symbol": "bm_set_bit",
+      "source_blob_short12": "6a86523c41ba",
+      "start_line": 14,
+      "end_line": 17,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-040",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "INIT_LIST_HEADER_S",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 73,
+      "end_line": 77,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-041",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_add_to_head",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 79,
+      "end_line": 83,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-042",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_remove_head",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 85,
+      "end_line": 89,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-043",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_remove_head",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 89,
+      "end_line": 93,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-044",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_header_add_to_tail",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 98,
+      "end_line": 102,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-045",
+      "path": "myinitramfs/mylib/util/list.c",
+      "symbol": "list_del_init",
+      "source_blob_short12": "24f7a214a288",
+      "start_line": 40,
+      "end_line": 44,
+      "kind": "function_body"
+    },
+    {
+      "id": "E145-046",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 40,
+      "end_line": 40,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-047",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 41,
+      "end_line": 41,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-048",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 47,
+      "end_line": 47,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-049",
+      "path": "myinitramfs/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "6757d21bc64c",
+      "start_line": 48,
+      "end_line": 48,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-050",
+      "path": "myinitramfs/mylib/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "8f6abc24095a",
+      "start_line": 1,
+      "end_line": 1,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-051",
+      "path": "myinitramfs/mylib/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "8f6abc24095a",
+      "start_line": 3,
+      "end_line": 3,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-052",
+      "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "b956957a602a",
+      "start_line": 1,
+      "end_line": 1,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-053",
+      "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "b956957a602a",
+      "start_line": 19,
+      "end_line": 19,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-054",
+      "path": "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "3b9f22dd9ab9",
+      "start_line": 3,
+      "end_line": 3,
+      "kind": "build_directive"
+    },
+    {
+      "id": "E145-055",
+      "path": "myinitramfs/mylib/util/CMakeLists.txt",
+      "symbol": "CMakeLists.txt",
+      "source_blob_short12": "5fd782a35629",
+      "start_line": 3,
+      "end_line": 3,
+      "kind": "build_directive"
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "A_ZERO_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(0)",
+        "scenario": "A_ZERO"
+      },
+      {
+        "id": "A_ZERO_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_ZERO"
+      },
+      {
+        "id": "A_ZERO_CLASS",
+        "kind": "STATE",
+        "label": "group 0 obj 32",
+        "scenario": "A_ZERO"
+      },
+      {
+        "id": "A_ZERO_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "A_ZERO"
+      },
+      {
+        "id": "A_ONE_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(1)",
+        "scenario": "A_ONE"
+      },
+      {
+        "id": "A_ONE_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_ONE"
+      },
+      {
+        "id": "A_ONE_CLASS",
+        "kind": "STATE",
+        "label": "group 0 obj 32",
+        "scenario": "A_ONE"
+      },
+      {
+        "id": "A_ONE_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "A_ONE"
+      },
+      {
+        "id": "A_32_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(32)",
+        "scenario": "A_32"
+      },
+      {
+        "id": "A_32_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_32"
+      },
+      {
+        "id": "A_32_CLASS",
+        "kind": "STATE",
+        "label": "group 0 obj 32",
+        "scenario": "A_32"
+      },
+      {
+        "id": "A_32_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "A_32"
+      },
+      {
+        "id": "A_33_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(33)",
+        "scenario": "A_33"
+      },
+      {
+        "id": "A_33_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_33"
+      },
+      {
+        "id": "A_33_CLASS",
+        "kind": "STATE",
+        "label": "group 1 obj 64",
+        "scenario": "A_33"
+      },
+      {
+        "id": "A_33_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "A_33"
+      },
+      {
+        "id": "A_64_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(64)",
+        "scenario": "A_64"
+      },
+      {
+        "id": "A_64_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_64"
+      },
+      {
+        "id": "A_64_CLASS",
+        "kind": "STATE",
+        "label": "group 1 obj 64",
+        "scenario": "A_64"
+      },
+      {
+        "id": "A_64_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "A_64"
+      },
+      {
+        "id": "A_65_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(65)",
+        "scenario": "A_65"
+      },
+      {
+        "id": "A_65_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_65"
+      },
+      {
+        "id": "A_65_CLASS",
+        "kind": "STATE",
+        "label": "group 2 obj 128",
+        "scenario": "A_65"
+      },
+      {
+        "id": "A_65_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "A_65"
+      },
+      {
+        "id": "A_MAX_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(1048576)",
+        "scenario": "A_MAX"
+      },
+      {
+        "id": "A_MAX_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_MAX"
+      },
+      {
+        "id": "A_MAX_CLASS",
+        "kind": "STATE",
+        "label": "group 15 obj 1048576",
+        "scenario": "A_MAX"
+      },
+      {
+        "id": "A_MAX_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "class selection boundary",
+        "scenario": "A_MAX"
+      },
+      {
+        "id": "A_OVER_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(1048577)",
+        "scenario": "A_OVER"
+      },
+      {
+        "id": "A_OVER_GATE",
+        "kind": "BRANCH",
+        "label": "initiated=true; size<=1MiB?",
+        "scenario": "A_OVER"
+      },
+      {
+        "id": "A_OVER_RETURN",
+        "kind": "RETURN",
+        "label": "NULL, no class walk",
+        "scenario": "A_OVER"
+      },
+      {
+        "id": "B_ZERO_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "B_ZERO"
+      },
+      {
+        "id": "B_ZERO_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 0",
+        "scenario": "B_ZERO"
+      },
+      {
+        "id": "B_ZERO_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "B_ZERO"
+      },
+      {
+        "id": "B_ZERO_WRITE",
+        "kind": "INDEPENDENT_ACTION",
+        "label": "bm_set_bit(0)",
+        "scenario": "B_ZERO"
+      },
+      {
+        "id": "B_63_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "B_63"
+      },
+      {
+        "id": "B_63_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 63",
+        "scenario": "B_63"
+      },
+      {
+        "id": "B_63_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "B_63"
+      },
+      {
+        "id": "B_63_WRITE",
+        "kind": "INDEPENDENT_ACTION",
+        "label": "bm_set_bit(63)",
+        "scenario": "B_63"
+      },
+      {
+        "id": "B_64_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "B_64"
+      },
+      {
+        "id": "B_64_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 64",
+        "scenario": "B_64"
+      },
+      {
+        "id": "B_64_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "B_64"
+      },
+      {
+        "id": "B_64_WRITE",
+        "kind": "INDEPENDENT_ACTION",
+        "label": "bm_set_bit(64)",
+        "scenario": "B_64"
+      },
+      {
+        "id": "B_FULL_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 0 limit128",
+        "scenario": "B_FULL"
+      },
+      {
+        "id": "B_FULL_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 128",
+        "scenario": "B_FULL"
+      },
+      {
+        "id": "B_FULL_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "B_FULL"
+      },
+      {
+        "id": "B_EMPTY_ENTRY",
+        "kind": "ENTRY",
+        "label": "scan start 128 limit128",
+        "scenario": "B_EMPTY"
+      },
+      {
+        "id": "B_EMPTY_SCAN",
+        "kind": "SOURCE_HELPER",
+        "label": "scan -> 128",
+        "scenario": "B_EMPTY"
+      },
+      {
+        "id": "B_EMPTY_RESULT",
+        "kind": "RETURN",
+        "label": "scan helper returns",
+        "scenario": "B_EMPTY"
+      },
+      {
+        "id": "C_USED_MORE_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "C_USED_MORE"
+      },
+      {
+        "id": "C_USED_MORE_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "choose used and list move",
+        "scenario": "C_USED_MORE"
+      },
+      {
+        "id": "C_USED_MORE_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx -> 63",
+        "scenario": "C_USED_MORE"
+      },
+      {
+        "id": "C_USED_MORE_OBJECT",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "address 0x600fc000 then bit set",
+        "scenario": "C_USED_MORE"
+      },
+      {
+        "id": "C_USED_MORE_REFILL",
+        "kind": "BRANCH",
+        "label": "free.count=1 no refill",
+        "scenario": "C_USED_MORE"
+      },
+      {
+        "id": "C_USED_MORE_RETURN",
+        "kind": "RETURN",
+        "label": "return 0x600fc000",
+        "scenario": "C_USED_MORE"
+      },
+      {
+        "id": "C_USED_LAST_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "C_USED_LAST"
+      },
+      {
+        "id": "C_USED_LAST_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "choose used and list move",
+        "scenario": "C_USED_LAST"
+      },
+      {
+        "id": "C_USED_LAST_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx -> 127",
+        "scenario": "C_USED_LAST"
+      },
+      {
+        "id": "C_USED_LAST_OBJECT",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "address 0x601fc000 then bit set",
+        "scenario": "C_USED_LAST"
+      },
+      {
+        "id": "C_USED_LAST_REFILL",
+        "kind": "BRANCH",
+        "label": "free.count=1 no refill",
+        "scenario": "C_USED_LAST"
+      },
+      {
+        "id": "C_USED_LAST_RETURN",
+        "kind": "RETURN",
+        "label": "return 0x601fc000",
+        "scenario": "C_USED_LAST"
+      },
+      {
+        "id": "C_FREE_FIRST_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "C_FREE_FIRST"
+      },
+      {
+        "id": "C_FREE_FIRST_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "choose free and list move",
+        "scenario": "C_FREE_FIRST"
+      },
+      {
+        "id": "C_FREE_FIRST_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx -> 0",
+        "scenario": "C_FREE_FIRST"
+      },
+      {
+        "id": "C_FREE_FIRST_OBJECT",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "address 0x60000000 then bit set",
+        "scenario": "C_FREE_FIRST"
+      },
+      {
+        "id": "C_FREE_FIRST_REFILL",
+        "kind": "BRANCH",
+        "label": "free.count=1 no refill",
+        "scenario": "C_FREE_FIRST"
+      },
+      {
+        "id": "C_FREE_FIRST_RETURN",
+        "kind": "RETURN",
+        "label": "return 0x60000000",
+        "scenario": "C_FREE_FIRST"
+      },
+      {
+        "id": "C_EMPTY_ENTRY",
+        "kind": "ENTRY",
+        "label": "malloc(size=16384) group9",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "C_EMPTY_SELECT",
+        "kind": "SOURCE_BRANCH",
+        "label": "choose neither and list move",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "C_EMPTY_STOP",
+        "kind": "ANALYSIS_STOP",
+        "label": "explicit while(1) no function return",
+        "scenario": "C_EMPTY"
+      },
+      {
+        "id": "REFILL_BOUNDARY_G",
+        "kind": "BRANCH",
+        "label": "if free.count<1 (not reached in C)",
+        "scenario": "REFILL_BOUNDARY"
+      },
+      {
+        "id": "REFILL_BOUNDARY_T",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "free.count++ temporary",
+        "scenario": "REFILL_BOUNDARY"
+      },
+      {
+        "id": "REFILL_BOUNDARY_U",
+        "kind": "CALL",
+        "label": "uslab_alloc(uslp)",
+        "scenario": "REFILL_BOUNDARY"
+      },
+      {
+        "id": "REFILL_BOUNDARY_D",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "free.count-- on normal return",
+        "scenario": "REFILL_BOUNDARY"
+      },
+      {
+        "id": "REFILL_BOUNDARY_X",
+        "kind": "ANALYSIS_STOP",
+        "label": "new_uslp NULL while(1)",
+        "scenario": "REFILL_BOUNDARY"
+      },
+      {
+        "id": "REFILL_BOUNDARY_L",
+        "kind": "SOURCE_SEQUENCE",
+        "label": "link new slab and add totals",
+        "scenario": "REFILL_BOUNDARY"
+      },
+      {
+        "id": "REFILL_BOUNDARY_R",
+        "kind": "CONTINUATION",
+        "label": "malloc return after successful callees",
+        "scenario": "REFILL_BOUNDARY"
+      }
+    ],
+    "edges": [
+      {
+        "from": "A_ZERO_ENTRY",
+        "to": "A_ZERO_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_ZERO_GATE",
+        "to": "A_ZERO_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "A_ZERO_CLASS",
+        "to": "A_ZERO_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "A_ONE_ENTRY",
+        "to": "A_ONE_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_ONE_GATE",
+        "to": "A_ONE_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "A_ONE_CLASS",
+        "to": "A_ONE_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "A_32_ENTRY",
+        "to": "A_32_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_32_GATE",
+        "to": "A_32_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "A_32_CLASS",
+        "to": "A_32_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "A_33_ENTRY",
+        "to": "A_33_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_33_GATE",
+        "to": "A_33_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "A_33_CLASS",
+        "to": "A_33_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "A_64_ENTRY",
+        "to": "A_64_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_64_GATE",
+        "to": "A_64_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "A_64_CLASS",
+        "to": "A_64_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "A_65_ENTRY",
+        "to": "A_65_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_65_GATE",
+        "to": "A_65_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "A_65_CLASS",
+        "to": "A_65_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "A_MAX_ENTRY",
+        "to": "A_MAX_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_MAX_GATE",
+        "to": "A_MAX_CLASS",
+        "kind": "CONTROL_TRUE",
+        "label": "admitted"
+      },
+      {
+        "from": "A_MAX_CLASS",
+        "to": "A_MAX_STOP",
+        "kind": "MODEL_BOUNDARY",
+        "label": "slab not modeled in A"
+      },
+      {
+        "from": "A_OVER_ENTRY",
+        "to": "A_OVER_GATE",
+        "kind": "CONTROL",
+        "label": "size gate"
+      },
+      {
+        "from": "A_OVER_GATE",
+        "to": "A_OVER_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "too large"
+      },
+      {
+        "from": "B_ZERO_ENTRY",
+        "to": "B_ZERO_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "B_ZERO_SCAN",
+        "to": "B_ZERO_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "B_ZERO_RESULT",
+        "to": "B_ZERO_WRITE",
+        "kind": "GIVEN_ACTION",
+        "label": "independent from helper"
+      },
+      {
+        "from": "B_63_ENTRY",
+        "to": "B_63_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "B_63_SCAN",
+        "to": "B_63_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "B_63_RESULT",
+        "to": "B_63_WRITE",
+        "kind": "GIVEN_ACTION",
+        "label": "independent from helper"
+      },
+      {
+        "from": "B_64_ENTRY",
+        "to": "B_64_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "B_64_SCAN",
+        "to": "B_64_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "B_64_RESULT",
+        "to": "B_64_WRITE",
+        "kind": "GIVEN_ACTION",
+        "label": "independent from helper"
+      },
+      {
+        "from": "B_FULL_ENTRY",
+        "to": "B_FULL_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "B_FULL_SCAN",
+        "to": "B_FULL_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "B_EMPTY_ENTRY",
+        "to": "B_EMPTY_SCAN",
+        "kind": "CALL",
+        "label": "bm_get_freebit_idx"
+      },
+      {
+        "from": "B_EMPTY_SCAN",
+        "to": "B_EMPTY_RESULT",
+        "kind": "FUNCTION_RETURN",
+        "label": "scan not mutating"
+      },
+      {
+        "from": "C_USED_MORE_ENTRY",
+        "to": "C_USED_MORE_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "C_USED_MORE_SELECT",
+        "to": "C_USED_MORE_SCAN",
+        "kind": "SOURCE_ORDER",
+        "label": "list moves precede scan"
+      },
+      {
+        "from": "C_USED_MORE_SCAN",
+        "to": "C_USED_MORE_OBJECT",
+        "kind": "CONTROL_TRUE",
+        "label": "idx<total"
+      },
+      {
+        "from": "C_USED_MORE_OBJECT",
+        "to": "C_USED_MORE_REFILL",
+        "kind": "SOURCE_ORDER",
+        "label": "bit set before refill gate"
+      },
+      {
+        "from": "C_USED_MORE_REFILL",
+        "to": "C_USED_MORE_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "free.count<1 false"
+      },
+      {
+        "from": "C_USED_LAST_ENTRY",
+        "to": "C_USED_LAST_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "C_USED_LAST_SELECT",
+        "to": "C_USED_LAST_SCAN",
+        "kind": "SOURCE_ORDER",
+        "label": "list moves precede scan"
+      },
+      {
+        "from": "C_USED_LAST_SCAN",
+        "to": "C_USED_LAST_OBJECT",
+        "kind": "CONTROL_TRUE",
+        "label": "idx<total"
+      },
+      {
+        "from": "C_USED_LAST_OBJECT",
+        "to": "C_USED_LAST_REFILL",
+        "kind": "SOURCE_ORDER",
+        "label": "bit set before refill gate"
+      },
+      {
+        "from": "C_USED_LAST_REFILL",
+        "to": "C_USED_LAST_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "free.count<1 false"
+      },
+      {
+        "from": "C_FREE_FIRST_ENTRY",
+        "to": "C_FREE_FIRST_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "C_FREE_FIRST_SELECT",
+        "to": "C_FREE_FIRST_SCAN",
+        "kind": "SOURCE_ORDER",
+        "label": "list moves precede scan"
+      },
+      {
+        "from": "C_FREE_FIRST_SCAN",
+        "to": "C_FREE_FIRST_OBJECT",
+        "kind": "CONTROL_TRUE",
+        "label": "idx<total"
+      },
+      {
+        "from": "C_FREE_FIRST_OBJECT",
+        "to": "C_FREE_FIRST_REFILL",
+        "kind": "SOURCE_ORDER",
+        "label": "bit set before refill gate"
+      },
+      {
+        "from": "C_FREE_FIRST_REFILL",
+        "to": "C_FREE_FIRST_RETURN",
+        "kind": "CONTROL_FALSE",
+        "label": "free.count<1 false"
+      },
+      {
+        "from": "C_EMPTY_ENTRY",
+        "to": "C_EMPTY_SELECT",
+        "kind": "CONTROL",
+        "label": "entry class ready"
+      },
+      {
+        "from": "C_EMPTY_SELECT",
+        "to": "C_EMPTY_STOP",
+        "kind": "CONTROL_TRUE",
+        "label": "used/free empty"
+      },
+      {
+        "from": "REFILL_BOUNDARY_G",
+        "to": "REFILL_BOUNDARY_T",
+        "kind": "CONTROL_TRUE",
+        "label": "refill entered"
+      },
+      {
+        "from": "REFILL_BOUNDARY_T",
+        "to": "REFILL_BOUNDARY_U",
+        "kind": "CALLER_SEQUENCE",
+        "label": "invoke uslab_alloc"
+      },
+      {
+        "from": "REFILL_BOUNDARY_U",
+        "to": "REFILL_BOUNDARY_D",
+        "kind": "NORMAL_RETURN_ONLY",
+        "label": "callee returned"
+      },
+      {
+        "from": "REFILL_BOUNDARY_D",
+        "to": "REFILL_BOUNDARY_X",
+        "kind": "CONTROL_TRUE",
+        "label": "NULL"
+      },
+      {
+        "from": "REFILL_BOUNDARY_D",
+        "to": "REFILL_BOUNDARY_L",
+        "kind": "CONTROL_FALSE",
+        "label": "nonNULL"
+      },
+      {
+        "from": "REFILL_BOUNDARY_L",
+        "to": "REFILL_BOUNDARY_R",
+        "kind": "SOURCE_ORDER",
+        "label": "all steps normal"
+      }
+    ]
+  },
+  "full_local_P9": "NOT_RUN",
+  "unknowns": [
+    "real sh linkage",
+    "C object and pointer legitimacy",
+    "dynamic allocation and recursion",
+    "real code execution"
+  ]
+}

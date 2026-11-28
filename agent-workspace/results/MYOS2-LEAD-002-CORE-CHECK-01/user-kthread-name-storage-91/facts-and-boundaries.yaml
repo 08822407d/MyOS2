@@ -1,0 +1,1631 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-KTHREAD-NAME-STORAGE-91",
+  "record_type": "bounded_format_allocation_and_kthread_name_lifecycle_static_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (consumer-visible family; backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "phase": 2,
+  "status": "AUTHOR_STATIC_PENDING_G04_AND_INDEPENDENT_MAINLINE_PRO_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_pin_short12": "a039d9803ade",
+  "mainline_pin_short12": "cc8bd9c768fd",
+  "execution_parent_short12": "034cd9c52dbf",
+  "G00": {
+    "decision": "PASS",
+    "lead": "cc8bd9c768fd",
+    "exec": "034cd9c52dbf",
+    "master": "e8e60cd19540",
+    "time": "a039d9803ade",
+    "PR16": "OPEN",
+    "PR17": "OPEN_DRAFT",
+    "open_PR_count": 2,
+    "target_directory": "ABSENT_AT_START",
+    "formal_delivery91": "ABSENT_AT_START",
+    "write_permission": "G00_PASSED_NEW_ONLY",
+    "full_P9": "NOT_RUN"
+  },
+  "read_account": {
+    "this_turn_new": "129,110,124,review90,closure89,checkpoint91,PR17 comment6896688417, reviews53 and closure53 and review68, 63/79 and v2 P1-P13, original90 six raw count, 15 time source files, two time/master canaries",
+    "same_C06c_conversation_reuse": "nine other MyOS2 project rules and 128 receiver/Mnemosyne guidance already independently read in prior active EXEC12 turn with fixed objects; original90 artifacts also previously authored, but newly re-read for counts in this turn",
+    "not_read": "complete batch53/68 six artifacts, full C fork/exit or all printf format branches, external libc or Linux spec; no inherited C06/C06b read claims",
+    "no_new_handoff_or_guidance_refresh": true
+  },
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "R90_01": {
+      "old_manifest": "user-id-allocation-lifecycle-90/MANIFEST.md@034cd9c52dbf",
+      "missing_canonical_P6_keys": [
+        "verified_claims",
+        "quotes_reconfirmed",
+        "downgraded_to_inferred"
+      ],
+      "original_historic_constructor_fields": {
+        "evidence_anchor_tag_prefix_count_expected": 59,
+        "evidence_anchor_literals_constructed_from_independently_fetched_fixed_source": 59,
+        "evidence_anchor_constructor_mismatch_count": 0
+      },
+      "new_independent_raw_count": {
+        "files": {
+          "MANIFEST.md": 0,
+          "id-allocation-lifecycle.md": 0,
+          "facts-and-boundaries.yaml": 0,
+          "id-allocation-lifecycle-paths.dot": 0,
+          "deferred-findings.yaml": 0,
+          "evidence.md": 59
+        },
+        "total": 59
+      },
+      "scope_of_current_recheck": "2026-11-16 direct read of all six fixed 90 objects and literal raw-prefix recount, plus targeted E013 source identity and new 91 independent D00 anchors",
+      "retroactive_P6_attestation": "NOT_AVAILABLE_OR_NOT_VALID_FOR_ORIGINAL_PUBLISH; do not invent historical three integers or pretend the original constructor statistic was a final P6 quote reconfirmation",
+      "original_p9": "NOT_RUN",
+      "meaning": "author claimed 59/59/0 as construction/literal match. The present count confirms 59 raw labels, but E013 disproves universal single-symbol compliance. 91 own P6 fields are separately real and cannot repair historical source by retroactive editing."
+    },
+    "R90_02": {
+      "old_anchor": "IDA90-E013",
+      "old_tag_symbol": "IDA_BITMAP_LONGS",
+      "problem": "old original quote includes comment about chunk plus three separate macros CHUNK_SIZE/LONGS/BITS; not one definition",
+      "new_single_symbol_anchors": {
+        "MYOS_IDR_BUF_SIZE": "KN91-E001",
+        "IDA_CHUNK_SIZE": "KN91-E002",
+        "IDA_BITMAP_LONGS": "KN91-E003",
+        "IDA_BITMAP_BITS": "KN91-E004"
+      },
+      "affected_consumers": [
+        "original90/evidence.md::IDA90-E013",
+        "original90/facts.source_ledger[mykernel/lib/idr/idr_const.h],fact_to_evidence_ids.ida_units",
+        "original90/matrices.ida_request_and_units_matrix A-REQ01/A-REQ03",
+        "original90/matrices.ida_scan_and_occupancy_matrix A-SCAN03/A-SCAN04",
+        "original90/matrices.ida_release_and_failure_matrix A-REL02",
+        "original90/finite_models M04/M07/M08/M12; model assumptions LP64 and number units separately",
+        "original90/deferred-findings IDA90-F04/IDA90-U01/IDA90-U02",
+        "original90/id-allocation-lifecycle.md G01/A capacity paragraphs",
+        "original90/id-allocation-lifecycle-paths.dot cluster_A cfg/bitmap and scan link"
+      ],
+      "retraction": "Original 59/59 literal construction count is preserved as historical; retract blanket assertion that all 59 quotes satisfy their stated single-definition boundary. Old E013 remains in frozen file and is invalid for this combined claim, not deleted.",
+      "semantics": "One macro one new anchor: chunk=MYOS_IDR_BUF_SIZE; longs=chunk/sizeof(long); bits=longs*sizeof(long)*8. IDA actual scan is still governed by earlier per-bit loop and must not silently be treated as scanning all physical bits."
+    },
+    "R90_supplements": {
+      "S01": "idr_replace old value read, new value written, then old value returned; C-LRR03 textual reverse ordering excluded. C-CON03 slot7 empty vs slot7 busy are different inputs. Old matrix row IDs such as A-SCAN01 lack IDA90 prefix, while evidence and model IDs retain it; DOT analog/comparison edges are not calls.",
+      "S02": "min word-index vs numerical lower bound; LP64 4096 words vs 32768 scanned positions vs 262144 physical bits; M06/M07 word0 need min0; M08 returns32760 under given bit, 32767 only scan range end. F01's min5→40 alone is not proof minimum lower-bound violation. Validity/overflow gates retained.",
+      "S03": "historical qualified IDs WQP89-F01/F02/F03/F05 and PID11-F01/F02 remain unchanged; do not restore historical 11 RETURN, keep 89 closed and R53 corrected reviewer errors. read_channel must use connector enum."
+    }
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/lib/idr/idr_const.h",
+      "evidence_ids": [
+        "KN91-E001",
+        "KN91-E002",
+        "KN91-E003",
+        "KN91-E004"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "evidence_ids": [
+        "KN91-E005",
+        "KN91-E081"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "evidence_ids": [
+        "KN91-E007",
+        "KN91-E008",
+        "KN91-E009"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "evidence_ids": [
+        "KN91-E010",
+        "KN91-E011",
+        "KN91-E012",
+        "KN91-E013",
+        "KN91-E014",
+        "KN91-E015"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/lib/printf/vsprintf.c",
+      "evidence_ids": [
+        "KN91-E016",
+        "KN91-E017",
+        "KN91-E018",
+        "KN91-E019",
+        "KN91-E020",
+        "KN91-E021",
+        "KN91-E022",
+        "KN91-E023",
+        "KN91-E024",
+        "KN91-E025",
+        "KN91-E026",
+        "KN91-E027",
+        "KN91-E028",
+        "KN91-E029",
+        "KN91-E030",
+        "KN91-E031",
+        "KN91-E032",
+        "KN91-E033",
+        "KN91-E034",
+        "KN91-E035",
+        "KN91-E036"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/lib/printf/kasprintf.c",
+      "evidence_ids": [
+        "KN91-E037",
+        "KN91-E041",
+        "KN91-E042",
+        "KN91-E043",
+        "KN91-E044",
+        "KN91-E045"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/include/linux/lib/stdarg.h",
+      "evidence_ids": [
+        "KN91-E038",
+        "KN91-E039",
+        "KN91-E040"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "evidence_ids": [
+        "KN91-E046",
+        "KN91-E047",
+        "KN91-E048",
+        "KN91-E049",
+        "KN91-E050",
+        "KN91-E051",
+        "KN91-E052",
+        "KN91-E053",
+        "KN91-E054",
+        "KN91-E055",
+        "KN91-E056",
+        "KN91-E057",
+        "KN91-E058",
+        "KN91-E059",
+        "KN91-E060",
+        "KN91-E061",
+        "KN91-E062",
+        "KN91-E063",
+        "KN91-E064",
+        "KN91-E065"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "evidence_ids": [
+        "KN91-E066",
+        "KN91-E067",
+        "KN91-E068",
+        "KN91-E069"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/sched/task/task_const.h",
+      "evidence_ids": [
+        "KN91-E006"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "evidence_ids": [
+        "KN91-E070"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/lib/string/string_helpers.c",
+      "evidence_ids": [
+        "KN91-E071",
+        "KN91-E072"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/lib/string/string.c",
+      "evidence_ids": [
+        "KN91-E073",
+        "KN91-E074",
+        "KN91-E075"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "evidence_ids": [
+        "KN91-E076",
+        "KN91-E077",
+        "KN91-E078"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    },
+    {
+      "path": "mykernel/sched/task/task.h",
+      "evidence_ids": [
+        "KN91-E079",
+        "KN91-E080"
+      ],
+      "read_scope": "relevant definitions verified on time; no repository code execution"
+    }
+  ],
+  "source_scope": {
+    "new_source_files": 15,
+    "soft_limit": 24,
+    "canary_files": [
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/debug/panic.c"
+    ],
+    "source_overage": 0,
+    "full_printf_fork_scheduler_out_of_scope": true
+  },
+  "fact_to_evidence_ids": {
+    "D00_capacity_definitions": [
+      "KN91-E001",
+      "KN91-E002",
+      "KN91-E003",
+      "KN91-E004"
+    ],
+    "worker_buffer_capacity": [
+      "KN91-E005",
+      "KN91-E081",
+      "KN91-E014"
+    ],
+    "short_comm_capacity": [
+      "KN91-E006",
+      "KN91-E068"
+    ],
+    "name_producer": [
+      "KN91-E010",
+      "KN91-E011",
+      "KN91-E012",
+      "KN91-E013",
+      "KN91-E014",
+      "KN91-E015"
+    ],
+    "format_semantics": [
+      "KN91-E016",
+      "KN91-E017",
+      "KN91-E018",
+      "KN91-E019",
+      "KN91-E020",
+      "KN91-E021",
+      "KN91-E022",
+      "KN91-E023",
+      "KN91-E024",
+      "KN91-E025",
+      "KN91-E026",
+      "KN91-E027",
+      "KN91-E028",
+      "KN91-E029",
+      "KN91-E030",
+      "KN91-E031",
+      "KN91-E032",
+      "KN91-E033",
+      "KN91-E034",
+      "KN91-E035",
+      "KN91-E036"
+    ],
+    "va_copy_and_alloc": [
+      "KN91-E037",
+      "KN91-E038",
+      "KN91-E039",
+      "KN91-E040",
+      "KN91-E041",
+      "KN91-E042",
+      "KN91-E043",
+      "KN91-E044",
+      "KN91-E045"
+    ],
+    "create_request": [
+      "KN91-E046",
+      "KN91-E047",
+      "KN91-E048",
+      "KN91-E049",
+      "KN91-E050",
+      "KN91-E064",
+      "KN91-E065"
+    ],
+    "name_private_transfer": [
+      "KN91-E051",
+      "KN91-E052",
+      "KN91-E053",
+      "KN91-E054",
+      "KN91-E055",
+      "KN91-E056",
+      "KN91-E057",
+      "KN91-E058",
+      "KN91-E059",
+      "KN91-E060",
+      "KN91-E061",
+      "KN91-E062",
+      "KN91-E063"
+    ],
+    "fork_short_comm": [
+      "KN91-E006",
+      "KN91-E066",
+      "KN91-E067",
+      "KN91-E068",
+      "KN91-E069",
+      "KN91-E070"
+    ],
+    "padding_and_readback": [
+      "KN91-E054",
+      "KN91-E055",
+      "KN91-E070",
+      "KN91-E071",
+      "KN91-E072",
+      "KN91-E073",
+      "KN91-E074",
+      "KN91-E075",
+      "KN91-E076",
+      "KN91-E077",
+      "KN91-E078",
+      "KN91-E079",
+      "KN91-E080"
+    ]
+  },
+  "matrices": {
+    "format_count_capacity_matrix": [
+      {
+        "id": "A-FMT01",
+        "scenario": "worker实际栈容量",
+        "preconditions": "WQ_NAME_LEN=32，WORKER_ID_LEN=10+WQ_NAME_LEN",
+        "source_step": "id_buf自动数组42字节；capacity包含NUL",
+        "conditional_result": "如格式化需求长度≤41，则可放全名及终止符",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E005",
+          "KN91-E014",
+          "KN91-E081"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-FMT02",
+        "scenario": "vsnprintf逻辑需求",
+        "preconditions": "合法buf/size/fmt和受支持格式",
+        "source_step": "str按需求推进，实际copy受end限制，结尾按size>0写NUL；返回str-buf",
+        "conditional_result": "需求长度不等于已写入字节数，不能将NUL计入返回",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E019",
+          "KN91-E020",
+          "KN91-E021",
+          "KN91-E022",
+          "KN91-E023",
+          "KN91-E024",
+          "KN91-E025",
+          "KN91-E026",
+          "KN91-E027",
+          "KN91-E028"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-FMT03",
+        "scenario": "vscnprintf的截断消费",
+        "preconditions": "size>0、vsnprintf返回i且长度可表示",
+        "source_step": "i<size直接返回i，否则返回size-1",
+        "conditional_result": "scnprintf返回写入字符数而非需求长度",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E016",
+          "KN91-E017",
+          "KN91-E018"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-FMT04",
+        "scenario": "size=0",
+        "preconditions": "提供有效的可执行指针数学前提，或独立建模抽象尺寸",
+        "source_step": "vscnprintf最终return0；内部仍调用vsnprintf；vsnprintf先计算buf+size",
+        "conditional_result": "不能由size=0没有写入推出NULL buf指针算术已获C语义证明",
+        "first_proof_gate": "对buf=NULL时的end和str-buf操作不作可移植保证",
+        "evidence_ids": [
+          "KN91-E017",
+          "KN91-E018",
+          "KN91-E019",
+          "KN91-E020",
+          "KN91-E027",
+          "KN91-E028"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-FMT05",
+        "scenario": "size=1或临界容量",
+        "preconditions": "一个有效char目的对象、需求D可表示",
+        "source_step": "size1写NUL于[0]，实际字符0；size=D+1可保留D个字符和NUL",
+        "conditional_result": "不足时size-1个实际字符，若size=0则0",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E017",
+          "KN91-E018",
+          "KN91-E027"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "worker_name_input_and_truncation_matrix": [
+      {
+        "id": "A-NAME01",
+        "scenario": "CPU绑定池格式",
+        "preconditions": "pool非NULL，cpu>=0，worker和attrs合法",
+        "source_step": "scnprintf('kworker/%d:%d%s',cpu,worker.id,nice<0?'H':'')",
+        "conditional_result": "H后缀仅来自nice<0判断，不等于调度优先级改动",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E008",
+          "KN91-E009",
+          "KN91-E010",
+          "KN91-E011"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-NAME02",
+        "scenario": "非绑定池格式",
+        "preconditions": "pool非NULL，cpu<0，pool.id和worker.id有效",
+        "source_step": "scnprintf('kworker/u%d:%d',pool.id,worker.id)",
+        "conditional_result": "不读取nice，不从名字推断实际CPU亲和性",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E008",
+          "KN91-E010",
+          "KN91-E012"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-NAME03",
+        "scenario": "pool缺失分支",
+        "preconditions": "pool=NULL，buf与size有效",
+        "source_step": "scnprintf('kworker/dying')",
+        "conditional_result": "固定字面需求13字符；不是create_worker(pool=NULL)可达性证明",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E010",
+          "KN91-E013"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-NAME04",
+        "scenario": "int32十进制有界输入",
+        "preconditions": "int为32位且十进制输出正确，普通格式/无额外标志",
+        "source_step": "正常分支最长8+10+1+11+1=31，unbound最长9+11+1+11=32",
+        "conditional_result": "在这些独立假设下42字节足以容纳NUL；不能声称正常worker实际发生截断",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E005",
+          "KN91-E007",
+          "KN91-E008",
+          "KN91-E011",
+          "KN91-E012",
+          "KN91-E029",
+          "KN91-E035",
+          "KN91-E081"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-NAME05",
+        "scenario": "调用方返回值被忽略",
+        "preconditions": "create_worker有合法42字节id_buf；先行分配返回且非BH",
+        "source_step": "format_worker_id返回写入字符数，调用处未接收；再以'%s'传给kthread_create_on_node",
+        "conditional_result": "即使抽象小容量下截断，也只能把已存栈名字交下一层；真实size在此为42",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E014",
+          "KN91-E015",
+          "KN91-E050"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "two_pass_format_allocation_matrix": [
+      {
+        "id": "B-2PASS01",
+        "scenario": "首次格式计长",
+        "preconditions": "fmt与va_list有效且两个C指针表达式具足够语义",
+        "source_step": "va_copy(aq,ap);first=vsnprintf(NULL,0,fmt,aq);va_end(aq)",
+        "conditional_result": "源码意图测需求长度；first声明unsigned；不能由注释证明所有NULL指针算术合法",
+        "first_proof_gate": "需要测长调用具有定义良好的返回及va_copy行为",
+        "evidence_ids": [
+          "KN91-E037",
+          "KN91-E038",
+          "KN91-E040",
+          "KN91-E041",
+          "KN91-E042",
+          "KN91-E028"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-2PASS02",
+        "scenario": "申请大小",
+        "preconditions": "first<=UINT_MAX-1且first+1可表示，分配器返回合法对象",
+        "source_step": "p=kmalloc(first+1,gfp)",
+        "conditional_result": "预期为NUL额外留一个字节；大小是否真成功依内存供应器",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E037",
+          "KN91-E043"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-2PASS03",
+        "scenario": "申请失败",
+        "preconditions": "kmalloc返回NULL",
+        "source_step": "if(!p) return NULL",
+        "conditional_result": "不会执行第二遍；外层__kthread_create_on_node转ERR_PTR(-ENOMEM)",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E043",
+          "KN91-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-2PASS04",
+        "scenario": "第二遍格式化",
+        "preconditions": "p有first+1有效可写字节，fmt/引用输入可读",
+        "source_step": "second=vsnprintf(p,first+1,fmt,ap)",
+        "conditional_result": "若本次需求变大则写入受容量限制，可能截断；检查first!=second被注释",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E044",
+          "KN91-E027"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-2PASS05",
+        "scenario": "两遍需求不同但返回指针",
+        "preconditions": "first和second有效，第二遍已返回",
+        "source_step": "没有活动比较/重配/失败门，直接return p",
+        "conditional_result": "name结果可能为被截断的字符串，不能仅因first!=second得出越界",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E044",
+          "KN91-E045"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-2PASS06",
+        "scenario": "异常计数转换",
+        "preconditions": "LP64/uint32假设，首遍返回负数或UINT_MAX等假设",
+        "source_step": "int转unsigned int后求first+1",
+        "conditional_result": "不能把非实际证明的异常返回当已发生；潜在零申请先停证",
+        "first_proof_gate": "先证首遍真的返回异常，再证uint溢出和kmalloc(0)行为",
+        "evidence_ids": [
+          "KN91-E037",
+          "KN91-E041",
+          "KN91-E043"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "varargs_and_input_stability_matrix": [
+      {
+        "id": "B-VAR01",
+        "scenario": "va_list复制的是遍历状态",
+        "preconditions": "va_list与变量来源正确",
+        "source_step": "va_copy(aq,ap)并让首次消费aq，第二次消费ap",
+        "conditional_result": "不会自动把指针所指字符串深拷贝/冻结",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E038",
+          "KN91-E039",
+          "KN91-E040",
+          "KN91-E041"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-VAR02",
+        "scenario": "输入稳定",
+        "preconditions": "两次fmt和%s所指内容均保持相同，且数字实参值相同",
+        "source_step": "两遍按同样格式产生同长度",
+        "conditional_result": "可有first==second（仍需vsnprintf具体长度返回）",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E041",
+          "KN91-E044",
+          "KN91-E024",
+          "KN91-E032"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-VAR03",
+        "scenario": "引用字符串变长",
+        "preconditions": "fmt='%s', 初始src='abc',第二遍'abcdefg'",
+        "source_step": "first假设3，alloc4，第二遍需求7",
+        "conditional_result": "有效写入至多3字节+NUL；second可能7，未活动检查",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E041",
+          "KN91-E043",
+          "KN91-E044",
+          "KN91-E045",
+          "KN91-E027"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-VAR04",
+        "scenario": "引用字符串缩短",
+        "preconditions": "首遍需求7，次遍需求3",
+        "source_step": "分配8字节，实际输出3及NUL",
+        "conditional_result": "额外容量不等于自动被清零；读取依NUL停止",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E043",
+          "KN91-E044",
+          "KN91-E045",
+          "KN91-E027"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-VAR05",
+        "scenario": "数字arg复制区别",
+        "preconditions": "fmt='%d'，实际int参数不变、fmt无变化",
+        "source_step": "va_copy有相同取参序列",
+        "conditional_result": "相比可变指针内容，纯按值数字不存在被指向字符串的中途变异（仍有外部格式与调用有效性）",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E038",
+          "KN91-E041",
+          "KN91-E025",
+          "KN91-E026"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "name_failure_result_matrix": [
+      {
+        "id": "B-FAIL01",
+        "scenario": "create信息申请失败",
+        "preconditions": "kmalloc(sizeof create)返回NULL",
+        "source_step": "__kthread_create_on_node立即ERR_PTR(-ENOMEM)",
+        "conditional_result": "未执行名字分配或登记请求",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E046"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-FAIL02",
+        "scenario": "名字分配失败",
+        "preconditions": "create已分配，kvasprintf返回NULL",
+        "source_step": "设置task=ERR_PTR(-ENOMEM)，goto free_create，kfree(create)",
+        "conditional_result": "外层kthread_create_on_node返回错误指针，不是NULL任务",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E047",
+          "KN91-E048",
+          "KN91-E049",
+          "KN91-E050"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-FAIL03",
+        "scenario": "成功名称不等于线程",
+        "preconditions": "kvasprintf非NULL、合法create及等待前提",
+        "source_step": "排入请求、唤醒kthreadd、wait_for_completion再读create.result",
+        "conditional_result": "只确认请求阶段，无法仅凭名字证明生产线程或业务执行",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E047",
+          "KN91-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-FAIL04",
+        "scenario": "kernel_thread失败",
+        "preconditions": "pid<0,create/full_name有效",
+        "source_step": "create_kthread先free(full_name)，done非NULL时result=ERR_PTR(pid), complete(done)",
+        "conditional_result": "该分支名字释放和错误任务发布分离，需已实际到达create_kthread",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E065"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-FAIL05",
+        "scenario": "业务执行前置",
+        "preconditions": "kthread请求done有效，内部私有结构、调度返回等成立",
+        "source_step": "kthread成功后通知创建者且后续等待STOP或醒",
+        "conditional_result": "完成通知不等于业务threadfn调用，R53/R68限定保持",
+        "first_proof_gate": "不重审53/68的实际调度/并发链",
+        "evidence_ids": [
+          "KN91-E062",
+          "KN91-E063"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "name_object_ownership_matrix": [
+      {
+        "id": "C-OBJ01",
+        "scenario": "栈id_buf",
+        "preconditions": "create_worker局部栈及worker有效",
+        "source_step": "char id_buf[42];格式化后用%s被同步传给公共包装",
+        "conditional_result": "栈缓冲未转为full_name本体；新堆名字依赖kvasprintf复制",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E014",
+          "KN91-E015",
+          "KN91-E043",
+          "KN91-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-OBJ02",
+        "scenario": "堆full_name",
+        "preconditions": "kvasprintf返回堆p且对象有效",
+        "source_step": "create->full_name指向p, create信息结构另有独立kmalloc",
+        "conditional_result": "仅指针赋值不深拷贝；失败与成功所有者不同",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E037",
+          "KN91-E043",
+          "KN91-E044",
+          "KN91-E047",
+          "KN91-E051"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-OBJ03",
+        "scenario": "fork先保存短名",
+        "preconditions": "args.name=full_name且copy_process走到名称分支",
+        "source_step": "kernel_thread参数name→args.name→strscpy_pad(p->comm,name,sizeof(comm))",
+        "conditional_result": "短名为task.comm[32]，至多31字节+NUL，不保证等于全名",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E064",
+          "KN91-E065",
+          "KN91-E066",
+          "KN91-E067",
+          "KN91-E070",
+          "KN91-E071",
+          "KN91-E072",
+          "KN91-E073",
+          "KN91-E074",
+          "KN91-E075"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-OBJ04",
+        "scenario": "kthread私有结构",
+        "preconditions": "set_kthread_struct正常分配",
+        "source_step": "p->worker_private=kthread；其中full_name是另一指针",
+        "conditional_result": "结构与字符串单独分配、单独释放",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E051",
+          "KN91-E052",
+          "KN91-E056",
+          "KN91-E057",
+          "KN91-E058"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-OBJ05",
+        "scenario": "成功指针转移",
+        "preconditions": "done非NULL，self合法，源create->full_name有效",
+        "source_step": "self->full_name=create->full_name，随后create结果通知；creator正常kfree(create)",
+        "conditional_result": "没有第二次字符串深拷贝；create释放不等于full_name释放",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E051",
+          "KN91-E062",
+          "KN91-E063",
+          "KN91-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-OBJ06",
+        "scenario": "取消/失败所有权",
+        "preconditions": "kthread done为NULL或create_kthread pid<0",
+        "source_step": "生产分支分别kfree(full_name)并处理create/done",
+        "conditional_result": "不能将两分支及成功时序合并为一个必达释放",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E061",
+          "KN91-E065"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-OBJ07",
+        "scenario": "私有对象释放调用条件",
+        "preconditions": "free_kthread_struct获得合法kthread",
+        "source_step": "worker_private=NULL;kfree(full_name);kfree(kthread);free_task内对该接口调用被注释",
+        "conditional_result": "不能由释放函数定义推出退出时自动调用；R53旧寿命门不关闭",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E059",
+          "KN91-E060",
+          "KN91-E069"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "name_readback_and_padding_matrix": [
+      {
+        "id": "C-READ01",
+        "scenario": "full_name优先",
+        "preconditions": "有效task+private+full_name和buf",
+        "source_step": "get_kthread_comm调用strscpy_pad(buf,full_name,buf_size)",
+        "conditional_result": "全名仍受调用方buf_size约束；void接口丢弃copy返回",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E054",
+          "KN91-E055",
+          "KN91-E071"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-READ02",
+        "scenario": "fallback短名",
+        "preconditions": "private=NULL或full_name=NULL且task有效",
+        "source_step": "get_kthread_comm调用__get_task_comm → strscpy_pad(buf,task.comm,buf_size)",
+        "conditional_result": "fallback不证明此worker成功创建后必有NULL名字",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E054",
+          "KN91-E076",
+          "KN91-E077"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-READ03",
+        "scenario": "truncation",
+        "preconditions": "buf_size=5,src='ABCDEFGH',不重叠有效对象",
+        "source_step": "strscpy copy首4字节并将第5字节置NUL,返回-E2BIG；pad早退",
+        "conditional_result": "get_kthread_comm仍为void，调用者无法据其返回判断截断",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E054",
+          "KN91-E055",
+          "KN91-E071",
+          "KN91-E073",
+          "KN91-E074",
+          "KN91-E075"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-READ04",
+        "scenario": "短串零填充",
+        "preconditions": "buf_size=5,src='A',合法且不重叠",
+        "source_step": "strscpy写'A\\0',返回1；pad剩余字节置0",
+        "conditional_result": "目标成为['A',0,0,0,0]，返回1只在直接调strscpy_pad可观测",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E071",
+          "KN91-E072",
+          "KN91-E074"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-READ05",
+        "scenario": "count0",
+        "preconditions": "buf_size=0",
+        "source_step": "strscpy直接返回-E2BIG；pad同步返回",
+        "conditional_result": "目的区无字符串写入，此处不以void返回证明调用成功",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E071",
+          "KN91-E073"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-READ06",
+        "scenario": "短名写者与锁",
+        "preconditions": "task有效，alloc_lock约束得到遵守",
+        "source_step": "__set_task_comm持task_lock,strscpy_pad(task.comm,buf,sizeof(comm)),再unlock",
+        "conditional_result": "写者忽略copy结果，不能推导名称能否完整回传或真实锁语义",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E070",
+          "KN91-E078",
+          "KN91-E079",
+          "KN91-E080"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "failure_and_release_prefix_matrix": [
+      {
+        "id": "C-REL01",
+        "scenario": "队列前名字失败",
+        "preconditions": "create kmalloc成功但kvasprintf失败",
+        "source_step": "free_create只free(create)，full_name为NULL没有成功取得堆名字",
+        "conditional_result": "不进入队列、不当做线程task已创建",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E046",
+          "KN91-E047",
+          "KN91-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-REL02",
+        "scenario": "fork创建失败",
+        "preconditions": "create已排队且pid<0",
+        "source_step": "生产者free full_name，然后result ERR_PTR并complete；请求本体由等待者清理",
+        "conditional_result": "53已有完成交接条件必须满足，不重复认定全生命周期安全",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E065",
+          "KN91-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-REL03",
+        "scenario": "kthread无done",
+        "preconditions": "假设xchg取得NULL",
+        "source_step": "kfree(full_name);kfree(create);kthread_exit(-EINTR)",
+        "conditional_result": "当前selected creator的取消路径被注释；真实可达性需另证",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E061"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-REL04",
+        "scenario": "kthread有done",
+        "preconditions": "xchg返回有效done, private合法",
+        "source_step": "self记录full_name后complete(done), 创建者kfree(create)",
+        "conditional_result": "不可把请求释放等同于full_name释放",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E062",
+          "KN91-E063",
+          "KN91-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-REL05",
+        "scenario": "释放器调用存在但调用不保",
+        "preconditions": "free_kthread_struct被执行时有效对象",
+        "source_step": "worker_private=NULL，随后依次kfree全名/私有对象",
+        "conditional_result": "所读free_task调用处注释，退出全链未验证",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E059",
+          "KN91-E060",
+          "KN91-E069"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-REL06",
+        "scenario": "get与释放交错未知",
+        "preconditions": "假设另上下文同时get和free",
+        "source_step": "读者使用kthread->full_name，释放方清私有指针并kfree",
+        "conditional_result": "仅是受限交错风险，不宣称真实UAF或发生竞态",
+        "first_proof_gate": "锁与对象引用/并发没有完整审查",
+        "evidence_ids": [
+          "KN91-E054",
+          "KN91-E055",
+          "KN91-E060"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC01",
+        "scenario": "format-worker-id到全名",
+        "preconditions": "pool/worker有效且格式化成功，create提交成功",
+        "source_step": "42B id_buf→'%s'→kvasprintf堆p→create.full_name",
+        "conditional_result": "此时名字分配成功与worker task创建是两件事",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E005",
+          "KN91-E014",
+          "KN91-E015",
+          "KN91-E043",
+          "KN91-E047",
+          "KN91-E051",
+          "KN91-E081"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC02",
+        "scenario": "全名到短名",
+        "preconditions": "kthread有合法full_name，copy_process name传递合法",
+        "source_step": "kernel_thread(name=full_name)→strscpy_pad(task.comm,32)",
+        "conditional_result": "task.comm最多31字符；私有full_name通常指原堆名，不受comm长度限制",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E062",
+          "KN91-E064",
+          "KN91-E066",
+          "KN91-E067",
+          "KN91-E070",
+          "KN91-E071",
+          "KN91-E072",
+          "KN91-E073",
+          "KN91-E074",
+          "KN91-E075"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC03",
+        "scenario": "读回与释放边界",
+        "preconditions": "私人full_name可读且释放条件独立",
+        "source_step": "get_kthread_comm full/fallback；free_kthread_struct按调用门释放",
+        "conditional_result": "名字显示/截断/释放不证明线程调度或exit完整成功",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E054",
+          "KN91-E055",
+          "KN91-E059",
+          "KN91-E060",
+          "KN91-E069"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC04",
+        "scenario": "D00历史证据不会自动修复",
+        "preconditions": "原90不改",
+        "source_step": "旧E013一复合锚拆4宏，规范计数字段在91自身补齐",
+        "conditional_result": "R90-01/02纠正提交待C06 Pro审；原90仍RETURN",
+        "first_proof_gate": "内存对象及被调函数有效且按条件正常返回；静态场景未运行",
+        "evidence_ids": [
+          "KN91-E001",
+          "KN91-E002",
+          "KN91-E003",
+          "KN91-E004"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_group_count": 9,
+  "matrix_row_count": 49,
+  "finite_models": [
+    {
+      "id": "KN91-M01",
+      "topic": "A",
+      "scenario": "dying文字/size0",
+      "input": "有合法buf对象,格式kworker/dying需求13, size0",
+      "intermediate_state": [
+        "vsnprintf抽象需求13",
+        "vscnprintf的size=0返回0",
+        "无需目的字节"
+      ],
+      "conditional_result": "scnprintf返回0,不以NULL缓冲推导C合法性",
+      "evidence_ids": [
+        "KN91-E013",
+        "KN91-E017",
+        "KN91-E018",
+        "KN91-E020",
+        "KN91-E027",
+        "KN91-E028"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M02",
+      "topic": "A",
+      "scenario": "size1",
+      "input": "同一合法buf,需求13,size1",
+      "intermediate_state": [
+        "实际最多0字符",
+        "写buf[0]=NUL",
+        "vsnprintf需求13",
+        "vscnprintf返回0"
+      ],
+      "conditional_result": "空输出字符串及返回0",
+      "evidence_ids": [
+        "KN91-E017",
+        "KN91-E018",
+        "KN91-E027"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M03",
+      "topic": "A",
+      "scenario": "截断边界size13",
+      "input": "需求13,size13,目的对象≥13",
+      "intermediate_state": [
+        "写前12字符",
+        "buf[12]=NUL",
+        "vsnprintf返回13",
+        "vscnprintf返回12"
+      ],
+      "conditional_result": "实际字符串长度12,需求长度13",
+      "evidence_ids": [
+        "KN91-E017",
+        "KN91-E027",
+        "KN91-E028"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M04",
+      "topic": "A",
+      "scenario": "刚好容纳size14",
+      "input": "需求13,size14",
+      "intermediate_state": [
+        "写13字符",
+        "buf[13]=NUL",
+        "vsnprintf返回13",
+        "vscnprintf返回13"
+      ],
+      "conditional_result": "无截断",
+      "evidence_ids": [
+        "KN91-E017",
+        "KN91-E027",
+        "KN91-E028"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M05",
+      "topic": "A",
+      "scenario": "普通worker最短",
+      "input": "cpu=0,id=0,nice=0,int32,valid pool",
+      "intermediate_state": [
+        "'kworker/'=8",
+        "'0'=1,':'=1,'0'=1",
+        "需求11,42字节容量"
+      ],
+      "conditional_result": "返回11，NUL index11",
+      "evidence_ids": [
+        "KN91-E005",
+        "KN91-E011",
+        "KN91-E014",
+        "KN91-E017",
+        "KN91-E081"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M06",
+      "topic": "A",
+      "scenario": "普通worker有H",
+      "input": "cpu=15,id=123,nice=-20,int32",
+      "intermediate_state": [
+        "前缀8",
+        "cpu两位/冒号1/id三位/H1",
+        "需求8+2+1+3+1=15"
+      ],
+      "conditional_result": "返回15, H只表示nice<0",
+      "evidence_ids": [
+        "KN91-E009",
+        "KN91-E011"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M07",
+      "topic": "A",
+      "scenario": "unbound名称",
+      "input": "cpu=-1,pool.id=7,worker.id=3",
+      "intermediate_state": [
+        "'kworker/u'=9",
+        "7一位,冒号1,3一位",
+        "需求12"
+      ],
+      "conditional_result": "返回12，无nice后缀",
+      "evidence_ids": [
+        "KN91-E012",
+        "KN91-E008"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M08",
+      "topic": "A",
+      "scenario": "32位int极端数界",
+      "input": "任一int32且实际十进制字符数至多11",
+      "intermediate_state": [
+        "普通分支需求≤8+10+1+11+1=31",
+        "unbound需求≤9+11+1+11=32",
+        "容量42含NUL"
+      ],
+      "conditional_result": "本格式在该模型下无需截断；不等于实机动态验证",
+      "evidence_ids": [
+        "KN91-E005",
+        "KN91-E011",
+        "KN91-E012",
+        "KN91-E014",
+        "KN91-E081"
+      ],
+      "first_stop_gate": "依赖正确实现十进制转写和可用字符串/整数前提",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M09",
+      "topic": "A",
+      "scenario": "通用格式缓冲不够",
+      "input": "需求42,size42,有效目的内存",
+      "intermediate_state": [
+        "vscnprintf返回41",
+        "写前41字符+NUL",
+        "格式长度42不同于返回41"
+      ],
+      "conditional_result": "明确仅测试接口一般边界，不宣称真实worker名字达到42",
+      "evidence_ids": [
+        "KN91-E017",
+        "KN91-E027",
+        "KN91-E028"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M10",
+      "topic": "B",
+      "scenario": "两遍字符串稳定",
+      "input": "fmt='%s',原字符串'abc',首遍计数语义假定合法",
+      "intermediate_state": [
+        "first=3",
+        "kmalloc(4)成功",
+        "second=3",
+        "写abc和NUL"
+      ],
+      "conditional_result": "kvasprintf返回指向4B名字对象的p",
+      "evidence_ids": [
+        "KN91-E037",
+        "KN91-E041",
+        "KN91-E043",
+        "KN91-E044",
+        "KN91-E045"
+      ],
+      "first_stop_gate": "NULL零缓冲算术及指针有效性另列",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M11",
+      "topic": "B",
+      "scenario": "首短后长",
+      "input": "fmt='%s',首'abc'后'abcdefg',输入内存允许变化",
+      "intermediate_state": [
+        "first3,allocate4",
+        "second7",
+        "容量4只能写3字符+NUL",
+        "first!=second的WARN注释"
+      ],
+      "conditional_result": "返回p但只包含截断后的三个字符；非溢出实测",
+      "evidence_ids": [
+        "KN91-E038",
+        "KN91-E041",
+        "KN91-E043",
+        "KN91-E044",
+        "KN91-E045",
+        "KN91-E027"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M12",
+      "topic": "B",
+      "scenario": "首长后短",
+      "input": "fmt='%s',首'abcdefg'后'abc'",
+      "intermediate_state": [
+        "first7,allocate8",
+        "second3",
+        "写abc和NUL",
+        "其它分配字节未保证被清零"
+      ],
+      "conditional_result": "返回p，有效字符串缩短，不等于泄漏已证",
+      "evidence_ids": [
+        "KN91-E041",
+        "KN91-E043",
+        "KN91-E044",
+        "KN91-E045"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M13",
+      "topic": "B",
+      "scenario": "第1遍计长异常转换",
+      "input": "uint32，假设vsnprintf返回-1",
+      "intermediate_state": [
+        "first=(unsigned)-1=UINT_MAX",
+        "first+1以uint32变0",
+        "kmalloc(0)结果未知"
+      ],
+      "conditional_result": "不能由此宣称真实当前vsnprintf返回负数或运行崩溃",
+      "evidence_ids": [
+        "KN91-E037",
+        "KN91-E041",
+        "KN91-E043"
+      ],
+      "first_stop_gate": "C NULL测长及有符号转无符号前提未闭合",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M14",
+      "topic": "B",
+      "scenario": "名字分配失败",
+      "input": "create对象有效,kvasprintf返回NULL",
+      "intermediate_state": [
+        "if(!full_name)",
+        "task=ERR_PTR(-ENOMEM)",
+        "goto free_create,kfree(create)"
+      ],
+      "conditional_result": "public wrapper返回错误指针而不是NULL",
+      "evidence_ids": [
+        "KN91-E046",
+        "KN91-E047",
+        "KN91-E048",
+        "KN91-E049",
+        "KN91-E050"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M15",
+      "topic": "C",
+      "scenario": "task.comm短名31",
+      "input": "src31字节且NUL, dest32有效",
+      "intermediate_state": [
+        "copy前31字节",
+        "写NUL于index31",
+        "return31"
+      ],
+      "conditional_result": "完整短名可容纳",
+      "evidence_ids": [
+        "KN91-E006",
+        "KN91-E067",
+        "KN91-E070",
+        "KN91-E073",
+        "KN91-E074",
+        "KN91-E075"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M16",
+      "topic": "C",
+      "scenario": "task.comm短名32",
+      "input": "src32字节且NUL,dest32有效",
+      "intermediate_state": [
+        "写前31字节",
+        "末位NUL",
+        "strscpy返回-E2BIG",
+        "上层忽略返回"
+      ],
+      "conditional_result": "短名31字符，full_name仍可能保留32或更多",
+      "evidence_ids": [
+        "KN91-E006",
+        "KN91-E067",
+        "KN91-E070",
+        "KN91-E073",
+        "KN91-E074",
+        "KN91-E075"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M17",
+      "topic": "C",
+      "scenario": "全名读回截断",
+      "input": "full_name='ABCDEFGH',dest5字节",
+      "intermediate_state": [
+        "strscpy复制ABCD",
+        "dest[4]=NUL",
+        "返回-E2BIG",
+        "get_kthread_comm为void"
+      ],
+      "conditional_result": "调用方无法通过此函数返回得到截断标记",
+      "evidence_ids": [
+        "KN91-E054",
+        "KN91-E055",
+        "KN91-E071",
+        "KN91-E073",
+        "KN91-E074",
+        "KN91-E075"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M18",
+      "topic": "C",
+      "scenario": "短字符串padding",
+      "input": "src='A',dest5字节",
+      "intermediate_state": [
+        "strscpy返回1且dest[1]=NUL",
+        "pad把dest[2..4]置0",
+        "返回1"
+      ],
+      "conditional_result": "写[A,0,0,0,0]，只在直接pad调用处返回1",
+      "evidence_ids": [
+        "KN91-E071",
+        "KN91-E072",
+        "KN91-E074"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M19",
+      "topic": "C",
+      "scenario": "full_name指针浅转移",
+      "input": "create.full_name=p, done!=NULL,self有效",
+      "intermediate_state": [
+        "self.full_name=p",
+        "create.result=current;complete(done)",
+        "creator释放create而非p"
+      ],
+      "conditional_result": "p可由self持有直到真正释放调用发生，非深拷贝",
+      "evidence_ids": [
+        "KN91-E051",
+        "KN91-E062",
+        "KN91-E063",
+        "KN91-E048"
+      ],
+      "first_stop_gate": "有条件的完成交接和实际时序按R53",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M20",
+      "topic": "C",
+      "scenario": "fork失败名称清理",
+      "input": "pid<0且create/done有效",
+      "intermediate_state": [
+        "create_kthread先kfree(full_name)",
+        "done!=NULL:result=ERR_PTR(pid)",
+        "complete(done)",
+        "creator释放create"
+      ],
+      "conditional_result": "线程创建失败与名字清理不同，未证明全寿命正确",
+      "evidence_ids": [
+        "KN91-E065",
+        "KN91-E048"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M21",
+      "topic": "C",
+      "scenario": "get短名回退",
+      "input": "假设合法task但private=NULL或full_name=NULL,src task.comm='Q'",
+      "intermediate_state": [
+        "get_kthread_comm分支fallback",
+        "__get_task_comm锁和strscpy_pad",
+        "返回值被外层void忽略"
+      ],
+      "conditional_result": "取得短名而不是私有全名",
+      "evidence_ids": [
+        "KN91-E054",
+        "KN91-E076",
+        "KN91-E077"
+      ],
+      "first_stop_gate": "纯文本条件模型，未运行仓库程序或真实硬件",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "KN91-M22",
+      "topic": "D00",
+      "scenario": "容量宏单独标注",
+      "input": "MYOS_IDR_BUF_SIZE=32768, LP64 sizeof(long)=8",
+      "intermediate_state": [
+        "CHUNK=32768",
+        "LONGS=32768/8=4096",
+        "BITS=4096*8*8=262144"
+      ],
+      "conditional_result": "三个宏的定义各在独立一行，旧E013单锚边界失格；物理位数不等于可扫描ID个数",
+      "evidence_ids": [
+        "KN91-E001",
+        "KN91-E002",
+        "KN91-E003",
+        "KN91-E004"
+      ],
+      "first_stop_gate": "不重做90的IDA扫描与释放实现",
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 22,
+  "historical_dedup": [
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01/F02/F03",
+      "kind": "prior_only",
+      "limits": "not name two-pass problems; R53C-S01 and R53-S01/S02 remain"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F01/F02",
+      "kind": "prior_only",
+      "limits": "startup PID check or callback nonnull is not name allocation proof; R68-S01/S02/S03 remain"
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F05",
+      "kind": "prior_only",
+      "limits": "kthread NULL provenance remains unproven; name failure returns ERR_PTR in read wrapper"
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F04",
+      "kind": "old_under_review",
+      "limits": "D00 capacity anchor repair does not create new underlying scan finding"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R89-01/R89-02",
+      "kind": "CLOSED",
+      "limits": "do not reopen"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01/R90-02",
+      "kind": "RETURN_CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+      "limits": "author cannot close"
+    }
+  ],
+  "check_boundaries": {
+    "source_anchor_count": 81,
+    "original90_raw_count": 59,
+    "full_local_P9": "NOT_RUN",
+    "actual_compiler_qemu_kernel_hardware_real_concurrency": "NOT_RUN",
+    "actual_graphviz": "NOT_RUN",
+    "API_backend_attestation": "UNATTESTED",
+    "Pro_review": "PENDING"
+  }
+}

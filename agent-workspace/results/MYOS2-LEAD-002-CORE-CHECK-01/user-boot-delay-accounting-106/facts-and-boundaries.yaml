@@ -1,0 +1,948 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-DELAY-ACCOUNTING-106",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "b8745d51ba7e",
+  "read_channel": "GitHub connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "R105_01": "OPEN",
+  "R105_02": "OPEN",
+  "D00_old_real_consumer_mapping": [
+    {
+      "return_id": "R105-01",
+      "old_actual_consumer": "startup_order_and_gates-03/-04",
+      "old_evidence": [
+        "SC105-E023",
+        "SC105-E024",
+        "SC105-E025",
+        "SC105-E026",
+        "SC105-E027",
+        "SC105-E028",
+        "SC105-E029"
+      ],
+      "new_evidence": [
+        "BD106-E001",
+        "BD106-E002",
+        "BD106-E003",
+        "BD106-E004",
+        "BD106-E005",
+        "BD106-E006"
+      ],
+      "correction": "条件guest编译候选、VMware/KVM、真实detector返回与copy_array调用者",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "return_id": "R105-01",
+      "old_actual_consumer": "startup_order_and_gates-10",
+      "old_evidence": [
+        "SC105-E013",
+        "SC105-E014"
+      ],
+      "new_evidence": [
+        "BD106-E024",
+        "BD106-E025"
+      ],
+      "correction": "架构、timekeeping、late真实先后",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "return_id": "R105-01",
+      "old_actual_consumer": "startup_order_and_gates-12",
+      "old_evidence": [
+        "SC105-E057",
+        "SC105-E058"
+      ],
+      "new_evidence": [
+        "BD106-E010",
+        "BD106-E035",
+        "BD106-E036"
+      ],
+      "correction": "determine(false)被调者else的注释",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "return_id": "R105-01",
+      "old_actual_consumer": "integer_conversion_and_continuity-09;frequency_source_and_units-14;SC105-F08",
+      "old_evidence": [
+        "SC105-E053"
+      ],
+      "new_evidence": [
+        "BD106-E007",
+        "BD106-E008",
+        "BD106-E009"
+      ],
+      "correction": "uint减后进入signed macro的合法性门",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "return_id": "R105-01",
+      "old_actual_consumer": "boot_offset_consumer-02/-03/-05;ABC_join-06;SC105-M15/M16;F07/U06",
+      "old_evidence": [
+        "SC105-E100",
+        "SC105-E101",
+        "SC105-E103",
+        "SC105-E104"
+      ],
+      "new_evidence": [
+        "BD106-E011",
+        "BD106-E012",
+        "BD106-E013",
+        "BD106-E014"
+      ],
+      "correction": "三个签名、s32*与u32*及负分支",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "return_id": "R105-01",
+      "old_actual_consumer": "read_path_and_fallback-03;ABC_join-03",
+      "old_evidence": [
+        "SC105-E067",
+        "SC105-E068"
+      ],
+      "new_evidence": [
+        "BD106-E015",
+        "BD106-E016"
+      ],
+      "correction": "别名定义及真实调用",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "return_id": "R105-01",
+      "old_actual_consumer": "per_cpu_scale_provenance-12",
+      "old_evidence": [
+        "SC105-E111",
+        "SC105-E112"
+      ],
+      "new_evidence": [
+        "BD106-E018",
+        "BD106-E019",
+        "BD106-E020",
+        "BD106-E021",
+        "BD106-E022",
+        "BD106-E023"
+      ],
+      "correction": "模板复制、unit offsets、delta和发布位置",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "D00_old_graph_edge_corrections": [
+    {
+      "old_edge_or_prose": "jiffies_branch -> jiffies64 / DATA_FLOW",
+      "action": "REVERSE",
+      "actual_direction": "jiffies64 -> jiffies_branch -> clock_value; INITIAL_JIFFIES/HZ also input",
+      "new_source_ref": [
+        "BD106-E017"
+      ]
+    },
+    {
+      "old_edge_or_prose": "hyper_detect -> hyper_cb / DATA_FLOW",
+      "action": "SPLIT",
+      "actual_direction": "detect_hypervisor_vendor -> return_h -> simple_init_hypervisor_platform -> copy_array -> x86_init.hyper; separate conditional invoke",
+      "new_source_ref": [
+        "BD106-E003",
+        "BD106-E005",
+        "BD106-E006",
+        "BD106-E079"
+      ]
+    },
+    {
+      "old_edge_or_prose": "pcpu_first -> percpu_copy / copy and publish",
+      "action": "SPLIT",
+      "actual_direction": "simple_pcpu_setup_first_chunk -> memcpy and unit_offsets; setup_per_cpu_areas -> per_cpu_offset",
+      "new_source_ref": [
+        "BD106-E018",
+        "BD106-E019",
+        "BD106-E020",
+        "BD106-E021",
+        "BD106-E022",
+        "BD106-E023"
+      ]
+    },
+    {
+      "old_edge_or_prose": "pcpu_offsets -> percpu_ptr / DATA_FLOW",
+      "action": "INSERT_INTERMEDIATE",
+      "actual_direction": "pcpu_unit_offsets -> delta+unit_offset -> per_cpu_offset(cpu) -> per_cpu_ptr",
+      "new_source_ref": [
+        "BD106-E018",
+        "BD106-E019"
+      ]
+    },
+    {
+      "old_edge_or_prose": "105 prose late_time_init -> hpet_time_init -> tsc_init",
+      "action": "CORRECT_PROSE_ONLY",
+      "actual_direction": "late_time_init -> hpet_time_init; late_time_init -> tsc_init",
+      "new_source_ref": [
+        "BD106-E024",
+        "BD106-E025"
+      ]
+    }
+  ],
+  "old105_evidence_account": {
+    "old_raw_verified_tokens": 114,
+    "old_source_quote_count": 114,
+    "old_manifest_reported_paths": 34,
+    "independently_counted_unique_paths": 33,
+    "independently_counted_distinct_windows": 113,
+    "duplicate_window_ids": [
+      "SC105-E007",
+      "SC105-E102"
+    ],
+    "old_material_frozen": true
+  },
+  "seven_bounded_matrices": {
+    "initial_lpj_and_writers": [
+      {
+        "id": "initial_lpj_and_writers-01",
+        "source_ref": [
+          "BD106-E026"
+        ],
+        "premise": "固定time原活动第68行有效，第67行是注释",
+        "conditional_conclusion": "全局unsigned long初值10371364",
+        "first_unverified_step": "ELF选择/装载及实际可达对象"
+      },
+      {
+        "id": "initial_lpj_and_writers-02",
+        "source_ref": [
+          "BD106-E027"
+        ],
+        "premise": "header包含同名extern",
+        "conditional_conclusion": "它只是全局声明，不是第二个独立初始值",
+        "first_unverified_step": "预处理和最终外部符号解析"
+      },
+      {
+        "id": "initial_lpj_and_writers-03",
+        "source_ref": [
+          "BD106-E032",
+          "BD106-E033",
+          "BD106-E034"
+        ],
+        "premise": "determine(true)成功；写入可达",
+        "conditional_conclusion": "tsc_enable_sched_clock将get_loops_per_jiffy结果写全局",
+        "first_unverified_step": "校频回调与对象写入实际运行"
+      },
+      {
+        "id": "initial_lpj_and_writers-04",
+        "source_ref": [
+          "BD106-E034",
+          "BD106-E026"
+        ],
+        "premise": "determine(true)返回false且无其它写者",
+        "conditional_conclusion": "全局保留静态初值供此时delay读取",
+        "first_unverified_step": "是否真实早期失败"
+      },
+      {
+        "id": "initial_lpj_and_writers-05",
+        "source_ref": [
+          "BD106-E035",
+          "BD106-E036"
+        ],
+        "premise": "tsc_init看到tsc_khz==0",
+        "conditional_conclusion": "请求determine(false)，失败则return",
+        "first_unverified_step": "被调函数是否使tsc_khz非零"
+      },
+      {
+        "id": "initial_lpj_and_writers-06",
+        "source_ref": [
+          "BD106-E010",
+          "BD106-E035"
+        ],
+        "premise": "determine(false)无额外未知写者",
+        "conditional_conclusion": "重新测频表达在被调else中只为注释",
+        "first_unverified_step": "其它可能写者/实际运行"
+      },
+      {
+        "id": "initial_lpj_and_writers-07",
+        "source_ref": [
+          "BD106-E037",
+          "BD106-E038",
+          "BD106-E039"
+        ],
+        "premise": "VMware配置与GETHZ有效",
+        "conditional_conclusion": "局部lpj不直接写全局；preset_lpj只为注释",
+        "first_unverified_step": "超调用、选择回调及实际内核版本"
+      },
+      {
+        "id": "initial_lpj_and_writers-08",
+        "source_ref": [
+          "BD106-E055"
+        ],
+        "premise": "__const_udelay正常调用且对象可达",
+        "conditional_conclusion": "读取唯一全局loops_per_jiffy",
+        "first_unverified_step": "实际值与并发可见性"
+      },
+      {
+        "id": "initial_lpj_and_writers-09",
+        "source_ref": [
+          "BD106-E032",
+          "BD106-E040",
+          "BD106-E041"
+        ],
+        "premise": "只观察已读固定直达路径",
+        "conditional_conclusion": "__use_tsc不是delay_fn，TSC延时切换仍注释",
+        "first_unverified_step": "其它未读全局写者和编译选择"
+      }
+    ],
+    "frequency_and_units": [
+      {
+        "id": "frequency_and_units-01",
+        "source_ref": [
+          "BD106-E007",
+          "BD106-E030"
+        ],
+        "premise": "tsc_khz uint且值有意义",
+        "conditional_conclusion": "单位kHz，不是自动等于真实CPU周期",
+        "first_unverified_step": "CPU返回值/选择路径"
+      },
+      {
+        "id": "frequency_and_units-02",
+        "source_ref": [
+          "BD106-E028",
+          "BD106-E030"
+        ],
+        "premise": "uint提升u64，整数乘法合法",
+        "conditional_conclusion": "kHz乘1000得到每秒周期数候选",
+        "first_unverified_step": "量纲物理正确性与实际CPU"
+      },
+      {
+        "id": "frequency_and_units-03",
+        "source_ref": [
+          "BD106-E029"
+        ],
+        "premise": "固定源码配置被采用",
+        "conditional_conclusion": "一个tick名义1/1000秒",
+        "first_unverified_step": "实际编译及定时中断"
+      },
+      {
+        "id": "frequency_and_units-04",
+        "source_ref": [
+          "BD106-E031"
+        ],
+        "premise": "分母HZ非零",
+        "conditional_conclusion": "u64商写回、余数返回但调用未消费",
+        "first_unverified_step": "真实宏是否被选择"
+      },
+      {
+        "id": "frequency_and_units-05",
+        "source_ref": [
+          "BD106-E028",
+          "BD106-E029",
+          "BD106-E030"
+        ],
+        "premise": "HZ=KHZ=1000且ulong64位",
+        "conditional_conclusion": "限定数值域floor(tsc_khz*1000/1000)=tsc_khz",
+        "first_unverified_step": "ABI和实测频率"
+      },
+      {
+        "id": "frequency_and_units-06",
+        "source_ref": [
+          "BD106-E028"
+        ],
+        "premise": "原生早期频率兜底生效",
+        "conditional_conclusion": "3000000kHz只是人工指定候选",
+        "first_unverified_step": "CPU实际频率"
+      },
+      {
+        "id": "frequency_and_units-07",
+        "source_ref": [
+          "BD106-E037",
+          "BD106-E038"
+        ],
+        "premise": "ebx!=UINT_MAX，设备返回合法",
+        "conditional_conclusion": "GETHZ低高字组合后局部tsc_khz除1000",
+        "first_unverified_step": "设备真实返回及整数界限"
+      },
+      {
+        "id": "frequency_and_units-08",
+        "source_ref": [
+          "BD106-E007",
+          "BD106-E008",
+          "BD106-E009"
+        ],
+        "premise": "abs宏适用且uint为32位",
+        "conditional_conclusion": "unsigned减法后转signed int，可能超界或溢出",
+        "first_unverified_step": "编译器实际转换及输入"
+      },
+      {
+        "id": "frequency_and_units-09",
+        "source_ref": [
+          "BD106-E024",
+          "BD106-E025",
+          "BD106-E035"
+        ],
+        "premise": "同一调用线程且按源顺序返回",
+        "conditional_conclusion": "HPET读到的lpj不受之后晚期重标定逆向改变",
+        "first_unverified_step": "实际执行路径及并发"
+      }
+    ],
+    "macro_const_and_wrappers": [
+      {
+        "id": "macro_const_and_wrappers-01",
+        "source_ref": [
+          "BD106-E043",
+          "BD106-E044"
+        ],
+        "premise": "__builtin_constant_p(n)为真且商判定未超界",
+        "conditional_conclusion": "n乘0x100000000ul后交__const_udelay",
+        "first_unverified_step": "参数C类型/预处理"
+      },
+      {
+        "id": "macro_const_and_wrappers-02",
+        "source_ref": [
+          "BD106-E044",
+          "BD106-E051"
+        ],
+        "premise": "__builtin_constant_p(n)为假",
+        "conditional_conclusion": "__sdelay包装，再交__const_udelay",
+        "first_unverified_step": "实际参数类型"
+      },
+      {
+        "id": "macro_const_and_wrappers-03",
+        "source_ref": [
+          "BD106-E045",
+          "BD106-E046"
+        ],
+        "premise": "常量分支商<1",
+        "conditional_conclusion": "实参乘0x418938ul，非注释0x418937",
+        "first_unverified_step": "乘法范围及宏选用"
+      },
+      {
+        "id": "macro_const_and_wrappers-04",
+        "source_ref": [
+          "BD106-E046",
+          "BD106-E052"
+        ],
+        "premise": "变量分支",
+        "conditional_conclusion": "__mdelay采用0x00418938",
+        "first_unverified_step": "实际取值及整数宽"
+      },
+      {
+        "id": "macro_const_and_wrappers-05",
+        "source_ref": [
+          "BD106-E047",
+          "BD106-E048"
+        ],
+        "premise": "整型常量1被编译器判常量",
+        "conditional_conclusion": "__const_udelay(4295UL)",
+        "first_unverified_step": "编译器宏选择/执行"
+      },
+      {
+        "id": "macro_const_and_wrappers-06",
+        "source_ref": [
+          "BD106-E048",
+          "BD106-E053"
+        ],
+        "premise": "变量分支，调用时值1",
+        "conditional_conclusion": "__udelay(1)再调用__const_udelay(4295)",
+        "first_unverified_step": "编译器选择与取值"
+      },
+      {
+        "id": "macro_const_and_wrappers-07",
+        "source_ref": [
+          "BD106-E047"
+        ],
+        "premise": "正整型常量19999",
+        "conditional_conclusion": "19999/20000=0，进入正常常量路径",
+        "first_unverified_step": "较大乘积合法域"
+      },
+      {
+        "id": "macro_const_and_wrappers-08",
+        "source_ref": [
+          "BD106-E047",
+          "BD106-E042"
+        ],
+        "premise": "正整型常量20000",
+        "conditional_conclusion": "商1，源码请求__bad_udelay",
+        "first_unverified_step": "实际编译/链接结果"
+      },
+      {
+        "id": "macro_const_and_wrappers-09",
+        "source_ref": [
+          "BD106-E049",
+          "BD106-E050"
+        ],
+        "premise": "常量合法",
+        "conditional_conclusion": "n乘5ul",
+        "first_unverified_step": "单位精度与真实机器"
+      },
+      {
+        "id": "macro_const_and_wrappers-10",
+        "source_ref": [
+          "BD106-E050",
+          "BD106-E054"
+        ],
+        "premise": "变量调用",
+        "conditional_conclusion": "__ndelay包装调用__const_udelay",
+        "first_unverified_step": "传参与整数宽度"
+      },
+      {
+        "id": "macro_const_and_wrappers-11",
+        "source_ref": [
+          "BD106-E042"
+        ],
+        "premise": "只有extern声明及宏引用",
+        "conditional_conclusion": "不能据静态文本宣称已链接失败",
+        "first_unverified_step": "编译与符号解析"
+      },
+      {
+        "id": "macro_const_and_wrappers-12",
+        "source_ref": [
+          "BD106-E043",
+          "BD106-E047"
+        ],
+        "premise": "负数或其它整数类型",
+        "conditional_conclusion": "条件是n/20000>=1，不是对所有类型简单n>=20000",
+        "first_unverified_step": "实际类型、转换与溢出"
+      }
+    ],
+    "multiplication_and_width": [
+      {
+        "id": "multiplication_and_width-01",
+        "source_ref": [
+          "BD106-E055"
+        ],
+        "premise": "唯一全局符号解析正常",
+        "conditional_conclusion": "__const_udelay以unsigned long lpj读取全局",
+        "first_unverified_step": "当前对象状态"
+      },
+      {
+        "id": "multiplication_and_width-02",
+        "source_ref": [
+          "BD106-E056"
+        ],
+        "premise": "xloops入值4295且unsigned long64位",
+        "conditional_conclusion": "乘4得到17180",
+        "first_unverified_step": "实际参数、截断"
+      },
+      {
+        "id": "multiplication_and_width-03",
+        "source_ref": [
+          "BD106-E056",
+          "BD106-E029"
+        ],
+        "premise": "HZ=1000",
+        "conditional_conclusion": "算lpj*250，类型unsigned long",
+        "first_unverified_step": "32位汇编取低字行为"
+      },
+      {
+        "id": "multiplication_and_width-04",
+        "source_ref": [
+          "BD106-E056"
+        ],
+        "premise": "x86-GCC内联asm语义按源码约束解释",
+        "conditional_conclusion": "EDX绑定lpj*250，EAX绑定xloops，目标EDX是xloops",
+        "first_unverified_step": "真实编译/机器指令"
+      },
+      {
+        "id": "multiplication_and_width-05",
+        "source_ref": [
+          "BD106-E056"
+        ],
+        "premise": "假定32位无符号MUL",
+        "conditional_conclusion": "EDX高32位=floor((17180*lpj*250)/2^32)",
+        "first_unverified_step": "寄存器宽度/ABI/实现选择"
+      },
+      {
+        "id": "multiplication_and_width-06",
+        "source_ref": [
+          "BD106-E057"
+        ],
+        "premise": "高字更新xloops且无回绕",
+        "conditional_conclusion": "++后给__delay的数=高字+1",
+        "first_unverified_step": "实际汇编输出寄存器扩展"
+      },
+      {
+        "id": "multiplication_and_width-07",
+        "source_ref": [
+          "BD106-E026",
+          "BD106-E055",
+          "BD106-E056"
+        ],
+        "premise": "lpj=10371364及上述MUL语义",
+        "conditional_conclusion": "高32=10371，传值10372",
+        "first_unverified_step": "实机而非纸面数值"
+      },
+      {
+        "id": "multiplication_and_width-08",
+        "source_ref": [
+          "BD106-E028",
+          "BD106-E056"
+        ],
+        "premise": "lpj=3000000及上述MUL语义",
+        "conditional_conclusion": "高32=3000，传值3001",
+        "first_unverified_step": "输入值是否来自实际CPU"
+      },
+      {
+        "id": "multiplication_and_width-09",
+        "source_ref": [
+          "BD106-E059",
+          "BD106-E061"
+        ],
+        "premise": "只用静态控制流",
+        "conditional_conclusion": "乘数和循环次数不构成经过1μs的证明",
+        "first_unverified_step": "生成汇编和实测时间"
+      }
+    ],
+    "loop_and_dispatch": [
+      {
+        "id": "loop_and_dispatch-01",
+        "source_ref": [
+          "BD106-E040"
+        ],
+        "premise": "没有其它已经确认的写者",
+        "conditional_conclusion": "delay_fn活动初值delay_loop",
+        "first_unverified_step": "链接及运行"
+      },
+      {
+        "id": "loop_and_dispatch-02",
+        "source_ref": [
+          "BD106-E041",
+          "BD106-E032"
+        ],
+        "premise": "只读直达路径",
+        "conditional_conclusion": "use_tsc_delay及调用处均注释",
+        "first_unverified_step": "其它可能的真正调用"
+      },
+      {
+        "id": "loop_and_dispatch-03",
+        "source_ref": [
+          "BD106-E058"
+        ],
+        "premise": "delay_fn有效",
+        "conditional_conclusion": "__delay间接调用delay_fn",
+        "first_unverified_step": "目标内存可达及真实分派"
+      },
+      {
+        "id": "loop_and_dispatch-04",
+        "source_ref": [
+          "BD106-E059",
+          "BD106-E062"
+        ],
+        "premise": "delay_loop输入0",
+        "conditional_conclusion": "test后jz到3f并经历末尾dec",
+        "first_unverified_step": "真实汇编分支"
+      },
+      {
+        "id": "loop_and_dispatch-05",
+        "source_ref": [
+          "BD106-E060",
+          "BD106-E061"
+        ],
+        "premise": "delay_loop非0",
+        "conditional_conclusion": "先跳1f/2f，再dec/jnz直到退出，最终仍有末尾dec",
+        "first_unverified_step": "实机循环、算术回绕"
+      },
+      {
+        "id": "loop_and_dispatch-06",
+        "source_ref": [
+          "BD106-E062"
+        ],
+        "premise": "按源码内联asm语法",
+        "conditional_conclusion": "只有a输入、没有输出/显式clobber",
+        "first_unverified_step": "编译器约束合法性及寄存器影响"
+      },
+      {
+        "id": "loop_and_dispatch-07",
+        "source_ref": [
+          "BD106-E055",
+          "BD106-E058",
+          "BD106-E061"
+        ],
+        "premise": "未运行编译/内核",
+        "conditional_conclusion": "不能从循环个数直接得真实1微秒",
+        "first_unverified_step": "真实测时与CPU调度/频率"
+      }
+    ],
+    "hpet_comparator_two_writes": [
+      {
+        "id": "hpet_comparator_two_writes-01",
+        "source_ref": [
+          "BD106-E024",
+          "BD106-E025"
+        ],
+        "premise": "late_time_init被执行",
+        "conditional_conclusion": "hpet_time_init先于tsc_init",
+        "first_unverified_step": "实际函数到达"
+      },
+      {
+        "id": "hpet_comparator_two_writes-02",
+        "source_ref": [
+          "BD106-E073"
+        ],
+        "premise": "hpet_time_init正常执行",
+        "conditional_conclusion": "先hpet_enable(NULL)再myos_HPET_init",
+        "first_unverified_step": "hpet实际返回"
+      },
+      {
+        "id": "hpet_comparator_two_writes-03",
+        "source_ref": [
+          "BD106-E074",
+          "BD106-E075"
+        ],
+        "premise": "myos_HPET_init实际到达",
+        "conditional_conclusion": "它是另一个注册IRQ调用，不是延时函数",
+        "first_unverified_step": "IRQ分发运行"
+      },
+      {
+        "id": "hpet_comparator_two_writes-04",
+        "source_ref": [
+          "BD106-E070",
+          "BD106-E071"
+        ],
+        "premise": "hpet_enable前置路径正常且LEGSUP真",
+        "conditional_conclusion": "才调用周期函数",
+        "first_unverified_step": "HPET ID和硬件能力"
+      },
+      {
+        "id": "hpet_comparator_two_writes-05",
+        "source_ref": [
+          "BD106-E064",
+          "BD106-E065"
+        ],
+        "premise": "mult/shift和HZ合法",
+        "conditional_conclusion": "以clocksrc字段得到delta，未验证为硬件周期",
+        "first_unverified_step": "数值和MMIO"
+      },
+      {
+        "id": "hpet_comparator_two_writes-06",
+        "source_ref": [
+          "BD106-E066"
+        ],
+        "premise": "第一次writel请求可达且返回",
+        "conditional_conclusion": "CMP(0)先写cmp=now+(uint)delta",
+        "first_unverified_step": "MMIO写入被设备接受"
+      },
+      {
+        "id": "hpet_comparator_two_writes-07",
+        "source_ref": [
+          "BD106-E067",
+          "BD106-E047"
+        ],
+        "premise": "编译选中源宏且第一次写返回",
+        "conditional_conclusion": "两次CMP写之间请求udelay(1)",
+        "first_unverified_step": "延时函数返回/实际经过时间"
+      },
+      {
+        "id": "hpet_comparator_two_writes-08",
+        "source_ref": [
+          "BD106-E068"
+        ],
+        "premise": "延时返回且到达二次写",
+        "conditional_conclusion": "同一CMP(0)再写(uint)delta",
+        "first_unverified_step": "设备接受二次写"
+      },
+      {
+        "id": "hpet_comparator_two_writes-09",
+        "source_ref": [
+          "BD106-E069",
+          "BD106-E072"
+        ],
+        "premise": "第二次写后继续",
+        "conditional_conclusion": "请求hpet_start_counter，周期函数返回0",
+        "first_unverified_step": "设备实际计数及IRQ"
+      }
+    ],
+    "cross_topic_timeline": [
+      {
+        "id": "cross_topic_timeline-01",
+        "source_ref": [
+          "SC105-E013",
+          "BD106-E034"
+        ],
+        "premise": "固定start_kernel顺序",
+        "conditional_conclusion": "tsc_early_init在setup_per_cpu_areas前可能写lpj",
+        "first_unverified_step": "早期指针与GS有效性"
+      },
+      {
+        "id": "cross_topic_timeline-02",
+        "source_ref": [
+          "BD106-E018",
+          "BD106-E019",
+          "BD106-E022"
+        ],
+        "premise": "setup_per_cpu_areas正常返回",
+        "conditional_conclusion": "模板复制与偏移发布分属于helper/owner",
+        "first_unverified_step": "内存有效性"
+      },
+      {
+        "id": "cross_topic_timeline-03",
+        "source_ref": [
+          "SC105-E014",
+          "BD106-E024"
+        ],
+        "premise": "按静态start_kernel",
+        "conditional_conclusion": "timekeeping_init先于late_time_init",
+        "first_unverified_step": "实际到达"
+      },
+      {
+        "id": "cross_topic_timeline-04",
+        "source_ref": [
+          "BD106-E024",
+          "BD106-E025"
+        ],
+        "premise": "late_time_init执行且调用正常返回",
+        "conditional_conclusion": "当前HPET的lpj读取先于本次tsc_init",
+        "first_unverified_step": "运行/并发"
+      },
+      {
+        "id": "cross_topic_timeline-05",
+        "source_ref": [
+          "BD106-E026",
+          "BD106-E034",
+          "BD106-E055"
+        ],
+        "premise": "早期false且无其它写者",
+        "conditional_conclusion": "HPET延时读静态10371364",
+        "first_unverified_step": "早期实际决策"
+      },
+      {
+        "id": "cross_topic_timeline-06",
+        "source_ref": [
+          "BD106-E030",
+          "BD106-E032",
+          "BD106-E055"
+        ],
+        "premise": "早期true且写入完成",
+        "conditional_conclusion": "HPET读取早期计算lpj",
+        "first_unverified_step": "内存可见性和实际CPU"
+      },
+      {
+        "id": "cross_topic_timeline-07",
+        "source_ref": [
+          "BD106-E025",
+          "BD106-E035"
+        ],
+        "premise": "同一调用顺序",
+        "conditional_conclusion": "后续晚期写不会改变过去已发生的读取",
+        "first_unverified_step": "实际写入/竞争"
+      },
+      {
+        "id": "cross_topic_timeline-08",
+        "source_ref": [
+          "BD106-E067",
+          "BD106-E055",
+          "BD106-E056"
+        ],
+        "premise": "名义常量1和纸面汇编模型",
+        "conditional_conclusion": "循环参数与请求1us和真实墙钟时间三者有区别",
+        "first_unverified_step": "设备及CPU测量"
+      }
+    ]
+  },
+  "matrix_row_counts": {
+    "initial_lpj_and_writers": 9,
+    "frequency_and_units": 9,
+    "macro_const_and_wrappers": 12,
+    "multiplication_and_width": 9,
+    "loop_and_dispatch": 7,
+    "hpet_comparator_two_writes": 9,
+    "cross_topic_timeline": 8
+  },
+  "total_bounded_rows": 63,
+  "bounded_paper_models": [
+    {
+      "id": "M01",
+      "label": "udelay(1) constant",
+      "input_premise": "n=1 positive integer",
+      "paper_result": "1/20000=0; 0x10c7=4295; __const_udelay(4295)",
+      "source_ref": [
+        "BD106-E047",
+        "BD106-E048"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M02",
+      "label": "udelay variable equals 1",
+      "input_premise": "n runtime variable 1",
+      "paper_result": "__udelay(1)->__const_udelay(4295)",
+      "source_ref": [
+        "BD106-E048",
+        "BD106-E053"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M03",
+      "label": "udelay thresholds",
+      "input_premise": "n=19999 vs20000 positive literals",
+      "paper_result": "integer quotient 0 vs1; latter source requests __bad_udelay",
+      "source_ref": [
+        "BD106-E047"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M04",
+      "label": "lpj zero",
+      "input_premise": "lpj=0, xloops=4295, HZ=1000, assumed unsigned MUL",
+      "paper_result": "high32=0, ++=>1",
+      "source_ref": [
+        "BD106-E055",
+        "BD106-E056",
+        "BD106-E057"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M05",
+      "label": "lpj=42000",
+      "input_premise": "lpj=42000, same domain",
+      "paper_result": "lpj*250=10500000; high32=42; ++=>43",
+      "source_ref": [
+        "BD106-E056"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M06",
+      "label": "lpj=2500000",
+      "input_premise": "lpj=2500000, same domain",
+      "paper_result": "lpj*250=625000000; high32=2500; ++=>2501",
+      "source_ref": [
+        "BD106-E056"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M07",
+      "label": "lpj=3000000",
+      "input_premise": "lpj=3000000, same domain",
+      "paper_result": "lpj*250=750000000; high32=3000; ++=>3001",
+      "source_ref": [
+        "BD106-E056"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M08",
+      "label": "lpj=10371364",
+      "input_premise": "fixed initializer, same domain",
+      "paper_result": "lpj*250=2592841000; high32=10371; ++=>10372",
+      "source_ref": [
+        "BD106-E026",
+        "BD106-E056"
+      ],
+      "executed_repository_code": false
+    },
+    {
+      "id": "M09",
+      "label": "loop zero/nonzero",
+      "input_premise": "delay_loop source branch only",
+      "paper_result": "zero jumps 3f and executes dec; nonzero loops through 2b then also 3f dec",
+      "source_ref": [
+        "BD106-E059",
+        "BD106-E061",
+        "BD106-E062"
+      ],
+      "executed_repository_code": false
+    }
+  ],
+  "model_count": 9,
+  "proof_ceiling": "SOURCE_STATIC_ONLY",
+  "actual_compilation": "NOT_RUN",
+  "actual_hardware": "NOT_RUN",
+  "note": "JSON是合法YAML 1.2子集，BD106-E源锚均见evidence.md，跨包SC105须到固定第105批实际路径查找。每行显式区分premise、conditional_conclusion和first_unverified_step。"
+}

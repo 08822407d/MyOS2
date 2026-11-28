@@ -1,0 +1,295 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81",
+  "record_type": "conditional_candidates_and_evidence_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "phase": 2,
+  "prior_acceptance": {
+    "R79_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R79_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch79": "PASS_PENDING_LOCAL",
+    "batch80": "PASS_PENDING_LOCAL_WITH_R80_S01_S02_S03",
+    "D00": "NOT_REQUIRED",
+    "old_source_findings": "UNMODIFIED_AND_NOT_CLOSED"
+  },
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F01",
+      "id": "PT81-F01",
+      "topic": "G01/A",
+      "category": "section_input_pattern_vs_brk_region",
+      "statement": "RESERVE_BRK macro places named static buffer in .bss..brk, while linker .bss selects .bss* and .brk separately selects .brk* after only 64KiB explicit expansion. A nominal 10MiB static reservation is not proven to increase runtime __brk_limit.",
+      "anchors": [
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A16"
+      ],
+      "prerequisites": "preprocessor macro selected, linker script used, final link map and actual section placement",
+      "first_stop": "stop before asserting extend_brk's 8MiB reservation succeeds",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F02",
+      "id": "PT81-F02",
+      "topic": "G01/A",
+      "category": "image_alias_physical_base_and_publication",
+      "statement": "extend_brk aligns virtual _brk_end, then __pa translates to physical base, then early_alloc publishes start/end/top and image aliases. Actual physical PMD alignment, translation/alias writability and state rollback remain unproved.",
+      "anchors": [
+        "A14",
+        "A16",
+        "A17",
+        "A29",
+        "A30"
+      ],
+      "prerequisites": "valid link symbols, phys_base, pointer arithmetic and output extent",
+      "first_stop": "first invalid pointer/value; later B/C are hypothetical",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F03",
+      "id": "PT81-F03",
+      "topic": "G02/B",
+      "category": "single_parent_pmd_index_wrap_across_1g",
+      "statement": "myos_early_map creates one PUD slot pointing to one PMD page. A valid 8MiB interval crossing a 1GiB boundary produces PMD indices 510,511,0,1, but only initial PUD parent was populated; source lacks active boundary rejection.",
+      "anchors": [
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B14",
+        "B15"
+      ],
+      "prerequisites": "valid aligned physical buffer that actually straddles a 1GiB boundary, parent aliases valid",
+      "first_stop": "at first mapping whose intended PUD index differs; no actual hardware corruption assertion",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F04",
+      "id": "PT81-F04",
+      "topic": "G02/B",
+      "category": "root_publication_and_flush_order",
+      "statement": "Function writes early root/children, calls __flush_tlb_all, only then copies single root entry into init_top_pgt. Local flush is not the same event as root copy or active CR3 switch; visibility depends on current root and later mapping stage.",
+      "anchors": [
+        "B04",
+        "B05",
+        "B07",
+        "B08",
+        "B35",
+        "B36",
+        "B37"
+      ],
+      "prerequisites": "actual active root, alias validity, successful callee and architecture/TLB behavior",
+      "first_stop": "do not certify direct-map mapping readable immediately after flush",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F05",
+      "id": "PT81-F05",
+      "topic": "G03/C",
+      "category": "early_capacity_overflow_and_zero_num",
+      "statement": "Early buffer condition forms pgt_buf_end+num without an observed overflow guard; num0 may return cursor without claiming a page. Cursor advances before per-page clear and lacks local rollback.",
+      "anchors": [
+        "C03",
+        "C06",
+        "C07",
+        "C08"
+      ],
+      "prerequisites": "bounded valid PFNs/num, legitimate address formation and writable directmap",
+      "first_stop": "first malformed sum or page address; no runtime defect proven",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F06",
+      "id": "PT81-F06",
+      "topic": "G03/C",
+      "category": "fallback_mapped_window_provenance_and_failure",
+      "statement": "Buffer-full memblock fallback gated by min_pfn_mapped<max_pfn_mapped; source segment contains a commented mapped-range registration and separate globals. ret0 invokes panic/while, but range readiness and actual return remain unknown.",
+      "anchors": [
+        "C03",
+        "C04",
+        "C05",
+        "C26",
+        "C27",
+        "C28"
+      ],
+      "prerequisites": "mapped window producer, memblock range valid, panic behavior",
+      "first_stop": "ret0 is conditional, not observed boot failure",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F07",
+      "id": "PT81-F07",
+      "topic": "G03/C",
+      "category": "late_order_zero_and_hook_zero_extent",
+      "statement": "Late return requests __GFP_ZERO to __get_free_pages, but does not run early clear loop. In buddy post_alloc_hook the clear_page argument advances by +i bytes rather than +i*PAGE_SIZE; order>0 may leave much of block uncleared if selected code reaches it.",
+      "anchors": [
+        "C02",
+        "C12",
+        "C14",
+        "C15",
+        "C17",
+        "C19",
+        "C20"
+      ],
+      "prerequisites": "page-layer actual filtered ZERO bit, valid order, writable pages and hook invocation; R77-S01 remains",
+      "first_stop": "no automatic all-pages-zero guarantee or independent runtime proof",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F08",
+      "id": "PT81-F08",
+      "topic": "G03/C",
+      "category": "num_width_and_signed_loop_boundary",
+      "statement": "num is uint but early clear loop index i is int; very large num can force int overflow if earlier storage and mapping gates were still met. num0 late sends get_order(0), which implementation documents as undefined.",
+      "anchors": [
+        "C02",
+        "C03",
+        "C07",
+        "C12",
+        "C14"
+      ],
+      "prerequisites": "selected uint/int/ulong widths, genuinely reachable large num, valid earlier state",
+      "first_stop": "stop at earliest width or address invalidity, not actual machine claim",
+      "status": "needs_evidence",
+      "observed_runtime_defect": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U01",
+      "id": "PT81-U01",
+      "name": "actual_linker_brk_section_placement",
+      "unknown": "Need exact linker map/object section placement for .bss..brk vs .brk* and actual __brk_base/limit; source wildcard inference insufficient.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U02",
+      "id": "PT81-U02",
+      "name": "brk_extend_bound_and_address_translation",
+      "unknown": "Need actual extend_brk return, phys_base and __phys_addr_nodebug selected configuration, PMD physical alignment and memory backing/permissions.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U03",
+      "id": "PT81-U03",
+      "name": "early_and_init_root_identity_active_cr3",
+      "unknown": "Need first actual early_top_pgt definition/linker storage, which root is in CR3 at every point, and effect of flush/root copy.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U04",
+      "id": "PT81-U04",
+      "name": "crossing_pud_pgd_with_real_buffer",
+      "unknown": "Need actual physical base and direct-map VA alignment to evaluate crossing 1GiB/512GiB with 8MiB extent.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U05",
+      "id": "PT81-U05",
+      "name": "page_table_entry_flags_and_hardware_effect",
+      "unknown": "Need effective pgprot mask, actual table physical pointer conversion/entry writability and architecture/TLB proof; no external spec in task.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U06",
+      "id": "PT81-U06",
+      "name": "min_max_pfn_mapped_actual_producers",
+      "unknown": "Need bounded full writer/caller provenance for min_pfn_mapped and max_pfn_mapped; commented add_pfn_range_mapped not a source.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U07",
+      "id": "PT81-U07",
+      "name": "after_bootmem_phase_and_buddy_handoff",
+      "unknown": "Need real stage/call ordering and returned page lifecycles beyond mem_init source statement; PB78/R77 limits remain.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U08",
+      "id": "PT81-U08",
+      "name": "late_page_zero_hook_and_flags",
+      "unknown": "Need actual page-layer flags pipeline, order allocation success and full region bytes, separate from GFP_ZERO name and early clear.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U09",
+      "id": "PT81-U09",
+      "name": "alloc_low_pages_num_validity_and_callers",
+      "unknown": "Need full caller-provenance/num upper bounds; alloc_low_page wrapper num1 alone cannot bound all direct calls.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U10",
+      "id": "PT81-U10",
+      "name": "earlier_memblock_and_page_allocator_gates",
+      "unknown": "Need MR79/PB78/PA77/BM80 candidate resolution for storage, physical page frames, mapping/zeroing; this batch cannot auto-close.",
+      "status": "needs_evidence",
+      "kernel_change_authorized": false
+    }
+  ],
+  "counts": {
+    "conditional_findings": 8,
+    "needs_evidence": 8,
+    "unverified_gaps": 10,
+    "runtime_proven_defects": 0,
+    "patches": 0
+  },
+  "old_ids_preserved": [
+    "AE75-U07",
+    "SL76-U09",
+    "CORE-MM-BASELINE-04::MC-01/02/03/04/05; LB-01/LB-08/GAP-M08",
+    "MR-02 narrowed",
+    "PA77",
+    "PB78",
+    "MR79",
+    "BM80"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "compile": "NOT_RUN",
+  "preprocess": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "runtime": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "mainline_acceptance": "PENDING",
+  "status": "READY_FOR_MAINLINE_REVIEW"
+}

@@ -1,0 +1,1694 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90",
+  "record_type": "bounded_static_facts_and_finite_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "ChatGPT GPT-6 family (visible; backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-15",
+  "base_snapshot": "time@a039d9803ade",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "GitHub_connector",
+  "contract_pin_short12": "07ed0fed054c",
+  "mainline_pin_short12": "ffe6d8b314c8",
+  "execution_parent_short12": "42897a06feb1",
+  "status": "AUTHOR_STATIC_PENDING_MAINLINE_PRO_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "phase": 2,
+  "G00": {
+    "decision": "PASS_FRESH_READ_ONLY_PREFLIGHT",
+    "lead": "ffe6d8b314c8",
+    "exec": "42897a06feb1",
+    "master": "e8e60cd19540",
+    "time": "a039d9803ade",
+    "pr16": "OPEN",
+    "pr17": "OPEN_DRAFT",
+    "open_pr_count": 2,
+    "target_90": "ABSENT_BEFORE_WRITE",
+    "all_existing_90_formal_deliveries": 0,
+    "old_EXEC11": "RETIRED_BY_OWNER",
+    "independent_loading": "COMPLETE",
+    "full_P9": "NOT_RUN"
+  },
+  "read_account": {
+    "handoff_128_00_01_02": "FRESH_COMPLETE",
+    "contract_127": "FRESH_COMPLETE",
+    "project_constraints_9": "FRESH_COMPLETE",
+    "protocol_v2_P1_P13": "FRESH_COMPLETE",
+    "owner_110": "FRESH_COMPLETE",
+    "model_124": "FRESH_COMPLETE",
+    "mnemosyne_receive": "ACTUAL_EARLY_REPORT_PRESERVES_PENDING",
+    "mnemosyne_refresh": "ACTUAL_POST_CONSTRAINT_AT_ee65de8a255d",
+    "original89_six": "FRESH_COMPLETE_42897a06feb1",
+    "old_pid11_manifest_deferred_facts": "FRESH_COMPLETE_2c410132e42d",
+    "fixed_source": "FRESH_time_a039d9803ade",
+    "not_reused_from_old_C06b": true
+  },
+  "D00": {
+    "old_89_author_count": "120/120/0 literal raw prefix, frozen",
+    "retraction": "旧120锚均在所标单一定义内部的总括撤回",
+    "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "legacy_files_modified": false,
+    "legacy_comment_modified": false,
+    "R89_01": {
+      "old_anchor": "WQP89-E010",
+      "issue": "两行分别属于for_each_possible_cpu和for_each_online_cpu两个宏，原单一符号锚混引",
+      "replacement_anchors": [
+        "IDA90-E001",
+        "IDA90-E002",
+        "IDA90-E003"
+      ],
+      "consumer_mapping": [
+        "89 evidence.md WQP89-E010",
+        "89 facts.evidence_anchor_ledger[WQP89-E010]",
+        "89 facts.source_ledger cpumask.h 与 fact_to_evidence_ids",
+        "89 matrices.pool_storage_and_initialization_matrix[WQP89-A-ST02]",
+        "89 matrices.bootstrap_entry_and_online_matrix[WQP89-A-BOOT04/WQP89-A-BOOT05]",
+        "89 finite_models[WQP89-M01/M02/M03/M08]",
+        "89 主文G01/A、DOT cluster_A possible/online路径"
+      ],
+      "new_reading": "possible与online各有自己的宏锚，二者分别转发for_each_cpu，实际底层为密集整数循环0..nr_cpu_ids-1；不可把旧复合锚冒称符号合一。"
+    },
+    "R89_02": {
+      "old_locations": [
+        "89 finite_models[WQP89-M15]",
+        "89 matrices.worker_failure_and_cleanup_matrix[WQP89-B-FAIL04]",
+        "89 matrices.worker_resource_acquisition_matrix[WQP89-B-RES04]",
+        "89 facts.state_proof_gates",
+        "89 new_candidates[WQP89-F05]",
+        "89 new_gaps[WQP89-U08]",
+        "89 主文G02/B及DOT cluster_B"
+      ],
+      "replacement_anchors": [
+        "IDA90-E004",
+        "IDA90-E005",
+        "IDA90-E006",
+        "IDA90-E007",
+        "IDA90-E008",
+        "IDA90-E009",
+        "IDA90-E010",
+        "IDA90-E059"
+      ],
+      "new_reading": "独立读完set_user_nice现行函数体，只有局部变量声明，其余对p的行为全注释；条件假设NULL kthread结果且attrs与其它对象有效、callee正常返回，可继续attach→nr_workers++→idle→skip wake→return worker；真实NULL是否可能、任务能否运行都未证明。保留F05和U08旧ID，撤回错误停证点。"
+    },
+    "historical_status": {
+      "batch88": "PASS_PENDING_LOCAL_R88_01_CLOSED",
+      "batch89": "RETURN_R89_01_R89_02_ONLY",
+      "R89_S01_S02_S03": "RETAINED_QUALIFICATIONS",
+      "batch90": "PENDING_PRO_REVIEW"
+    }
+  },
+  "source_scope": {
+    "source_soft_limit": 24,
+    "source_objects_read": 13,
+    "canary_files": [
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/debug/panic.c"
+    ],
+    "time_source_only": true,
+    "external_Linux_libc_not_used": true
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/lib/idr/idr.c",
+      "evidence_ids": [
+        "IDA90-E018",
+        "IDA90-E019",
+        "IDA90-E020",
+        "IDA90-E021",
+        "IDA90-E022",
+        "IDA90-E028",
+        "IDA90-E029",
+        "IDA90-E030",
+        "IDA90-E031",
+        "IDA90-E032",
+        "IDA90-E033",
+        "IDA90-E034",
+        "IDA90-E035",
+        "IDA90-E036",
+        "IDA90-E037",
+        "IDA90-E038",
+        "IDA90-E039",
+        "IDA90-E040",
+        "IDA90-E041",
+        "IDA90-E042",
+        "IDA90-E043",
+        "IDA90-E044",
+        "IDA90-E045"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/lib/idr/idr.h",
+      "evidence_ids": [
+        "IDA90-E011",
+        "IDA90-E015",
+        "IDA90-E016",
+        "IDA90-E017",
+        "IDA90-E023",
+        "IDA90-E024",
+        "IDA90-E026",
+        "IDA90-E027"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/lib/idr/idr_const.h",
+      "evidence_ids": [
+        "IDA90-E012",
+        "IDA90-E013"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/lib/idr/idr_types.h",
+      "evidence_ids": [
+        "IDA90-E014",
+        "IDA90-E025"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/lib/idr/idr_macro.h",
+      "evidence_ids": [],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "evidence_ids": [
+        "IDA90-E006",
+        "IDA90-E007",
+        "IDA90-E008",
+        "IDA90-E009",
+        "IDA90-E010",
+        "IDA90-E046",
+        "IDA90-E047",
+        "IDA90-E048",
+        "IDA90-E049"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/sched/task/pid.c",
+      "evidence_ids": [
+        "IDA90-E050",
+        "IDA90-E051",
+        "IDA90-E052",
+        "IDA90-E053",
+        "IDA90-E054",
+        "IDA90-E055",
+        "IDA90-E056",
+        "IDA90-E057"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/sched/task/pid.h",
+      "evidence_ids": [],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/sched/task/pid_const.h",
+      "evidence_ids": [
+        "IDA90-E058"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "evidence_ids": [
+        "IDA90-E001",
+        "IDA90-E002",
+        "IDA90-E003"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/sched/runqueue/runqueue.c",
+      "evidence_ids": [
+        "IDA90-E004",
+        "IDA90-E005"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/err.h",
+      "evidence_ids": [
+        "IDA90-E059"
+      ],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "evidence_ids": [],
+      "read_scope": "bounded relevant actual definitions; no repository program execution"
+    }
+  ],
+  "fact_to_evidence_ids": {
+    "ida_units": [
+      "IDA90-E011",
+      "IDA90-E012",
+      "IDA90-E013",
+      "IDA90-E014"
+    ],
+    "ida_scan": [
+      "IDA90-E015",
+      "IDA90-E016",
+      "IDA90-E017",
+      "IDA90-E018",
+      "IDA90-E019",
+      "IDA90-E020",
+      "IDA90-E021"
+    ],
+    "ida_release": [
+      "IDA90-E022"
+    ],
+    "idr_init": [
+      "IDA90-E023",
+      "IDA90-E024",
+      "IDA90-E025",
+      "IDA90-E026",
+      "IDA90-E027",
+      "IDA90-E028"
+    ],
+    "idr_range_cursor": [
+      "IDA90-E029",
+      "IDA90-E030",
+      "IDA90-E031",
+      "IDA90-E032",
+      "IDA90-E033",
+      "IDA90-E034",
+      "IDA90-E035",
+      "IDA90-E036",
+      "IDA90-E037"
+    ],
+    "idr_lookup": [
+      "IDA90-E038",
+      "IDA90-E039",
+      "IDA90-E040"
+    ],
+    "idr_iteration": [
+      "IDA90-E041",
+      "IDA90-E042",
+      "IDA90-E043",
+      "IDA90-E044",
+      "IDA90-E045"
+    ],
+    "worker_registry": [
+      "IDA90-E046",
+      "IDA90-E047"
+    ],
+    "worker_ids": [
+      "IDA90-E048",
+      "IDA90-E049"
+    ],
+    "pid_reservation": [
+      "IDA90-E050",
+      "IDA90-E051"
+    ],
+    "pid_publish_find_free": [
+      "IDA90-E052",
+      "IDA90-E053",
+      "IDA90-E054",
+      "IDA90-E055"
+    ],
+    "pid_init": [
+      "IDA90-E056",
+      "IDA90-E057",
+      "IDA90-E058"
+    ],
+    "D00_possible_online": [
+      "IDA90-E001",
+      "IDA90-E002",
+      "IDA90-E003"
+    ],
+    "D00_nullable_worker": [
+      "IDA90-E004",
+      "IDA90-E005",
+      "IDA90-E006",
+      "IDA90-E007",
+      "IDA90-E008",
+      "IDA90-E009",
+      "IDA90-E010",
+      "IDA90-E059"
+    ]
+  },
+  "matrices": {
+    "ida_request_and_units_matrix": [
+      {
+        "id": "A-REQ01",
+        "scenario": "IDA存储与单位",
+        "preconditions": "LP64 long=8B,有可用内存",
+        "source_operation": "CHUNK_SIZE32768 bytes;BITMAP_LONGS4096;BITMAP_BITS262144",
+        "conditional_result": "扫描4096个ulong，每个仅扫8位，最多32768数字",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E011",
+          "IDA90-E012",
+          "IDA90-E013",
+          "IDA90-E014",
+          "IDA90-E018",
+          "IDA90-E019"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REQ02",
+        "scenario": "ida_alloc/min/max包装",
+        "preconditions": "有效IDA",
+        "source_operation": "alloc传(0,~0);alloc_min传(min,~0);alloc_max传(0,max)",
+        "conditional_result": "min/max被传入range但range未按数字区间正确实现",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E015",
+          "IDA90-E016",
+          "IDA90-E017",
+          "IDA90-E018"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REQ03",
+        "scenario": "非零min",
+        "preconditions": "LP64;min=5,bitmap[5]=0",
+        "source_operation": "从slot_idx=5开始，返回5*8+0",
+        "conditional_result": "实际返回40，不是数字5",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E016",
+          "IDA90-E018",
+          "IDA90-E020"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REQ04",
+        "scenario": "max=0",
+        "preconditions": "bitmap[0]=1",
+        "source_operation": "bit0忙，bit1空，max未读取",
+        "conditional_result": "返回1超出max",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E017",
+          "IDA90-E018",
+          "IDA90-E019",
+          "IDA90-E020"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REQ05",
+        "scenario": "调用者类型",
+        "preconditions": "LP64模型明确",
+        "source_operation": "uint min/max,ulong slot,int return,byte-count不是bit-count",
+        "conditional_result": "不把sizeof(long)=8与每word64位混同",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E013",
+          "IDA90-E014",
+          "IDA90-E018",
+          "IDA90-E020"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ida_scan_and_occupancy_matrix": [
+      {
+        "id": "A-SCAN01",
+        "scenario": "两次取同号",
+        "preconditions": "word0=0无其他写",
+        "source_operation": "第一次bit0空返回0，未置位；第二次仍返回0",
+        "conditional_result": "引用旧WQP89-F01，不新增根因",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E018",
+          "IDA90-E020"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-SCAN02",
+        "scenario": "特殊word误跳",
+        "preconditions": "LP64;word0=0xfffffffffffffffe;word1=0",
+        "source_operation": "word0==~1ULL整word跳过",
+        "conditional_result": "bit0空也可被跳过，返回8",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E019",
+          "IDA90-E020"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-SCAN03",
+        "scenario": "只扫低8位",
+        "preconditions": "LP64;word0=0xff;word1=0",
+        "source_operation": "bit_idx仅0..7",
+        "conditional_result": "跳至word1，得到8，高56位不扫",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E013",
+          "IDA90-E018",
+          "IDA90-E019",
+          "IDA90-E020"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-SCAN04",
+        "scenario": "最后word",
+        "preconditions": "LP64;min4095,word4095=0",
+        "source_operation": "slot_idx4095,bit0",
+        "conditional_result": "返回32760，最后编号32767",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E013",
+          "IDA90-E018",
+          "IDA90-E020"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-SCAN05",
+        "scenario": "所有可扫描低位忙",
+        "preconditions": "4096 word低8位均置1",
+        "source_operation": "没有空位，最终return -1",
+        "conditional_result": "不能写成-ENOSPC，也不表示64位都满",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E018",
+          "IDA90-E019",
+          "IDA90-E021"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ida_release_and_failure_matrix": [
+      {
+        "id": "A-REL01",
+        "scenario": "释放AND掩码",
+        "preconditions": "word=11,id1",
+        "source_operation": "11 & (1<<1)=2",
+        "conditional_result": "bit1保留、其它bit清掉；归WQP89-F02",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E022"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REL02",
+        "scenario": "无效索引释放",
+        "preconditions": "LP64;id=32768",
+        "source_operation": "index=32768/8=4096",
+        "conditional_result": "越过合法0..4095，停止正常计算",
+        "first_stop_gate": "数组访问前停证；不声称实测后果",
+        "evidence_ids": [
+          "IDA90-E011",
+          "IDA90-E013",
+          "IDA90-E022"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REL03",
+        "scenario": "初始位图申请NULL",
+        "preconditions": "kzalloc=NULL",
+        "source_operation": "ida_init仍将initiated=true",
+        "conditional_result": "后续bitmap读取前停证；归WQP89-F03",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E011",
+          "IDA90-E018"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REL04",
+        "scenario": "worker ID失败",
+        "preconditions": "ida_alloc返回-1",
+        "source_operation": "create_worker在对象分配前return NULL",
+        "conditional_result": "不执行后面的fail标签的ida_free",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E048",
+          "IDA90-E049"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-REL05",
+        "scenario": "后续worker失败",
+        "preconditions": "IDA得到id3，但alloc_worker NULL或kthread ERR_PTR",
+        "source_operation": "进入fail标签调用ida_free(id)、kfree(worker)",
+        "conditional_result": "释放动作存在不证明位图已正确归还",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E022",
+          "IDA90-E048",
+          "IDA90-E049"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "idr_storage_and_range_matrix": [
+      {
+        "id": "B-STO01",
+        "scenario": "IDR存储",
+        "preconditions": "base=0或500,分配有效",
+        "source_operation": "idr_init_base分配32768个指针槽并赋base,next=0",
+        "conditional_result": "base字段存在，但活动索引不减base",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E023",
+          "IDA90-E024",
+          "IDA90-E025",
+          "IDA90-E028",
+          "IDA90-E029"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-STO02",
+        "scenario": "非零base",
+        "preconditions": "base500,nextid0,slot0空",
+        "source_operation": "idr_alloc_u32读base但直接索引slot0",
+        "conditional_result": "成功ID0，不自动加500",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E023",
+          "IDA90-E028",
+          "IDA90-E029",
+          "IDA90-E030"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-STO03",
+        "scenario": "end上界失效",
+        "preconditions": "start5,end6,slot5忙slot6空",
+        "source_operation": "wrapper max5;底层只检查slot<32768",
+        "conditional_result": "返回6，超出exclusive end",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E030",
+          "IDA90-E033",
+          "IDA90-E034"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-STO04",
+        "scenario": "空区间",
+        "preconditions": "start=end=8,slot8空",
+        "source_operation": "没有start>=end的本地拒绝",
+        "conditional_result": "返回8，即使区间为空",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E030",
+          "IDA90-E032",
+          "IDA90-E033"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-STO05",
+        "scenario": "容量终点",
+        "preconditions": "start=32768",
+        "source_operation": "for(int slot_idx=32768;slot_idx<32768;...)",
+        "conditional_result": "不读数组，返回-ENOSPC",
+        "first_stop_gate": "仅在有符号转换可表示前提",
+        "evidence_ids": [
+          "IDA90-E012",
+          "IDA90-E029",
+          "IDA90-E031"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-STO06",
+        "scenario": "大无符号nextid",
+        "preconditions": "nextid>INT_MAX",
+        "source_operation": "int slot_idx=u32 id发生实现定义转换",
+        "conditional_result": "不对扫描结果做可移植断言",
+        "first_stop_gate": "类型转换未确证",
+        "evidence_ids": [
+          "IDA90-E028",
+          "IDA90-E029"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "idr_slot_publication_matrix": [
+      {
+        "id": "B-PUB01",
+        "scenario": "NULL预约",
+        "preconditions": "ptr=NULL,nextid8,slot8=NULL",
+        "source_operation": "写NULL再写nextid8",
+        "conditional_result": "槽仍空，PID11-F01同根因",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E030",
+          "IDA90-E050",
+          "IDA90-E051"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB02",
+        "scenario": "非NULL发布",
+        "preconditions": "ptr=A非NULL,slot8空",
+        "source_operation": "slot8=A,nextid8",
+        "conditional_result": "随后合法find可得A，不担保引用安全",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E030",
+          "IDA90-E038"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB03",
+        "scenario": "相邻空位",
+        "preconditions": "slot8=A,slot9=NULL,ptr=B",
+        "source_operation": "跳8写9",
+        "conditional_result": "返回9而非8",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E030"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB04",
+        "scenario": "替换空槽",
+        "preconditions": "slot7=NULL,ptr=P",
+        "source_operation": "idr_replace读NULL写P",
+        "conditional_result": "返回NULL不等于已合法保留",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E039"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB05",
+        "scenario": "替换已有槽",
+        "preconditions": "slot7=A,ptr=B",
+        "source_operation": "读A写B",
+        "conditional_result": "无旧值比较，直接覆盖A",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E039"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "idr_cursor_and_retry_matrix": [
+      {
+        "id": "B-CUR01",
+        "scenario": "游标顺行",
+        "preconditions": "cursor7,start2,slot7忙slot8空",
+        "source_operation": "第一次找到8;next=9",
+        "conditional_result": "游标移动与排他占号是两个问题",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E026",
+          "IDA90-E035",
+          "IDA90-E036",
+          "IDA90-E037"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CUR02",
+        "scenario": "容量后回绕",
+        "preconditions": "cursor32768,start1,slot1空",
+        "source_operation": "首轮ENOSPC,id>start,重试1",
+        "conditional_result": "返回1,next=2",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E031",
+          "IDA90-E035",
+          "IDA90-E036",
+          "IDA90-E037"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CUR03",
+        "scenario": "双轮失败",
+        "preconditions": "cursor8,start1,所有有效slot满",
+        "source_operation": "第一次失败后从1重试失败",
+        "conditional_result": "ENOSPC,游标仍8",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E031",
+          "IDA90-E035",
+          "IDA90-E036",
+          "IDA90-E037"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CUR04",
+        "scenario": "游标小于start",
+        "preconditions": "cursor1,start300,slot300空",
+        "source_operation": "提升id至300,找到300",
+        "conditional_result": "next=301",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E035",
+          "IDA90-E036",
+          "IDA90-E037"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CUR05",
+        "scenario": "游标高于end",
+        "preconditions": "cursor12,start1,end5,slot12空",
+        "source_operation": "不因超过end而重置",
+        "conditional_result": "返回12,next=13，越过end",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E035",
+          "IDA90-E036",
+          "IDA90-E037"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "idr_lookup_replace_remove_matrix": [
+      {
+        "id": "C-LRR01",
+        "scenario": "有效查找",
+        "preconditions": "id7,slot7=A",
+        "source_operation": "idr_find直接读idr_rt[7]",
+        "conditional_result": "返回A，NULL不能表示占位状态",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E038"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-LRR02",
+        "scenario": "越界查找",
+        "preconditions": "id=32768",
+        "source_operation": "idr_find无上界检查",
+        "conditional_result": "索引前止证；引用PID11-F02",
+        "first_stop_gate": "超容量读取的动态后果未知",
+        "evidence_ids": [
+          "IDA90-E012",
+          "IDA90-E038",
+          "IDA90-E054"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-LRR03",
+        "scenario": "替换旧值",
+        "preconditions": "slot7=A,ptr=B",
+        "source_operation": "idr_replace返回旧A后写B",
+        "conditional_result": "无校验slot是否曾分配",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E039"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-LRR04",
+        "scenario": "重复移除",
+        "preconditions": "slot7=B",
+        "source_operation": "remove1返回B改NULL；remove2返回NULL",
+        "conditional_result": "不区分不存在或NULL payload",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E040"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-LRR05",
+        "scenario": "remove越界",
+        "preconditions": "id=32768",
+        "source_operation": "idr_remove直接先读rt[id]",
+        "conditional_result": "同旧索引根因，不另登记PID11-F02",
+        "first_stop_gate": "数组访问前止证",
+        "evidence_ids": [
+          "IDA90-E012",
+          "IDA90-E040"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "idr_iteration_and_output_matrix": [
+      {
+        "id": "C-IT01",
+        "scenario": "非空表for_each",
+        "preconditions": "slot2=A,slot4=B,fn有效",
+        "source_operation": "实际仅声明base后return0;radix块注释",
+        "conditional_result": "fn调用0次，0不等于遍历全部",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E041"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IT02",
+        "scenario": "空表for_each",
+        "preconditions": "slot全NULL",
+        "source_operation": "活动实现同样return0",
+        "conditional_result": "无法通过返回0区分表空或非空",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E041"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IT03",
+        "scenario": "非空get_next_ul",
+        "preconditions": "slot2=A,nextid2",
+        "source_operation": "entry=NULL；注释算法不执行",
+        "conditional_result": "返回NULL,nextid仍2",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E042",
+          "IDA90-E043"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IT04",
+        "scenario": "get_next包装",
+        "preconditions": "nextid2",
+        "source_operation": "内层NULL,整数2未变;写回2",
+        "conditional_result": "输出仍2且返回NULL",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E042",
+          "IDA90-E043",
+          "IDA90-E044",
+          "IDA90-E045"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IT05",
+        "scenario": "负索引包装",
+        "preconditions": "nextid=-1",
+        "source_operation": "转ulong极大, guard id>INT_MAX",
+        "conditional_result": "WARN分支返回NULL且不写回",
+        "first_stop_gate": "UINT64模型与WARN展开受限",
+        "evidence_ids": [
+          "IDA90-E044",
+          "IDA90-E045"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "consumer_reservation_publication_matrix": [
+      {
+        "id": "C-CON01",
+        "scenario": "pool编号注册",
+        "preconditions": "有效worker_pool_idr,pool对象",
+        "source_operation": "worker_pool_assign_id用非NULL pool ptr,ret>=0写pool->id",
+        "conditional_result": "编号申请不等于启动worker",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E033",
+          "IDA90-E046",
+          "IDA90-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-CON02",
+        "scenario": "worker编号",
+        "preconditions": "有效worker_ida",
+        "source_operation": "create_worker先ida_alloc，失败直接return；后续失败fail归还",
+        "conditional_result": "旧WQP89-F01/F02根因继承",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E015",
+          "IDA90-E020",
+          "IDA90-E022",
+          "IDA90-E048",
+          "IDA90-E049"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-CON03",
+        "scenario": "PID显式tid",
+        "preconditions": "tid7,namespace合法,slot7/8空",
+        "source_operation": "idr_alloc(NULL,7,8),若7忙可扫8",
+        "conditional_result": "数字可能越end，NULL不排他，附加到PID11-F01",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E029",
+          "IDA90-E030",
+          "IDA90-E033",
+          "IDA90-E050"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-CON04",
+        "scenario": "PID自动分配",
+        "preconditions": "pid_min1或300,由cursor决定",
+        "source_operation": "idr_alloc_cyclic(NULL,pid_min,pid_max)",
+        "conditional_result": "游标+NULL占位均需分别核对",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E035",
+          "IDA90-E036",
+          "IDA90-E037",
+          "IDA90-E051"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-CON05",
+        "scenario": "PID对象发表",
+        "preconditions": "对象初始化、数组合法",
+        "source_operation": "idr_replace把pid指针写槽，find_pid_ns调idr_find",
+        "conditional_result": "取得数字/发布指针/挂接任务/可运行性不能合为一步",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E038",
+          "IDA90-E039",
+          "IDA90-E052",
+          "IDA90-E054"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-CON06",
+        "scenario": "PID失败/释放",
+        "preconditions": "已实际到达out_free或free_pid",
+        "source_operation": "idr_remove已获得upids的IDR槽",
+        "conditional_result": "函数存在不证明exit调用成功",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E040",
+          "IDA90-E053",
+          "IDA90-E055"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC01",
+        "scenario": "IDA到worker",
+        "preconditions": "合法IDA和worker对象",
+        "source_operation": "bitmap试位→返回整数→命名/线程请求",
+        "conditional_result": "数字申请并不保证占位或线程运行",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E018",
+          "IDA90-E020",
+          "IDA90-E048",
+          "IDA90-E049"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC02",
+        "scenario": "IDR到pool",
+        "preconditions": "可用IDR",
+        "source_operation": "idr_alloc pool指针→pool.id赋值",
+        "conditional_result": "忽略max/base之接口风险不能推断真实启动入口执行",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E023",
+          "IDA90-E029",
+          "IDA90-E033",
+          "IDA90-E046",
+          "IDA90-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC03",
+        "scenario": "IDR到PID",
+        "preconditions": "合法PID对象和IDR",
+        "source_operation": "NULL预约→idr_replace发布pid→find_pid_ns",
+        "conditional_result": "三阶段加引用/任务关联仍需其它前提，PID11-F01/02不另造",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E030",
+          "IDA90-E038",
+          "IDA90-E039",
+          "IDA90-E050",
+          "IDA90-E051",
+          "IDA90-E052",
+          "IDA90-E054"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC04",
+        "scenario": "失败止证",
+        "preconditions": "分配NULL/越界/先行函数不返回",
+        "source_operation": "第一未满足的对象或返回门停止",
+        "conditional_result": "不报动态已复现故障",
+        "first_stop_gate": "有效对象、合法范围及所调用函数正常返回；未运行",
+        "evidence_ids": [
+          "IDA90-E011",
+          "IDA90-E022",
+          "IDA90-E023",
+          "IDA90-E038"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_group_count": 10,
+  "matrix_rows": 51,
+  "finite_models": [
+    {
+      "id": "IDA90-M01",
+      "topic": "A",
+      "scenario": "零位起点",
+      "input": "LP64,min0,max0,word0=0",
+      "intermediate_state": [
+        "slot0",
+        "bit0空",
+        "return0",
+        "word0仍0"
+      ],
+      "conditional_result": "得0",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E018",
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M02",
+      "topic": "A",
+      "scenario": "min 1被当word",
+      "input": "LP64,min1,max1,word1=0",
+      "intermediate_state": [
+        "slot1",
+        "bit0空",
+        "id=1*8=8"
+      ],
+      "conditional_result": "得8，越max",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E016",
+        "IDA90-E018",
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M03",
+      "topic": "A",
+      "scenario": "min 5计算",
+      "input": "LP64,min5,max5,word5=0",
+      "intermediate_state": [
+        "slot5",
+        "bit0空",
+        "id=5*8=40"
+      ],
+      "conditional_result": "得40",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E018",
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M04",
+      "topic": "A",
+      "scenario": "min=4096",
+      "input": "LP64,min4096",
+      "intermediate_state": [
+        "slot_idx4096",
+        "4096<4096 false",
+        "return -1"
+      ],
+      "conditional_result": "不能再查word",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E013",
+        "IDA90-E018",
+        "IDA90-E021"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M05",
+      "topic": "A",
+      "scenario": "max无约束",
+      "input": "LP64,min0,max0,word0=1",
+      "intermediate_state": [
+        "bit0 busy",
+        "bit1 free",
+        "return1"
+      ],
+      "conditional_result": "得1>max",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E017",
+        "IDA90-E018",
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M06",
+      "topic": "A",
+      "scenario": "误跳0号",
+      "input": "LP64,word0=~1ULL,word1=0",
+      "intermediate_state": [
+        "word0==~1ULL",
+        "跳word0",
+        "word1 bit0 free",
+        "id8"
+      ],
+      "conditional_result": "得8，不选空的bit0",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E019",
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M07",
+      "topic": "A",
+      "scenario": "只扫低字节",
+      "input": "LP64,word0=0xff,word1=0",
+      "intermediate_state": [
+        "检查bit0..7全忙",
+        "高56位未检",
+        "下一word bit0空"
+      ],
+      "conditional_result": "得8",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E013",
+        "IDA90-E019",
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M08",
+      "topic": "A",
+      "scenario": "末word",
+      "input": "LP64,min4095,word4095=0",
+      "intermediate_state": [
+        "slot4095",
+        "bit0 free",
+        "4095*8=32760"
+      ],
+      "conditional_result": "得32760",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E013",
+        "IDA90-E018",
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M09",
+      "topic": "A",
+      "scenario": "低8位全忙",
+      "input": "4096words low8 all 1",
+      "intermediate_state": [
+        "逐word无空低位",
+        "slot4096跳出",
+        "return -1"
+      ],
+      "conditional_result": "不可推断全262144位占满",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E018",
+        "IDA90-E019",
+        "IDA90-E021"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M10",
+      "topic": "A",
+      "scenario": "重复请求",
+      "input": "word0=0,无写者",
+      "intermediate_state": [
+        "请求1得0不置位",
+        "请求2仍得0"
+      ],
+      "conditional_result": "WQP89-F01保留",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E020"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M11",
+      "topic": "A",
+      "scenario": "释放旧掩码",
+      "input": "word0=11,id1",
+      "intermediate_state": [
+        "mask=2",
+        "11 & 2 =2",
+        "bit1仍1"
+      ],
+      "conditional_result": "WQP89-F02保留",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E022"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M12",
+      "topic": "A",
+      "scenario": "释放越界",
+      "input": "LP64,id32768",
+      "intermediate_state": [
+        "id/8=4096",
+        "合法最大word index4095",
+        "停证"
+      ],
+      "conditional_result": "无法推断正常释放结果",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E011",
+        "IDA90-E013",
+        "IDA90-E022"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M13",
+      "topic": "A",
+      "scenario": "初始化空指针",
+      "input": "kzalloc=NULL",
+      "intermediate_state": [
+        "bitmap=NULL",
+        "initiated=true",
+        "首个bitmap读之前停证"
+      ],
+      "conditional_result": "WQP89-F03保留",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E011",
+        "IDA90-E018"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M14",
+      "topic": "B",
+      "scenario": "IDR base偏移",
+      "input": "base500,start0,slot0空,ptr=A",
+      "intermediate_state": [
+        "base被读未用",
+        "扫描slot0",
+        "存A→ID0"
+      ],
+      "conditional_result": "不是500",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E023",
+        "IDA90-E028",
+        "IDA90-E029",
+        "IDA90-E030"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M15",
+      "topic": "B",
+      "scenario": "IDR end外取号",
+      "input": "start5,end6,slot5忙,slot6空",
+      "intermediate_state": [
+        "max=5",
+        "底层忽略max",
+        "slot6成功"
+      ],
+      "conditional_result": "得6",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E029",
+        "IDA90-E030",
+        "IDA90-E033"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M16",
+      "topic": "B",
+      "scenario": "空区间仍分配",
+      "input": "start8,end8,slot8空",
+      "intermediate_state": [
+        "max=7",
+        "底层扫描8",
+        "返回8"
+      ],
+      "conditional_result": "得8",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E029",
+        "IDA90-E030",
+        "IDA90-E033"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M17",
+      "topic": "B",
+      "scenario": "NULL重复预约",
+      "input": "start8,ptr=NULL,slot8=NULL,两次",
+      "intermediate_state": [
+        "首写NULL仍空",
+        "次又选8"
+      ],
+      "conditional_result": "PID11-F01保留",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E029",
+        "IDA90-E030"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M18",
+      "topic": "B",
+      "scenario": "非NULL顺延",
+      "input": "slot8=A,slot9空,ptr=B",
+      "intermediate_state": [
+        "8忙",
+        "9空",
+        "写B到9"
+      ],
+      "conditional_result": "得9",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E029",
+        "IDA90-E030"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M19",
+      "topic": "B",
+      "scenario": "游标顺行",
+      "input": "cursor7,start2,slot7忙,slot8空",
+      "intermediate_state": [
+        "从7检",
+        "到8成功",
+        "idr_next=9"
+      ],
+      "conditional_result": "得8",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E035",
+        "IDA90-E036",
+        "IDA90-E037"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M20",
+      "topic": "B",
+      "scenario": "容量边回绕",
+      "input": "cursor32768,start1,slot1空",
+      "intermediate_state": [
+        "首次ENOSPC",
+        "改id=1",
+        "再次成功1",
+        "next=2"
+      ],
+      "conditional_result": "得1",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E029",
+        "IDA90-E031",
+        "IDA90-E035",
+        "IDA90-E036",
+        "IDA90-E037"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M21",
+      "topic": "B",
+      "scenario": "游标双失败",
+      "input": "cursor8,start1,所有有效slot满",
+      "intermediate_state": [
+        "首次ENOSPC",
+        "再自1 ENOSPC",
+        "next仍8"
+      ],
+      "conditional_result": "返回-ENOSPC",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E031",
+        "IDA90-E035",
+        "IDA90-E036",
+        "IDA90-E037"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M22",
+      "topic": "B",
+      "scenario": "游标高于end",
+      "input": "cursor12,start1,end5,slot12空",
+      "intermediate_state": [
+        "max=4未生效",
+        "扫slot12成功",
+        "next=13"
+      ],
+      "conditional_result": "得12，超end",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E035",
+        "IDA90-E036",
+        "IDA90-E037"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M23",
+      "topic": "C",
+      "scenario": "空槽替换",
+      "input": "slot7空,ptr=P",
+      "intermediate_state": [
+        "old=NULL",
+        "slot7=P",
+        "返回NULL",
+        "find7=P"
+      ],
+      "conditional_result": "不证明之前存在保留",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E038",
+        "IDA90-E039"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M24",
+      "topic": "C",
+      "scenario": "已有槽替换",
+      "input": "slot7=A,ptr=B",
+      "intermediate_state": [
+        "old=A",
+        "slot7=B",
+        "返回A"
+      ],
+      "conditional_result": "不检查原值",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E039"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M25",
+      "topic": "C",
+      "scenario": "重复remove",
+      "input": "slot7=B",
+      "intermediate_state": [
+        "remove1返回B置NULL",
+        "remove2返回NULL"
+      ],
+      "conditional_result": "第二次无旧值",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E040"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M26",
+      "topic": "C",
+      "scenario": "越界find",
+      "input": "id32768",
+      "intermediate_state": [
+        "合法下标0..32767",
+        "即将访问rt[32768]",
+        "停证"
+      ],
+      "conditional_result": "旧PID11-F02",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E012",
+        "IDA90-E038",
+        "IDA90-E054"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M27",
+      "topic": "C",
+      "scenario": "遍历非空但回调0次",
+      "input": "slot2=A,slot4=B,fn有效",
+      "intermediate_state": [
+        "旧radix代码注释",
+        "return0",
+        "callback次数0"
+      ],
+      "conditional_result": "0非完整遍历证明",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E041"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M28",
+      "topic": "C",
+      "scenario": "get_next不迭代",
+      "input": "slot2=A,nextid2",
+      "intermediate_state": [
+        "entry=NULL",
+        "无活动循环",
+        "inner返回NULL",
+        "outer写回2"
+      ],
+      "conditional_result": "未找到2且输出仍2",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E042",
+        "IDA90-E043",
+        "IDA90-E044",
+        "IDA90-E045"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M29",
+      "topic": "C",
+      "scenario": "PID预约到发布",
+      "input": "tid7且所有合法前提",
+      "intermediate_state": [
+        "alloc NULL返回7仍空",
+        "稍后idr_replace把pid写7",
+        "find_pid_ns合法时读pid"
+      ],
+      "conditional_result": "不是原子排他预约",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E030",
+        "IDA90-E039",
+        "IDA90-E050",
+        "IDA90-E052",
+        "IDA90-E054"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    },
+    {
+      "id": "IDA90-M30",
+      "topic": "D00",
+      "scenario": "kthread假设NULL纠正",
+      "input": "非BH,worker与attrs合法,task=NULL,其他callee正常返回",
+      "intermediate_state": [
+        "IS_ERR(NULL) false",
+        "set_user_nice(NULL,attrs.nice)无活动p访问",
+        "attach workers然后worker.pool",
+        "nr_workers 0→1",
+        "idle.count 0→1",
+        "if(task) false跳过wake",
+        "return worker"
+      ],
+      "conditional_result": "旧WQP89-M15在nice处止证失实；真实NULL来源仍未知",
+      "first_stop_gate": "仅在明确输入和合法先行内存/调用条件下，未运行",
+      "evidence_ids": [
+        "IDA90-E004",
+        "IDA90-E005",
+        "IDA90-E006",
+        "IDA90-E007",
+        "IDA90-E008",
+        "IDA90-E009",
+        "IDA90-E010",
+        "IDA90-E059"
+      ],
+      "execution": "PURE_TEXT_FINITE_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 30,
+  "old_qualified_id_dedup": [
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F01",
+      "use": "missing occupancy set preserved"
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F02",
+      "use": "wrong ida_free AND preserved"
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F03",
+      "use": "unchecked bitmap/IDR array init preserved"
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F05",
+      "use": "NULL task hypothesis kept with corrected set_user_nice stop"
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11::PID11-F01",
+      "use": "NULL pseudo-reservation existing root"
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11::PID11-F02",
+      "use": "idr direct array unbounded indexing existing root"
+    }
+  ],
+  "verification_limits": {
+    "source_quote_count_expected": 59,
+    "source_quote_ids": "IDA90-E001..IDA90-E059",
+    "old_89_original_120_120_0_frozen": true,
+    "all_actual_runtime": "NOT_RUN",
+    "full_local_P9": "NOT_RUN",
+    "Pro_acceptance": "PENDING",
+    "graphviz": "NOT_RUN",
+    "git_publication": "PENDING_UNTIL_G04",
+    "source_soft_overage": 0
+  }
+}

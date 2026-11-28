@@ -1,0 +1,1 @@
+{"anchors": [90, 90], "markdown_tags": {"mm-04-disposition.md": [0, 0], "user-vfs-baseline.md": [31, 31]}, "structure_errors": 0, "deferred_findings_errors": 0, "query_errors": 0, "structure_checks": [7, 7], "value_tables_ok": true, "supersedes_scope": [40, 40], "hex40_in_package": 0, "all_ok": true}

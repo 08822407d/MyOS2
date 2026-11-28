@@ -1,0 +1,219 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-04",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "bcb7ecb66a06",
+  "contract62_short12": "928d1d521e4e",
+  "mandatory_supplements": [
+    "R36C-S01",
+    "R37-S01",
+    "R37-S02"
+  ],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "record_type": "bounded_superblock_binding_candidates",
+  "prior_document_items": {
+    "R36_01": "CLOSED_DOCUMENTATION_ONLY_BY_C04",
+    "R36_02": "CLOSED_DOCUMENTATION_ONLY_BY_C04",
+    "batch36_combined": "PASS_PENDING_LOCAL",
+    "batch37": "PASS_PENDING_LOCAL",
+    "review_reperformed": false,
+    "old_artifacts_changed": false
+  },
+  "new_findings": [
+    {
+      "id": "SB38-F01",
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F01",
+      "status": "needs_evidence",
+      "kind": "superblock_error_pointer_contract",
+      "source_fact": "alloc_super explicitly returns ERR_PTR(-ENOMEM) on allocation NULL; read_fat32_superblock tests only sbp==NULL before sbp->s_op store",
+      "anchors": [
+        "SB38-A030",
+        "SB38-A033",
+        "SB38-A034"
+      ],
+      "premises": [
+        "selected allocation failure occurs; helpers return as shown"
+      ],
+      "counterevidence": [
+        "normal ordinary allocation avoids this premise; actual failure not exercised"
+      ],
+      "last_prefix_or_limit": "first invalid superblock store; do not invent a safely returned errno",
+      "resume_conditions": [
+        "bounded allocator-failure producer/consumer proof; no repair authorization"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SB38-F02",
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F02",
+      "status": "needs_evidence",
+      "kind": "standalone_child_vs_MSDOS_I_container",
+      "source_fact": "FAT32_sb_ops omits alloc_inode, selecting sizeof(inode_s) fallback; subsequent fat_fill_inode writes MSDOS_I(inode)->i_pos",
+      "anchors": [
+        "SB38-A023",
+        "SB38-A053",
+        "SB38-A055",
+        "SB38-A063",
+        "SB38-A062",
+        "SB38-A061"
+      ],
+      "premises": [
+        "known FAT32 table unchanged; fallback successful; earlier lookup and VFS operations valid"
+      ],
+      "counterevidence": [
+        "fat_sops alternate path really allocates a containing object, but is a different sb binding; actual memory corruption not executed"
+      ],
+      "last_prefix_or_limit": "containing object not established at outer i_pos write; cannot certify completed child",
+      "resume_conditions": [
+        "actual allocator/object provenance only if separately scoped; preserve earliest invalid prefix"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SB38-F03",
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F03",
+      "status": "needs_evidence",
+      "kind": "direct_root_mapping_provenance",
+      "source_fact": "read_fat32_superblock root uses kmalloc(sizeof(inode_s)) and directly writes selected fields without inode_init_always or i_mapping assignment",
+      "anchors": [
+        "SB38-A038",
+        "SB38-A039",
+        "SB38-A056",
+        "SB38-A058"
+      ],
+      "premises": [
+        "a downstream consumer needs root mapping; no other unexamined writer supplies it"
+      ],
+      "counterevidence": [
+        "root lookup may use private_idx_info/i_sb rather than i_mapping initially; allocator contents unknown; no invalid read proved"
+      ],
+      "last_prefix_or_limit": "missing root mapping writer, not whole page-cache defect or guaranteed fault",
+      "resume_conditions": [
+        "identify a concrete root mapping consumer without repeating batch13"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SB38-F04",
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F04",
+      "status": "needs_evidence",
+      "kind": "private_field_route_separation",
+      "source_fact": "FAT32 constructor writes private_sb_info=FAT32_SBinfo_s; fat_fill_super writes s_fs_info=msdos_sb_info_s; MSDOS_SB returns only s_fs_info",
+      "anchors": [
+        "SB38-A034",
+        "SB38-A042",
+        "SB38-A026",
+        "SB38-A027",
+        "SB38-A028"
+      ],
+      "premises": [
+        "cross-route consumer would require the other private structure"
+      ],
+      "counterevidence": [
+        "fields may be populated elsewhere on an unexamined path; two distinct fields do not prove unequal pointer values in every execution"
+      ],
+      "last_prefix_or_limit": "do not conflate private objects or infer registration implies compatible helper state",
+      "resume_conditions": [
+        "follow a specific required consumer and its writer, not complete mount audit"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SB38-F05",
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F05",
+      "status": "needs_evidence",
+      "kind": "alternate_fill_no_active_success_exit",
+      "source_fact": "after nonnegative fat_read_root completion, selected fat_fill_super falls through out_invalid and clears s_fs_info; active d_make_root/return0 are absent",
+      "anchors": [
+        "SB38-A044",
+        "SB38-A045",
+        "SB38-A046",
+        "SB38-A047"
+      ],
+      "premises": [
+        "alternative fill is actually invoked; preceding helpers and cleanup return normally"
+      ],
+      "counterevidence": [
+        "register_diskfs does not activate init_vfat_fs; mount_bdev caller behavior is not audited; no actual mount failure observed"
+      ],
+      "last_prefix_or_limit": "defined local fallthrough returns -EINVAL, not a successfully published root",
+      "resume_conditions": [
+        "separate bounded caller study if authorized; no full mount/driver audit"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SB38-F06",
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F06",
+      "status": "needs_evidence",
+      "kind": "unprotected_root_result_consumption",
+      "source_fact": "mount_fs can return NULL on name miss; boot path may fail its selection conditions; set_init_mount consumes myos_root_sb->s_root without a local validity gate",
+      "anchors": [
+        "SB38-A008",
+        "SB38-A004",
+        "SB38-A005",
+        "SB38-A006"
+      ],
+      "premises": [
+        "no prior valid root or an unsuitable result; flow reaches set_init_mount"
+      ],
+      "counterevidence": [
+        "a matching successful read_super can provide a valid root; actual partitions and control path unobserved"
+      ],
+      "last_prefix_or_limit": "first invalid result consumption, not deterministic CPU failure",
+      "resume_conditions": [
+        "prove concrete selection/miss or result provenance if separately authorized"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F01",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "mapping first-value gaps retained, distinguish direct root from initialized child"
+    },
+    {
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F02",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "once-helper existence does not prove calls on either allocator path"
+    },
+    {
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F03",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "private_idx_info distinct from enclosing msdos object"
+    },
+    {
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F04",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "mode/size results only after valid fat_fill_inode completion, not across A-route containment gap"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F05",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "upstream defaults proven for valid new_inode, but actual s_op/object provenance now separated"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F04",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "private-info allocation validity remains prior separate boundary"
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "callback nonNULL does not globally certify inode/mapping"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "RETAINED_NOT_CLOSED",
+      "note": "do_open return boundary not reaudited"
+    }
+  ],
+  "candidate_count_is_not_vulnerability_count": true,
+  "no_repairs_or_owner_decisions": true
+}

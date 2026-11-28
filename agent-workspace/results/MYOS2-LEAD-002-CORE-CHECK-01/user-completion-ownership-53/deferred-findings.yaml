@@ -1,0 +1,159 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-COMPLETION-OWNERSHIP-53",
+  "record_type": "deferred_candidates",
+  "R52_01": {
+    "verdict": "RETURN",
+    "status": "OPEN",
+    "closure_requested": "R52-01_DOCUMENTATION_CLOSURE_REQUESTED",
+    "executor_self_closed": false,
+    "old52_files_modified": false,
+    "correction_anchor_count": 6
+  },
+  "new_source_candidates": [
+    {
+      "id": "CO53-F01",
+      "topic": "A",
+      "kind": "heap_req_completion_to_result_read_lifetime",
+      "relation": "WW52-U04 focused; existing gap not closed or duplicated as proven failure",
+      "first_boundary": "worker.kfree(req) might precede creator.req->err read",
+      "preconditions": [
+        "heap req from successful kzalloc",
+        "worker and creator both reach corresponding lines",
+        "wake allows wait normal return",
+        "kfree actually ends req lifetime before read"
+      ],
+      "not_established": [
+        "real interleaving",
+        "actual UAF",
+        "allocator reclamation timing"
+      ]
+    },
+    {
+      "id": "CO53-F02",
+      "topic": "A",
+      "kind": "delete_stack_req_uninitialized_and_conditional_invalid_free",
+      "relation": "separate producer/storage origin; distinct from heap lifetime case",
+      "first_boundary": "worker reads uninitialized name/uid/gid arguments before complete/kfree; handle_remove int has no active return",
+      "preconditions": [
+        "delete submits &req",
+        "worker takes it",
+        "continued evaluation only hypothetically if earlier undefined behavior avoided"
+      ],
+      "not_established": [
+        "defined reachability of kfree(stack)",
+        "runtime invalid free",
+        "true CPU result"
+      ]
+    },
+    {
+      "id": "CO53-F03",
+      "topic": "A",
+      "kind": "create_allocation_and_early_exit",
+      "relation": "separate local first-boundary from ownership after completion",
+      "first_boundary": "kzalloc NULL is immediately dereferenced; when dev_name returns NULL, create returns with allocated req not freed locally",
+      "preconditions": [
+        "allocation can fail or name can be NULL"
+      ],
+      "not_established": [
+        "such failure occurred",
+        "actual leak after broader ownership tracking"
+      ]
+    }
+  ],
+  "candidate_count": 3,
+  "runtime_verified_count": 0,
+  "carried": [
+    {
+      "id": "CORE-USER-WAIT-WAKE-CONSISTENCY-52::WW52-U04",
+      "status": "needs_evidence",
+      "note": "heap result lifetime addressed as conditional CO53-F01, not closed"
+    },
+    {
+      "id": "CORE-USER-WAIT-WAKE-CONSISTENCY-52::WW52-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-WAIT-WAKE-CONSISTENCY-52::WW52-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-WAIT-WAKE-CONSISTENCY-52::WW52-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-01",
+      "status": "deferred_owner_not_ready",
+      "note": "52 deprecated shorthand deferred_not_ready did not change status"
+    },
+    {
+      "id": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-04",
+      "status": "SUPPORTED_IN_SCOPE_HISTORICAL"
+    },
+    {
+      "id": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-03",
+      "status": "SUPPORTED_IN_SCOPE_HISTORICAL"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U04",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SEMAPHORE-TIMEOUT-51::SM51-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SEMAPHORE-TIMEOUT-51::SM51-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SEMAPHORE-TIMEOUT-51::SM51-U03",
+      "status": "needs_evidence"
+    }
+  ],
+  "unproven": [
+    "actual free/read order and memory errors",
+    "head/counter correctness at runtime",
+    "hardware IRQ and task scheduling",
+    "true xchg/pointer ownership binary",
+    "kernel compile/run"
+  ],
+  "next_batch_authorized": false,
+  "code_change_authorized": false
+}

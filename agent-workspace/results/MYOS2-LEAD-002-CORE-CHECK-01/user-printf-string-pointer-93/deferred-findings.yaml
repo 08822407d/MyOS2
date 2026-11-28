@@ -1,0 +1,277 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PRINTF-STRING-POINTER-93",
+  "record_type": "bounded_incremental_static_candidates_and_proof_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (consumer-visible family; backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "AUTHOR_CONDITIONAL_PENDING_INDEPENDENT_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "D00": "NOT_REQUIRED",
+  "prior_reviews": {
+    "batch92": "PASS_PENDING_LOCAL_WITH_R92_S01_S02_S03",
+    "batch91": "PASS_PENDING_LOCAL_WITH_R91_S01_S02_S03",
+    "batch90": "PASS_PENDING_LOCAL_DOCUMENTATION_CLOSED"
+  },
+  "new_candidates": [
+    {
+      "id": "SP93-F01",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01",
+      "topic": "C nonvoid pointer missing active return",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NEEDS_INDEPENDENT_REVIEW",
+      "claim": "所读time快照的pointer()声明返回char*，其完整函数体只有被注释的switch与return，实际执行到函数末尾没有活动return；vsnprintf的PTR分支把调用结果赋给str，首次需要已定义的返回值即遇到无法建立的契约。不能声称任何%p地址哈希/ERR_PTR文字输出、后缀while的正常完成或vsnprintf需求长度。",
+      "preconditions": [
+        "解析器认出%p",
+        "va_arg(void*)与实际实参匹配",
+        "pointer进入所读活动体并到达末尾",
+        "返回值被caller使用"
+      ],
+      "evidence_ids": [
+        "SP93-E033",
+        "SP93-E045",
+        "SP93-E046",
+        "SP93-E049",
+        "SP93-E050",
+        "SP93-E051"
+      ],
+      "first_proof_gate": "不同于既有KN91-U02未展开更多printf帮助函数：本批确认了独立函数定义缺失返回和真实PTR调用消费",
+      "distinct_from_prior": "在非void函数返回值由caller使用的第一个边界停止，不能直接复现具体崩溃",
+      "runtime_confirmed": false,
+      "fix_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-F02",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F02",
+      "topic": "A string shape filter does not validate backing memory",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NEEDS_INDEPENDENT_REVIEW",
+      "claim": "对于非NULL、数值不低于PAGE_SIZE且不是IS_ERR_VALUE的s，check_pointer_msg返回NULL后string_nocheck活动循环读*s++。若此地址没有相应可读对象，数值筛查不会阻止首次非法读取；仅是附带合法指针/映射假设的静态缺口，不宣称实际进程向printf传入过坏指针。",
+      "preconditions": [
+        "低地址/ERR_VALUE判断为false",
+        "相关fmt调用确实传入这一s",
+        "s所指字符在首次实际读取处不可访问",
+        "不是precision0等无源读取分支"
+      ],
+      "evidence_ids": [
+        "SP93-E002",
+        "SP93-E003",
+        "SP93-E005",
+        "SP93-E007",
+        "SP93-E009"
+      ],
+      "first_proof_gate": "独立于SP93-F01的非void返回问题；对%s的输入指针检查不足不同于%p返回缺陷",
+      "distinct_from_prior": "在第一个*s++的对象/映射有效性门停止",
+      "runtime_confirmed": false,
+      "fix_authorized": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "SP93-U01",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U01",
+      "label": "pointer返回和%p有效执行路径",
+      "evidence_missing": "pointer函数体没有活动return；其被注释的case e/s/default不作为活动分派，尚未认证编译器控制流、输出或返回值",
+      "first_proof_gate": "首次str=pointer(...)调用结果消费之前停止正常语义；不能在其后继续宣布suffix和NUL已执行",
+      "evidence_ids": [
+        "SP93-E033",
+        "SP93-E045",
+        "SP93-E046",
+        "SP93-E049",
+        "SP93-E050",
+        "SP93-E051"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-U02",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U02",
+      "label": "PAGE_SIZE与错误指针判定的构建和地址约定",
+      "evidence_missing": "PAGE_SIZE和MAX_ERRNO/IS_ERR_VALUE是本快照的宏定义；没有预处理/编译/实机，尚未确认所有架构/数值指针变换及物理映射状态",
+      "first_proof_gate": "x86_64 PAGE_SHIFT=12数值模型可计算，但非NULL高地址不保证可读",
+      "evidence_ids": [
+        "SP93-E002",
+        "SP93-E003",
+        "SP93-E012",
+        "SP93-E013",
+        "SP93-E014",
+        "SP93-E015"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-U03",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U03",
+      "label": "极大字符串与int lim递减",
+      "evidence_missing": "默认precision=-1时while(lim--)会一直减少，未穷查至少2GB无NUL有效可读输入及有符号int极值；运行态未认证",
+      "first_proof_gate": "首次不可读地址、NUL或int溢出先结束该模型，不制造一般字符串必出错结论",
+      "evidence_ids": [
+        "SP93-E008",
+        "SP93-E009"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-U04",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U04",
+      "label": "通用memmove和memset实际选择",
+      "evidence_missing": "lib/string/string.c通用实现分别在__HAVE_ARCH_MEMMOVE/__HAVE_ARCH_MEMSET条件门之下；未运行预处理、构建或链接，也未穷查架构替代路径",
+      "first_proof_gate": "B的字节逆向/正向次序仅在该通用实现实际选中、输入源/目标有效且合法比较时成立",
+      "evidence_ids": [
+        "SP93-E018",
+        "SP93-E019",
+        "SP93-E023",
+        "SP93-E024",
+        "SP93-E025",
+        "SP93-E026"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-U05",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U05",
+      "label": "逻辑指针与缓冲对象",
+      "evidence_missing": "string_nocheck/widen_string在写入受end限制时仍可推进buf，并计算buf-n、buf+spaces；vsnprintf末尾计算str-buf及end[-1]。合法C指针轨迹不能由最终字符串像证明",
+      "first_proof_gate": "延续KN91-U01/PF92-U06原qualified_id；在最早越出目标C对象允许的指针加减/比较处停止",
+      "evidence_ids": [
+        "SP93-E010",
+        "SP93-E011",
+        "SP93-E016",
+        "SP93-E019",
+        "SP93-E021",
+        "SP93-E035",
+        "SP93-E036",
+        "SP93-E047",
+        "SP93-E048"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-U06",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U06",
+      "label": "实际C varargs与真实消费者需求",
+      "evidence_missing": "%s使用va_arg(char*)，%c使用va_arg(int)，%p使用va_arg(void*)；没有核真实格式调用者的参数类型、实际内存对象及宽度精度极值",
+      "first_proof_gate": "负动态精度和%c内嵌NUL的数学输出不足以证明所有调用符合接口需求",
+      "evidence_ids": [
+        "SP93-E029",
+        "SP93-E030",
+        "SP93-E031",
+        "SP93-E032",
+        "SP93-E033",
+        "SP93-E039",
+        "SP93-E040",
+        "SP93-E041",
+        "SP93-E042",
+        "SP93-E044",
+        "SP93-E045"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-U07",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U07",
+      "label": "pr_err_once到格式化函数的日志调用链",
+      "evidence_missing": "仅从create_worker核到%pe格式及错误指针参数；没有沿所有日志宏/函数到实际vsnprintf的调用链，也没有运行worker错误路径",
+      "first_proof_gate": "只能记录格式的源级生产者，不能声称走到pointer或打印了错误文字",
+      "evidence_ids": [
+        "SP93-E063",
+        "SP93-E064",
+        "SP93-E045",
+        "SP93-E049"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "SP93-U08",
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U08",
+      "label": "fmt后缀的对象可读性及扫描范围",
+      "evidence_missing": "ctype表及宏证明ASCII代表字符的分类；后缀循环需在pointer返回后才运行，且fmt必须有合法终止或可读范围",
+      "first_proof_gate": "如输入指针返回契约不成立，suffix长度/后继字面输出只保留假设词法结果",
+      "evidence_ids": [
+        "SP93-E046",
+        "SP93-E052",
+        "SP93-E053",
+        "SP93-E054",
+        "SP93-E055",
+        "SP93-E056",
+        "SP93-E057",
+        "SP93-E058",
+        "SP93-E059",
+        "SP93-E060"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "state": "RETAINED",
+      "relation": "同一输出指针对象有效性与逻辑移动根因；SP93-U05仅新增字符串move_right表达式证据"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U06",
+      "state": "RETAINED_AS_91_U01_ALIAS",
+      "relation": "与本批string right-shift/size不足的C指针问题合读，不另造根因"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U02",
+      "state": "RETAINED_BOUNDED",
+      "relation": "更广printf仍未覆盖，本批只补%s/%c/%p入口与错误占位"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F03",
+      "state": "RETAINED",
+      "relation": "get_kthread_comm状态不传播与本包check_pointer的内部-EFAULT独立"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F04",
+      "state": "RETAINED",
+      "relation": "task.comm短名截断本包不重报"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-F03",
+      "state": "RETAINED",
+      "relation": "skip_atoi解析整型溢出不同于string_nocheck有符号lim递减"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U03",
+      "state": "PARTIALLY_NARROWED_BY_C06_MATH",
+      "relation": "92主线证明仅算法商和表索引，不迁移为本包字符串内存/ABI保证"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01",
+      "state": "CLOSED",
+      "relation": "不重开，无D00"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-02",
+      "state": "CLOSED",
+      "relation": "不重开，无D00"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01",
+      "state": "HISTORIC_NEEDS_EVIDENCE",
+      "relation": "53主线已撤回两处空行误判，源码候选并不因此关闭"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 2,
+    "new_evidence_gaps": 8,
+    "actual_runtime_confirmed_errors": 0,
+    "old_roots_duplicated": 0,
+    "patches_or_repairs": 0,
+    "owner_action_now": 0
+  },
+  "forbidden": [
+    "change kernel or legacy files",
+    "claim runtime or compile correctness",
+    "infer %p output from commented cases",
+    "merge or create new PR/branch",
+    "launch batch94"
+  ]
+}

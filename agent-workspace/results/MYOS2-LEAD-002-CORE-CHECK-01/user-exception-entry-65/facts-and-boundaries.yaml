@@ -1,0 +1,760 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXCEPTION-ENTRY-65",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "16817a5be4d1",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_disposition": {
+    "batch63": "PASS_PENDING_LOCAL_WITH_R63C-S01; R63-01 CLOSED_DOCUMENTATION_ONLY; old blank-line allegation retracted",
+    "batch64": "RETURN_DOCUMENTATION; only R64-01 open",
+    "D00": "documentation_disposition_submitted_pending_C05",
+    "original_C23_text_location": "common.c lines 689–693 inside arch_cpu_finalize_init; cpu_init ends 639",
+    "revised_two_sites": [
+      "bugs.c::check_bugs",
+      "common.c::arch_cpu_finalize_init"
+    ],
+    "propagation": [
+      {
+        "target": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-uaccess-recovery-64/evidence.md::C23",
+        "old": "common.c::cpu_init",
+        "new": "common.c::arch_cpu_finalize_init"
+      },
+      {
+        "target": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-uaccess-recovery-64/MANIFEST.md",
+        "old": "66/66 declared and C23 cpu_init",
+        "new": "historical count only; C23 P2 definition error; other 65 not full re-audited"
+      },
+      {
+        "target": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-uaccess-recovery-64/uaccess-recovery.md",
+        "old": "two comment sites check_bugs and cpu_init",
+        "new": "check_bugs and arch_cpu_finalize_init"
+      },
+      {
+        "target": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-uaccess-recovery-64/facts-and-boundaries.yaml",
+        "old": "source_ledger/source_context/alternative_activation_matrix:cpu_init",
+        "new": "arch_cpu_finalize_init"
+      },
+      {
+        "target": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-uaccess-recovery-64/deferred-findings.yaml::UR64-F06",
+        "old": "check_bugs and cpu_init",
+        "new": "check_bugs and arch_cpu_finalize_init"
+      },
+      {
+        "target": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-uaccess-recovery-64/uaccess-recovery-paths.dot::cpu",
+        "old": "cpu_init",
+        "new": "arch_cpu_finalize_init"
+      },
+      {
+        "target": "https://github.com/08822407d/MyOS2/pull/17#issuecomment-6738378936",
+        "old": "comment C site cpu_init",
+        "new": "arch_cpu_finalize_init"
+      }
+    ],
+    "old_six_and_comment_unchanged": true,
+    "old_66_count": "author-declared quote tally; C23 definition gate failed, other 65 not independently fully checked"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/kernel/idt.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "9e66b427c1f6",
+      "physical_lines": 102,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "80fa8f8734b3",
+      "physical_lines": 393,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "fa0ce5b9b46c",
+      "physical_lines": 239,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/ptrace.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "29bb6d7ba119",
+      "physical_lines": 289,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/desc_const_arch.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "e5a7dcb03344",
+      "physical_lines": 192,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/desc_arch.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "f7ebee7b8170",
+      "physical_lines": 301,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/idtentry.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "3b02ade9dc60",
+      "physical_lines": 400,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/trapnr.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "9a4ffe2dd20c",
+      "physical_lines": 33,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "232f7fa6e875",
+      "physical_lines": 149,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "05627b2d6819",
+      "physical_lines": 122,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/include/generated/asm-offsets.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "a3a7b1c465e9",
+      "physical_lines": 63,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kbuild/asm-offsets_64.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "44cdea17e2d9",
+      "physical_lines": 87,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "ef531baa8317",
+      "physical_lines": 241,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/sched/scheduler/preempt_macro.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "4ee3963ae252",
+      "physical_lines": 146,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/fault.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "739a1eaaaf0b",
+      "physical_lines": 465,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/common.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "cae051b123c8",
+      "physical_lines": 718,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/bugs.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "4c57524dfbba",
+      "physical_lines": 73,
+      "read_scope": "full_fixed_blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/hw_irq.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "a08843fcebd1",
+      "physical_lines": 139,
+      "read_scope": "full_fixed_blob"
+    }
+  ],
+  "source_context": [
+    {
+      "file": "entry_64.S",
+      "line": 22,
+      "source": "#include <generated/asm-offsets.h>",
+      "meaning": "actual included checked-in header"
+    },
+    {
+      "file": "entry_64.S",
+      "line": 30,
+      "source": "#include <processor/desc_const_arch.h>",
+      "meaning": "error mask selector"
+    },
+    {
+      "file": "desc_arch.h",
+      "line": 80,
+      "source": "#if defined(ARCH_DESC_DEFINATION) || !(DEBUG)",
+      "meaning": "selected implementation source but configuration not preprocessed"
+    },
+    {
+      "file": "common.c",
+      "line": 692,
+      "source": "// alternative_instructions();",
+      "definition": "arch_cpu_finalize_init"
+    },
+    {
+      "file": "entry_64.S",
+      "line": 315,
+      "source": "sti",
+      "meaning": "before C dispatch and later read_cr2"
+    }
+  ],
+  "idt_binding_matrix": [
+    {
+      "stage": "source_selection",
+      "source": "idt_setup_early_handler uses idt_handler_array+IDT_ALIGN*i for 0..31; later setup repeats 0..31 and uses irq_entries_start for 0x20..",
+      "evidence": [
+        "A05",
+        "A08",
+        "A09"
+      ]
+    },
+    {
+      "stage": "gate_data",
+      "source": "init_idt_data sets vector/address/kernel segment/GATE_INTERRUPT/present",
+      "evidence": [
+        "A15",
+        "A16"
+      ]
+    },
+    {
+      "stage": "gate_pack",
+      "source": "idt_init_desc splits handler address into gate.offset_low/middle/high and bits",
+      "evidence": [
+        "A17",
+        "A18"
+      ]
+    },
+    {
+      "stage": "table_write",
+      "source": "write_idt_entry calls memcpy(&idt[entry],gate,sizeof(*gate))",
+      "evidence": [
+        "A19"
+      ]
+    },
+    {
+      "stage": "load_request",
+      "source": "load_idt uses source-level lidt, no observed IDTR",
+      "evidence": [
+        "A20"
+      ]
+    },
+    {
+      "stage": "stubs",
+      "source": "IDT_ALIGN=16 given current macros; .rept 32 and .fill slot packing not executed code length",
+      "evidence": [
+        "A21",
+        "A27",
+        "A30"
+      ]
+    },
+    {
+      "stage": "GP",
+      "vector": 13,
+      "mask": "0x20027d00",
+      "bit": 1,
+      "software_zero": false,
+      "CPU_error_assumed": true
+    },
+    {
+      "stage": "PF",
+      "vector": 14,
+      "mask": "0x20027d00",
+      "bit": 1,
+      "software_zero": false,
+      "CPU_error_assumed": true
+    }
+  ],
+  "entry_frame_layout_matrix": {
+    "slot_width_bytes": 8,
+    "slot_count": 22,
+    "total_bytes": 176,
+    "slots": [
+      {
+        "field": "r15",
+        "offset_bytes": 0,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "r14",
+        "offset_bytes": 8,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "r13",
+        "offset_bytes": 16,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "r12",
+        "offset_bytes": 24,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "bp",
+        "offset_bytes": 32,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "bx",
+        "offset_bytes": 40,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "r11",
+        "offset_bytes": 48,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "r10",
+        "offset_bytes": 56,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "r9",
+        "offset_bytes": 64,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "r8",
+        "offset_bytes": 72,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "ax",
+        "offset_bytes": 80,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "cx",
+        "offset_bytes": 88,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "dx",
+        "offset_bytes": 96,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "si",
+        "offset_bytes": 104,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "di",
+        "offset_bytes": 112,
+        "origin": "PUSH_REGS"
+      },
+      {
+        "field": "irq_nr",
+        "offset_bytes": 120,
+        "origin": "software vector"
+      },
+      {
+        "field": "orig_ax",
+        "offset_bytes": 128,
+        "origin": "hardware error or software zero"
+      },
+      {
+        "field": "ip",
+        "offset_bytes": 136,
+        "origin": "assumed CPU return tail"
+      },
+      {
+        "field": "cs",
+        "offset_bytes": 144,
+        "origin": "assumed CPU return tail"
+      },
+      {
+        "field": "flags",
+        "offset_bytes": 152,
+        "origin": "assumed CPU return tail"
+      },
+      {
+        "field": "sp",
+        "offset_bytes": 160,
+        "origin": "assumed CPU return tail"
+      },
+      {
+        "field": "ss",
+        "offset_bytes": 168,
+        "origin": "assumed CPU return tail"
+      }
+    ],
+    "push_order": [
+      "rdi",
+      "rsi",
+      "rdx",
+      "rcx",
+      "rax",
+      "r8",
+      "r9",
+      "r10",
+      "r11",
+      "rbx",
+      "rbp",
+      "r12",
+      "r13",
+      "r14",
+      "r15"
+    ],
+    "reg_t": "__UINT64_TYPE__",
+    "checked_in_offsets": "mykernel/include/generated/asm-offsets.h",
+    "generation_source": "mykernel/arch/x86_64/kbuild/asm-offsets_64.c",
+    "generator_run": false,
+    "assumptions": [
+      "x86-64 pushq/popq eight-byte slots",
+      "CPU provides GP/PF error and IP/CS/FLAGS/SP/SS return tail as conditional model",
+      "same valid stack/frame retained until epilogue",
+      "checked-in generated offsets are not independently compiled ABI"
+    ]
+  },
+  "dispatch_argument_matrix": [
+    {
+      "value": "irq_nr",
+      "offset": 120,
+      "producer": "pushq $vector",
+      "consumer": "excep_hwint_context and exception_handler",
+      "GP": 13,
+      "PF": 14
+    },
+    {
+      "value": "orig_ax",
+      "offset": 128,
+      "producer": "assumed CPU GP/PF error-code slot",
+      "consumer": "GP diagnostics AND PF exc_page_fault(regs, regs->orig_ax); same field"
+    },
+    {
+      "value": "cs",
+      "offset": 144,
+      "producer": "assumed CPU saved CS",
+      "consumer": "entry/exit test and user_mode"
+    },
+    {
+      "value": "CR2",
+      "offset": null,
+      "producer": "read_cr2 in fault.c::exc_page_fault",
+      "consumer": "handle_page_fault numeric address",
+      "ordering": "entry sti -> C dispatch -> exc_page_fault -> read_cr2",
+      "nested_risk": "only if a nested actual event modifies CR2 in that window; not observed"
+    },
+    {
+      "value": "address_route",
+      "offset": null,
+      "producer": "fault_in_kernel_space(address)",
+      "consumer": "do_kern_addr_fault vs do_user_addr_fault; independent of GP/PF vector and saved privilege"
+    }
+  ],
+  "return_state_matrix": [
+    {
+      "stage": "first CS",
+      "action": "conditional swapgs after PUSH_REGS",
+      "guard": "saved CS valid"
+    },
+    {
+      "stage": "C dispatch",
+      "action": "sti and excep_hwint_context",
+      "guard": "handler can return"
+    },
+    {
+      "stage": "schedule gate",
+      "action": "if (!in_atomic()) schedule()",
+      "guard": "callee returns; scheduler and same stack opaque"
+    },
+    {
+      "stage": "second CS",
+      "action": "conditional swapgs again using current frame CS",
+      "guard": "may differ from first if frame changed"
+    },
+    {
+      "stage": "iret request",
+      "action": "cli POP_REGS addq $0x10 sti iretq",
+      "guard": "intact stack, vector/error slots and CPU tail"
+    },
+    {
+      "stage": "GP source",
+      "action": "excep_gen_prot diagnostic and while(1)",
+      "guard": "only if earlier diagnostics valid"
+    },
+    {
+      "stage": "PF high source",
+      "action": "do_kern_addr_fault while(1)",
+      "guard": "only on high route"
+    },
+    {
+      "stage": "PF low source",
+      "action": "myos_handle_mm_fault once then while(fault!=ENOERR)",
+      "guard": "valid mm/vma and 0 result to reach normal return; 0 not PTE proof"
+    },
+    {
+      "stage": "four layers",
+      "actions": [
+        "C normal return conditional",
+        "iretq reached conditional",
+        "CPU accepts saved frame NOT_RUN",
+        "faulting instruction reexecutes NOT_RUN"
+      ]
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "case_id": "MASK-0",
+      "vector": 0,
+      "bit": 0,
+      "software_dummy": true,
+      "hardware_not_attested": true
+    },
+    {
+      "case_id": "MASK-8",
+      "vector": 8,
+      "bit": 1,
+      "software_dummy": false,
+      "hardware_not_attested": true
+    },
+    {
+      "case_id": "MASK-13",
+      "vector": 13,
+      "bit": 1,
+      "software_dummy": false,
+      "hardware_not_attested": true
+    },
+    {
+      "case_id": "MASK-14",
+      "vector": 14,
+      "bit": 1,
+      "software_dummy": false,
+      "hardware_not_attested": true
+    },
+    {
+      "case_id": "MASK-17",
+      "vector": 17,
+      "bit": 1,
+      "software_dummy": false,
+      "hardware_not_attested": true
+    },
+    {
+      "case_id": "MASK-29",
+      "vector": 29,
+      "bit": 1,
+      "software_dummy": false,
+      "hardware_not_attested": true
+    },
+    {
+      "case_id": "MASK-31",
+      "vector": 31,
+      "bit": 0,
+      "software_dummy": true,
+      "hardware_not_attested": true
+    },
+    {
+      "case_id": "CS-0-0",
+      "entry_swapgs": false,
+      "exit_swapgs": false,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "CS-0-3",
+      "entry_swapgs": false,
+      "exit_swapgs": true,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "CS-1-0",
+      "entry_swapgs": true,
+      "exit_swapgs": false,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "CS-1-3",
+      "entry_swapgs": true,
+      "exit_swapgs": true,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "CS-2-0",
+      "entry_swapgs": true,
+      "exit_swapgs": false,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "CS-2-3",
+      "entry_swapgs": true,
+      "exit_swapgs": true,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "CS-3-0",
+      "entry_swapgs": true,
+      "exit_swapgs": false,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "CS-3-3",
+      "entry_swapgs": true,
+      "exit_swapgs": true,
+      "paired_without_frame_assumption": false
+    },
+    {
+      "case_id": "PF-0",
+      "fault_return_value": 0,
+      "source_while_nonzero": false,
+      "actual_PTE_unknown": true
+    },
+    {
+      "case_id": "PF-1",
+      "fault_return_value": 1,
+      "source_while_nonzero": true,
+      "actual_PTE_unknown": true
+    },
+    {
+      "case_id": "PF-2",
+      "fault_return_value": 2,
+      "source_while_nonzero": true,
+      "actual_PTE_unknown": true
+    },
+    {
+      "case_id": "SCHED-0-0",
+      "atomic": false,
+      "handler_returns": false,
+      "source_schedule_call": false,
+      "same_stack_after": "unknown"
+    },
+    {
+      "case_id": "SCHED-0-1",
+      "atomic": false,
+      "handler_returns": true,
+      "source_schedule_call": true,
+      "same_stack_after": "unknown"
+    },
+    {
+      "case_id": "SCHED-1-0",
+      "atomic": true,
+      "handler_returns": false,
+      "source_schedule_call": false,
+      "same_stack_after": "unknown"
+    },
+    {
+      "case_id": "SCHED-1-1",
+      "atomic": true,
+      "handler_returns": true,
+      "source_schedule_call": false,
+      "same_stack_after": "unknown"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consume": "R12-S01/S02 qualifiers preserved"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F02",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consume": "R12-S01/S02 qualifiers preserved"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F03",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consume": "R12-S01/S02 qualifiers preserved"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F04",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consume": "R12-S01/S02 qualifiers preserved"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "original source/conditional limits retained"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "original source/conditional limits retained"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F05",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "original source/conditional limits retained"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "correct attribution; no closure"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "original source/conditional limits retained"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "original source/conditional limits retained"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U08",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "original source/conditional limits retained"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "no runtime extable/alternative recovery proved"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consume": "no runtime extable/alternative recovery proved"
+    }
+  ],
+  "unknowns": [
+    "hardware frame/GP/PF error code manual not independently consulted",
+    "real CPU, IDTR, assembler, binary, GS, nested CR2 events and scheduler not tested",
+    "no whole-kernel absence conclusions"
+  ],
+  "P9": {
+    "full_local": "NOT_RUN",
+    "selected_text_checks": "63 fixed direct quotes, P6=63+0, source ledger, graph/JSON checks",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_machine": "NOT_RUN"
+  }
+}

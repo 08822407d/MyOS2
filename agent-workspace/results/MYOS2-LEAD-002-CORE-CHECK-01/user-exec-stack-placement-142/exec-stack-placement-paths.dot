@@ -1,0 +1,220 @@
+/*
+task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+track_id: "MYOS2-LEAD-002"
+followup_id: "CORE-USER-EXEC-STACK-PLACEMENT-142"
+executor_identity: "MYOS2-LEAD-002-CHAT-EXEC-22"
+conversation_display_name: "MYOS2-A-C10a 代码分析执行"
+produced_by: "GPT-6.2（系统模型族标识；界面实际型号不可独立核实）"
+model_per_owner: "次一档GPT-6.2 Sol；Extra/高档偏好"
+actual_backend_model: "UNATTESTED"
+actual_backend_effort: "UNATTESTED"
+date: "2026-11-24"
+phase: 2
+base_snapshot: "time（分支名）"
+source_pin_short12: "a039d9803ade"
+read_channel: "connector"
+status: "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04"
+mainline_acceptance: "PENDING"
+full_local_P9: "NOT_RUN"
+open_questions: ["实际配置、C指针/对象合法性、vma前置、映射和真实运行仍未证"]
+inputs_read: [{"path":"mykernel/scripts/options_flags.cmake","ref":"a039d9803ade","blob":"6019436417ad"},{"path":"mykernel/fs/vfs/binfmt_elf.c","ref":"a039d9803ade","blob":"579fb4e9fadd"},{"path":"mykernel/arch/x86_64/include/asm/elf.h","ref":"a039d9803ade","blob":"421649d6f3bc"},{"path":"mykernel/include/linux/kernel/elf.h","ref":"a039d9803ade","blob":"dd427f17f005"},{"path":"mykernel/include/uapi/linux/elf.h","ref":"a039d9803ade","blob":"eff5e1ff56b8"},{"path":"mykernel/include/uapi/linux/auxvec.h","ref":"a039d9803ade","blob":"166fa1066af1"},{"path":"mykernel/include/linux/fs/binfmts.h","ref":"a039d9803ade","blob":"002c2aec4aa8"},{"path":"mykernel/include/uapi/linux/binfmts.h","ref":"a039d9803ade","blob":"a60f4e7c53b0"},{"path":"mykernel/mm/misc/mm_misc_const.h","ref":"a039d9803ade","blob":"ec983b79166f"},{"path":"mykernel/include/linux/kernel/asm-generic/param.h","ref":"a039d9803ade","blob":"16bba89f98f5"},{"path":"mykernel/mm/misc/mm_misc_types.h","ref":"a039d9803ade","blob":"b9d93f504756"},{"path":"mykernel/arch/x86_64/sched/context/process_arch.c","ref":"a039d9803ade","blob":"4431545af5fb"},{"path":"mykernel/sched/forkexec/exec.c","ref":"a039d9803ade","blob":"0861ebae6fc2"},{"path":"mykernel/include/linux/kernel/types.h","ref":"a039d9803ade","blob":"ef531baa8317"}]
+record_type: "phase2_stack_placement_graph"
+*/
+digraph stack_placement_142 {
+  rankdir=LR;
+  source_upstream [kind="source", label="setup_arg_pages fields, return not proved", scenario="source"];
+  source_entry [kind="source", label="create_elf_tables given entry", scenario="source"];
+  source_align [kind="source", label="arch_align_stack and platform alloc", scenario="source"];
+  source_tablebase [kind="source", label="STACK_ADD, STACK_ROUND, sp reset", scenario="source"];
+  source_gate [kind="boundary", label="uninitialized vma: no proven crossing", scenario="source"];
+  source_prefix [kind="source", label="independent post-gate prefix and loops", scenario="source"];
+  source_copy [kind="source", label="copy_to_user(sp, saved_auxv, ei_index * word)", scenario="source"];
+  source_caller [kind="source", label="normal return gate; mm.start_stack; START_THREAD", scenario="source"];
+  R1 [kind="independent_model", label="R1 U=0x70000000", scenario="R1"];
+  R1_A_p0 [kind="address", label="p0=0x6fffffe2", scenario="R1"];
+  R1_A_p1 [kind="address", label="p1=0x6fffffe0", scenario="R1"];
+  R1_A_P [kind="address", label="P=0x6fffffd9", scenario="R1"];
+  R1_A_sp_aux [kind="address", label="sp_aux=0x6fffff09", scenario="R1"];
+  R1_A_raw_bottom [kind="address", label="raw_bottom=0x6ffffed1", scenario="R1"];
+  R1_A_S [kind="address", label="S=0x6ffffed0", scenario="R1"];
+  R1_A_Q [kind="address", label="Q=0x6fffff08", scenario="R1"];
+  R1_A_E [kind="address", label="E=0x6fffffd8", scenario="R1"];
+  R1_prefix [kind="range", label="prefix [0x6ffffed0,0x6fffff08) 56 bytes", scenario="R1"];
+  R1_auxv [kind="range", label="auxv [0x6fffff08,0x6fffffd8) 208 bytes", scenario="R1"];
+  R1_final_gap [kind="range", label="final_gap [0x6fffffd8,0x6fffffd9) 1 bytes", scenario="R1"];
+  R1_platform [kind="range", label="platform [0x6fffffd9,0x6fffffe0) 7 bytes", scenario="R1"];
+  R1_initial_gap [kind="range", label="initial_gap [0x6fffffe0,0x6fffffe2) 2 bytes", scenario="R1"];
+  R1_strings [kind="range", label="strings [0x6fffffe2,0x70000000) 30 bytes", scenario="R1"];
+  R1_T01 [kind="stage", label="entry initialized p=0x6fffffe2 sp=0x6fffffe2 bprm.p=0x6fffffe2", scenario="R1"];
+  R1_T02 [kind="stage", label="after arch_align_stack p=0x6fffffe0 sp=0x6fffffe2 bprm.p=0x6fffffe2", scenario="R1"];
+  R1_T03 [kind="stage", label="platform successfully allocated/copied p=0x6fffffd9 sp=0x6fffffe2 bprm.p=0x6fffffe2", scenario="R1"];
+  R1_T04 [kind="stage", label="after STACK_ADD p=0x6fffffd9 sp=0x6fffff09 bprm.p=0x6fffffe2", scenario="R1"];
+  R1_T05 [kind="stage", label="after STACK_ROUND assignment p=0x6fffffd9 sp=0x6fffff09 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T06 [kind="stage", label="after sp reset; before vma gate p=0x6fffffd9 sp=0x6ffffed0 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T07 [kind="stage", label="after argc write p=0x6fffffd9 sp=0x6ffffed8 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T08 [kind="stage", label="after arg reset p=0x6fffffe2 sp=0x6ffffed8 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T09 [kind="stage", label="after argv loop (failed final test) p=0x6fffffed sp=0x6ffffee8 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T10 [kind="stage", label="after argv NULL, arg_end update and env boundary initialization p=0x6fffffed sp=0x6ffffef0 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T11 [kind="stage", label="after envp loop (before env NULL) p=0x6ffffff6 sp=0x6fffff00 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T12 [kind="stage", label="after env NULL and env_end update p=0x6ffffff6 sp=0x6fffff08 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T13 [kind="stage", label="auxv copy returns zero and local return 0 p=0x6ffffff6 sp=0x6fffff08 bprm.p=0x6ffffed0", scenario="R1"];
+  R1_T14 [kind="stage", label="caller consumption after normal return and later gates p=OUT_OF_SCOPE (last 0x6ffffff6) sp=OUT_OF_SCOPE (last 0x6fffff08) bprm.p=0x6ffffed0", scenario="R1"];
+  R2 [kind="independent_model", label="R2 U=0x70000000", scenario="R2"];
+  R2_A_p0 [kind="address", label="p0=0x6fffffec", scenario="R2"];
+  R2_A_p1 [kind="address", label="p1=0x6fffffe0", scenario="R2"];
+  R2_A_P [kind="address", label="P=0x6fffffd9", scenario="R2"];
+  R2_A_sp_aux [kind="address", label="sp_aux=0x6ffffef9", scenario="R2"];
+  R2_A_raw_bottom [kind="address", label="raw_bottom=0x6ffffec9", scenario="R2"];
+  R2_A_S [kind="address", label="S=0x6ffffec0", scenario="R2"];
+  R2_A_Q [kind="address", label="Q=0x6ffffef0", scenario="R2"];
+  R2_A_E [kind="address", label="E=0x6fffffd0", scenario="R2"];
+  R2_prefix [kind="range", label="prefix [0x6ffffec0,0x6ffffef0) 48 bytes", scenario="R2"];
+  R2_auxv [kind="range", label="auxv [0x6ffffef0,0x6fffffd0) 224 bytes", scenario="R2"];
+  R2_final_gap [kind="range", label="final_gap [0x6fffffd0,0x6fffffd9) 9 bytes", scenario="R2"];
+  R2_platform [kind="range", label="platform [0x6fffffd9,0x6fffffe0) 7 bytes", scenario="R2"];
+  R2_initial_gap [kind="range", label="initial_gap [0x6fffffe0,0x6fffffec) 12 bytes", scenario="R2"];
+  R2_strings [kind="range", label="strings [0x6fffffec,0x70000000) 20 bytes", scenario="R2"];
+  R2_T01 [kind="stage", label="entry initialized p=0x6fffffec sp=0x6fffffec bprm.p=0x6fffffec", scenario="R2"];
+  R2_T02 [kind="stage", label="after arch_align_stack p=0x6fffffe0 sp=0x6fffffec bprm.p=0x6fffffec", scenario="R2"];
+  R2_T03 [kind="stage", label="platform successfully allocated/copied p=0x6fffffd9 sp=0x6fffffec bprm.p=0x6fffffec", scenario="R2"];
+  R2_T04 [kind="stage", label="after STACK_ADD p=0x6fffffd9 sp=0x6ffffef9 bprm.p=0x6fffffec", scenario="R2"];
+  R2_T05 [kind="stage", label="after STACK_ROUND assignment p=0x6fffffd9 sp=0x6ffffef9 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T06 [kind="stage", label="after sp reset; before vma gate p=0x6fffffd9 sp=0x6ffffec0 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T07 [kind="stage", label="after argc write p=0x6fffffd9 sp=0x6ffffec8 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T08 [kind="stage", label="after arg reset p=0x6fffffec sp=0x6ffffec8 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T09 [kind="stage", label="after argv loop (failed final test) p=0x6fffffed sp=0x6ffffed0 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T10 [kind="stage", label="after argv NULL, arg_end update and env boundary initialization p=0x6fffffed sp=0x6ffffed8 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T11 [kind="stage", label="after envp loop (before env NULL) p=0x6ffffff6 sp=0x6ffffee8 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T12 [kind="stage", label="after env NULL and env_end update p=0x6ffffff6 sp=0x6ffffef0 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T13 [kind="stage", label="auxv copy returns zero and local return 0 p=0x6ffffff6 sp=0x6ffffef0 bprm.p=0x6ffffec0", scenario="R2"];
+  R2_T14 [kind="stage", label="caller consumption after normal return and later gates p=OUT_OF_SCOPE (last 0x6ffffff6) sp=OUT_OF_SCOPE (last 0x6ffffef0) bprm.p=0x6ffffec0", scenario="R2"];
+  R3 [kind="independent_model", label="R3 U=0x70000000", scenario="R3"];
+  R3_A_p0 [kind="address", label="p0=0x6fffffa3", scenario="R3"];
+  R3_A_p1 [kind="address", label="p1=0x6fffffa0", scenario="R3"];
+  R3_A_P [kind="address", label="P=0x6fffff99", scenario="R3"];
+  R3_A_sp_aux [kind="address", label="sp_aux=0x6ffffec9", scenario="R3"];
+  R3_A_raw_bottom [kind="address", label="raw_bottom=0x6ffffe81", scenario="R3"];
+  R3_A_S [kind="address", label="S=0x6ffffe80", scenario="R3"];
+  R3_A_Q [kind="address", label="Q=0x6ffffec8", scenario="R3"];
+  R3_A_E [kind="address", label="E=0x6fffff98", scenario="R3"];
+  R3_prefix [kind="range", label="prefix [0x6ffffe80,0x6ffffec8) 72 bytes", scenario="R3"];
+  R3_auxv [kind="range", label="auxv [0x6ffffec8,0x6fffff98) 208 bytes", scenario="R3"];
+  R3_final_gap [kind="range", label="final_gap [0x6fffff98,0x6fffff99) 1 bytes", scenario="R3"];
+  R3_platform [kind="range", label="platform [0x6fffff99,0x6fffffa0) 7 bytes", scenario="R3"];
+  R3_initial_gap [kind="range", label="initial_gap [0x6fffffa0,0x6fffffa3) 3 bytes", scenario="R3"];
+  R3_strings [kind="range", label="strings [0x6fffffa3,0x70000000) 93 bytes", scenario="R3"];
+  R3_T01 [kind="stage", label="entry initialized p=0x6fffffa3 sp=0x6fffffa3 bprm.p=0x6fffffa3", scenario="R3"];
+  R3_T02 [kind="stage", label="after arch_align_stack p=0x6fffffa0 sp=0x6fffffa3 bprm.p=0x6fffffa3", scenario="R3"];
+  R3_T03 [kind="stage", label="platform successfully allocated/copied p=0x6fffff99 sp=0x6fffffa3 bprm.p=0x6fffffa3", scenario="R3"];
+  R3_T04 [kind="stage", label="after STACK_ADD p=0x6fffff99 sp=0x6ffffec9 bprm.p=0x6fffffa3", scenario="R3"];
+  R3_T05 [kind="stage", label="after STACK_ROUND assignment p=0x6fffff99 sp=0x6ffffec9 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T06 [kind="stage", label="after sp reset; before vma gate p=0x6fffff99 sp=0x6ffffe80 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T07 [kind="stage", label="after argc write p=0x6fffff99 sp=0x6ffffe88 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T08 [kind="stage", label="after arg reset p=0x6fffffa3 sp=0x6ffffe88 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T09 [kind="stage", label="after argv loop (failed final test) p=0x6fffffca sp=0x6ffffea0 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T10 [kind="stage", label="after argv NULL, arg_end update and env boundary initialization p=0x6fffffca sp=0x6ffffea8 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T11 [kind="stage", label="after envp loop (before env NULL) p=0x6ffffff7 sp=0x6ffffec0 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T12 [kind="stage", label="after env NULL and env_end update p=0x6ffffff7 sp=0x6ffffec8 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T13 [kind="stage", label="auxv copy returns zero and local return 0 p=0x6ffffff7 sp=0x6ffffec8 bprm.p=0x6ffffe80", scenario="R3"];
+  R3_T14 [kind="stage", label="caller consumption after normal return and later gates p=OUT_OF_SCOPE (last 0x6ffffff7) sp=OUT_OF_SCOPE (last 0x6ffffec8) bprm.p=0x6ffffe80", scenario="R3"];
+  source_upstream -> source_entry [kind="field_origin_only", label="given entry does not establish successful prior relocation"];
+  source_entry -> source_align [kind="source_order_only", label="not runtime"];
+  source_align -> source_tablebase [kind="source_order_only", label="not runtime"];
+  source_tablebase -> source_gate [kind="source_order_only", label="not runtime"];
+  source_gate -> source_prefix [kind="INDEPENDENT_POST_GATE_MODEL", label="no production reachability claim"];
+  source_prefix -> source_copy [kind="source_order_conditional", label="given normal prefix writes"];
+  source_copy -> source_caller [kind="conditional_consumer", label="given normal return and later reachability"];
+  source_entry -> R1 [kind="MODEL_PROJECTION", label="new given input"];
+  R1 -> R1_A_p0 [kind="given_input", label="p0"];
+  R1_A_p0 -> R1_A_p1 [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R1_A_p1 -> R1_A_P [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R1_A_P -> R1_A_sp_aux [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R1_A_sp_aux -> R1_A_raw_bottom [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R1_A_raw_bottom -> R1_A_S [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R1_A_S -> R1_A_Q [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R1_A_Q -> R1_A_E [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R1_prefix -> R1_auxv [kind="address_order", label="adjacent half-open ranges"];
+  R1_auxv -> R1_final_gap [kind="address_order", label="adjacent half-open ranges"];
+  R1_final_gap -> R1_platform [kind="address_order", label="adjacent half-open ranges"];
+  R1_platform -> R1_initial_gap [kind="address_order", label="adjacent half-open ranges"];
+  R1_initial_gap -> R1_strings [kind="address_order", label="adjacent half-open ranges"];
+  R1_A_S -> R1_prefix [kind="data_origin", label="partition start"];
+  R1 -> R1_T01 [kind="MODEL_PROJECTION", label="given entry"];
+  R1_T01 -> R1_T02 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T02 -> R1_T03 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T03 -> R1_T04 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T04 -> R1_T05 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T05 -> R1_T06 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T06 -> R1_T07 [kind="INDEPENDENT_POST_GATE_FRAGMENT", label="not real crossing"];
+  R1_T07 -> R1_T08 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T08 -> R1_T09 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T09 -> R1_T10 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T10 -> R1_T11 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T11 -> R1_T12 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T12 -> R1_T13 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R1_T13 -> R1_T14 [kind="CONDITIONAL_CALLER_MODEL", label="normal return and later gates"];
+  source_copy -> R1_T13 [kind="MODEL_PROJECTION", label="sp=Q; E exclusive end"];
+  source_caller -> R1_T14 [kind="MODEL_PROJECTION", label="stack arg S only"];
+  source_entry -> R2 [kind="MODEL_PROJECTION", label="new given input"];
+  R2 -> R2_A_p0 [kind="given_input", label="p0"];
+  R2_A_p0 -> R2_A_p1 [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R2_A_p1 -> R2_A_P [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R2_A_P -> R2_A_sp_aux [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R2_A_sp_aux -> R2_A_raw_bottom [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R2_A_raw_bottom -> R2_A_S [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R2_A_S -> R2_A_Q [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R2_A_Q -> R2_A_E [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R2_prefix -> R2_auxv [kind="address_order", label="adjacent half-open ranges"];
+  R2_auxv -> R2_final_gap [kind="address_order", label="adjacent half-open ranges"];
+  R2_final_gap -> R2_platform [kind="address_order", label="adjacent half-open ranges"];
+  R2_platform -> R2_initial_gap [kind="address_order", label="adjacent half-open ranges"];
+  R2_initial_gap -> R2_strings [kind="address_order", label="adjacent half-open ranges"];
+  R2_A_S -> R2_prefix [kind="data_origin", label="partition start"];
+  R2 -> R2_T01 [kind="MODEL_PROJECTION", label="given entry"];
+  R2_T01 -> R2_T02 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T02 -> R2_T03 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T03 -> R2_T04 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T04 -> R2_T05 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T05 -> R2_T06 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T06 -> R2_T07 [kind="INDEPENDENT_POST_GATE_FRAGMENT", label="not real crossing"];
+  R2_T07 -> R2_T08 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T08 -> R2_T09 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T09 -> R2_T10 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T10 -> R2_T11 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T11 -> R2_T12 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T12 -> R2_T13 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R2_T13 -> R2_T14 [kind="CONDITIONAL_CALLER_MODEL", label="normal return and later gates"];
+  source_copy -> R2_T13 [kind="MODEL_PROJECTION", label="sp=Q; E exclusive end"];
+  source_caller -> R2_T14 [kind="MODEL_PROJECTION", label="stack arg S only"];
+  source_entry -> R3 [kind="MODEL_PROJECTION", label="new given input"];
+  R3 -> R3_A_p0 [kind="given_input", label="p0"];
+  R3_A_p0 -> R3_A_p1 [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R3_A_p1 -> R3_A_P [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R3_A_P -> R3_A_sp_aux [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R3_A_sp_aux -> R3_A_raw_bottom [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R3_A_raw_bottom -> R3_A_S [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R3_A_S -> R3_A_Q [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R3_A_Q -> R3_A_E [kind="arithmetic_projection", label="integer formula; not typed pointer proof"];
+  R3_prefix -> R3_auxv [kind="address_order", label="adjacent half-open ranges"];
+  R3_auxv -> R3_final_gap [kind="address_order", label="adjacent half-open ranges"];
+  R3_final_gap -> R3_platform [kind="address_order", label="adjacent half-open ranges"];
+  R3_platform -> R3_initial_gap [kind="address_order", label="adjacent half-open ranges"];
+  R3_initial_gap -> R3_strings [kind="address_order", label="adjacent half-open ranges"];
+  R3_A_S -> R3_prefix [kind="data_origin", label="partition start"];
+  R3 -> R3_T01 [kind="MODEL_PROJECTION", label="given entry"];
+  R3_T01 -> R3_T02 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T02 -> R3_T03 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T03 -> R3_T04 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T04 -> R3_T05 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T05 -> R3_T06 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T06 -> R3_T07 [kind="INDEPENDENT_POST_GATE_FRAGMENT", label="not real crossing"];
+  R3_T07 -> R3_T08 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T08 -> R3_T09 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T09 -> R3_T10 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T10 -> R3_T11 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T11 -> R3_T12 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T12 -> R3_T13 [kind="MODEL_OBSERVATION_ORDER", label="non-atomic observation"];
+  R3_T13 -> R3_T14 [kind="CONDITIONAL_CALLER_MODEL", label="normal return and later gates"];
+  source_copy -> R3_T13 [kind="MODEL_PROJECTION", label="sp=Q; E exclusive end"];
+  source_caller -> R3_T14 [kind="MODEL_PROJECTION", label="stack arg S only"];
+}

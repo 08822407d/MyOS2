@@ -1,0 +1,59 @@
+{
+ "mode": "branch",
+ "target_commit_short12": "eb75b3100601",
+ "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/facts-and-dependencies.yaml",
+ "field": null,
+ "expected_blob_available": true,
+ "expected_bytes": 148940,
+ "expected_sha256_segments": [
+  "25a7a10485ed9845",
+  "42d6ec645543ce1b",
+  "3d3b83e5f6cd8bd7",
+  "e4545e55f9c45ff2"
+ ],
+ "channels": [
+  {
+   "channel": "raw.githubusercontent.com",
+   "url": "https://raw.githubusercontent.com/08822407d/MyOS2/claude/dazzling-cori-q0dnyt/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/facts-and-dependencies.yaml",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 148940,
+   "sha256_segments": [
+    "25a7a10485ed9845",
+    "42d6ec645543ce1b",
+    "3d3b83e5f6cd8bd7",
+    "e4545e55f9c45ff2"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_ok": true,
+   "ok": true
+  },
+  {
+   "channel": "api.github.com_contents_raw",
+   "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/facts-and-dependencies.yaml?ref=claude/dazzling-cori-q0dnyt",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 148940,
+   "sha256_segments": [
+    "25a7a10485ed9845",
+    "42d6ec645543ce1b",
+    "3d3b83e5f6cd8bd7",
+    "e4545e55f9c45ff2"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_ok": true,
+   "ok": true
+  }
+ ],
+ "branch": "claude/dazzling-cori-q0dnyt",
+ "branch_head_relation": "equal",
+ "ok": true
+}

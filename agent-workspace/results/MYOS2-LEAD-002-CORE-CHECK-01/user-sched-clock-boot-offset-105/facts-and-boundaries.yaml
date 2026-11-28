@@ -1,0 +1,3491 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105",
+  "produced_by": "GPT-6（Owner指定次一档GPT-6＋Extra，后台路由不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra",
+  "record_type": "fixed_time_boot_scheduler_clock_provenance_and_doc_corrections",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "87ad6b6c914b",
+  "exec_parent_short12": "51f1f5b5dc08",
+  "master_direct_short12": "e8e60cd19540",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "R102_01": "CLOSED_DOCUMENTATION_ONLY",
+  "R102_02": "CLOSED_DOCUMENTATION_ONLY",
+  "R102_03": "CLOSED_DOCUMENTATION_ONLY",
+  "R103_02": "CLOSED_DOCUMENTATION_ONLY",
+  "R103_01": "OPEN_CONSUMER_MAPPING_ONLY",
+  "R104_01": "OPEN",
+  "R104_02": "OPEN",
+  "D00": {
+    "followup_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105",
+    "source_pin_short12": "a039d9803ade",
+    "old103_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/facts-and-boundaries.yaml",
+    "old104_ref": "MyOS2@51f1f5b5dc08:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml",
+    "C07_fixed_review": "MyOS2@87ad6b6c914b:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-RTC-WALL-CLOCK-104-D00-102-103-review.md",
+    "status": {
+      "R102_01": "CLOSED_DOCUMENTATION_ONLY",
+      "R102_02": "CLOSED_DOCUMENTATION_ONLY",
+      "R102_03": "CLOSED_DOCUMENTATION_ONLY",
+      "R103_02": "CLOSED_DOCUMENTATION_ONLY",
+      "batch102": "PASS_PENDING_LOCAL",
+      "batch103": "RETURN",
+      "batch104": "RETURN",
+      "R103_01": "OPEN_CONSUMER_MAPPING_ONLY",
+      "R104_01": "OPEN",
+      "R104_02": "OPEN",
+      "R103_01_new_submission": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "R104_01_new_submission": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "R104_02_new_submission": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    "scope": "append only to105, old six original comments frozen, no author closure",
+    "R103_01": {
+      "ten_consumer_reconciliation": [
+        {
+          "old_id": "TK103-E001",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E001",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "set(CMAKE_C_FLAGS)",
+          "locator_topic": "configuration command",
+          "direct_old_103_consumer_ids": [
+            "ABC-06"
+          ],
+          "current_effective_reference_for_direct_ids": {
+            "ABC-06": [
+              "RTC104-E001"
+            ]
+          },
+          "group_or_indirect_consumers": [],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E007",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E002",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "__clocksource_update_freq_scale",
+          "locator_topic": "frequency update",
+          "direct_old_103_consumer_ids": [],
+          "current_effective_reference_for_direct_ids": {},
+          "group_or_indirect_consumers": [
+            "D00.R102_02.clocksource frequency group",
+            "HC102-M01–M07 / HC102-F01/F02 group only; not individually direct"
+          ],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E008",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E003",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "__clocksource_update_freq_scale",
+          "locator_topic": "frequency update",
+          "direct_old_103_consumer_ids": [
+            "G102-21"
+          ],
+          "current_effective_reference_for_direct_ids": {
+            "G102-21": [
+              "RTC104-E002",
+              "RTC104-E004"
+            ]
+          },
+          "group_or_indirect_consumers": [
+            "D00.R102_02.clocksource frequency group",
+            "HC102-M01–M07 / HC102-F01/F02 group only; not individually direct"
+          ],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E009",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E004",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "__clocksource_update_freq_scale",
+          "locator_topic": "multshift direct call",
+          "direct_old_103_consumer_ids": [
+            "G102-21"
+          ],
+          "current_effective_reference_for_direct_ids": {
+            "G102-21": [
+              "RTC104-E002",
+              "RTC104-E004"
+            ]
+          },
+          "group_or_indirect_consumers": [
+            "D00.R102_02.clocksource frequency group",
+            "HC102-M01–M07 / HC102-F01/F02 group only; not individually direct"
+          ],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E010",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E005",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "__clocksource_update_freq_scale",
+          "locator_topic": "frequency adjustment",
+          "direct_old_103_consumer_ids": [],
+          "current_effective_reference_for_direct_ids": {},
+          "group_or_indirect_consumers": [
+            "D00.R102_02.clocksource frequency group",
+            "HC102-M01–M07 / HC102-F01/F02 group only; not individually direct"
+          ],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E011",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E006",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "__clocksource_update_freq_scale",
+          "locator_topic": "frequency adjustment",
+          "direct_old_103_consumer_ids": [],
+          "current_effective_reference_for_direct_ids": {},
+          "group_or_indirect_consumers": [
+            "D00.R102_02.clocksource frequency group",
+            "HC102-M01–M07 / HC102-F01/F02 group only; not individually direct"
+          ],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E012",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E007",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "__clocksource_register_scale",
+          "locator_topic": "register and enqueue",
+          "direct_old_103_consumer_ids": [
+            "G102-20",
+            "G102-22"
+          ],
+          "current_effective_reference_for_direct_ids": {
+            "G102-20": [
+              "HC102-E095",
+              "RTC104-E011"
+            ],
+            "G102-22": [
+              "RTC104-E012"
+            ]
+          },
+          "group_or_indirect_consumers": [],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E013",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E008",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "__clocksource_register_scale",
+          "locator_topic": "register tail",
+          "direct_old_103_consumer_ids": [
+            "G102-20",
+            "G102-22"
+          ],
+          "current_effective_reference_for_direct_ids": {
+            "G102-20": [
+              "HC102-E095",
+              "RTC104-E011"
+            ],
+            "G102-22": [
+              "RTC104-E012"
+            ]
+          },
+          "group_or_indirect_consumers": [],
+          "withdraw_false_rows": [],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E030",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E009",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "myos_hpet_clkevt_set_state_periodic",
+          "locator_topic": "periodic helper",
+          "direct_old_103_consumer_ids": [],
+          "current_effective_reference_for_direct_ids": {},
+          "group_or_indirect_consumers": [],
+          "withdraw_false_rows": [
+            "C-periodic-setting is descriptive prose, not stable row ID"
+          ],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        },
+        {
+          "old_id": "TK103-E089",
+          "old_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md",
+          "replacement_id": "RTC104-E010",
+          "replacement_fixed_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md",
+          "real_symbol": "TICK_NSEC",
+          "locator_topic": "jiffies tick macro",
+          "direct_old_103_consumer_ids": [
+            "A-F04",
+            "TK103-M01"
+          ],
+          "current_effective_reference_for_direct_ids": {
+            "A-F04": [
+              "RTC104-E010"
+            ],
+            "TK103-M01": [
+              "RTC104-E010"
+            ]
+          },
+          "group_or_indirect_consumers": [
+            "ABC-01 is indirect default object dependence, not direct TICK_NSEC reference"
+          ],
+          "withdraw_false_rows": [
+            "A-M01 does not exist in 103 matrices; HC102 A-M01 refers HPET address, not TICK_NSEC"
+          ],
+          "first_stop_gate": "only actual source-level symbol and listed consumer scope; group inference/ABI/real execution not signed"
+        }
+      ],
+      "actual_old_direct_count": 9,
+      "old_graph_current_changes": [
+        {
+          "old": "G102-20",
+          "old_ids": [
+            "TK103-E012",
+            "TK103-E013"
+          ],
+          "effective_ids": [
+            "HC102-E095",
+            "RTC104-E011"
+          ],
+          "from": "__clocksource_register_scale",
+          "to": "__clocksource_update_freq_scale",
+          "type": "DIRECT_CALL",
+          "gate": "registration body invocation, not running CPU"
+        },
+        {
+          "old": "G102-21",
+          "old_ids": [
+            "TK103-E008",
+            "TK103-E009"
+          ],
+          "effective_ids": [
+            "RTC104-E002",
+            "RTC104-E004"
+          ],
+          "from": "__clocksource_update_freq_scale",
+          "to": "clocks_calc_mult_shift",
+          "type": "CONDITIONAL_DIRECT_CALL",
+          "gate": "freq nonzero and valid arithmetic"
+        },
+        {
+          "old": "G102-22",
+          "old_ids": [
+            "TK103-E012",
+            "TK103-E013"
+          ],
+          "effective_ids": [
+            "RTC104-E012"
+          ],
+          "from": "__clocksource_register_scale",
+          "to": "clocksource_enqueue",
+          "type": "DIRECT_CALL",
+          "gate": "clock is not thereby selected"
+        }
+      ],
+      "old_zero_direct": "None is a count from enumerated old103 rows, not proof no indirect source dependency",
+      "false_or_free_text_removed": [
+        "A-M01",
+        "C-periodic-setting",
+        "HC102-M01..M07 asserted as per-E direct references"
+      ],
+      "first_stop_gate": "each actual direct ID must resolve in exact frozen batch; group and prose not stable IDs"
+    },
+    "R104_01": {
+      "corrections": [
+        {
+          "id": "R104-01-E047",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md::RTC104-E047",
+          "old_problem": "two independent macros under lock_cmos_prefix label",
+          "disposition": "SPLIT_DEFINITION_UNITS",
+          "valid_support_ids": [
+            "SC105-E002",
+            "SC105-E003",
+            "SC105-E012"
+          ],
+          "affected_consumers": [
+            "active_sampling_steps_matrix-05",
+            "RTC104-F01"
+          ],
+          "first_stop_gate": "no active locking claimed; lock calls commented in rtc_cmos_read"
+        },
+        {
+          "id": "R104-01-E060",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md::RTC104-E060",
+          "old_problem": "BUILDIO(b,b,char) is invocation, not macro body",
+          "disposition": "DOWNGRADE_OLD_LABEL_TO_LOCATED_INVOCATION_AND_USE_REAL_MACRO_BODY",
+          "valid_support_ids": [
+            "SC105-E005",
+            "SC105-E006"
+          ],
+          "located_invocation": {
+            "path": "mykernel/arch/x86_64/insns/io_arch.h",
+            "fixed_ref": "time@a039d9803ade",
+            "line": 239,
+            "source_text": "BUILDIO(b, b, char)",
+            "status": "POSITION_ONLY_NOT_VERIFIED_DEFINITION"
+          },
+          "affected_consumers": [
+            "rtc_field_origin_consumer_matrix-09",
+            "active_sampling_steps_matrix-02",
+            "active_sampling_steps_matrix-03",
+            "RTC104-U01",
+            "DOT BUILDIO→outb/inb"
+          ],
+          "first_stop_gate": "preprocessor branch and actual port execution not proven"
+        },
+        {
+          "id": "R104-01-GETTER",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/evidence.md::RTC104-E063,E064",
+          "old_problem": "local variable and two assignments lack actual mc146818_get_time(&tm) call expression",
+          "disposition": "ADD_CALL_BODY_PROVENANCE",
+          "valid_support_ids": [
+            "SC105-E004",
+            "RTC104-E062",
+            "RTC104-E038",
+            "RTC104-E064"
+          ],
+          "affected_consumers": [
+            "rtc_field_origin_consumer_matrix-08",
+            "active_sampling_steps_matrix-08",
+            "RTC104-F05",
+            "RTC104-F03",
+            "DOT persistent→mc_get"
+          ],
+          "first_stop_gate": "int return ignored by caller but I/O and data validity unobserved; callee signature and return separate"
+        },
+        {
+          "id": "R104-01-UNUSED",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::rtc_field_origin_consumer_matrix-07",
+          "old_problem": "E031 only rtc_cmos_read val local not unused calendar fields",
+          "disposition": "REPLACE_SUPPORT_AND_SCOPE",
+          "valid_support_ids": [
+            "RTC104-E036",
+            "RTC104-E037",
+            "RTC104-E046",
+            "RTC104-E061",
+            "RTC104-E085"
+          ],
+          "first_stop_gate": "no full-tree writers/invocations conclusion"
+        },
+        {
+          "id": "R104-01-LOCK",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::active_sampling_steps_matrix-05",
+          "old_problem": "E033 is return val rather than commented lock sites",
+          "disposition": "REPLACE_SUPPORT",
+          "valid_support_ids": [
+            "SC105-E002",
+            "SC105-E003",
+            "SC105-E012",
+            "RTC104-E032"
+          ],
+          "first_stop_gate": "lock macros empty and calls commented only here"
+        },
+        {
+          "id": "R104-01-TIMEKEEPER-M04",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::wall_clock_timekeeper_fields_matrix-04",
+          "old_problem": "E093 is difference not local_clock call",
+          "disposition": "REMAP_CONSUMER",
+          "valid_support_ids": [
+            "RTC104-E092",
+            "RTC104-E027",
+            "RTC104-E028",
+            "RTC104-E102",
+            "SC105-E101",
+            "SC105-E103"
+          ],
+          "first_stop_gate": "u64 to s64 argument conversion before function body"
+        },
+        {
+          "id": "R104-01-TIMEKEEPER-M05",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::wall_clock_timekeeper_fields_matrix-05",
+          "old_problem": "E094 is clock selection not wall_to_mono calculation",
+          "disposition": "REMAP_CONSUMER",
+          "valid_support_ids": [
+            "RTC104-E093",
+            "RTC104-E100",
+            "SC105-E007",
+            "SC105-E008"
+          ],
+          "first_stop_gate": "local difference does not write timekeeper field"
+        },
+        {
+          "id": "R104-01-TIMEKEEPER-M06",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::wall_clock_timekeeper_fields_matrix-06",
+          "old_problem": "E095 is later xtime call, setup invocation at E094",
+          "disposition": "REMAP_CONSUMER",
+          "valid_support_ids": [
+            "RTC104-E094",
+            "TK103-E067"
+          ],
+          "first_stop_gate": "weak source actual binding and clock valid"
+        },
+        {
+          "id": "R104-01-TIMEKEEPER-M07",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::wall_clock_timekeeper_fields_matrix-07",
+          "old_problem": "wrong E097/E099 call evidence for actual xtime copy",
+          "disposition": "REMAP_CONSUMER",
+          "valid_support_ids": [
+            "RTC104-E095",
+            "RTC104-E096",
+            "RTC104-E098",
+            "SC105-E107",
+            "SC105-E108"
+          ],
+          "first_stop_gate": "shift and numeric conversion legal"
+        },
+        {
+          "id": "R104-01-TIMEKEEPER-M08",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::wall_clock_timekeeper_fields_matrix-08",
+          "old_problem": "missing actual call and commented assignment evidence",
+          "disposition": "REMAP_CONSUMER",
+          "valid_support_ids": [
+            "RTC104-E095",
+            "RTC104-E097",
+            "RTC104-E098",
+            "SC105-E106"
+          ],
+          "first_stop_gate": "no active wall_to_monotonic assignment in bounded helper"
+        },
+        {
+          "id": "R104-01-MODEL-AND-GAP",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::RTC104-M12 plus deferred-findings.yaml::RTC104-U06",
+          "old_problem": "local_clock u64 return and s64 ns_to_timespec64 parameter must be paired with actual call",
+          "disposition": "ADD_EXPLICIT_INPUT_CHAIN",
+          "valid_support_ids": [
+            "SC105-E100",
+            "SC105-E101",
+            "SC105-E103",
+            "RTC104-E027",
+            "RTC104-E028",
+            "RTC104-E102"
+          ],
+          "first_stop_gate": "native_sched_clock selected path and numeric range distinct"
+        },
+        {
+          "id": "R104-01-DEFAULTMASK",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/rtc-wall-clock.md::R103-02 default-mask helper limit",
+          "old_problem": "104 E023 merely cached field declaration",
+          "disposition": "REUSE_FIXED_103_BASE_AND_NEW_SHR",
+          "valid_support_ids": [
+            "TK103-E083",
+            "TK103-E084",
+            "TK103-E088",
+            "TK103-E097",
+            "TK103-E105",
+            "RTC104-E010"
+          ],
+          "first_stop_gate": "default object/clock selection vs artificial helper examples distinct"
+        }
+      ],
+      "old_quote_count_unchanged": 104,
+      "new_source_count_is_separate": 110,
+      "first_stop_gate": "new definitions and actual expressions must support changed matrix refs, no old mutation"
+    },
+    "R104_02": {
+      "corrections": [
+        {
+          "id": "R104-02-SUBTRACTION",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/rtc-wall-clock-paths.dot::timekeeping_init→timespec_sub",
+          "old_problem": "old label says wall minus boot, despite source args lhs boot_offset rhs wall_time",
+          "disposition": "REVERSE_TEXT_DIRECTION_KEEP_TRUE_INPUT_EDGES",
+          "correct_formula": "boot_offset − wall_time",
+          "valid_support_ids": [
+            "SC105-E007",
+            "SC105-E008"
+          ],
+          "first_stop_gate": "set_normalized_timespec64 and signed subtraction normal conditions"
+        },
+        {
+          "id": "R104-02-UNWRITTEN-FIELDS",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/rtc-wall-clock-paths.dot::simple_get→tm_others",
+          "old_problem": "DATA_FLOW label implies write even though source does not write",
+          "disposition": "ANNOTATION_NOT_DATA_FLOW",
+          "valid_support_ids": [
+            "RTC104-E036",
+            "RTC104-E037",
+            "RTC104-E046",
+            "RTC104-E061"
+          ],
+          "first_stop_gate": "only bounded function and six direct downstream fields"
+        },
+        {
+          "id": "R104-02-CONTROL",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/rtc-wall-clock-paths.dot::mc_get→control",
+          "old_problem": "commented control register read is inside simple getter, not direct mc_get body",
+          "disposition": "REASSIGN_ANNOTATION_TO_SIMPLE_GET",
+          "valid_support_ids": [
+            "SC105-E010"
+          ],
+          "first_stop_gate": "not actual control read or hardware mode"
+        },
+        {
+          "id": "R104-02-INDEX-VALUE",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::rtc_field_origin_consumer_matrix-01..06",
+          "old_problem": "CMOS_READ(index constant) was equated with value returned",
+          "disposition": "SPLIT_REQUEST_INDEX_FROM_DATA_BYTE",
+          "corrected_rows": [
+            "RTC_SECONDS index0 to read byte value unknown",
+            "RTC_MINUTES index2 to read byte value unknown",
+            "RTC_HOURS index4 to read byte value unknown",
+            "RTC_DAY_OF_MONTH index7 to read byte value unknown",
+            "RTC_MONTH index8 to read byte value unknown",
+            "RTC_YEAR index9 to read byte value unknown"
+          ],
+          "valid_support_ids": [
+            "SC105-E011",
+            "SC105-E012",
+            "RTC104-E039",
+            "RTC104-E040",
+            "RTC104-E041",
+            "RTC104-E042",
+            "RTC104-E043",
+            "RTC104-E044"
+          ],
+          "first_stop_gate": "actual byte value unknown until real hardware sample"
+        },
+        {
+          "id": "R104-02-MODELS",
+          "old_ref": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rtc-wall-clock-104/facts-and-boundaries.yaml::finite_models RTC104-M07/M09/M10/M11",
+          "old_problem": "only Gregorian date specified, precise epoch seconds require midnight time input and checker offsets",
+          "disposition": "COMPLETE_DECLARED_INPUTS_AND_CONDITIONAL_CONVERSION",
+          "corrected_samples": [
+            {
+              "old_id": "RTC104-M07",
+              "full_tm": {
+                "tm_year": 100,
+                "tm_mon": 1,
+                "tm_mday": 29,
+                "tm_hour": 0,
+                "tm_min": 0,
+                "tm_sec": 0
+              },
+              "calendar": "2000-02-29 00:00:00",
+              "checker": "rtc_valid_tm would accept if independently invoked",
+              "epoch_seconds": 951782400
+            },
+            {
+              "old_id": "RTC104-M09",
+              "full_tm": {
+                "tm_year": 70,
+                "tm_mon": 0,
+                "tm_mday": 1,
+                "tm_hour": 0,
+                "tm_min": 0,
+                "tm_sec": 0
+              },
+              "mktime_args": {
+                "year0": 1970,
+                "mon0": 1,
+                "day": 1,
+                "hour": 0,
+                "min": 0,
+                "sec": 0
+              },
+              "calendar": "1970-01-01 00:00:00",
+              "epoch_seconds": 0,
+              "implementation_gate": "uint mon0=1 subtract 2 wraps then uint->int implementation-defined"
+            },
+            {
+              "old_id": "RTC104-M10",
+              "full_tm": {
+                "tm_year": 100,
+                "tm_mon": 1,
+                "tm_mday": 29,
+                "tm_hour": 0,
+                "tm_min": 0,
+                "tm_sec": 0
+              },
+              "mktime_args": {
+                "year0": 2000,
+                "mon0": 2,
+                "day": 29,
+                "hour": 0,
+                "min": 0,
+                "sec": 0
+              },
+              "epoch_seconds": 951782400
+            },
+            {
+              "old_id": "RTC104-M11",
+              "full_tm": {
+                "tm_year": 100,
+                "tm_mon": 2,
+                "tm_mday": 1,
+                "tm_hour": 0,
+                "tm_min": 0,
+                "tm_sec": 0
+              },
+              "mktime_args": {
+                "year0": 2000,
+                "mon0": 3,
+                "day": 1,
+                "hour": 0,
+                "min": 0,
+                "sec": 0
+              },
+              "epoch_seconds": 951868800
+            },
+            {
+              "old_id": "RTC104-M08",
+              "full_tm": {
+                "tm_year": 101,
+                "tm_mon": 1,
+                "tm_mday": 29,
+                "tm_hour": 0,
+                "tm_min": 0,
+                "tm_sec": 0
+              },
+              "calendar": "2001-02-29 00:00:00",
+              "checker": "rtc_valid_tm would reject on Feb length",
+              "mktime_relation": "unchecked arithmetic may coincide with 2001-03-01 midnight under documented integer-domain assumptions"
+            }
+          ],
+          "valid_support_ids": [
+            "RTC104-E078",
+            "RTC104-E079",
+            "RTC104-E080",
+            "RTC104-E085",
+            "RTC104-E086",
+            "RTC104-E087",
+            "RTC104-E088",
+            "SC105-E009"
+          ],
+          "first_stop_gate": "no actual invalid RTC sample or compiler chosen January mapping"
+        }
+      ],
+      "first_stop_gate": "calendar samples and graph semantics depend on C domain and actual source; no real RTC read"
+    }
+  },
+  "source_evidence_index": [
+    {
+      "id": "SC105-E001",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E001",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/scripts/options_flags.cmake",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "real_symbol": "set(CMAKE_C_FLAGS)",
+      "line_start": 58,
+      "line_end": 61,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E002",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E002",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "path": "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "real_symbol": "lock_cmos_prefix",
+      "line_start": 16,
+      "line_end": 16,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E003",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E003",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "path": "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "real_symbol": "lock_cmos_suffix",
+      "line_start": 17,
+      "line_end": 17,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E004",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E004",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/rtc.c",
+      "path": "mykernel/arch/x86_64/kernel/rtc.c",
+      "real_symbol": "read_persistent_clock64",
+      "line_start": 45,
+      "line_end": 48,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E005",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E005",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/io_arch.h",
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "real_symbol": "BUILDIO",
+      "line_start": 188,
+      "line_end": 190,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E006",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E006",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/io_arch.h",
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "real_symbol": "BUILDIO",
+      "line_start": 197,
+      "line_end": 200,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E007",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E007",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 251,
+      "line_end": 251,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E008",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E008",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.h",
+      "path": "mykernel/time/misc/time_misc.h",
+      "real_symbol": "timespec64_sub",
+      "line_start": 80,
+      "line_end": 83,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E009",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E009",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "mktime64",
+      "line_start": 256,
+      "line_end": 258,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E010",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E010",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "simple_mc146818_gettime",
+      "line_start": 36,
+      "line_end": 36,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E011",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E011",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "simple_mc146818_gettime",
+      "line_start": 18,
+      "line_end": 20,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E012",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E012",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/rtc.c",
+      "path": "mykernel/arch/x86_64/kernel/rtc.c",
+      "real_symbol": "rtc_cmos_read",
+      "line_start": 22,
+      "line_end": 25,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E013",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E013",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/init/main.c",
+      "path": "mykernel/init/main.c",
+      "real_symbol": "start_kernel",
+      "line_start": 138,
+      "line_end": 140,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E014",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E014",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/init/main.c",
+      "path": "mykernel/init/main.c",
+      "real_symbol": "start_kernel",
+      "line_start": 163,
+      "line_end": 166,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E015",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E015",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/init/main.c",
+      "path": "mykernel/init/main.c",
+      "real_symbol": "start_kernel",
+      "line_start": 176,
+      "line_end": 177,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E016",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E016",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/setup.c",
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "real_symbol": "setup_arch",
+      "line_start": 211,
+      "line_end": 213,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E017",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E017",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/time.c",
+      "path": "mykernel/arch/x86_64/kernel/time.c",
+      "real_symbol": "late_time_init",
+      "line_start": 50,
+      "line_end": 51,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E018",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E018",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/time.c",
+      "path": "mykernel/arch/x86_64/kernel/time.c",
+      "real_symbol": "late_time_init",
+      "line_start": 58,
+      "line_end": 58,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E019",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E019",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/x86_init.c",
+      "path": "mykernel/arch/x86_64/kernel/x86_init.c",
+      "real_symbol": "x86_init",
+      "line_start": 115,
+      "line_end": 118,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E020",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E020",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/x86_init.c",
+      "path": "mykernel/arch/x86_64/kernel/x86_init.c",
+      "real_symbol": "x86_platform",
+      "line_start": 147,
+      "line_end": 149,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E021",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E021",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/x86_init.h",
+      "path": "mykernel/arch/x86_64/include/asm/x86_init.h",
+      "real_symbol": "x86_hyper_init",
+      "line_start": 127,
+      "line_end": 129,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E022",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E022",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/x86_init.h",
+      "path": "mykernel/arch/x86_64/include/asm/x86_init.h",
+      "real_symbol": "x86_platform_ops",
+      "line_start": 313,
+      "line_end": 314,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E023",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E023",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/hypervisor.h",
+      "path": "mykernel/arch/x86_64/include/asm/hypervisor.h",
+      "real_symbol": "init_hypervisor_platform",
+      "line_start": 73,
+      "line_end": 73,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E024",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E024",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/hypervisor.h",
+      "path": "mykernel/arch/x86_64/include/asm/hypervisor.h",
+      "real_symbol": "init_hypervisor_platform",
+      "line_start": 79,
+      "line_end": 79,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E025",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E025",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/hypervisor.c",
+      "path": "mykernel/cpu/hypervisor.c",
+      "real_symbol": "detect_hypervisor_vendor",
+      "line_start": 64,
+      "line_end": 68,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E026",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E026",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/hypervisor.c",
+      "path": "mykernel/cpu/hypervisor.c",
+      "real_symbol": "detect_hypervisor_vendor",
+      "line_start": 69,
+      "line_end": 72,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E027",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E027",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/hypervisor.c",
+      "path": "mykernel/cpu/hypervisor.c",
+      "real_symbol": "simple_init_hypervisor_platform",
+      "line_start": 98,
+      "line_end": 101,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E028",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E028",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/hypervisor.c",
+      "path": "mykernel/cpu/hypervisor.c",
+      "real_symbol": "simple_init_hypervisor_platform",
+      "line_start": 103,
+      "line_end": 107,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E029",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E029",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/hypervisor.c",
+      "path": "mykernel/cpu/hypervisor.c",
+      "real_symbol": "copy_array",
+      "line_start": 89,
+      "line_end": 91,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E030",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E030",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/vmware.c",
+      "path": "mykernel/cpu/vmware.c",
+      "real_symbol": "x86_hyper_vmware",
+      "line_start": 254,
+      "line_end": 258,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E031",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E031",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/vmware.c",
+      "path": "mykernel/cpu/vmware.c",
+      "real_symbol": "vmware_platform",
+      "line_start": 217,
+      "line_end": 220,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E032",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E032",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/vmware.c",
+      "path": "mykernel/cpu/vmware.c",
+      "real_symbol": "vmware_platform",
+      "line_start": 221,
+      "line_end": 223,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E033",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E033",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/vmware.c",
+      "path": "mykernel/cpu/vmware.c",
+      "real_symbol": "vmware_platform",
+      "line_start": 224,
+      "line_end": 226,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E034",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E034",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/vmware.c",
+      "path": "mykernel/cpu/vmware.c",
+      "real_symbol": "vmware_platform_setup",
+      "line_start": 157,
+      "line_end": 161,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E035",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E035",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/vmware.c",
+      "path": "mykernel/cpu/vmware.c",
+      "real_symbol": "vmware_platform_setup",
+      "line_start": 172,
+      "line_end": 174,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E036",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E036",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/cpu/vmware.c",
+      "path": "mykernel/cpu/vmware.c",
+      "real_symbol": "vmware_get_tsc_khz",
+      "line_start": 68,
+      "line_end": 68,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E037",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E037",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_cpu_early",
+      "line_start": 341,
+      "line_end": 341,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E038",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E038",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_cpu_early",
+      "line_start": 350,
+      "line_end": 353,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E039",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E039",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "DUMMY_TSC_KHZ",
+      "line_start": 41,
+      "line_end": 41,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E040",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E040",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/processor/processor_const_arch.h",
+      "path": "mykernel/arch/x86_64/processor/processor_const_arch.h",
+      "real_symbol": "CPUID_LEAF_TSC",
+      "line_start": 229,
+      "line_end": 229,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E041",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E041",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/processor/processor_const_arch.h",
+      "path": "mykernel/arch/x86_64/processor/processor_const_arch.h",
+      "real_symbol": "CPUID_LEAF_FREQ",
+      "line_start": 230,
+      "line_end": 230,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E042",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E042",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "cpu_khz_from_cpuid",
+      "line_start": 323,
+      "line_end": 327,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E043",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E043",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "cpu_khz_from_cpuid",
+      "line_start": 331,
+      "line_end": 334,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E044",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E044",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_tsc",
+      "line_start": 250,
+      "line_end": 254,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E045",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E045",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_tsc",
+      "line_start": 258,
+      "line_end": 261,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E046",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E046",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_tsc",
+      "line_start": 264,
+      "line_end": 264,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E047",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E047",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_tsc",
+      "line_start": 288,
+      "line_end": 292,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E048",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E048",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_tsc",
+      "line_start": 292,
+      "line_end": 294,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E049",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E049",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_tsc",
+      "line_start": 296,
+      "line_end": 297,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E050",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E050",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_calibrate_tsc",
+      "line_start": 316,
+      "line_end": 316,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E051",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E051",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "determine_cpu_tsc_frequencies",
+      "line_start": 376,
+      "line_end": 380,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E052",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E052",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "determine_cpu_tsc_frequencies",
+      "line_start": 381,
+      "line_end": 383,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E053",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E053",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "determine_cpu_tsc_frequencies",
+      "line_start": 395,
+      "line_end": 398,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E054",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E054",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "determine_cpu_tsc_frequencies",
+      "line_start": 400,
+      "line_end": 401,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E055",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E055",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "tsc_early_init",
+      "line_start": 442,
+      "line_end": 444,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E056",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E056",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "tsc_enable_sched_clock",
+      "line_start": 430,
+      "line_end": 432,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E057",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E057",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "tsc_init",
+      "line_start": 461,
+      "line_end": 464,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E058",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E058",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "tsc_init",
+      "line_start": 465,
+      "line_end": 469,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E059",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E059",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "tsc_init",
+      "line_start": 491,
+      "line_end": 492,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E060",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E060",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "tsc_init",
+      "line_start": 495,
+      "line_end": 496,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E061",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E061",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "clocksource_mark_unstable",
+      "line_start": 113,
+      "line_end": 117,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E062",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E062",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_unstable",
+      "line_start": 80,
+      "line_end": 82,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E063",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E063",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/timer.h",
+      "path": "mykernel/arch/x86_64/include/asm/timer.h",
+      "real_symbol": "cyc2ns_data",
+      "line_start": 30,
+      "line_end": 34,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E064",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E064",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/timer.h",
+      "path": "mykernel/arch/x86_64/include/asm/timer.h",
+      "real_symbol": "cyc2ns",
+      "line_start": 35,
+      "line_end": 38,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E065",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E065",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/percpu.h",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "real_symbol": "DECLARE_PER_CPU",
+      "line_start": 87,
+      "line_end": 88,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E066",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E066",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/smp/percpu_area.c",
+      "path": "mykernel/arch/x86_64/smp/percpu_area.c",
+      "real_symbol": "cyc2ns",
+      "line_start": 89,
+      "line_end": 93,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E067",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E067",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__simple_cyc2ns_read",
+      "line_start": 82,
+      "line_end": 85,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E068",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E068",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__cycles_2_ns",
+      "line_start": 127,
+      "line_end": 130,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E069",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E069",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__cycles_2_ns",
+      "line_start": 129,
+      "line_end": 132,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E070",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E070",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "cycles_2_ns",
+      "line_start": 138,
+      "line_end": 141,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E071",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E071",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__set_cyc2ns_scale",
+      "line_start": 150,
+      "line_end": 150,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E072",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E072",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__set_cyc2ns_scale",
+      "line_start": 157,
+      "line_end": 158,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E073",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E073",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__set_cyc2ns_scale",
+      "line_start": 166,
+      "line_end": 169,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E074",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E074",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__set_cyc2ns_scale",
+      "line_start": 171,
+      "line_end": 172,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E075",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E075",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__set_cyc2ns_scale",
+      "line_start": 174,
+      "line_end": 174,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E076",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E076",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__set_cyc2ns_scale",
+      "line_start": 176,
+      "line_end": 180,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E077",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E077",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "cyc2ns_init_boot_cpu",
+      "line_start": 202,
+      "line_end": 205,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E078",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E078",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/percpu.h",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "real_symbol": "this_cpu_ptr",
+      "line_start": 250,
+      "line_end": 250,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E079",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E079",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/percpu.h",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "real_symbol": "arch_raw_cpu_ptr",
+      "line_start": 210,
+      "line_end": 214,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E080",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E080",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/percpu.h",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "real_symbol": "per_cpu_ptr",
+      "line_start": 244,
+      "line_end": 248,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E081",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E081",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/percpu.h",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "real_symbol": "raw_cpu_read_long",
+      "line_start": 208,
+      "line_end": 208,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E082",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E082",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/mm/misc/percpu.c",
+      "path": "mykernel/mm/misc/percpu.c",
+      "real_symbol": "simple_pcpu_setup_first_chunk",
+      "line_start": 354,
+      "line_end": 356,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E083",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E083",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/mm/misc/percpu.c",
+      "path": "mykernel/mm/misc/percpu.c",
+      "real_symbol": "simple_pcpu_setup_first_chunk",
+      "line_start": 360,
+      "line_end": 363,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E084",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E084",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "clocks_calc_mult_shift",
+      "line_start": 57,
+      "line_end": 61,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E085",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E085",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "clocks_calc_mult_shift",
+      "line_start": 67,
+      "line_end": 71,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E086",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E086",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "clocks_calc_mult_shift",
+      "line_start": 74,
+      "line_end": 75,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E087",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E087",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/math64.h",
+      "path": "mykernel/include/linux/kernel/math64.h",
+      "real_symbol": "mul_u64_u32_shr",
+      "line_start": 160,
+      "line_end": 160,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E088",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E088",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/math64.h",
+      "path": "mykernel/include/linux/kernel/math64.h",
+      "real_symbol": "mul_u64_u32_shr",
+      "line_start": 177,
+      "line_end": 180,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E089",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E089",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/math64.h",
+      "path": "mykernel/include/linux/kernel/math64.h",
+      "real_symbol": "mul_u64_u32_shr",
+      "line_start": 180,
+      "line_end": 184,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E090",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E090",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/asm-generic/div64.h",
+      "path": "mykernel/include/linux/kernel/asm-generic/div64.h",
+      "real_symbol": "do_div",
+      "line_start": 44,
+      "line_end": 48,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E091",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E091",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "__use_tsc",
+      "line_start": 51,
+      "line_end": 51,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E092",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E092",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_sched_clock",
+      "line_start": 222,
+      "line_end": 225,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E093",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E093",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "native_sched_clock",
+      "line_start": 237,
+      "line_end": 237,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E094",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E094",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/x86msr.h",
+      "path": "mykernel/arch/x86_64/insns/x86msr.h",
+      "real_symbol": "rdtsc",
+      "line_start": 65,
+      "line_end": 67,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E095",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E095",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timer/timer.c",
+      "path": "mykernel/time/timer/timer.c",
+      "real_symbol": "jiffies_64",
+      "line_start": 38,
+      "line_end": 38,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E096",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E096",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/systick/systick_const.h",
+      "path": "mykernel/time/systick/systick_const.h",
+      "real_symbol": "INITIAL_JIFFIES",
+      "line_start": 69,
+      "line_end": 69,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E097",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E097",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/systick/systick_macro.h",
+      "path": "mykernel/time/systick/systick_macro.h",
+      "real_symbol": "INITIAL_JIFFIES",
+      "line_start": 227,
+      "line_end": 227,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E098",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E098",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h",
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "real_symbol": "HZ",
+      "line_start": 9,
+      "line_end": 9,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E099",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E099",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel.lds",
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "real_symbol": "jiffies",
+      "line_start": 17,
+      "line_end": 17,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E100",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E100",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/sched/clock.h",
+      "path": "mykernel/include/linux/sched/clock.h",
+      "real_symbol": "local_clock",
+      "line_start": 53,
+      "line_end": 53,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E101",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E101",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 244,
+      "line_end": 245,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E102",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E102",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 251,
+      "line_end": 251,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E103",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E103",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "ns_to_timespec64",
+      "line_start": 52,
+      "line_end": 56,
+      "line_count": 5,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E104",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E104",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "ns_to_timespec64",
+      "line_start": 55,
+      "line_end": 57,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E105",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E105",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "ns_to_timespec64",
+      "line_start": 64,
+      "line_end": 65,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E106",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E106",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "tk_set_wall_to_mono",
+      "line_start": 59,
+      "line_end": 59,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E107",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E107",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "tk_set_xtime",
+      "line_start": 35,
+      "line_end": 37,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E108",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E108",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 258,
+      "line_end": 261,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E109",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E109",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "get_loops_per_jiffy",
+      "line_start": 417,
+      "line_end": 420,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E110",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E110",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/tsc.c",
+      "path": "mykernel/arch/x86_64/kernel/tsc.c",
+      "real_symbol": "tsc_enable_sched_clock",
+      "line_start": 425,
+      "line_end": 425,
+      "line_count": 1,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E111",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E111",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/smp/setup_percpu.c",
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "real_symbol": "setup_per_cpu_areas",
+      "line_start": 73,
+      "line_end": 75,
+      "line_count": 3,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E112",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E112",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/smp/setup_percpu.c",
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "real_symbol": "setup_per_cpu_areas",
+      "line_start": 76,
+      "line_end": 79,
+      "line_count": 4,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E113",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E113",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/smp/setup_percpu.c",
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "real_symbol": "setup_per_cpu_areas",
+      "line_start": 112,
+      "line_end": 113,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    },
+    {
+      "id": "SC105-E114",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-E114",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/smp/setup_percpu.c",
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "real_symbol": "setup_per_cpu_areas",
+      "line_start": 141,
+      "line_end": 142,
+      "line_count": 2,
+      "scope": "FIXED_TIME_SOURCE_LITERAL_ONLY"
+    }
+  ],
+  "source_evidence_count": 114,
+  "source_quote_paths": [
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+    "mykernel/arch/x86_64/kernel/rtc.c",
+    "mykernel/arch/x86_64/insns/io_arch.h",
+    "mykernel/time/timekeeping/timekeeping.c",
+    "mykernel/time/misc/time_misc.h",
+    "mykernel/time/misc/time_misc.c",
+    "mykernel/drivers/rtc/rtc-mc146818.c",
+    "mykernel/init/main.c",
+    "mykernel/arch/x86_64/kernel/setup.c",
+    "mykernel/arch/x86_64/kernel/time.c",
+    "mykernel/arch/x86_64/kernel/x86_init.c",
+    "mykernel/arch/x86_64/include/asm/x86_init.h",
+    "mykernel/arch/x86_64/include/asm/hypervisor.h",
+    "mykernel/cpu/hypervisor.c",
+    "mykernel/cpu/vmware.c",
+    "mykernel/arch/x86_64/kernel/tsc.c",
+    "mykernel/arch/x86_64/processor/processor_const_arch.h",
+    "mykernel/time/clocksource/clocksource.c",
+    "mykernel/arch/x86_64/include/asm/timer.h",
+    "mykernel/arch/x86_64/include/asm/percpu.h",
+    "mykernel/arch/x86_64/smp/percpu_area.c",
+    "mykernel/mm/misc/percpu.c",
+    "mykernel/include/linux/kernel/math64.h",
+    "mykernel/include/linux/kernel/asm-generic/div64.h",
+    "mykernel/arch/x86_64/insns/x86msr.h",
+    "mykernel/time/timer/timer.c",
+    "mykernel/time/systick/systick_const.h",
+    "mykernel/time/systick/systick_macro.h",
+    "mykernel/include/linux/kernel/asm-generic/param.h",
+    "mykernel/arch/x86_64/kernel.lds",
+    "mykernel/include/linux/sched/clock.h",
+    "mykernel/arch/x86_64/smp/setup_percpu.c"
+  ],
+  "matrices": {
+    "startup_order_and_gates": [
+      {
+        "id": "startup_order_and_gates-01",
+        "topic": "entry",
+        "source_fact": "start_kernel calls setup_arch before setup_per_cpu_areas",
+        "preconditions": "actual boot entry executed",
+        "conditional_result": "source-level order architecture then perCPU allocator",
+        "first_stop_gate": "not hardware boot reachability",
+        "evidence_ids": [
+          "SC105-E013"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-02",
+        "topic": "hypervisor",
+        "source_fact": "setup_arch invokes init_hypervisor_platform then tsc_early_init",
+        "preconditions": "setup_arch reaches both",
+        "conditional_result": "virtualization dispatch precedes frequency estimate",
+        "first_stop_gate": "config branch and selected callback unknown",
+        "evidence_ids": [
+          "SC105-E016",
+          "SC105-E023",
+          "SC105-E024"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-03",
+        "topic": "hypervisor_modes",
+        "source_fact": "CONFIG_HYPERVISOR_GUEST selects alias or no-op",
+        "preconditions": "compiler chooses one branch",
+        "conditional_result": "if disabled noop; if enabled simple vendor detector",
+        "first_stop_gate": "active preprocessing and actual guest unknown",
+        "evidence_ids": [
+          "SC105-E023",
+          "SC105-E024",
+          "SC105-E027",
+          "SC105-E028"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-04",
+        "topic": "vendor_detect",
+        "source_fact": "hypervisor detector chooses nonzero highest priority",
+        "preconditions": "candidate detect callbacks return normal",
+        "conditional_result": "winning h sets x86_init.hyper.init_platform if nonnull",
+        "first_stop_gate": "vendor actual sample opaque",
+        "evidence_ids": [
+          "SC105-E025",
+          "SC105-E026",
+          "SC105-E027",
+          "SC105-E028",
+          "SC105-E029",
+          "SC105-E030"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-05",
+        "topic": "platform_callbacks",
+        "source_fact": "x86_platform originally points to native calibration; VMware callback can overwrite both",
+        "preconditions": "VMware candidate chosen and hypercall ebx != UINT_MAX",
+        "conditional_result": "both calibrate_cpu and calibrate_tsc point vmware_get_tsc_khz returning stored value",
+        "first_stop_gate": "no real VMware or returned Hz proof",
+        "evidence_ids": [
+          "SC105-E020",
+          "SC105-E028",
+          "SC105-E030",
+          "SC105-E034",
+          "SC105-E035",
+          "SC105-E036"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-06",
+        "topic": "early_tsc",
+        "source_fact": "setup_arch calls tsc_early_init while setup_per_cpu_areas not yet called",
+        "preconditions": "entry reaches this order",
+        "conditional_result": "early frequencies can attempt boot CPU cyc2ns setup before template copy",
+        "first_stop_gate": "perCPU pointer identity and mapping not proven",
+        "evidence_ids": [
+          "SC105-E013",
+          "SC105-E016",
+          "SC105-E055",
+          "SC105-E056",
+          "SC105-E077",
+          "SC105-E082"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-07",
+        "topic": "early_return",
+        "source_fact": "tsc_early_init early frequency function false returns before tsc_enable_sched_clock",
+        "preconditions": "source reaches frequency gate",
+        "conditional_result": "__use_tsc remains false in this path absent other writers",
+        "first_stop_gate": "actual gate/binary reachability unknown",
+        "evidence_ids": [
+          "SC105-E054",
+          "SC105-E055",
+          "SC105-E056",
+          "SC105-E091"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-08",
+        "topic": "success_enable",
+        "source_fact": "success branch calls cyc2ns_init_boot_cpu then writes __use_tsc=true",
+        "preconditions": "nonzero tsc_khz and successful CPU pointer operations",
+        "conditional_result": "TSC scheduler branch can be chosen after initialization",
+        "first_stop_gate": "failed pointer/callback/sync not shown by source",
+        "evidence_ids": [
+          "SC105-E055",
+          "SC105-E056",
+          "SC105-E077",
+          "SC105-E091"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-09",
+        "topic": "percpu_after",
+        "source_fact": "start_kernel later calls setup_per_cpu_areas; actual setup_per_cpu_areas body first_chunk call, offset publishing, CPU0-only GS update at fixedtime setup_percpu.c",
+        "preconditions": "setup_arch returned normally",
+        "conditional_result": "perCPU template copy and offsets are later source requests",
+        "first_stop_gate": "success of memory allocation and GS mapping not proven; actual remapping and GS state remain unobserved",
+        "evidence_ids": [
+          "SC105-E013",
+          "SC105-E082",
+          "SC105-E083",
+          "SC105-E111",
+          "SC105-E112",
+          "SC105-E113",
+          "SC105-E114"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-10",
+        "topic": "timekeeper_stage",
+        "source_fact": "start_kernel timekeeping_init after perCPU setup",
+        "preconditions": "earlier steps normal",
+        "conditional_result": "local_clock evaluates __use_tsc at boot_offset use point",
+        "first_stop_gate": "read of device and consistent clock mapping unknown",
+        "evidence_ids": [
+          "SC105-E014",
+          "SC105-E100",
+          "SC105-E101"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-11",
+        "topic": "late_stage",
+        "source_fact": "start_kernel late_time_init after timekeeping_init",
+        "preconditions": "all earlier functions return",
+        "conditional_result": "late hpet setup then tsc_init after boot_offset already computed",
+        "first_stop_gate": "later enabling cannot retroactively change earlier chosen path",
+        "evidence_ids": [
+          "SC105-E014",
+          "SC105-E015",
+          "SC105-E017",
+          "SC105-E018"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-12",
+        "topic": "late_retry",
+        "source_fact": "tsc_init if no tsc_khz calls determine(false) with body calibration branch commented",
+        "preconditions": "early was zero, late path reached",
+        "conditional_result": "may still fail and return; if nonzero invokes enable",
+        "first_stop_gate": "not proof a new calibrated value was obtained",
+        "evidence_ids": [
+          "SC105-E057",
+          "SC105-E058"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "startup_order_and_gates-13",
+        "topic": "late_mark",
+        "source_fact": "tsc_init active clocksource_mark_unstable after its gates; register expression commented",
+        "preconditions": "function reaches end",
+        "conditional_result": "clocksource flags may become unstable independent of scheduler __use_tsc",
+        "first_stop_gate": "no actual watch queue or clocksource selection proof",
+        "evidence_ids": [
+          "SC105-E059",
+          "SC105-E060",
+          "SC105-E061",
+          "SC105-E062"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "frequency_source_and_units": [
+      {
+        "id": "frequency_source_and_units-01",
+        "topic": "callback_types",
+        "source_fact": "x86_platform_ops has ulong callbacks calibrate_cpu and calibrate_tsc",
+        "preconditions": "initial x86_platform object chosen",
+        "conditional_result": "two independently callable calibration sources",
+        "first_stop_gate": "callback may be overwritten by platform init",
+        "evidence_ids": [
+          "SC105-E020",
+          "SC105-E022"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-02",
+        "topic": "native_CPU_cpuid_guard",
+        "source_fact": "cpu_khz_from_cpuid tests vendor Intel and cpuid_level >=CPUID_LEAF_FREQ 0x16",
+        "preconditions": "boot_cpu_data valid and guards true",
+        "conditional_result": "function requests CPU frequency candidate",
+        "first_stop_gate": "does not certify actual leaf semantics",
+        "evidence_ids": [
+          "SC105-E041",
+          "SC105-E042"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-03",
+        "topic": "native_CPU_active_leaf",
+        "source_fact": "commented CPUID_LEAF_FREQ request while active CPUID_LEAF_TSC 0x15",
+        "preconditions": "guard passes, cpuid returns",
+        "conditional_result": "EAX is multiplied by1000 as if MHz and returned as kHz",
+        "first_stop_gate": "cannot assume leaf0x15 EAX denotes nominal MHz",
+        "evidence_ids": [
+          "SC105-E040",
+          "SC105-E041",
+          "SC105-E043"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-04",
+        "topic": "native_CPU_fallback",
+        "source_fact": "native_calibrate_cpu_early replaces zero candidate with DUMMY_TSC_KHZ=3e6",
+        "preconditions": "selected native callback and CPUID candidate0",
+        "conditional_result": "returns 3000000 in ulong for fixed expression",
+        "first_stop_gate": "dummy value not measured CPU freq",
+        "evidence_ids": [
+          "SC105-E037",
+          "SC105-E038",
+          "SC105-E039"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-05",
+        "topic": "TSC_guard",
+        "source_fact": "native_calibrate_tsc tests Intel vendor and cpuid_level >=0x15",
+        "preconditions": "selected native callback",
+        "conditional_result": "other vendor/insufficient level returns0",
+        "first_stop_gate": "vendor and level unobserved",
+        "evidence_ids": [
+          "SC105-E040",
+          "SC105-E044"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-06",
+        "topic": "TSC_ratio",
+        "source_fact": "CPUID_LEAF_TSC reads u32 denominator EAX numerator EBX crystal ECX",
+        "preconditions": "both ratio fields nonzero",
+        "conditional_result": "zero EAX or EBX returns0 before divide",
+        "first_stop_gate": "CPU return values and physical meaning opaque",
+        "evidence_ids": [
+          "SC105-E045"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-07",
+        "topic": "crystal_primary",
+        "source_fact": "ecx_hz/1000 assigned u32 crystal_khz",
+        "preconditions": "nonzero ECX Hz and no overflow",
+        "conditional_result": "integer truncation before ratio; Hz to integer kHz",
+        "first_stop_gate": "ECX physical origin unknown",
+        "evidence_ids": [
+          "SC105-E046"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-08",
+        "topic": "crystal_backup",
+        "source_fact": "if zero crystal and cpuid_level >=leaf0x16 calls CPUID_LEAF_FREQ",
+        "preconditions": "runtime branch and denom/numer nonzero",
+        "conditional_result": "eax_base_mhz*1000*denominator/numerator in unsigned intermediates",
+        "first_stop_gate": "u32 intermediate overflow and leaf semantics first unproven",
+        "evidence_ids": [
+          "SC105-E041",
+          "SC105-E047",
+          "SC105-E048"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-09",
+        "topic": "crystal_zero",
+        "source_fact": "no crystal after backup returns0",
+        "preconditions": "fallback absent or zero",
+        "conditional_result": "TSC calibration call returns0",
+        "first_stop_gate": "no physical frequency proof",
+        "evidence_ids": [
+          "SC105-E049"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-10",
+        "topic": "TSC_final",
+        "source_fact": "returns crystal_khz*ebx_numerator/eax_denominator",
+        "preconditions": "u32 intermediate multiplication and nonzero denominator valid",
+        "conditional_result": "integer truncated kHz from ratio; overflow possible before division",
+        "first_stop_gate": "not unrestricted real TSC freq",
+        "evidence_ids": [
+          "SC105-E050"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-11",
+        "topic": "vmware_report",
+        "source_fact": "VMware hypercall returns EAX and EBX highword with guard",
+        "preconditions": "guest selected and ebx != UINT_MAX",
+        "conditional_result": "lpj and tsc_khz assembled u64 then do_div by1000 to kHz",
+        "first_stop_gate": "hypercall is opaque and guard is not device certification",
+        "evidence_ids": [
+          "SC105-E034",
+          "SC105-E035",
+          "SC105-E036",
+          "SC105-E090"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-12",
+        "topic": "frequency_owners",
+        "source_fact": "determine(true) assigns cpu_khz and selects tsc_early_khz or calibrate_tsc",
+        "preconditions": "callbacks normal",
+        "conditional_result": "two globals can differ, source early_khz may short circuit",
+        "first_stop_gate": "tsc_early_khz producer unknown",
+        "evidence_ids": [
+          "SC105-E051",
+          "SC105-E052"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-13",
+        "topic": "freq_khz_field",
+        "source_fact": "clocksource_tsc.freq_khz stored inside early calibrated else before later zero fallback",
+        "preconditions": "tsc_early_khz is zero and callback branch reached",
+        "conditional_result": "field write not synonymous with final tsc_khz value if later fallback used",
+        "first_stop_gate": "no clocksource registration or selection proof",
+        "evidence_ids": [
+          "SC105-E052",
+          "SC105-E053",
+          "SC105-E059"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-14",
+        "topic": "freq_sanity",
+        "source_fact": "zero tsc_khz falls back cpu_khz; else abs(cpu_khz -tsc_khz) threshold may reset cpu_khz",
+        "preconditions": "values and abs macro type semantics defined",
+        "conditional_result": "zero could lead to false; fallback retains distinct origin",
+        "first_stop_gate": "unsigned subtraction before abs cannot be treated as mathematical signed abs automatically",
+        "evidence_ids": [
+          "SC105-E053",
+          "SC105-E054"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "frequency_source_and_units-15",
+        "topic": "clocksource_vs_sched",
+        "source_fact": "tsc_enable_sched_clock flips __use_tsc but tsc_init may mark clocksource_tsc unstable",
+        "preconditions": "both paths reached conditionally",
+        "conditional_result": "scheduler read branch, clocksource flags and clocksource registration distinct",
+        "first_stop_gate": "actual selected timekeeper clock and source reliability unknown",
+        "evidence_ids": [
+          "SC105-E056",
+          "SC105-E059",
+          "SC105-E060",
+          "SC105-E061",
+          "SC105-E062"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "per_cpu_scale_provenance": [
+      {
+        "id": "per_cpu_scale_provenance-01",
+        "topic": "template",
+        "source_fact": "cyc2ns template mul=1431655765 shift32 offset0",
+        "preconditions": "template object linked",
+        "conditional_result": "initial numeric inputs for conversion if actually addressed",
+        "first_stop_gate": "does not certify copied CPU object or current GS base",
+        "evidence_ids": [
+          "SC105-E063",
+          "SC105-E064",
+          "SC105-E066"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-02",
+        "topic": "declaration",
+        "source_fact": "DECLARE_PER_CPU macro defined and perCPU template instantiated separately",
+        "preconditions": "build uses declared perCPU symbol",
+        "conditional_result": "definition macro and template object are different units",
+        "first_stop_gate": "symbol visibility not runtime mapping",
+        "evidence_ids": [
+          "SC105-E065",
+          "SC105-E066"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-03",
+        "topic": "current_CPU_ptr",
+        "source_fact": "this_cpu_ptr maps arch_raw_cpu_ptr uses rdgsbase with ignored argument",
+        "preconditions": "valid architecture wrapper and current GS offset",
+        "conditional_result": "pointer computation is CPU-context-dependent",
+        "first_stop_gate": "GS base and pointer valid not observed",
+        "evidence_ids": [
+          "SC105-E078",
+          "SC105-E079",
+          "SC105-E081"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-04",
+        "topic": "three_reads",
+        "source_fact": "__simple_cyc2ns_read uses 3 independent READ_ONCE of offset/mul/shift",
+        "preconditions": "current pointer valid and fields initialized",
+        "conditional_result": "each component read from c->data, not one atomic triple snapshot",
+        "first_stop_gate": "concurrent updates and preemption state unknown",
+        "evidence_ids": [
+          "SC105-E067"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-05",
+        "topic": "scale_read",
+        "source_fact": "__cycles_2_ns reads data then offset + mul_u64_u32_shr",
+        "preconditions": "scaling operands and shift legal",
+        "conditional_result": "u64 result wraps modulo2^64 if arithmetic within expression domain",
+        "first_stop_gate": "actual TSC timestamp and coherent fields unobserved",
+        "evidence_ids": [
+          "SC105-E068",
+          "SC105-E069"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-06",
+        "topic": "wrapper",
+        "source_fact": "cycles_2_ns wraps __cycles_2_ns with commented preempt guards",
+        "preconditions": "function normal",
+        "conditional_result": "perCPU relocation or migration safety not provided by these lines",
+        "first_stop_gate": "no runtime scheduling or consistency evidence",
+        "evidence_ids": [
+          "SC105-E070"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-07",
+        "topic": "old_value",
+        "source_fact": "__set_cyc2ns_scale computes ns_now=cycles_2_ns(tsc_now) first",
+        "preconditions": "current CPU old data valid",
+        "conditional_result": "captures old representation numeric value at same count",
+        "first_stop_gate": "not same CPU as intended target unless separately established",
+        "evidence_ids": [
+          "SC105-E071",
+          "SC105-E075"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-08",
+        "topic": "new_factor",
+        "source_fact": "calls clocks_calc_mult_shift(khz,NSEC_PER_MSEC,0) to derive uint32 mult shift",
+        "preconditions": "khz fits u32 nonzero and division valid",
+        "conditional_result": "new conversion slope comes from requested kHz to ns-per-ms",
+        "first_stop_gate": "actual frequency from CPUID or hypervisor unknown",
+        "evidence_ids": [
+          "SC105-E072",
+          "SC105-E084",
+          "SC105-E085",
+          "SC105-E086"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-09",
+        "topic": "shift_adj",
+        "source_fact": "if computed shift32 then shift31 and mul >>=1",
+        "preconditions": "returned factors valid and reachable",
+        "conditional_result": "retains approximate ratio but rounds truncated mult again",
+        "first_stop_gate": "not an exact infinite-precision slope guarantee",
+        "evidence_ids": [
+          "SC105-E073"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-10",
+        "topic": "offset",
+        "source_fact": "new offset = ns_now - conversion(tsc_now) in u64",
+        "preconditions": "same tsc count, same CPU pointer, valid helpers",
+        "conditional_result": "new expression equals old ns_now modulo2^64 at that count after publication",
+        "first_stop_gate": "no multi-field atomicity across readers",
+        "evidence_ids": [
+          "SC105-E074",
+          "SC105-E076"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-11",
+        "topic": "publication",
+        "source_fact": "per_cpu_ptr(&cyc2ns,cpu) and c2n->data=data",
+        "preconditions": "cpu offset mapping exists and valid; write occurs",
+        "conditional_result": "one struct assignment targets designated CPU; readers use 3 READ_ONCE",
+        "first_stop_gate": "not atomic reader snapshot or all CPU copies",
+        "evidence_ids": [
+          "SC105-E075",
+          "SC105-E076",
+          "SC105-E080"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "per_cpu_scale_provenance-12",
+        "topic": "template_copy_timing",
+        "source_fact": "simple_pcpu_setup_first_chunk copies template and publishes offsets after early TSC request; actual setup_per_cpu_areas body first_chunk call, offset publishing, CPU0-only GS update at fixedtime setup_percpu.c",
+        "preconditions": "startup follows fixed source order and allocations complete",
+        "conditional_result": "before/after storage identity can differ",
+        "first_stop_gate": "old PC86 mapping and GS/register assumptions remain open; actual remapping and GS state remain unobserved",
+        "evidence_ids": [
+          "SC105-E013",
+          "SC105-E016",
+          "SC105-E055",
+          "SC105-E077",
+          "SC105-E082",
+          "SC105-E083",
+          "SC105-E111",
+          "SC105-E112",
+          "SC105-E113",
+          "SC105-E114"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "integer_conversion_and_continuity": [
+      {
+        "id": "integer_conversion_and_continuity-01",
+        "topic": "maxsec_bound",
+        "source_fact": "clocks_calc_mult_shift tmp=((u64)maxsec*from)>>32",
+        "preconditions": "fixed direct caller maxsec0",
+        "conditional_result": "sftacc initially32, no loop for direct maxsec0 and product0",
+        "first_stop_gate": "doesn't validate arbitrary caller maxsec inputs",
+        "evidence_ids": [
+          "SC105-E072",
+          "SC105-E084"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-02",
+        "topic": "mult_search",
+        "source_fact": "for sft32..1, tmp=((u64)to<<sft)+from/2 then do_div(tmp,from)",
+        "preconditions": "from nonzero and no unexpected shifts",
+        "conditional_result": "rounded integer quotient then fit test against sftacc",
+        "first_stop_gate": "does not imply exact frequency",
+        "evidence_ids": [
+          "SC105-E085",
+          "SC105-E090"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-03",
+        "topic": "output_width",
+        "source_fact": "writes tmp into *mult u32 and sft u32",
+        "preconditions": "fit condition controls top bits",
+        "conditional_result": "mult truncation would matter if no satisfying shift; direct ordinary case conditional",
+        "first_stop_gate": "no algorithm execution or forced sft value",
+        "evidence_ids": [
+          "SC105-E086"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-04",
+        "topic": "transition_shift32",
+        "source_fact": "if shift==32 sets shift31 and halves u32 mul",
+        "preconditions": "factor from helper=32",
+        "conditional_result": "new ratio has extra truncation",
+        "first_stop_gate": "source choice and exact error not measured",
+        "evidence_ids": [
+          "SC105-E073"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-05",
+        "topic": "old_new_offset",
+        "source_fact": "ns_now old then offset=ns_now-newTerm, u64",
+        "preconditions": "both computed normally at same tsc_now and valid perCPU identity",
+        "conditional_result": "newTerm+offset equals ns_now modulo2^64",
+        "first_stop_gate": "other counters may not have exact continuity due to rounding",
+        "evidence_ids": [
+          "SC105-E071",
+          "SC105-E074"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-06",
+        "topic": "int128_math",
+        "source_fact": "INT128 candidate calculates ((unsigned __int128)a*mul)>>shift then casts to u64",
+        "preconditions": "branch selected and shift<128",
+        "conditional_result": "full product under128 and return truncated to low64",
+        "first_stop_gate": "actual compiler selection not verified",
+        "evidence_ids": [
+          "SC105-E087"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-07",
+        "topic": "fallback_math",
+        "source_fact": "fallback splits a into 32bit low and high; low product >>shift",
+        "preconditions": "branch selected and shift0..63",
+        "conditional_result": "lowword arithmetic result then optional high contribution",
+        "first_stop_gate": "validity not proven for all abstract shift values",
+        "evidence_ids": [
+          "SC105-E088",
+          "SC105-E089"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-08",
+        "topic": "fallback_high",
+        "source_fact": "if high32(a) nonzero computes high product <<(32-shift)",
+        "preconditions": "branch selected highword!=0 and shift<=32",
+        "conditional_result": "only under shift0..32 valid left count; shift>32 invalid under unsigned count",
+        "first_stop_gate": "not inferred reachable from selected perCPU factors",
+        "evidence_ids": [
+          "SC105-E089"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-09",
+        "topic": "signed_unsigned",
+        "source_fact": "TSC cpu_khz and tsc_khz are uint; abs(cpu_khz-tsc_khz) sees unsigned subtraction",
+        "preconditions": "types and abs implementation may define cast",
+        "conditional_result": "cannot use ordinary mathematical absolute difference without guards",
+        "first_stop_gate": "actual CPU values and precise compiler path not certified",
+        "evidence_ids": [
+          "SC105-E053"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-10",
+        "topic": "primary_ratio_width",
+        "source_fact": "native_calibrate_tsc stores crystal_khz as uint; ratio uint multiplication occurs before division",
+        "preconditions": "ratio nonzero and products fit",
+        "conditional_result": "integer division truncates; overflow may change result",
+        "first_stop_gate": "not actual hardware frequency",
+        "evidence_ids": [
+          "SC105-E046",
+          "SC105-E048",
+          "SC105-E050"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-11",
+        "topic": "VMware_division",
+        "source_fact": "do_div on u64 tsc_khz divides by u32 1000 and modifies left operand",
+        "preconditions": "selected hypervisor reports guarded value",
+        "conditional_result": "truncates Hz into kHz; saved global ulong may narrow on ABI",
+        "first_stop_gate": "real hypercall result and ABI unknown",
+        "evidence_ids": [
+          "SC105-E034",
+          "SC105-E035",
+          "SC105-E090"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "integer_conversion_and_continuity-12",
+        "topic": "read_coherence",
+        "source_fact": "three READ_ONCE and one struct data assignment are not same multi-field mechanism",
+        "preconditions": "actual concurrent writers possible",
+        "conditional_result": "individual reads do not by themselves certify coherent triple",
+        "first_stop_gate": "no live concurrency experiment",
+        "evidence_ids": [
+          "SC105-E067",
+          "SC105-E076"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "read_path_and_fallback": [
+      {
+        "id": "read_path_and_fallback-01",
+        "topic": "local_clock",
+        "source_fact": "local_clock returns native_sched_clock u64",
+        "preconditions": "caller reachable and inline selected",
+        "conditional_result": "public local read enters native function",
+        "first_stop_gate": "not actual timekeeping clocksource",
+        "evidence_ids": [
+          "SC105-E100"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-02",
+        "topic": "gate",
+        "source_fact": "__use_tsc initially false and set after cyc2ns_init_boot_cpu",
+        "preconditions": "startup control flow reaches enable",
+        "conditional_result": "branch true only if prior enabling store in actual execution",
+        "first_stop_gate": "late enable timing vs boot_offset matters",
+        "evidence_ids": [
+          "SC105-E091",
+          "SC105-E056"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-03",
+        "topic": "tsc_true",
+        "source_fact": "native_sched_clock if __use_tsc reads rdtsc then cycles_2_ns",
+        "preconditions": "gate true and valid perCPU scale",
+        "conditional_result": "u64 ns computed from TSC plus offset",
+        "first_stop_gate": "CPU counter and frequency true accuracy unknown",
+        "evidence_ids": [
+          "SC105-E092",
+          "SC105-E094",
+          "SC105-E068",
+          "SC105-E069"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-04",
+        "topic": "unstable_distinct",
+        "source_fact": "clocksource_mark_unstable may set flag after late init",
+        "preconditions": "tsc_init reaches call",
+        "conditional_result": "does not in this source clear __use_tsc or change native_sched_clock gate",
+        "first_stop_gate": "other writers not searched globally",
+        "evidence_ids": [
+          "SC105-E056",
+          "SC105-E060",
+          "SC105-E061",
+          "SC105-E062",
+          "SC105-E092"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-05",
+        "topic": "fallback",
+        "source_fact": "native_sched_clock returns (jiffies_64-INITIAL_JIFFIES)*(1e9/HZ)",
+        "preconditions": "gate false and branch reached",
+        "conditional_result": "u64 tick delta modulo and integer nanoseconds factor",
+        "first_stop_gate": "jiffies sample unlocked and real increment unknown",
+        "evidence_ids": [
+          "SC105-E093",
+          "SC105-E095",
+          "SC105-E096",
+          "SC105-E098"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-06",
+        "topic": "jiffies_def",
+        "source_fact": "jiffies_64 defined u64 initial INITIAL_JIFFIES",
+        "preconditions": "object selected and HZ1000",
+        "conditional_result": "initial cast (-300*HZ) via uint then ulong converts 32bit wrap to u64 initial",
+        "first_stop_gate": "actual link/load address and elapsed ticks unknown",
+        "evidence_ids": [
+          "SC105-E095",
+          "SC105-E096",
+          "SC105-E098"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-07",
+        "topic": "duplicate_macro",
+        "source_fact": "systick const and macro both define INITIAL_JIFFIES identically",
+        "preconditions": "headers included under real configuration",
+        "conditional_result": "declarations match text; selected preproc not run",
+        "first_stop_gate": "not two independent counter objects",
+        "evidence_ids": [
+          "SC105-E096",
+          "SC105-E097"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-08",
+        "topic": "HZ_ratio",
+        "source_fact": "HZ1000 means (1000000000/HZ)=1000000 integer",
+        "preconditions": "macro selected",
+        "conditional_result": "each normal +1 tick increases expression by 1e6ns if no overflow",
+        "first_stop_gate": "not measured timer tick cadence",
+        "evidence_ids": [
+          "SC105-E093",
+          "SC105-E098"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-09",
+        "topic": "linker_alias",
+        "source_fact": "kernel.lds assigns jiffies=jiffies_64",
+        "preconditions": "actual script selected by linker",
+        "conditional_result": "text defines alias relation, not actual live address",
+        "first_stop_gate": "linker map and assembly not inspected",
+        "evidence_ids": [
+          "SC105-E099",
+          "SC105-E095"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "read_path_and_fallback-10",
+        "topic": "reader_gate",
+        "source_fact": "local_clock reads native and may see TSC enabled after early clock setup",
+        "preconditions": "setup order and gate state actual",
+        "conditional_result": "boot_offset may use TSC-derived or jiffies-derived value",
+        "first_stop_gate": "no real hardware perCPU values or transition time",
+        "evidence_ids": [
+          "SC105-E013",
+          "SC105-E014",
+          "SC105-E016",
+          "SC105-E055",
+          "SC105-E056",
+          "SC105-E091",
+          "SC105-E100",
+          "SC105-E101"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "boot_offset_consumer": [
+      {
+        "id": "boot_offset_consumer-01",
+        "topic": "call",
+        "source_fact": "timekeeping_init reads persistent wall_time then boot_offset=ns_to_timespec64(local_clock())",
+        "preconditions": "timekeeping_init reachable and locals valid",
+        "conditional_result": "two independent input origins, second scheduler local source",
+        "first_stop_gate": "RTC data and current clock not independently measured",
+        "evidence_ids": [
+          "SC105-E004",
+          "SC105-E101"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "boot_offset_consumer-02",
+        "topic": "argument",
+        "source_fact": "local_clock returns u64 but ns_to_timespec64 takes s64",
+        "preconditions": "u64 value<=S64_MAX or implementation choice for out-of-range",
+        "conditional_result": "conversion happens before callee body",
+        "first_stop_gate": "native_sched_clock return can wrap u64",
+        "evidence_ids": [
+          "SC105-E100",
+          "SC105-E101",
+          "SC105-E103"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "boot_offset_consumer-03",
+        "topic": "positive_converter",
+        "source_fact": "ns_to_timespec64 positive branch div_u64_rem with local s32 rem",
+        "preconditions": "type-compatible build or explicit ABI premise",
+        "conditional_result": "mathematical quotient and remainder map nanoseconds to fields",
+        "first_stop_gate": "s32* vs u32* mismatch is separate compile/static constraint",
+        "evidence_ids": [
+          "SC105-E103",
+          "SC105-E104"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "boot_offset_consumer-04",
+        "topic": "negative_converter",
+        "source_fact": "negative branch uses signed inner negative and u64 outer negative quotient",
+        "preconditions": "valid signed negation and out-of-range signed assignment conventions",
+        "conditional_result": "can model a particular input only with implementation assumption",
+        "first_stop_gate": "INT64_MIN and pointer mismatch not re-run",
+        "evidence_ids": [
+          "SC105-E105"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "boot_offset_consumer-05",
+        "topic": "zero_case",
+        "source_fact": "ns_to_timespec64 ts initialized zero and conditional branches only for nonzero",
+        "preconditions": "input0 and valid output",
+        "conditional_result": "boot_offset timespec zero if function returns normally",
+        "first_stop_gate": "real scheduler local counter not proven zero",
+        "evidence_ids": [
+          "SC105-E103"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "boot_offset_consumer-06",
+        "topic": "difference",
+        "source_fact": "wall_to_mono=timespec64_sub(boot_offset,wall_time)",
+        "preconditions": "both valid timespec values and signed subtract in range",
+        "conditional_result": "local wall_to_mono equals boot_offset minus wall_time",
+        "first_stop_gate": "NOT wall_time minus boot_offset",
+        "evidence_ids": [
+          "SC105-E007",
+          "SC105-E008",
+          "SC105-E102"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "boot_offset_consumer-07",
+        "topic": "stored_wall",
+        "source_fact": "tk_set_xtime receives wall_time and writes xtime_sec and shifted fraction",
+        "preconditions": "valid shift and object, RTC source normal",
+        "conditional_result": "timekeeper wall seconds from RTC not from boot_offset",
+        "first_stop_gate": "not proof of time correctness",
+        "evidence_ids": [
+          "SC105-E107",
+          "SC105-E108"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "boot_offset_consumer-08",
+        "topic": "unstored_offset",
+        "source_fact": "tk_set_wall_to_mono called but the assignment body commented",
+        "preconditions": "this bounded helper and normal call",
+        "conditional_result": "wall_to_mono local computed and passed but no active field store there",
+        "first_stop_gate": "later writers and ELF output unknown",
+        "evidence_ids": [
+          "SC105-E106",
+          "SC105-E108"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "ABC_join": [
+      {
+        "id": "ABC_join-01",
+        "topic": "order",
+        "source_fact": "setup_arch hypervisor then tsc_early_init before perCPU setup; actual setup_per_cpu_areas body first_chunk call, offset publishing, CPU0-only GS update at fixedtime setup_percpu.c",
+        "preconditions": "boot path reaches source calls",
+        "conditional_result": "early frequency gate and possible scale setup precede allocator",
+        "first_stop_gate": "GS and perCPU validity first unproved; actual remapping and GS state remain unobserved",
+        "evidence_ids": [
+          "SC105-E013",
+          "SC105-E016",
+          "SC105-E055",
+          "SC105-E056",
+          "SC105-E077",
+          "SC105-E082",
+          "SC105-E111",
+          "SC105-E112",
+          "SC105-E113",
+          "SC105-E114"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-02",
+        "topic": "freq_origin",
+        "source_fact": "native/VMware callbacks and CPUID expressions can set tsc_khz",
+        "preconditions": "selected hypervisor and guards and valid conversion",
+        "conditional_result": "rate supplied to clocks_calc_mult_shift, not independently measured",
+        "first_stop_gate": "wrong 0x15/0x16 leaf semantic first unproved",
+        "evidence_ids": [
+          "SC105-E020",
+          "SC105-E035",
+          "SC105-E042",
+          "SC105-E043",
+          "SC105-E044",
+          "SC105-E045",
+          "SC105-E046",
+          "SC105-E050",
+          "SC105-E051",
+          "SC105-E052"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-03",
+        "topic": "scale",
+        "source_fact": "perCPU template and 3 READ_ONCE supply old scale; new calc stores data",
+        "preconditions": "correct current CPU pointers and legal math",
+        "conditional_result": "conversion to nanoseconds modulo u64",
+        "first_stop_gate": "early mapping, CPU identity, coherence unknown",
+        "evidence_ids": [
+          "SC105-E066",
+          "SC105-E067",
+          "SC105-E068",
+          "SC105-E069",
+          "SC105-E071",
+          "SC105-E072",
+          "SC105-E074",
+          "SC105-E076",
+          "SC105-E079"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-04",
+        "topic": "switch",
+        "source_fact": "__use_tsc true only after cyc2ns_init_boot_cpu on successful branch",
+        "preconditions": "all previous steps normal",
+        "conditional_result": "native_sched_clock selects TSC path",
+        "first_stop_gate": "not clocksource_tsc registration or accuracy proof",
+        "evidence_ids": [
+          "SC105-E055",
+          "SC105-E056",
+          "SC105-E077",
+          "SC105-E091",
+          "SC105-E092"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-05",
+        "topic": "fallback",
+        "source_fact": "if TSC sched gate false native returns jiffies difference*factor",
+        "preconditions": "initial object and HZ selected",
+        "conditional_result": "fallback u64 nanoseconds, tick granularity1ms if HZ1000",
+        "first_stop_gate": "actual timer tick and timestamp quality unknown",
+        "evidence_ids": [
+          "SC105-E093",
+          "SC105-E095",
+          "SC105-E096",
+          "SC105-E098",
+          "SC105-E099"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-06",
+        "topic": "converge",
+        "source_fact": "local_clock returns u64 either path and ns_to_timespec64 formally takes s64",
+        "preconditions": "value in signed domain or conversion implementation selected",
+        "conditional_result": "boot_offset built from ns converter under type contract",
+        "first_stop_gate": "not generic always representable signed time",
+        "evidence_ids": [
+          "SC105-E100",
+          "SC105-E101",
+          "SC105-E103"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-07",
+        "topic": "wall",
+        "source_fact": "104 RTC persistent input supplies wall_time with tv_nsec0",
+        "preconditions": "RTC valid and calendar arithmetic well-defined",
+        "conditional_result": "independent wall clock used in subtraction",
+        "first_stop_gate": "RTC not measured in this batch",
+        "evidence_ids": [
+          "SC105-E004",
+          "SC105-E101",
+          "SC105-E102"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-08",
+        "topic": "subtract",
+        "source_fact": "timespec64_sub receives lhs boot_offset rhs wall_time",
+        "preconditions": "valid signed arithmetic and normalization",
+        "conditional_result": "wall_to_mono = boot_offset - wall_time",
+        "first_stop_gate": "stored field assignment commented",
+        "evidence_ids": [
+          "SC105-E007",
+          "SC105-E008",
+          "SC105-E102",
+          "SC105-E106"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC_join-09",
+        "topic": "end",
+        "source_fact": "tk_set_xtime uses wall_time and raw_sec=0; later tsc_init may mark clocksource unstable",
+        "preconditions": "clock setup/calls normal",
+        "conditional_result": "no inference that boot_offset drives xtime_sec or TSC is timekeeper source",
+        "first_stop_gate": "actual linked selected source and subsequent synchronization unknown",
+        "evidence_ids": [
+          "SC105-E108",
+          "SC105-E060",
+          "SC105-E061",
+          "SC105-E107"
+        ],
+        "kind": "STATIC_SOURCE_OR_FINITE_CONDITIONAL_NO_RUNTIME"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows": 79,
+  "matrix_rows_by_group": {
+    "startup_order_and_gates": 13,
+    "frequency_source_and_units": 15,
+    "per_cpu_scale_provenance": 12,
+    "integer_conversion_and_continuity": 12,
+    "read_path_and_fallback": 10,
+    "boot_offset_consumer": 8,
+    "ABC_join": 9
+  },
+  "finite_models": [
+    {
+      "id": "SC105-M01",
+      "title": "CPU CPUID nominal result",
+      "declared_inputs": {
+        "vendor": "Intel",
+        "cpuid_level": "0x16",
+        "queried_leaf": "0x15",
+        "returned_EAX": 42
+      },
+      "expression": "EAX*1000 in u32",
+      "conditional_result": "42000 kHz numeric candidate, does not establish actual leaf semantic",
+      "evidence_ids": [
+        "SC105-E040",
+        "SC105-E041",
+        "SC105-E042",
+        "SC105-E043"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M02",
+      "title": "CPU dummy fallback",
+      "declared_inputs": {
+        "native_cpu_candidate_khz": 0
+      },
+      "expression": "fast_calibrate=3000000",
+      "conditional_result": "DUMMY_TSC_KHZ value is 3e6 kHz, not measured",
+      "evidence_ids": [
+        "SC105-E037",
+        "SC105-E038",
+        "SC105-E039"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M03",
+      "title": "TSC primary ratio",
+      "declared_inputs": {
+        "ecx_hz": 24000000,
+        "eax_denominator": 2,
+        "ebx_numerator": 3
+      },
+      "expression": "crystal_khz=24000; tsc_khz=24000*3/2",
+      "conditional_result": "36000 kHz with in-range u32 products",
+      "evidence_ids": [
+        "SC105-E045",
+        "SC105-E046",
+        "SC105-E050"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M04",
+      "title": "TSC secondary leaf finite sample",
+      "declared_inputs": {
+        "ecx_hz": 0,
+        "eax_base_mhz": 3000,
+        "eax_denominator": 2,
+        "ebx_numerator": 3
+      },
+      "expression": "crystal_khz=(3000*1000*2)/3=2000000; tsc_khz=2000000*3/2",
+      "conditional_result": "3000000 kHz under secondary-leaf and no-u32-overflow preconditions",
+      "evidence_ids": [
+        "SC105-E047",
+        "SC105-E048",
+        "SC105-E049",
+        "SC105-E050"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M05",
+      "title": "crystal frequency truncation",
+      "declared_inputs": {
+        "ecx_hz": 24999999,
+        "eax_denominator": 2,
+        "ebx_numerator": 3
+      },
+      "expression": "24999999/1000 integer =>24999; 24999*3/2=>37498",
+      "conditional_result": "37498 kHz ordinary bounded arithmetic; ratio does not prove hardware freq",
+      "evidence_ids": [
+        "SC105-E045",
+        "SC105-E046",
+        "SC105-E050"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M06",
+      "title": "no successful early kHz",
+      "declared_inputs": {
+        "tsc_khz": 0,
+        "cpu_khz": 0
+      },
+      "expression": "tsc_khz remains0 after fallback",
+      "conditional_result": "determine false and tsc_early_init skips enable",
+      "evidence_ids": [
+        "SC105-E053",
+        "SC105-E054",
+        "SC105-E055",
+        "SC105-E091"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M07",
+      "title": "template tsc3 cycles",
+      "declared_inputs": {
+        "cycle": 3,
+        "mul": 1431655765,
+        "shift": 32,
+        "offset": 0
+      },
+      "expression": "floor(3*1431655765/2^32)=0",
+      "conditional_result": "0ns modulo result under valid selected helper and template; shows truncation",
+      "evidence_ids": [
+        "SC105-E066",
+        "SC105-E068",
+        "SC105-E069"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M08",
+      "title": "template tsc6 cycles",
+      "declared_inputs": {
+        "cycle": 6,
+        "mul": 1431655765,
+        "shift": 32,
+        "offset": 0
+      },
+      "expression": "floor(6*1431655765/2^32)=1",
+      "conditional_result": "1ns under same scope, no real CPU read",
+      "evidence_ids": [
+        "SC105-E066",
+        "SC105-E068",
+        "SC105-E069"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M09",
+      "title": "continuity at same TSC",
+      "declared_inputs": {
+        "tsc_now": 12,
+        "old_ns_now": 900,
+        "new_mult": 2,
+        "new_shift": 1
+      },
+      "expression": "newTerm=floor(12*2/2)=12, offset=900-12=888, newTerm+offset=900",
+      "conditional_result": "equality at identical count modulo2^64 if fields coherently read and same CPU",
+      "evidence_ids": [
+        "SC105-E071",
+        "SC105-E074",
+        "SC105-E076"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M10",
+      "title": "shift32 normalization",
+      "declared_inputs": {
+        "new_mult_before": 1431655765,
+        "new_shift_before": 32
+      },
+      "expression": "new_shift=31 and new_mult=floor(1431655765/2)=715827882",
+      "conditional_result": "conversion slope adjusted by truncating mult; no exact equality guarantee",
+      "evidence_ids": [
+        "SC105-E073"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M11",
+      "title": "jiffies initial",
+      "declared_inputs": {
+        "HZ": 1000,
+        "jiffies_64": "INITIAL_JIFFIES"
+      },
+      "expression": "(jiffies64-INITIAL)*1000000",
+      "conditional_result": "0 ns under no intervening increment",
+      "evidence_ids": [
+        "SC105-E093",
+        "SC105-E095",
+        "SC105-E096",
+        "SC105-E098"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M12",
+      "title": "jiffies one tick after initial",
+      "declared_inputs": {
+        "HZ": 1000,
+        "jiffies_64": "INITIAL_JIFFIES+1"
+      },
+      "expression": "delta1*(1000000000/1000)",
+      "conditional_result": "1000000 ns if no unsigned wrap in this local delta",
+      "evidence_ids": [
+        "SC105-E093",
+        "SC105-E095",
+        "SC105-E096",
+        "SC105-E098"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M13",
+      "title": "jiffies initial cast",
+      "declared_inputs": {
+        "HZ": 1000,
+        "int_operand": "-300000"
+      },
+      "expression": "(uint)(-300000)=4294667296, ulong then u64",
+      "conditional_result": "initial numeric jiffies_64 is4294667296 under 32bit uint and 64bit ulong C environment",
+      "evidence_ids": [
+        "SC105-E095",
+        "SC105-E096",
+        "SC105-E098"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M14",
+      "title": "unsigned jiffies wrap",
+      "declared_inputs": {
+        "jiffies_64": "INITIAL_JIFFIES-1"
+      },
+      "expression": "u64 subtraction yields UINT64_MAX; multiplication by1000000 mod 2^64",
+      "conditional_result": "not same as negative elapsed nanoseconds, potential >S64_MAX conversion gate",
+      "evidence_ids": [
+        "SC105-E093",
+        "SC105-E095",
+        "SC105-E096"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M15",
+      "title": "local_clock signed boundary",
+      "declared_inputs": {
+        "local_clock_u64": "9223372036854775808"
+      },
+      "expression": "2^63 not representable in s64",
+      "conditional_result": "ns_to_timespec64 argument conversion implementation-defined before function body",
+      "evidence_ids": [
+        "SC105-E100",
+        "SC105-E101",
+        "SC105-E103"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M16",
+      "title": "positive nanosecond seconds",
+      "declared_inputs": {
+        "nsec_s64": 1000000000
+      },
+      "expression": "1e9/1e9 quotient1 remainder0",
+      "conditional_result": "(tv_sec1,tv_nsec0) in mathematical domain; s32* vs u32* parameter issue separately assumed resolved",
+      "evidence_ids": [
+        "SC105-E103",
+        "SC105-E104"
+      ],
+      "not_executed_repository": true
+    },
+    {
+      "id": "SC105-M17",
+      "title": "boot_offset minus wall_time",
+      "declared_inputs": {
+        "boot_offset": {
+          "sec": 2,
+          "nsec": 0
+        },
+        "wall_time": {
+          "sec": 1,
+          "nsec": 0
+        }
+      },
+      "expression": "2 sec -1 sec =1 sec",
+      "conditional_result": "local wall_to_mono 1sec but no active store into tk wall_to_monotonic",
+      "evidence_ids": [
+        "SC105-E007",
+        "SC105-E008",
+        "SC105-E102",
+        "SC105-E106"
+      ],
+      "not_executed_repository": true
+    }
+  ],
+  "finite_model_count": 17,
+  "history": {
+    "batch102": "PASS_PENDING_LOCAL",
+    "batch103": "RETURN",
+    "batch104": "RETURN",
+    "PC86_roots": "Keep qualified PC86-F/U as frozen historical sources with 86-reviewed and 86-DOC-CLOSURE boundaries",
+    "source104_persistent": "RTC104 source accepted conditionally; source102/103 author judgments not overwritten"
+  },
+  "read_ledger": {
+    "new_full": [
+      "149 fixed contract @87ad6b6c914b",
+      "C07 publication comment 6998814749",
+      "R104-D00 102 103 review @87ad6b6c914b",
+      "R104 independent review @87ad6b6c914b",
+      "C07 checkpoint 2026-11-19 RTC104 reviewed sched-clock105 @87ad6b6c914b",
+      "104 author comment 6998446053",
+      "MyOS2 63 GitHub retry fully read",
+      "86 review and 86 doc closure fixed @40725302f9ee",
+      "direct master conventions §1.2 and time/master canaries"
+    ],
+    "same_actor_reuse": [
+      "104 six fixed result files fully read in prior same CHAT-EXEC-15 conversation and now six fixed/active full-text and blob identity reconfirmed",
+      "103 fixed previous same-actor full read; D00 named source graph rows re-read and enumerated",
+      "102 same-actor fixed source and notes only to validated narrow references",
+      "P1-P13 and other MyOS2 nine rules same pinned content personally read in previous turn; 63 refreshed this round"
+    ],
+    "quoted_source_path_count": 33,
+    "quoted_source_paths": [
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "mykernel/arch/x86_64/kernel/rtc.c",
+      "mykernel/arch/x86_64/insns/io_arch.h",
+      "mykernel/time/timekeeping/timekeeping.c",
+      "mykernel/time/misc/time_misc.h",
+      "mykernel/time/misc/time_misc.c",
+      "mykernel/drivers/rtc/rtc-mc146818.c",
+      "mykernel/init/main.c",
+      "mykernel/arch/x86_64/kernel/setup.c",
+      "mykernel/arch/x86_64/kernel/time.c",
+      "mykernel/arch/x86_64/kernel/x86_init.c",
+      "mykernel/arch/x86_64/include/asm/x86_init.h",
+      "mykernel/arch/x86_64/include/asm/hypervisor.h",
+      "mykernel/cpu/hypervisor.c",
+      "mykernel/cpu/vmware.c",
+      "mykernel/arch/x86_64/kernel/tsc.c",
+      "mykernel/arch/x86_64/processor/processor_const_arch.h",
+      "mykernel/time/clocksource/clocksource.c",
+      "mykernel/arch/x86_64/include/asm/timer.h",
+      "mykernel/arch/x86_64/include/asm/percpu.h",
+      "mykernel/arch/x86_64/smp/percpu_area.c",
+      "mykernel/mm/misc/percpu.c",
+      "mykernel/include/linux/kernel/math64.h",
+      "mykernel/include/linux/kernel/asm-generic/div64.h",
+      "mykernel/arch/x86_64/insns/x86msr.h",
+      "mykernel/time/timer/timer.c",
+      "mykernel/time/systick/systick_const.h",
+      "mykernel/time/systick/systick_macro.h",
+      "mykernel/include/linux/kernel/asm-generic/param.h",
+      "mykernel/arch/x86_64/kernel.lds",
+      "mykernel/include/linux/sched/clock.h",
+      "mykernel/arch/x86_64/smp/setup_percpu.c"
+    ],
+    "scoped_navigation_without_105_quote": [
+      "mykernel/include/linux/smp/percpu.h",
+      "mykernel/arch/x86_64/include/asm/percpu_area.h",
+      "mykernel/time/systick/systick_api.h",
+      "mykernel/time/systick/systick.h",
+      "mykernel/time/time_type_declaration.h",
+      "mykernel/arch/x86_64/include/asm/x86_init.h",
+      "mykernel/include/linux/kernel/math.h",
+      "mykernel/time/time_const.h"
+    ],
+    "full_files_physically_fetched": true,
+    "reading_scope": "Only source facts with new short anchors were P2-verified; file fetch != whole tree semantic audit",
+    "new_scoped_source_augmentation": [
+      "mykernel/arch/x86_64/smp/setup_percpu.c::setup_per_cpu_areas lines73–79 and112–142, 4 P2 body anchors E111–E114",
+      "This source was fetched after the initial matrix draft; the new active setup_per_cpu_areas caller validates perCPU allocation relation but does not imply runtime GS state"
+    ]
+  },
+  "self_check": {
+    "verified_claims": 114,
+    "quotes_reconfirmed": 114,
+    "downgraded_to_inferred": 0,
+    "equation": "114=114+0",
+    "full_local_P9": "NOT_RUN"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "actual_hardware_frequency": "NOT_VERIFIED",
+  "live_cpu_or_port_operations": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "additional_R86_boundary": "fixed 86 review and doc closure consumed only for source-level perCPU identity and GS/template uncertainty; no new perCPU allocator defect or runtime observation claimed"
+}

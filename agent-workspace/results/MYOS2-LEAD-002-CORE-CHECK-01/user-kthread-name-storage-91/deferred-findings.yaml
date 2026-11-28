@@ -1,0 +1,314 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-KTHREAD-NAME-STORAGE-91",
+  "record_type": "incremental_deferred_findings_and_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (visible family; UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "AUTHOR_ONLY_STATIC_PENDING_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "R90_01_02": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+  "R89_01_02": "CLOSED_KEEP",
+  "batch90": "RETURN_WITH_R90_S01_S02_S03",
+  "new_candidates": [
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F01",
+      "id": "KN91-F01",
+      "topic": "B two-pass mismatch",
+      "kind": "BOUNDED_STATIC_CONDITIONAL_CANDIDATE",
+      "claim": "kvasprintf的两遍vsnprintf返回first/second之后，first!=second的WARN只有注释，仍return p。若%s所指内容在两遍间增长，已申请first+1字节会被第二遍按长度门截断而不由本函数报错。",
+      "preconditions": [
+        "两遍都定义良好并正常返回",
+        "有效且可变化的字符串实参",
+        "合法的有界分配",
+        "second需求>first"
+      ],
+      "evidence_ids": [
+        "KN91-E037",
+        "KN91-E041",
+        "KN91-E043",
+        "KN91-E044",
+        "KN91-E045",
+        "KN91-E027"
+      ],
+      "distinct_from_history": "53此前只记full_name指针交接，未复核kvasprintf两遍内容一致性；不是53旧名字所有权重复根因",
+      "runtime_confirmed": false,
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F02",
+      "id": "KN91-F02",
+      "topic": "B unsigned count narrowing",
+      "kind": "BOUNDED_STATIC_CONDITIONAL_CANDIDATE",
+      "claim": "kvasprintf把int vsnprintf返回存进unsigned int first，然后计算first+1；在首遍异常负值或极端无符号值等额外假设下，所申请容量可能与需求量不符。",
+      "preconditions": [
+        "异常返回真实存在尚未证明",
+        "32-bit unsigned溢出按该模型推演",
+        "底层kmalloc(0)及vsnprintf NULL测长未核"
+      ],
+      "evidence_ids": [
+        "KN91-E037",
+        "KN91-E041",
+        "KN91-E042",
+        "KN91-E043"
+      ],
+      "distinct_from_history": "独立的数字计数和分配大小门，不是WQP89的IDA编号/释放问题",
+      "runtime_confirmed": false,
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F03",
+      "id": "KN91-F03",
+      "topic": "C readback status discarded",
+      "kind": "BOUNDED_STATIC_CONDITIONAL_CANDIDATE",
+      "claim": "get_kthread_comm是void，不接收strscpy_pad的返回；当dest不足时，后者可返回-E2BIG而调用者无法从get_kthread_comm返回值获知截断。",
+      "preconditions": [
+        "tsk/private/full_name/dest生命周期有效",
+        "src长度超过buf_size-1",
+        "strscpy返回负值"
+      ],
+      "evidence_ids": [
+        "KN91-E054",
+        "KN91-E055",
+        "KN91-E071",
+        "KN91-E073",
+        "KN91-E074",
+        "KN91-E075"
+      ],
+      "distinct_from_history": "输出状态传播与53的create/result/completion对象交接不同",
+      "runtime_confirmed": false,
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F04",
+      "id": "KN91-F04",
+      "topic": "C short-name truncation not exposed",
+      "kind": "BOUNDED_STATIC_CONDITIONAL_CANDIDATE",
+      "claim": "copy_process以strscpy_pad写32字节task.comm但不接收返回值；若全名超过31字节，则短名被NUL截断而私有full_name仍可更长，因此短名与全名必须区分消费。",
+      "preconditions": [
+        "args->name存在且指向有效NUL字符串",
+        "实际copy_process走名称分支",
+        "名称原文至少32字符"
+      ],
+      "evidence_ids": [
+        "KN91-E006",
+        "KN91-E066",
+        "KN91-E067",
+        "KN91-E070",
+        "KN91-E071",
+        "KN91-E073",
+        "KN91-E074",
+        "KN91-E075"
+      ],
+      "distinct_from_history": "属于名称存储长度和返回值的独立契约，不重报CO53对象寿命或KT68执行状态",
+      "runtime_confirmed": false,
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "id": "KN91-U01",
+      "title": "NULL零容量计数的语言层前提",
+      "evidence_missing": "vsnprintf(NULL,0)执行了buf+size和str-buf指针操作；未独立认证这些表达式对NULL在当前编译/ABI下严格定义良好。",
+      "first_proof_gate": "只可将first视作在有定义且正确返回前提下的需求量",
+      "evidence_ids": [
+        "KN91-E019",
+        "KN91-E020",
+        "KN91-E028",
+        "KN91-E041",
+        "KN91-E042"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U02",
+      "id": "KN91-U02",
+      "title": "更广格式与数字算法",
+      "evidence_missing": "本包只核固定文字、%d和%s及近邻；未全面验证put_dec、所有整数边界与未知格式、输出耗时。",
+      "first_proof_gate": "不保证C99全行为或所有数值实参可正常生成",
+      "evidence_ids": [
+        "KN91-E025",
+        "KN91-E029",
+        "KN91-E030",
+        "KN91-E031",
+        "KN91-E032",
+        "KN91-E035",
+        "KN91-E036"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U03",
+      "id": "KN91-U03",
+      "title": "内存分配和计数极端值",
+      "evidence_missing": "未运行kmalloc，未验证大first/first+1或异常-1转换引起的真实分配返回与对象大小。",
+      "first_proof_gate": "失败路径只能按声明的NULL/ERR_PTR处理",
+      "evidence_ids": [
+        "KN91-E037",
+        "KN91-E043",
+        "KN91-E046",
+        "KN91-E047"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U04",
+      "id": "KN91-U04",
+      "title": "两遍字符串稳定性",
+      "evidence_missing": "va_copy只复用实参读取状态，不冻结fmt和%s指向的字节；没有真实并发或突变实测。",
+      "first_proof_gate": "增长/缩短仅是有前提的文字条件轨迹",
+      "evidence_ids": [
+        "KN91-E038",
+        "KN91-E041",
+        "KN91-E044",
+        "KN91-E045"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U05",
+      "id": "KN91-U05",
+      "title": "任务创建与调度门",
+      "evidence_missing": "53的完成交接与68的首入口/线程返回已单独限定；本91未重审完整调度/业务回调。",
+      "first_proof_gate": "名字分配/发布不升级为线程已运行",
+      "evidence_ids": [
+        "KN91-E046",
+        "KN91-E047",
+        "KN91-E048",
+        "KN91-E063",
+        "KN91-E064"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U06",
+      "id": "KN91-U06",
+      "title": "私有全名释放的真正可达性",
+      "evidence_missing": "free_kthread_struct确可释放fullname/private，但所读free_task处的直接调用注释，未完成全调用者及退出生命周期审查。",
+      "first_proof_gate": "不宣称真实泄漏、UAF或所有任务自动回收",
+      "evidence_ids": [
+        "KN91-E059",
+        "KN91-E060",
+        "KN91-E069"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U07",
+      "id": "KN91-U07",
+      "title": "全名读取与释放的同步",
+      "evidence_missing": "get_kthread_comm全名分支直接读取full_name；free_kthread_struct可kfree，缺少完整同步与引用/并发证明。",
+      "first_proof_gate": "不宣称已经发生竞态或读取释放后的指针",
+      "evidence_ids": [
+        "KN91-E053",
+        "KN91-E054",
+        "KN91-E055",
+        "KN91-E060",
+        "KN91-E079",
+        "KN91-E080"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U08",
+      "id": "KN91-U08",
+      "title": "task.comm对象、名称写者与锁",
+      "evidence_missing": "copy_process/__set_task_comm对短名的填充有合法指针/内存前提；未审所有rename/read callers及锁运行。",
+      "first_proof_gate": "不能凭task_lock名字保证多核互斥或返回所有字符",
+      "evidence_ids": [
+        "KN91-E067",
+        "KN91-E070",
+        "KN91-E071",
+        "KN91-E072",
+        "KN91-E076",
+        "KN91-E078",
+        "KN91-E079",
+        "KN91-E080"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U09",
+      "id": "KN91-U09",
+      "title": "worker标识与实际CPU优先级",
+      "evidence_missing": "name后缀H仅由attrs.nice<0决定，kthread绑定调用被注释，R89-02已限定set_user_nice实现；未实机运行。",
+      "first_proof_gate": "不把线程名、nice或pool.cpu数字当作实际亲和性与调度生效证明",
+      "evidence_ids": [
+        "KN91-E008",
+        "KN91-E009",
+        "KN91-E011",
+        "KN91-E012",
+        "KN91-E014",
+        "KN91-E015"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01",
+      "state": "RETURN",
+      "action": "91/D00规范自检字段和原59标签实测补记，提交待C06复审，不自闭合"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-02",
+      "state": "RETURN",
+      "action": "91/D00旧IDA90-E013分离为KN91-E001/E002/E003/E004，补消费者映射，待C06复审"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R89-01/R89-02",
+      "state": "CLOSED_BY_C06",
+      "action": "不得重开，89组合PASS_PENDING_LOCAL"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::R53-01",
+      "state": "CLOSED_DOCUMENTATION_ONLY",
+      "action": "R53C-S01撤回主线两条空行误判，不再传播原指控"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F01/KT68-F02",
+      "state": "HISTORIC_NEEDS_EVIDENCE",
+      "action": "仅保留首入口失败、回调非空前提，不重报名称根因"
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F05",
+      "state": "HISTORIC_CONDITIONAL",
+      "action": "不由名称申请推断NULL线程结果或线程实际运行"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01/F02/F03",
+      "state": "HISTORIC_CONDITIONAL",
+      "action": "此前主要为devtmpfs请求所有权，不与本批kvasprintf输出混同"
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F04",
+      "state": "RETAINED_WITH_R90_S02",
+      "action": "容量宏纠正是证据定位，不另造相同源码扫描问题"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 4,
+    "new_evidence_gaps": 9,
+    "confirmed_runtime_bugs": 0,
+    "old_finding_roots_duplicated": 0,
+    "old_issue_closures_by_executor": 0,
+    "owner_action_now": 0
+  },
+  "boundaries": [
+    "no kernel edits or code patch",
+    "no actual execution/tests/Graphviz",
+    "no PID/IDA/IDR or completion/entry batch redo",
+    "no merge/branch/PR metadata mutation",
+    "not actual C lifetime or concurrency validation"
+  ]
+}

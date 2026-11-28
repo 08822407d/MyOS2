@@ -1,0 +1,100 @@
+{
+ "record": "checker_negative_probes",
+ "checker": "scripts/uv_facts_check.py",
+ "driver": "session scratch, not delivered",
+ "note": "each probe modifies one thing in a scratch copy of the package; p0 is the unmodified copy; copies not delivered",
+ "probes": [
+  {
+   "probe": "p0",
+   "mutation": "unmodified copy",
+   "returncode": 0,
+   "all_ok": true,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": true}"
+  },
+  {
+   "probe": "p1",
+   "mutation": "anchor line shift",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [89, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p2",
+   "mutation": "anchor kind comment->body",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [89, 90], \"markdown_tags\": {}, \"structure_errors\": 1, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p3",
+   "mutation": "drop #if condition",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [89, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p4",
+   "mutation": "indirect call-site line",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 1, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p5",
+   "mutation": "VT-MR01 expected head",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": false, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p6",
+   "mutation": "VT-FR01 expected len",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": false, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p7",
+   "mutation": "supersedes line number",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [39, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p8",
+   "mutation": "finding owner_action_now",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 1, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p9",
+   "mutation": "runtime PASS",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 1, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p10",
+   "mutation": "counts block",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 1, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p11",
+   "mutation": "negative query gets active hits",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 2, \"structure_checks\": [7, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  },
+  {
+   "probe": "p12",
+   "mutation": "structure check symbol",
+   "returncode": 1,
+   "all_ok": false,
+   "summary": "{\"anchors\": [90, 90], \"markdown_tags\": {}, \"structure_errors\": 0, \"deferred_findings_errors\": 0, \"query_errors\": 0, \"structure_checks\": [6, 7], \"value_tables_ok\": true, \"supersedes_scope\": [40, 40], \"hex40_in_package\": 0, \"all_ok\": false}"
+  }
+ ],
+ "all_as_expected": true
+}

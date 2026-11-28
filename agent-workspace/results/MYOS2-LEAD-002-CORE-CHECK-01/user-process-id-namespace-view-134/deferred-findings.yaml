@@ -1,0 +1,117 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PROCESS-ID-NAMESPACE-VIEW-134",
+  "record_type": "phase2_deferred_process_pid_namespace_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "conversation_display_name": "MYOS2-A-C08c 代码分析执行",
+  "date": "2026-11-23",
+  "base_snapshot": "time（分支名）",
+  "produced_by": "GPT-6 self-reported; backend/effort UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra",
+  "read_channel": "connector",
+  "author_status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "issues": [
+    {
+      "id": "R133-01",
+      "category": "D00_frozen_graph_mapping",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "four S132_B*_loop old node IDs exist in 132; actual D133_B*_loop new IDs exist in 133; static class edge and indirect call owner mapped one-to-many",
+      "recovery": "C09 Pro independently repeat old/new ID and edge cardinalities using fixed 132 and 133 facts/DOT"
+    },
+    {
+      "id": "R133-02",
+      "category": "D00_clock_control",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "neutral delta<0 guard true goes early return, false +=; flags writes at 1065 and 1067 always, rq.clock write at 27 only C1/C2, not C3",
+      "recovery": "C09 Pro replay 133 C.control and fixed scheduler_core.c"
+    },
+    {
+      "id": "R133-03",
+      "category": "D00_evidence_ownership",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "E133-015 frozen has 3 macros but only one symbol; E134-001/002/003 each own single active definition; virtual old formal37 vs frozen35",
+      "recovery": "C09 Pro check each source line and two separate P6 accounting scopes"
+    },
+    {
+      "id": "C1_TO_C4_CONTRACT",
+      "category": "given_valid_objects",
+      "status": "PAPER_CONCLUSIONS_ONLY",
+      "fact": "ten queries fixed: C1 20/7/22, C2 5100/20, C3 0/4100/20, C4 0/20",
+      "evidence": "fixed task_pid_ptr, ns source, pid_nr_ns and given namespace arrays",
+      "recovery": "reviewers independently derive ten intermediate tuples and both zero cause distinctions"
+    },
+    {
+      "id": "REAL_USERSPACE_DISPATCH",
+      "category": "runtime_unknown",
+      "status": "UNKNOWN_NOT_RUN",
+      "fact": "init source has two getpid requests, x86_64 map has number39/110, external call bridge, actual successful user kernel dispatch and libc linkage not observed",
+      "recovery": "future explicit authorized build/link/run study; unavailable in current phase2 permission"
+    },
+    {
+      "id": "RCU_LIFETIME_AND_CONCURRENCY",
+      "category": "unproven_safety",
+      "status": "UNKNOWN_NOT_RUN",
+      "fact": "rcu_dereference active in __task_pid_nr_ns while nearby lock/unlock and sys_getppid lock are commented, no reference/counter/lifetime guarantee from selected text",
+      "recovery": "independent bounded lock, ref, parent lifetime read and approved runtime evidence"
+    },
+    {
+      "id": "NAMESPACE_PROVISIONING",
+      "category": "unproven_runtime",
+      "status": "UNKNOWN_NOT_RUN",
+      "fact": "N0/N1/M1 and T/G/GP/GP0 are contract-provided objects; does not attest namespace creation, fork support, actual real_parent or PID values on actual boot",
+      "recovery": "new contract for creation and runtime"
+    },
+    {
+      "id": "PID_NS_ZERO_REASON",
+      "category": "scope_fact",
+      "status": "GIVEN_CASES_CONFIRMED",
+      "fact": "C3 GP0.level0 vs viewerN1.level1 fails before array; C4 G.level1 vs M1.level1 passes level but indexed slot has N1!=M1, no nr read",
+      "recovery": "do not infer actual visibility policy beyond pid_nr_ns selected body"
+    },
+    {
+      "id": "KERNEL_PGID_SID",
+      "category": "out_of_scope",
+      "status": "NOT_ANALYZED",
+      "fact": "pid_type enumerates PGID/SID but 186 asks only PID and TGID",
+      "recovery": "future bounded request if needed"
+    },
+    {
+      "id": "LINK_CLASS_AND_KERNEL_BUILD",
+      "category": "runtime_unknown",
+      "status": "NOT_RUN",
+      "fact": "three __SYSCALL macro contexts recorded as fixed text, actual preprocessed calls and compilation/link unresolved",
+      "recovery": "explicit build permission only"
+    },
+    {
+      "id": "P9_FULL_AND_LIVE_TESTS",
+      "category": "prohibited_execution",
+      "status": "NOT_RUN",
+      "fact": "complete local P9, preprocess, compiler, linker, repository scripts, Graphviz, QEMU, real clock, PID, process, scheduler, file and hardware operations not performed",
+      "recovery": "outside phase2 with permission"
+    }
+  ],
+  "closed_historical_not_reopened": [
+    "R132-01",
+    "R132-02",
+    "R132-03",
+    "R131-01",
+    "R131-02",
+    "R130-02"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "compilation": "NOT_RUN",
+  "linking": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "repository_scripts": "NOT_RUN",
+  "real_process_file_scheduler_clock": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "actual libc to x86_64 entry bridge",
+    "real namespace and PID life cycle under concurrency",
+    "C09 acceptance of 3 doc corrections"
+  ]
+}

@@ -1,0 +1,1699 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79",
+  "record_type": "source_pinned_memblock_region_lifecycle_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "executor_display_name": "MYOS2-A-C06a 代码分析执行",
+  "model_per_owner": "GPT-6 + Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "ed8b3ac237f6",
+  "execution_start_short12": "03519ebb5d86",
+  "read_channel": "connector",
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "phase": 2,
+  "G00": {
+    "status": "PASS_PRE_WRITE",
+    "mnemosyne_receive_report": "formed_in_transient_plain_text_before_rules; not persisted to repository as separate file",
+    "nine_MyOS2_rules": "independently_loaded_in_order",
+    "owner_110": "independently_loaded_after_nine",
+    "mnemosyne_guidance": "loaded_separately_only_after_MyOS2_rules",
+    "lead_pr": 16,
+    "exec_pr": 17,
+    "lead_ref_short12": "ed8b3ac237f6",
+    "execution_ref_short12": "03519ebb5d86",
+    "time_ref_short12": "a039d9803ade",
+    "master_ref_short12": "e8e60cd19540",
+    "target_directory_before_write": "absent",
+    "formal_79_comment_before_write": "absent",
+    "canary_time": "kernel mcmodel and smp_processor_id",
+    "canary_master": "large/fPIE and raw_smp_processor_id",
+    "branch_permissions": "restricted to six new artifacts, one PR17 formal comment"
+  },
+  "D00": {
+    "returned_id": "R78-01",
+    "batch78_legacy_verdict": "RETURN_DOCUMENTATION_ONLY",
+    "submitted_status": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+    "closure_authority": "MYOS2-A-C06 Pro independent reviewer",
+    "prior_77": "R77-01 CLOSED_DOCUMENTATION_ONLY; 77 PASS_PENDING_LOCAL",
+    "old_files_or_comments_modified": false,
+    "old_evidence_label_count": {
+      "A": 43,
+      "B": 44,
+      "C": 49,
+      "total": 136
+    },
+    "new_79_evidence_counts_exclude_78": true,
+    "replace_macro": {
+      "old": "78/evidence.md A31 included condition directive and macro line",
+      "new": "79/evidence.md D01 uses only __va definition line, condition #ifndef disclosed outside quote",
+      "anchor": "D01",
+      "old_file_retained": true
+    },
+    "evidence_index_replacements": [
+      {
+        "claim": "setup_arch requests zone_sizes_init",
+        "old_wrong_uses": "B03 sometimes treated as in free_area_init",
+        "correct_old_78": "B03",
+        "new_evidence_scope": "source call distinct from boundary producer"
+      },
+      {
+        "claim": "free_area_init clears boundary arrays then pgdat",
+        "correct_old_78": "B04 then B05",
+        "new_79": [
+          "D05",
+          "D06"
+        ]
+      },
+      {
+        "claim": "empty or no-intersection node output early return",
+        "correct_old_78": "B06 and new D11; caller B11/B12",
+        "new_79": [
+          "D11"
+        ],
+        "limit": "B10 is nonempty callee normal tail write, not the caller's uninitialized locals"
+      },
+      {
+        "claim": "zone->zone_start_pfn/spanned_pages/present_pages first producer",
+        "old_wrong_uses": "B12 only contains real_size calculation",
+        "correct_old_78": "B13",
+        "new_79": [
+          "D07"
+        ]
+      },
+      {
+        "claim": "node nr_zones/totals",
+        "correct_old_78": "B14",
+        "new_79": []
+      },
+      {
+        "claim": "commented zone lock/core read/call internals",
+        "correct_old_78": "B15/B16/B17",
+        "new_79": []
+      },
+      {
+        "claim": "memmap iteration start/reset/page lists",
+        "correct_old_78": "B18/B19/B20/B21/B22",
+        "new_79": [
+          "D08"
+        ]
+      },
+      {
+        "claim": "startup order and free_area_init core chain",
+        "correct_old_78": "B40/B41/B44 (also C46)",
+        "new_79": [
+          "D09",
+          "D10"
+        ]
+      },
+      {
+        "claim": "PB78-F05 zone present overwrite",
+        "old_wrong_uses": "old deferred B12+B18+B40 and two facts fields mislabelled PB78-F06",
+        "correct_old_78": "B13+B19+B44",
+        "new_79": [
+          "D07",
+          "D08",
+          "D09",
+          "D10"
+        ],
+        "correct_qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F05"
+      },
+      {
+        "claim": "PB78-F06 uninitialized pages cumulative",
+        "old_wrong_uses": "F06 misused for zone present reset",
+        "correct_old_78": "C24/C25/C26",
+        "new_79": [
+          "D12",
+          "D13"
+        ],
+        "correct_qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F06"
+      },
+      {
+        "claim": "memblock_alloc_internal lower-bound fallback and phys0",
+        "old_wrong_uses": "A10 covers first request only; graph A_ZERO incorrectly routes internal through phys_to_virt",
+        "correct_old_78": "new 79 D02-D04",
+        "new_79": [
+          "D02",
+          "D03",
+          "D04"
+        ]
+      }
+    ],
+    "graph_repair_rules": [
+      "internal: memblock_alloc_range phys0 -> optional min_addr retry -> if still zero return NULL; only nonzero enters phys_to_virt",
+      "alloc_node_mem_map: direct memblock_alloc_range phys0 -> phys_to_virt -> if virtual map NULL; no internal retry call in that path",
+      "free_area_init: boundary arrays clear and fill -> pgdat clear -> get_pfn_range -> calculate_node_totalpages -> alloc_node_mem_map -> free_area_init_core -> memmap_init",
+      "mem_init -> memblock_free_all then in mm_core_init next kmem_cache_init (conditional prior return)",
+      "all after first invalid pointer/address or indeterminate C read are HYPOTHETICAL_SEQUENCE, never actual-reached proof",
+      "for_each_memblock_type cnt+1 may read tail; __simple_next_mem_range terminal r pointer may be formed but r->base guarded by idx_b<cnt"
+    ],
+    "correct_historical_models": {
+      "source_numeric_or_conditional": 31,
+      "documentation_count": 1,
+      "record_total": 32,
+      "claim_not_allowed": "32 kernel models"
+    },
+    "scope_only": "appended replacement in 79; no old78 mutation, no R78-01 closure or PASS"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/mm/early/memblock.c",
+      "source_blob_short12": "91f0898a257f",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "G01/G02/G03 direct function bodies; complete file"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.h",
+      "source_blob_short12": "2b38facdc5bc",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "search and membership inline bodies; complete"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_macro.h",
+      "source_blob_short12": "30ec09c3079d",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "cnt+1/topdown/iterator macros; complete"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_types.h",
+      "source_blob_short12": "c8555b5e5b4e",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "record and type extents; complete"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_const.h",
+      "source_blob_short12": "48e0f747d1a9",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "flags and initial max; complete"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "source_blob_short12": "1c03094d91b3",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "D00 macro definition; complete"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_init.c",
+      "source_blob_short12": "23c8934e03b5",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "D00 zone/stat order; complete"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/limits.h",
+      "source_blob_short12": "6cf9b01e4068",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "PHYS_ADDR_MAX; complete"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/errno-base.h",
+      "source_blob_short12": "8705e60aee51",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "ENOERR; complete"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/math.h",
+      "source_blob_short12": "a83a89133d87",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "round_up/down; complete"
+    },
+    {
+      "path": "mykernel/lib/string/string.c",
+      "source_blob_short12": "cbb2752bc8b2",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "coverage": "overlapping memmove source-local body; targeted 700-743"
+    }
+  ],
+  "G01": {
+    "status": "completed_in_scope",
+    "matrix": [
+      {
+        "id": "A01",
+        "case": "empty memory and reserved",
+        "preconditions": "static zeroed storage and capacity128/256",
+        "operation": "memblock initializes cnt=0 on both types",
+        "conditional_postcondition": "active count0; no registered physical region yet",
+        "earliest_stop": "do not equate zeroed tail-slot contents with active record",
+        "anchors": [
+          "A01",
+          "A02",
+          "A03",
+          "A05",
+          "A06",
+          "A07"
+        ]
+      },
+      {
+        "id": "A02",
+        "case": "normal add memory",
+        "preconditions": "physical byte base/size and valid regions array",
+        "operation": "simple_mmblk_add -> simple_mmblk_add_range(memory,..,flags0)",
+        "conditional_postcondition": "same mutator as reserved registration; later persistence contingent on all gates",
+        "earliest_stop": "first iteration pre-array prev pointer formation must be isolated in models",
+        "anchors": [
+          "A09",
+          "A10",
+          "A13"
+        ]
+      },
+      {
+        "id": "A03",
+        "case": "reserve bytes",
+        "preconditions": "valid physical byte range",
+        "operation": "simple_mmblk_reserve -> simple_mmblk_add_range(reserved,..,flags0)",
+        "conditional_postcondition": "reserve result code alone not certificate of no overlap or backing array validity",
+        "earliest_stop": "same first-iteration and tail checks",
+        "anchors": [
+          "A11",
+          "A12",
+          "A13"
+        ]
+      },
+      {
+        "id": "A04",
+        "case": "base near maximum",
+        "preconditions": "base=M-4,size=8,M=PHYS_ADDR_MAX",
+        "operation": "size=min(8,M-base)=4, end=base+4=M",
+        "conditional_postcondition": "only a four-unit half-open representable requested interval remains",
+        "earliest_stop": "input original eight units not preserved; API must define truncation semantics",
+        "anchors": [
+          "A08",
+          "A20"
+        ]
+      },
+      {
+        "id": "A05",
+        "case": "size=0 or clipped zero",
+        "preconditions": "size=0 or base=M,size>0",
+        "operation": "if(!size) returns ENOERR before for loop",
+        "conditional_postcondition": "success may mean no change, cannot assert new region",
+        "earliest_stop": "no active interval inserted",
+        "anchors": [
+          "A08",
+          "A09",
+          "A21"
+        ]
+      },
+      {
+        "id": "A06",
+        "case": "first loop iteration idx=0",
+        "preconditions": "cnt>=0, regions pointer to first object",
+        "operation": "macro evaluates idx0; body computes prev=rgn-1 before if(idx>0)",
+        "conditional_postcondition": "even when never dereferenced, before-array pointer formation is separate C object-bound gate",
+        "earliest_stop": "stop before treating downstream insertion as certified execution",
+        "anchors": [
+          "A12",
+          "A13"
+        ]
+      },
+      {
+        "id": "A07",
+        "case": "tail-slot rule",
+        "preconditions": "cnt<max",
+        "operation": "macro permits idx==cnt and reads rgn base/size",
+        "conditional_postcondition": "tail is allocated slot but not automatically valid logical sentinel",
+        "earliest_stop": "unknown stale values from earlier deletions",
+        "anchors": [
+          "A12",
+          "A14",
+          "B10"
+        ]
+      },
+      {
+        "id": "A08",
+        "case": "at capacity",
+        "preconditions": "cnt==max",
+        "operation": "macro's idx==cnt reaches one-past pointer, body reads rgn fields",
+        "conditional_postcondition": "capacity cannot be inferred from late BUG_ON",
+        "earliest_stop": "stop at invalid read, not simply at legal one-past formation",
+        "anchors": [
+          "A12",
+          "A14",
+          "A19"
+        ]
+      },
+      {
+        "id": "A09",
+        "case": "new interval precedes existing",
+        "preconditions": "old=[30,40), new=[10,20)",
+        "operation": "rbase>=end chooses insert_size=end-base=10",
+        "conditional_postcondition": "numeric prefix [10,20) if isolated from prior pointer/bounds guards",
+        "earliest_stop": "merge receives idx-1; cannot assert full success",
+        "anchors": [
+          "A15",
+          "A18",
+          "B04"
+        ]
+      },
+      {
+        "id": "A10",
+        "case": "new overlaps existing",
+        "preconditions": "old=[10,20),new=[15,25)",
+        "operation": "else-if rbase<end computes size_t insert_size=10-15",
+        "conditional_postcondition": "negative mathematical difference becomes a large unsigned size in 64-bit model",
+        "earliest_stop": "stop before treating insertion/reservation as correct union",
+        "anchors": [
+          "A16",
+          "B01"
+        ]
+      },
+      {
+        "id": "A11",
+        "case": "contained new interval",
+        "preconditions": "old=[10,20),new=[12,18)",
+        "operation": "rbase-base=10-12",
+        "conditional_postcondition": "unsigned-width model produces 2^64-2, not zero new coverage",
+        "earliest_stop": "not a valid overlap no-op proof",
+        "anchors": [
+          "A16"
+        ]
+      },
+      {
+        "id": "A12",
+        "case": "append after existing",
+        "preconditions": "old=[10,20),new=[30,40),cnt capacity and sorted",
+        "operation": "idx0 rend<=base skip; idx1 tail insert",
+        "conditional_postcondition": "isolated valid-state model: two distinct regions, cnt1->2",
+        "earliest_stop": "first idx0 prev pointer and tail content need independent validity",
+        "anchors": [
+          "A12",
+          "A14",
+          "A15",
+          "B02"
+        ]
+      },
+      {
+        "id": "A13",
+        "case": "adjacent tail insert",
+        "preconditions": "old=[10,20),new=[20,30),flags equal",
+        "operation": "idx1 insert then merge idx0/1",
+        "conditional_postcondition": "isolated integer union [10,30), count1->2->1",
+        "earliest_stop": "requires legitimate idx0 evaluation, struct moves and representable counts",
+        "anchors": [
+          "A18",
+          "B06",
+          "B07"
+        ]
+      }
+    ]
+  },
+  "G02": {
+    "status": "completed_in_scope",
+    "matrix": [
+      {
+        "id": "B01",
+        "case": "insert at index k",
+        "preconditions": "0<=k<=cnt<max and rgn valid",
+        "operation": "rgn=&regions[k] formed before BUG_ON",
+        "conditional_postcondition": "memmove shifts [k,cnt) one slot right; overwrites base/size",
+        "earliest_stop": "do not treat guard as pre-pointer validation; source has no rollback",
+        "anchors": [
+          "B01",
+          "B02",
+          "B15"
+        ]
+      },
+      {
+        "id": "B02",
+        "case": "initial insert",
+        "preconditions": "cnt0,max128, idx0, zeroed tail",
+        "operation": "memmove byte count 0, writes base,size, cnt++/total+=size",
+        "conditional_postcondition": "isolated arithmetic leads cnt1,total=size",
+        "earliest_stop": "first-loop pre-array pointer and merge idx-1 unresolved",
+        "anchors": [
+          "B02",
+          "B03",
+          "A13",
+          "B24"
+        ]
+      },
+      {
+        "id": "B03",
+        "case": "two-region append",
+        "preconditions": "old [10,20),new [30,40), flags equal",
+        "operation": "memmove at idx1, writes candidate",
+        "conditional_postcondition": "counts 1->2,total10->20 in isolated model",
+        "earliest_stop": "no proof from API success alone that writes were legal",
+        "anchors": [
+          "B02",
+          "B03"
+        ]
+      },
+      {
+        "id": "B04",
+        "case": "adjacent pair merge",
+        "preconditions": "left=[10,20),right=[20,30), same flags",
+        "operation": "this.size+=next.size; total_size+=next.size; remove subtracts next.size",
+        "conditional_postcondition": "nominal total_size pre-merge20 ->30 ->20; final cnt1, [10,30)",
+        "earliest_stop": "requires valid indices, no overflow, correctly represented prestate",
+        "anchors": [
+          "B05",
+          "B06",
+          "B07",
+          "B08"
+        ]
+      },
+      {
+        "id": "B05",
+        "case": "nonadjacent pair",
+        "preconditions": "left end20,right base30",
+        "operation": "this_end!=next.base so i++",
+        "conditional_postcondition": "no merge of these two",
+        "earliest_stop": "later pair only if i<end_rgn",
+        "anchors": [
+          "B05",
+          "B06"
+        ]
+      },
+      {
+        "id": "B06",
+        "case": "overlap pair",
+        "preconditions": "left end25,next base20",
+        "operation": "branch BUG_ON(this_end>next.base)",
+        "conditional_postcondition": "not equivalent to ordinary noncontiguity",
+        "earliest_stop": "no branch behavior without bound valid and BUG_ON semantics",
+        "anchors": [
+          "B06"
+        ]
+      },
+      {
+        "id": "B07",
+        "case": "bridge three records",
+        "preconditions": "[10,20),[30,40) plus inserted [20,30) at idx1",
+        "operation": "merge(start0,end1) checks first pair only and reduces end_rgn",
+        "conditional_postcondition": "conditional [10,30), [30,40) remain adjacent after single merge; no second adjacent check",
+        "earliest_stop": "first-loop pointer and full array behavior remain isolated",
+        "anchors": [
+          "A18",
+          "B04",
+          "B07",
+          "B22"
+        ]
+      },
+      {
+        "id": "B08",
+        "case": "first insertion merge argument",
+        "preconditions": "idx=0",
+        "operation": "call merge(type,idx-1,idx), negative signed value converts to ulong",
+        "conditional_postcondition": "start_rgn becomes unsigned extreme; subsequent assignment to int i implementation-dependent",
+        "earliest_stop": "stop before assuming i=0 or no-op portable",
+        "anchors": [
+          "A18",
+          "B04",
+          "B16"
+        ]
+      },
+      {
+        "id": "B09",
+        "case": "flags identity",
+        "preconditions": "caller passes flags0 to mutator; inserted slot may hold stale flags",
+        "operation": "insert_region assigns base/size but does not assign flags",
+        "conditional_postcondition": "expected flag equality is contingent on prior tail content, not just argument",
+        "earliest_stop": "all writers to flags and actual stale nonzero require separate proof",
+        "anchors": [
+          "B01",
+          "B02",
+          "B03",
+          "A22"
+        ]
+      },
+      {
+        "id": "B10",
+        "case": "delete middle",
+        "preconditions": "cnt3, delete idx1, all records valid",
+        "operation": "total-=oldsize; memmove shifts one later record to idx1; cnt--",
+        "conditional_postcondition": "nominal cnt2, old tail still contains data",
+        "earliest_stop": "no end-of-array sentinel guaranteed; overlap memmove implementation is not a capacity guard",
+        "anchors": [
+          "B08",
+          "B09",
+          "B10",
+          "B11"
+        ]
+      },
+      {
+        "id": "B11",
+        "case": "delete only member",
+        "preconditions": "cnt1,idx0,valid record[10,20)",
+        "operation": "memmove with byte count0; cnt1->0; tail slot not cleared",
+        "conditional_postcondition": "logical empty type can still contain stale [10,20) in regions[0]",
+        "earliest_stop": "search do-while may consume stale slot; C07/C08",
+        "anchors": [
+          "B08",
+          "B09",
+          "B10"
+        ]
+      },
+      {
+        "id": "B12",
+        "case": "capacity just below limit",
+        "preconditions": "cnt close to max",
+        "operation": "insert_region checks cnt>=max but add_range has a later BUG_ON(cnt>=max-2)",
+        "conditional_postcondition": "late check can be encountered after mutation",
+        "earliest_stop": "cannot certify transaction, caller rollback or active capacity below max",
+        "anchors": [
+          "B14",
+          "B15"
+        ]
+      },
+      {
+        "id": "B13",
+        "case": "memmove semantics",
+        "preconditions": "source and destination may overlap, both within allocated array",
+        "operation": "memmove implementation uses forward/backward loop based on order",
+        "conditional_postcondition": "overlap handling does not prove arithmetic count or address valid",
+        "earliest_stop": "requires shift bounds and count*record-size representability",
+        "anchors": [
+          "B11",
+          "B12",
+          "B13"
+        ]
+      },
+      {
+        "id": "B14",
+        "case": "remove underflow guard",
+        "preconditions": "idx>=cnt or cnt0",
+        "operation": "remove computes total and (cnt-(idx+1))*sizeof before any check",
+        "conditional_postcondition": "unsigned length can underflow",
+        "earliest_stop": "stop at invalid index; not an ordinary deletion",
+        "anchors": [
+          "B08",
+          "B09"
+        ]
+      },
+      {
+        "id": "B15",
+        "case": "total size invariant",
+        "preconditions": "valid disjoint regions and no wrap",
+        "operation": "insert add size; merge add then remove subtract; trim handles separately",
+        "conditional_postcondition": "nominal total matches unique lengths only under correct set operations",
+        "earliest_stop": "overlap subtraction bug or trim can invalidate",
+        "anchors": [
+          "B03",
+          "B07",
+          "B08"
+        ]
+      }
+    ]
+  },
+  "G03": {
+    "status": "completed_in_scope",
+    "matrix": [
+      {
+        "id": "C01",
+        "case": "topdown empty",
+        "preconditions": "cnt0",
+        "operation": "macro initializes r=&regions[cnt-1]",
+        "conditional_postcondition": "cnt-1 underflows before any actual element access",
+        "earliest_stop": "no claim safe empty traversal",
+        "anchors": [
+          "C01"
+        ]
+      },
+      {
+        "id": "C02",
+        "case": "topdown one member",
+        "preconditions": "cnt1,valid member",
+        "operation": "loop body then macro r-- and relational comparison",
+        "conditional_postcondition": "one-before-array pointer/comparison enters bounds uncertainty",
+        "earliest_stop": "cannot certify termination under strict C",
+        "anchors": [
+          "C01",
+          "C02"
+        ]
+      },
+      {
+        "id": "C03",
+        "case": "trim no change",
+        "preconditions": "[8,16),align4",
+        "operation": "round_up(8,4)=8,round_down(16,4)=16",
+        "conditional_postcondition": "continue, base/size/total unchanged",
+        "earliest_stop": "requires pow2 align and representable endpoint",
+        "anchors": [
+          "C02",
+          "C05",
+          "C06"
+        ]
+      },
+      {
+        "id": "C04",
+        "case": "trim shrinks nonempty",
+        "preconditions": "[3,14), align4, total11",
+        "operation": "start4,end12; write base4,size8",
+        "conditional_postcondition": "total_size remains11 in this function, while region size becomes8",
+        "earliest_stop": "no later repair verified by this path",
+        "anchors": [
+          "C02",
+          "C03"
+        ]
+      },
+      {
+        "id": "C05",
+        "case": "trim removes",
+        "preconditions": "[9,11),align4",
+        "operation": "start12,end8; branch remove",
+        "conditional_postcondition": "delete count/total change then internal r--",
+        "earliest_stop": "macro also decrements r: risk of skipping previous member",
+        "anchors": [
+          "C01",
+          "C02",
+          "C04"
+        ]
+      },
+      {
+        "id": "C06",
+        "case": "trim skip predecessor",
+        "preconditions": "three valid sorted regions, last deleted at idx2",
+        "operation": "internal r-- to idx1; macro increment r-- to idx0",
+        "conditional_postcondition": "idx1 is skipped in that iteration",
+        "earliest_stop": "requires prior valid pointer/array sequence",
+        "anchors": [
+          "C01",
+          "C04"
+        ]
+      },
+      {
+        "id": "C07",
+        "case": "search nonempty hit",
+        "preconditions": "cnt1, regions[0]=[10,20),addr15",
+        "operation": "do mid0 and return0",
+        "conditional_postcondition": "member true if correctly active",
+        "earliest_stop": "requires sorted nonoverlap and valid extent",
+        "anchors": [
+          "C07",
+          "C08",
+          "C09",
+          "C10",
+          "C12"
+        ]
+      },
+      {
+        "id": "C08",
+        "case": "search nonempty miss",
+        "preconditions": "cnt1, regions[0]=[10,20),addr25",
+        "operation": "mid0 advances left to1 then returns -1",
+        "conditional_postcondition": "member false in this bounded model",
+        "earliest_stop": "no proof all invalid inputs handled",
+        "anchors": [
+          "C07",
+          "C09",
+          "C10"
+        ]
+      },
+      {
+        "id": "C09",
+        "case": "search cnt0 stale tail",
+        "preconditions": "cnt0 but regions[0] still=[10,20) after delete",
+        "operation": "do executes once, mid0, addr15 inside stale record, returns0",
+        "conditional_postcondition": "membership spuriously true even though active cnt0 in isolated state",
+        "earliest_stop": "tail slot not guaranteed cleared; count/tail root shared with B11",
+        "anchors": [
+          "B10",
+          "C07",
+          "C08",
+          "C09",
+          "C11",
+          "C12"
+        ]
+      },
+      {
+        "id": "C10",
+        "case": "is_map_memory nomap flag",
+        "preconditions": "valid search hit then flags has MEMBLOCK_NOMAP",
+        "operation": "!memblock_is_nomap returns false",
+        "conditional_postcondition": "mappable status distinct from membership",
+        "earliest_stop": "flags init writer not proven when stale slot",
+        "anchors": [
+          "C13",
+          "C14",
+          "A22",
+          "B09"
+        ]
+      },
+      {
+        "id": "C11",
+        "case": "contained check",
+        "preconditions": "region=[10,30), request base=15,size5",
+        "operation": "search(base) hits, end20 <=30",
+        "conditional_postcondition": "true only for clipped request entirely in one record",
+        "earliest_stop": "does not prove free/unreserved/mapped physical extent",
+        "anchors": [
+          "C15",
+          "C16"
+        ]
+      },
+      {
+        "id": "C12",
+        "case": "containment clipped",
+        "preconditions": "region reaches PHYS_ADDR_MAX, base=M-4,size8",
+        "operation": "cap size to4, compare clipped endM against region endM",
+        "conditional_postcondition": "may report true for clipped range, not original eight bytes",
+        "earliest_stop": "caller interpretation of truncated request unresolved",
+        "anchors": [
+          "A08",
+          "C15",
+          "C16"
+        ]
+      },
+      {
+        "id": "C13",
+        "case": "free-range semantics",
+        "preconditions": "memory=[0,40), reserved=[10,20), both sorted",
+        "operation": "two gap intersections",
+        "conditional_postcondition": "isolated free intervals [0,10),[20,40)",
+        "earliest_stop": "tail slot pointer may be formed; no need r->base on terminal gap",
+        "anchors": [
+          "C21",
+          "C22",
+          "C23",
+          "C24",
+          "C25"
+        ]
+      },
+      {
+        "id": "C14",
+        "case": "free-range end capacity",
+        "preconditions": "reserved cnt==max",
+        "operation": "tail r=&regions[cnt] forms one-past, r_gap_end conditional uses MAX",
+        "conditional_postcondition": "terminal r->base not necessarily read, unlike for_each_memblock_type body",
+        "earliest_stop": "other array/order arithmetic still must be valid",
+        "anchors": [
+          "C23",
+          "A12"
+        ]
+      },
+      {
+        "id": "C15",
+        "case": "candidate alignment",
+        "preconditions": "free=[100,200), request start100,end200,size16,align16",
+        "operation": "round_up(100,16)=112,112+16<=200",
+        "conditional_postcondition": "conditional physical candidate112",
+        "earliest_stop": "actual reserve and address mapping separate",
+        "anchors": [
+          "C26",
+          "C27",
+          "C32"
+        ]
+      },
+      {
+        "id": "C16",
+        "case": "candidate too large",
+        "preconditions": "free=[100,110),size16,align16",
+        "operation": "candidate112 not < this_end110",
+        "conditional_postcondition": "no candidate; return0",
+        "earliest_stop": "capacity failure distinct from reserve registration failure",
+        "anchors": [
+          "C26",
+          "C27",
+          "C28"
+        ]
+      },
+      {
+        "id": "C17",
+        "case": "end 0 sentinel",
+        "preconditions": "memblock.current_limit=M,bounds=[PAGE_SIZE,0] call",
+        "operation": "end special=ACCESSIBLE then max(start,end)",
+        "conditional_postcondition": "range upper limit M, not empty interval",
+        "earliest_stop": "configuration and last numeric bound unknown",
+        "anchors": [
+          "C29",
+          "C30",
+          "C31"
+        ]
+      },
+      {
+        "id": "C18",
+        "case": "start 0 floor",
+        "preconditions": "request lower0 and valid end",
+        "operation": "start=max(0,PAGE_SIZE)",
+        "conditional_postcondition": "first page not selected by this allocator",
+        "earliest_stop": "no guarantee any physical bytes reserved",
+        "anchors": [
+          "C31"
+        ]
+      },
+      {
+        "id": "C19",
+        "case": "aligned found and reserve success",
+        "preconditions": "candidate nonzero, size>0, type records valid",
+        "operation": "found && !simple_mmblk_reserve(found,size)",
+        "conditional_postcondition": "returns physical candidate if callback returns ENOERR",
+        "earliest_stop": "registration success is conditional on earlier A/B gates",
+        "anchors": [
+          "C27",
+          "C32",
+          "A11"
+        ]
+      },
+      {
+        "id": "C20",
+        "case": "zero-length allocation",
+        "preconditions": "size0,candidate valid>0 in nonempty free interval",
+        "operation": "end-cand>=0, reserve(found,0) returns ENOERR with no write",
+        "conditional_postcondition": "alloc_range can return nonzero without reserving any bytes",
+        "earliest_stop": "request must be separately shown to be size>0",
+        "anchors": [
+          "A09",
+          "C27",
+          "C32"
+        ]
+      },
+      {
+        "id": "C21",
+        "case": "failed reservation",
+        "preconditions": "candidate nonzero but reserve returns nonzero error",
+        "operation": "alloc_range else returns0",
+        "conditional_postcondition": "candidate found not a usable allocation",
+        "earliest_stop": "no underlying region rollback asserted",
+        "anchors": [
+          "C32",
+          "C33"
+        ]
+      },
+      {
+        "id": "C22",
+        "case": "normal fallback",
+        "preconditions": "initial min_addr>0 fails, max_addr valid",
+        "operation": "memblock_alloc_internal retries with lower0; alloc_range floors to PAGE_SIZE",
+        "conditional_postcondition": "not every normal success necessarily >= original min_addr",
+        "earliest_stop": "actual chosen physical location unknown",
+        "anchors": [
+          "D02",
+          "C31",
+          "C34"
+        ]
+      },
+      {
+        "id": "C23",
+        "case": "physical zero handling",
+        "preconditions": "underlying alloc_range returned0",
+        "operation": "internal returns NULL before phys_to_virt",
+        "conditional_postcondition": "distinct from 78 alloc_node_mem_map direct conversion path",
+        "earliest_stop": "real virtual mapping cannot be inferred",
+        "anchors": [
+          "D01",
+          "D03",
+          "D04",
+          "C35"
+        ]
+      },
+      {
+        "id": "C24",
+        "case": "region flag selection",
+        "preconditions": "free scanner receives flags MEMBLOCK_NONE; memory record flags possibly NOMAP",
+        "operation": "should_skip_region excludes NOMAP, MIRROR etc per tests",
+        "conditional_postcondition": "free interval membership depends on flags as well as set arithmetic",
+        "earliest_stop": "no full invariant over all flags producers",
+        "anchors": [
+          "C17",
+          "C18",
+          "C19",
+          "C20",
+          "C21"
+        ]
+      },
+      {
+        "id": "C25",
+        "case": "iteration exhaustion",
+        "preconditions": "no further valid intersection",
+        "operation": "__simple_next_mem_range sets ULLONG_MAX",
+        "conditional_postcondition": "for_each_free_mem_range macro exits on sentinel",
+        "earliest_stop": "unproven if invalid cursor/array inputs",
+        "anchors": [
+          "C21",
+          "C22",
+          "C23"
+        ]
+      }
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "id": "MR79-M01",
+      "kind": "pure_integer",
+      "input": {
+        "base": 100,
+        "size": 20
+      },
+      "expected": {
+        "capped_size": 20
+      },
+      "anchors": [
+        "A08"
+      ]
+    },
+    {
+      "id": "MR79-M02",
+      "kind": "pure_integer",
+      "input": {
+        "base": "M-4",
+        "size": 8
+      },
+      "expected": {
+        "capped_size": 4,
+        "end": "M"
+      },
+      "anchors": [
+        "A08",
+        "A20"
+      ]
+    },
+    {
+      "id": "MR79-M03",
+      "kind": "pure_integer",
+      "input": {
+        "base": "M",
+        "size": 1
+      },
+      "expected": {
+        "capped_size": 0,
+        "branch": "early_ENOERR_no_mutation"
+      },
+      "anchors": [
+        "A09"
+      ]
+    },
+    {
+      "id": "MR79-M04",
+      "kind": "pure_integer",
+      "input": {
+        "cnt": 0,
+        "max": 128
+      },
+      "expected": {
+        "loop_idx_zero_condition": true,
+        "active_entry_count": 0
+      },
+      "anchors": [
+        "A01",
+        "A12"
+      ]
+    },
+    {
+      "id": "MR79-M05",
+      "kind": "C_pointer_boundary",
+      "input": {
+        "idx": 0,
+        "rgn": "&regions[0]"
+      },
+      "expected": {
+        "prev": "&regions[-1]",
+        "not_dereferenced_on_idx0": true,
+        "valid_pointer_formation": "NOT_CERTIFIED"
+      },
+      "anchors": [
+        "A13"
+      ]
+    },
+    {
+      "id": "MR79-M06",
+      "kind": "pure_integer",
+      "input": {
+        "old": "[10,20)",
+        "new": "[15,25)",
+        "size_t_width": 64
+      },
+      "expected": {
+        "mathematical_rbase_minus_base": -5,
+        "unsigned_value": "2^64-5"
+      },
+      "anchors": [
+        "A16"
+      ]
+    },
+    {
+      "id": "MR79-M07",
+      "kind": "pure_integer",
+      "input": {
+        "old": "[10,20)",
+        "new": "[12,18)",
+        "size_t_width": 64
+      },
+      "expected": {
+        "mathematical_rbase_minus_base": -2,
+        "unsigned_value": "2^64-2"
+      },
+      "anchors": [
+        "A16"
+      ]
+    },
+    {
+      "id": "MR79-M08",
+      "kind": "isolated_structural",
+      "input": {
+        "old": "[10,20)",
+        "new": "[30,40)"
+      },
+      "expected": {
+        "cnt_before": 1,
+        "cnt_after_append": 2,
+        "no_adjacency": true
+      },
+      "anchors": [
+        "A14",
+        "A15",
+        "B03"
+      ]
+    },
+    {
+      "id": "MR79-M09",
+      "kind": "isolated_structural",
+      "input": {
+        "old": "[10,20)",
+        "new": "[20,30)"
+      },
+      "expected": {
+        "merged": "[10,30)",
+        "cnt": 1
+      },
+      "anchors": [
+        "A18",
+        "B06",
+        "B07"
+      ]
+    },
+    {
+      "id": "MR79-M10",
+      "kind": "isolated_structural",
+      "input": {
+        "old": [
+          "[10,20)",
+          "[30,40)"
+        ],
+        "new": "[20,30)",
+        "merge_start": 0,
+        "merge_end": 1
+      },
+      "expected": {
+        "after_first_merge": [
+          "[10,30)",
+          "[30,40)"
+        ],
+        "adjacent_unmerged": true
+      },
+      "anchors": [
+        "A18",
+        "B04",
+        "B07"
+      ]
+    },
+    {
+      "id": "MR79-M11",
+      "kind": "conditional_integer_conversion",
+      "input": {
+        "idx": 0,
+        "call": "merge(type,idx-1,idx)"
+      },
+      "expected": {
+        "signed_argument": -1,
+        "ulong_value": "ULONG_MAX",
+        "int_conversion": "implementation_dependent"
+      },
+      "anchors": [
+        "A18",
+        "B04"
+      ]
+    },
+    {
+      "id": "MR79-M12",
+      "kind": "pure_accounting",
+      "input": {
+        "total_before_insert": 10,
+        "insert_size": 10
+      },
+      "expected": {
+        "after_insert": 20,
+        "after_merge_add": 30,
+        "after_remove_sub": 20
+      },
+      "anchors": [
+        "B03",
+        "B07",
+        "B08"
+      ]
+    },
+    {
+      "id": "MR79-M13",
+      "kind": "isolated_structural",
+      "input": {
+        "cnt": 1,
+        "delete_idx": 0,
+        "slot0": "[10,20)"
+      },
+      "expected": {
+        "cnt_after": 0,
+        "stale_slot0": "[10,20)"
+      },
+      "anchors": [
+        "B08",
+        "B09",
+        "B10"
+      ]
+    },
+    {
+      "id": "MR79-M14",
+      "kind": "isolated_structural",
+      "input": {
+        "cnt": 0,
+        "stale_slot0": "[10,20)",
+        "addr": 15
+      },
+      "expected": {
+        "do_loop_mid": 0,
+        "search_return": 0,
+        "logical_membership_should_be": false
+      },
+      "anchors": [
+        "C07",
+        "C08",
+        "C09"
+      ]
+    },
+    {
+      "id": "MR79-M15",
+      "kind": "pure_integer",
+      "input": {
+        "region": "[3,14)",
+        "align": 4,
+        "total_size_before": 11
+      },
+      "expected": {
+        "start": 4,
+        "end": 12,
+        "retained_region": "[4,12)",
+        "total_size_after_actual_branch": 11,
+        "actual_region_length": 8
+      },
+      "anchors": [
+        "C02",
+        "C03"
+      ]
+    },
+    {
+      "id": "MR79-M16",
+      "kind": "pure_integer",
+      "input": {
+        "region": "[9,11)",
+        "align": 4
+      },
+      "expected": {
+        "start": 12,
+        "end": 8,
+        "delete_branch": true
+      },
+      "anchors": [
+        "C02",
+        "C04"
+      ]
+    },
+    {
+      "id": "MR79-M17",
+      "kind": "isolated_structural",
+      "input": {
+        "initial_index": 2,
+        "deleted_index": 2,
+        "prior_index": 1
+      },
+      "expected": {
+        "internal_r_decrement_to": 1,
+        "macro_r_decrement_to": 0,
+        "skipped_index": 1
+      },
+      "anchors": [
+        "C01",
+        "C04"
+      ]
+    },
+    {
+      "id": "MR79-M18",
+      "kind": "pure_integer",
+      "input": {
+        "region": "[8,16)",
+        "align": 4
+      },
+      "expected": {
+        "trim_changed": false
+      },
+      "anchors": [
+        "C02",
+        "C05",
+        "C06"
+      ]
+    },
+    {
+      "id": "MR79-M19",
+      "kind": "conditional_C_pointer_boundary",
+      "input": {
+        "cnt": 0,
+        "topdown": true
+      },
+      "expected": {
+        "initial_index": "cnt-1_unrepresentable_unsigned",
+        "valid_pointer": "NOT_CERTIFIED"
+      },
+      "anchors": [
+        "C01"
+      ]
+    },
+    {
+      "id": "MR79-M20",
+      "kind": "pure_integer",
+      "input": {
+        "memory": "[0,40)",
+        "reserved": "[10,20)"
+      },
+      "expected": {
+        "free": [
+          "[0,10)",
+          "[20,40)"
+        ]
+      },
+      "anchors": [
+        "C21",
+        "C23",
+        "C24"
+      ]
+    },
+    {
+      "id": "MR79-M21",
+      "kind": "pure_integer",
+      "input": {
+        "free": "[100,200)",
+        "start": 100,
+        "end": 200,
+        "size": 16,
+        "align": 16
+      },
+      "expected": {
+        "rounded_candidate": 112,
+        "fits": true
+      },
+      "anchors": [
+        "C26",
+        "C27"
+      ]
+    },
+    {
+      "id": "MR79-M22",
+      "kind": "pure_integer",
+      "input": {
+        "free": "[100,110)",
+        "start": 100,
+        "end": 110,
+        "size": 16,
+        "align": 16
+      },
+      "expected": {
+        "rounded_candidate": 112,
+        "fits": false
+      },
+      "anchors": [
+        "C26",
+        "C27"
+      ]
+    },
+    {
+      "id": "MR79-M23",
+      "kind": "conditional_zero_size",
+      "input": {
+        "free": "[100,200)",
+        "size": 0,
+        "align": 16
+      },
+      "expected": {
+        "candidate": 112,
+        "can_return_nonzero": true,
+        "reserved_bytes": 0
+      },
+      "anchors": [
+        "A09",
+        "C27",
+        "C32"
+      ]
+    },
+    {
+      "id": "MR79-M24",
+      "kind": "logical",
+      "input": {
+        "min_addr": 16777216,
+        "first_found": 0,
+        "retry_min_addr": 0
+      },
+      "expected": {
+        "retry_occurs": true,
+        "effective_floor": "PAGE_SIZE"
+      },
+      "anchors": [
+        "D02",
+        "C31"
+      ]
+    },
+    {
+      "id": "MR79-M25",
+      "kind": "logical",
+      "input": {
+        "found": 0
+      },
+      "expected": {
+        "alloc_range_phys_result": 0,
+        "internal_virtual_result": "NULL"
+      },
+      "anchors": [
+        "C33",
+        "D03"
+      ]
+    },
+    {
+      "id": "MR79-M26",
+      "kind": "logical",
+      "input": {
+        "memblock_reserved_cnt": 256,
+        "max": 256
+      },
+      "expected": {
+        "for_each_memblock_type_includes_index_256": true,
+        "slot_256_is_one_past": true
+      },
+      "anchors": [
+        "A12",
+        "A02"
+      ]
+    },
+    {
+      "id": "MR79-M27",
+      "kind": "pure_integer",
+      "input": {
+        "region": "[10,30)",
+        "base": 15,
+        "size": 5
+      },
+      "expected": {
+        "is_region_memory": true
+      },
+      "anchors": [
+        "C15",
+        "C16"
+      ]
+    },
+    {
+      "id": "MR79-M28",
+      "kind": "pure_integer",
+      "input": {
+        "region": "[10,30)",
+        "base": 15,
+        "size": 25
+      },
+      "expected": {
+        "is_region_memory": false
+      },
+      "anchors": [
+        "C15",
+        "C16"
+      ]
+    },
+    {
+      "id": "MR79-M29",
+      "kind": "logical",
+      "input": {
+        "cnt": 1,
+        "region": "[10,20)",
+        "addr": 25
+      },
+      "expected": {
+        "search_return": -1
+      },
+      "anchors": [
+        "C07",
+        "C09",
+        "C10"
+      ]
+    },
+    {
+      "id": "MR79-M30",
+      "kind": "historical_D00_document_accounting",
+      "input": {
+        "prior_78_finite_records": 32,
+        "source_conditional_records": 31,
+        "documentation_only_record": 1
+      },
+      "expected": {
+        "kernel_model_claim_limit": 31,
+        "old_records_unchanged": true
+      },
+      "anchors": []
+    }
+  ],
+  "finite_model_count": 30,
+  "conditional_findings": [
+    {
+      "id": "MR79-F01",
+      "kind": "conditional_first_iteration_pre_array_pointer",
+      "status": "needs_evidence",
+      "anchors": [
+        "A12",
+        "A13"
+      ],
+      "earliest_stop": "idx0 rgn-1 pointer formation before idx>0 conditional"
+    },
+    {
+      "id": "MR79-F02",
+      "kind": "conditional_overlap_unsigned_size",
+      "status": "needs_evidence",
+      "anchors": [
+        "A14",
+        "A16"
+      ],
+      "earliest_stop": "old rbase < new base uses unsigned rbase-base; invalid union size"
+    },
+    {
+      "id": "MR79-F03",
+      "kind": "conditional_merge_index_and_bridge_scope",
+      "status": "needs_evidence",
+      "anchors": [
+        "A18",
+        "B04",
+        "B07"
+      ],
+      "earliest_stop": "idx0 signed-to-unsigned/unsigned-to-int, and bounded merge range may leave right neighbor unmerged"
+    },
+    {
+      "id": "MR79-F04",
+      "kind": "conditional_cnt_tail_and_stale_search",
+      "status": "needs_evidence",
+      "anchors": [
+        "A12",
+        "A14",
+        "B10",
+        "C07",
+        "C08",
+        "C09"
+      ],
+      "earliest_stop": "cnt+1 tail access (including cnt==max) and empty do-while consuming retained old slot; same cnt/tail family"
+    },
+    {
+      "id": "MR79-F05",
+      "kind": "conditional_trim_total_size_invariant",
+      "status": "needs_evidence",
+      "anchors": [
+        "C02",
+        "C03"
+      ],
+      "earliest_stop": "nonempty aligned slice changes size without updating type total_size"
+    },
+    {
+      "id": "MR79-F06",
+      "kind": "conditional_reverse_iterator_index_and_deletion_skip",
+      "status": "needs_evidence",
+      "anchors": [
+        "C01",
+        "C04"
+      ],
+      "earliest_stop": "cnt0 topdown underflow, final decrement one-before array, dual r-- can skip previous member"
+    },
+    {
+      "id": "MR79-F07",
+      "kind": "conditional_inserted_flags_not_written",
+      "status": "needs_evidence",
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "A22"
+      ],
+      "earliest_stop": "flags param not stored, stale slot flags may affect merge/filter; caller flags0 alone cannot prove tail"
+    },
+    {
+      "id": "MR79-F08",
+      "kind": "conditional_zero_size_alloc_without_reserve",
+      "status": "needs_evidence",
+      "anchors": [
+        "A09",
+        "C27",
+        "C32"
+      ],
+      "earliest_stop": "found candidate with size0 can return physical nonzero despite no reserved byte"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "MR79-U01",
+      "status": "needs_evidence",
+      "topic": "type->cnt provenance, region-array allocated extent, writer invariants, tail slot initialization and capacity check at each call",
+      "anchors": [
+        "A01",
+        "A12",
+        "A14"
+      ]
+    },
+    {
+      "id": "MR79-U02",
+      "status": "needs_evidence",
+      "topic": "first-iteration invalid pointer evaluation and language/compiler mode; no preprocessing or executable artifact",
+      "anchors": [
+        "A13"
+      ]
+    },
+    {
+      "id": "MR79-U03",
+      "status": "needs_evidence",
+      "topic": "overlap cases with typed operands, insertion partition invariant and add/merge semantics; no full property proof",
+      "anchors": [
+        "A15",
+        "A16",
+        "B04"
+      ]
+    },
+    {
+      "id": "MR79-U04",
+      "status": "needs_evidence",
+      "topic": "signed idx to ulong conversion, 64-bit to int conversion and merge loop termination; build/ABI not executed",
+      "anchors": [
+        "A18",
+        "B04",
+        "B16"
+      ]
+    },
+    {
+      "id": "MR79-U05",
+      "status": "needs_evidence",
+      "topic": "all flags writers and end-to-end region flags including tail stale contents",
+      "anchors": [
+        "B02",
+        "A22",
+        "C13"
+      ]
+    },
+    {
+      "id": "MR79-U06",
+      "status": "needs_evidence",
+      "topic": "zero-member search after delete and consumers of is_memory/is_reserved/is_map_memory",
+      "anchors": [
+        "B10",
+        "C08",
+        "C11",
+        "C12",
+        "C14"
+      ]
+    },
+    {
+      "id": "MR79-U07",
+      "status": "needs_evidence",
+      "topic": "trim caller timing, alignment validity, total_size consumers and cumulative repair; no whole tree survey",
+      "anchors": [
+        "C01",
+        "C03",
+        "C04",
+        "C05"
+      ]
+    },
+    {
+      "id": "MR79-U08",
+      "status": "needs_evidence",
+      "topic": "physical layout provenance, sorted/disjoint coverage, phys max and map/direct address validity",
+      "anchors": [
+        "C15",
+        "C21",
+        "C24",
+        "C27"
+      ]
+    },
+    {
+      "id": "MR79-U09",
+      "status": "needs_evidence",
+      "topic": "nonzero-size obligation of memblock_alloc_range, callers and pre-slab lifetime",
+      "anchors": [
+        "A09",
+        "C29",
+        "C32"
+      ]
+    },
+    {
+      "id": "MR79-U10",
+      "status": "needs_evidence",
+      "topic": "links to PB78-F01–F06 and MM historical MC-01/05, LB-01/08, GAP-M08 remain source conditional and not reaccepted",
+      "anchors": [
+        "D02",
+        "D08",
+        "D12",
+        "D13"
+      ]
+    }
+  ],
+  "qualified_prior_ids_retained": [
+    "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F01",
+    "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F02",
+    "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F03",
+    "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F04",
+    "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F05",
+    "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F06",
+    "CORE-MM-BASELINE-04::MC-01",
+    "CORE-MM-BASELINE-04::MC-05",
+    "CORE-MM-BASELINE-04::LB-01",
+    "CORE-MM-BASELINE-04::LB-08",
+    "CORE-MM-BASELINE-04::GAP-M08",
+    "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F01",
+    "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F02"
+  ],
+  "methods": {
+    "new_definition_labels": 95,
+    "counts": {
+      "D": 13,
+      "A": 23,
+      "B": 24,
+      "C": 35
+    },
+    "raw_reserved_prefixes_in_new_evidence": 95,
+    "other_five_expected": 0,
+    "source_files_11": true,
+    "source_soft_cap": 22,
+    "all_short_quotes_fixed_source_exact": true,
+    "source_reconfirmations": 95,
+    "downgraded_to_inferred": 0,
+    "analyzed_case_count": 53,
+    "isolated_models": 30,
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "preflight_retry_actual": "to be filled in formal comment"
+  },
+  "owner_decisions_requested_now": [],
+  "kernel_change_authorized": false,
+  "patch_authorized": false,
+  "review_receiver": "MYOS2-A-C06",
+  "acceptance_ceiling": "PASS_PENDING_LOCAL",
+  "mainline_acceptance": "PENDING",
+  "status": "READY_FOR_MAINLINE_REVIEW"
+}

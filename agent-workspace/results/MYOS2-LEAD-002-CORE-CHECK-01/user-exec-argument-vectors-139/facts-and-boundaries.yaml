@@ -1,0 +1,4313 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EXEC-ARGUMENT-VECTORS-139",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "record_type": "phase2_machine_facts_and_graph",
+  "date": "2026-11-23",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "produced_by": "GPT-6（文本模型族；后台未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "actual_backend_model": "UNATTESTED",
+  "actual_backend_effort": "UNATTESTED",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "exec_parent_short12": "38a5184142d7",
+  "lead_contract_short12": "61daf1431705",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R138-01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_batch": 138,
+      "author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "frozen_old_nodes": [
+        {
+          "id": "A1_INPUT",
+          "kind": "given",
+          "label": "ab count1 dest5A*8"
+        },
+        {
+          "id": "A1_INNER",
+          "kind": "copy",
+          "label": "reads 0; ret-E2BIG"
+        },
+        {
+          "id": "A1_PAD",
+          "kind": "padding",
+          "label": "pad ,rewrite0"
+        },
+        {
+          "id": "A1_RESULT",
+          "kind": "buffer",
+          "label": "00 5A 5A 5A 5A 5A 5A 5A"
+        },
+        {
+          "id": "A3_INPUT",
+          "kind": "given",
+          "label": "ab count5 dest5A*8"
+        },
+        {
+          "id": "A3_INNER",
+          "kind": "copy",
+          "label": "reads 0,1,2; ret2"
+        },
+        {
+          "id": "A3_PAD",
+          "kind": "padding",
+          "label": "pad 3,4,rewritenone"
+        },
+        {
+          "id": "A3_RESULT",
+          "kind": "buffer",
+          "label": "61 62 00 00 00 5A 5A 5A"
+        },
+        {
+          "id": "A4_INPUT",
+          "kind": "given",
+          "label": "abcdef count4 dest5A*8"
+        },
+        {
+          "id": "A4_INNER",
+          "kind": "copy",
+          "label": "reads 0,1,2,3; ret-E2BIG"
+        },
+        {
+          "id": "A4_PAD",
+          "kind": "padding",
+          "label": "pad ,rewrite3"
+        },
+        {
+          "id": "A4_RESULT",
+          "kind": "buffer",
+          "label": "61 62 63 00 5A 5A 5A 5A"
+        }
+      ],
+      "frozen_old_edges": [
+        {
+          "from": "A1_INPUT",
+          "to": "A1_INNER",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A1_INNER",
+          "to": "A1_PAD",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A1_PAD",
+          "to": "A1_RESULT",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A3_INPUT",
+          "to": "A3_INNER",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A3_INNER",
+          "to": "A3_PAD",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A3_PAD",
+          "to": "A3_RESULT",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A4_INPUT",
+          "to": "A4_INNER",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A4_INNER",
+          "to": "A4_PAD",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "A4_PAD",
+          "to": "A4_RESULT",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        }
+      ],
+      "defect": "A1/A4 old INNER node includes -E2BIG before old PAD node labels rewrite; source inner overwrites before return, wrapper never rewrites on negative",
+      "A1": {
+        "writes_in_order": [
+          "strscpy dest[0]='a'",
+          "strscpy dest[0]=NUL",
+          "strscpy returns -E2BIG",
+          "strscpy_pad returns -E2BIG without memset"
+        ]
+      },
+      "A4": {
+        "writes_in_order": [
+          "strscpy dest[0..3]='abcd'",
+          "strscpy dest[3]=NUL",
+          "strscpy returns -E2BIG",
+          "strscpy_pad returns -E2BIG without memset"
+        ]
+      },
+      "A3": {
+        "writes_in_order": [
+          "strscpy dest[0..2]='ab'+NUL",
+          "strscpy returns 2",
+          "strscpy_pad memset dest[3],dest[4] zero",
+          "strscpy_pad returns 2"
+        ]
+      },
+      "old_5_result_snapshots": [
+        {
+          "id": "A0",
+          "inner": "-E2BIG",
+          "outer": "-E2BIG",
+          "bytes": [
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A"
+          ]
+        },
+        {
+          "id": "A1",
+          "inner": "-E2BIG",
+          "outer": "-E2BIG",
+          "bytes": [
+            "00",
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A"
+          ]
+        },
+        {
+          "id": "A2",
+          "inner": 2,
+          "outer": 2,
+          "bytes": [
+            "61",
+            "62",
+            "00",
+            "5A",
+            "5A",
+            "5A",
+            "5A",
+            "5A"
+          ]
+        },
+        {
+          "id": "A3",
+          "inner": 2,
+          "outer": 2,
+          "bytes": [
+            "61",
+            "62",
+            "00",
+            "00",
+            "00",
+            "5A",
+            "5A",
+            "5A"
+          ]
+        },
+        {
+          "id": "A4",
+          "inner": "-E2BIG",
+          "outer": "-E2BIG",
+          "bytes": [
+            "61",
+            "62",
+            "63",
+            "00",
+            "5A",
+            "5A",
+            "5A",
+            "5A"
+          ]
+        }
+      ],
+      "returns_count": 10,
+      "byte_count": 40,
+      "graph_prefixes": [
+        "D139_A1",
+        "D139_A3",
+        "D139_A4"
+      ],
+      "evidence": [
+        "E139-077",
+        "E139-078",
+        "E139-079",
+        "E139-080"
+      ]
+    },
+    "R138-02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_batch": 138,
+      "frozen_old_B_three_edges": [
+        {
+          "from": "B138_P",
+          "to": "B138_K",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "B138_K",
+          "to": "B138_J",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        },
+        {
+          "from": "B138_J",
+          "to": "B138_GET",
+          "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+          "label": ""
+        }
+      ],
+      "frozen_old_C_shared_premises": {
+        "K_reset": [
+          105,
+          110,
+          105,
+          116,
+          0,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90
+        ],
+        "argv0": "display-name",
+        "selected_bprm_filename": "filename->name at AT_FDCWD; bprm->interp initially same pointer",
+        "me": "current=K",
+        "setter": "__set_task_comm(K,bprm->filename)",
+        "lock": "set/get both task_lock(K) and task_unlock(K) around strscpy_pad, using K.alloc_lock",
+        "full_exec_outcome": "NOT_OBSERVED",
+        "no_basename_in_active_setter": true
+      },
+      "defect": "B P-K-J-GET erroneously sequential, C3 incorrectly inherits bprm+setter from shared premise",
+      "independent_copy_edges": [
+        [
+          "P",
+          "K",
+          "P_TO_K_WHOLE_STRUCT"
+        ],
+        [
+          "P",
+          "J",
+          "P_TO_J_WHOLE_STRUCT"
+        ]
+      ],
+      "getter_source": "K.comm only",
+      "J_name_override": "J.comm io via copy_process direct strscpy_pad",
+      "C_profile": [
+        {
+          "case": "C1",
+          "setter_reached": true,
+          "bprm_reached": true,
+          "setter_lock": "K.alloc_lock",
+          "getter_lock": "K.alloc_lock",
+          "getter_bytes_hex": [
+            "2F",
+            "6F",
+            "70",
+            "74",
+            "2F",
+            "64",
+            "65",
+            "00"
+          ],
+          "getter_capacity": 8,
+          "copy_ret": "-E2BIG",
+          "outer_result": "original buf pointer",
+          "source": "K after setter"
+        },
+        {
+          "case": "C2",
+          "setter_reached": true,
+          "bprm_reached": true,
+          "setter_lock": "K.alloc_lock",
+          "getter_lock": "K.alloc_lock",
+          "getter_bytes_hex": [
+            "2F",
+            "6F",
+            "70",
+            "74",
+            "2F",
+            "64",
+            "65",
+            "6D",
+            "6F",
+            "2F",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "00"
+          ],
+          "getter_capacity": 32,
+          "copy_ret": 31,
+          "outer_result": "original buf pointer",
+          "source": "K after setter"
+        },
+        {
+          "case": "C3",
+          "setter_reached": false,
+          "bprm_reached": false,
+          "setter_lock": "NOT_REACHED",
+          "getter_lock": "K.alloc_lock",
+          "getter_bytes_hex": [
+            "69",
+            "6E",
+            "69",
+            "74",
+            "00",
+            "00",
+            "00",
+            "00"
+          ],
+          "getter_capacity": 8,
+          "copy_ret": 4,
+          "outer_result": "original buf pointer",
+          "source": "K original"
+        }
+      ],
+      "new_graph_conventions": "P branches separately to K and J, K alone supplies getter. C3 separate after early return, no bprm or setter.",
+      "evidence": [
+        "E139-081",
+        "E139-082",
+        "E139-083",
+        "E139-084",
+        "E139-085",
+        "E139-086"
+      ]
+    },
+    "R138-03": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_batch": 138,
+      "incorrect_report_path": "D00.R137_02.old_window_crosswalk",
+      "incorrect_evidence_paths": [
+        "R137_02",
+        "old_window_crosswalk"
+      ],
+      "actual_path_old_73": "D00[\"R137-02\"].all_73_old_windows",
+      "actual_path_old_new_47": "D00[\"R137-02\"].new_47_window_index",
+      "actual_counts": {
+        "old_73": 73,
+        "new_47": 47
+      },
+      "old_47_crosswalk": [
+        {
+          "old_id": "E138-001",
+          "source_path": "mykernel/sched/task/task_const.h",
+          "source_symbol": "TASK_COMM_LEN",
+          "original_line": 11,
+          "original_end": 11,
+          "title": "TASK_COMM_LEN=32",
+          "physical_match": true,
+          "source_quote": "\t\tTASK_COMM_LEN = 32,",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-002",
+          "source_path": "mykernel/sched/task/task_types.h",
+          "source_symbol": "task_struct",
+          "original_line": 326,
+          "original_end": 326,
+          "title": "comm inline char array",
+          "physical_match": true,
+          "source_quote": "\t\tchar\t\t\tcomm[TASK_COMM_LEN];",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-003",
+          "source_path": "mykernel/sched/forkexec/fork.c",
+          "source_symbol": "dup_task_struct",
+          "original_line": 288,
+          "original_end": 289,
+          "title": "whole task value copied",
+          "physical_match": true,
+          "source_quote": "\t\t*tsk = *orig;\n\t\terr = 0;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-004",
+          "source_path": "mykernel/sched/forkexec/fork.c",
+          "source_symbol": "copy_process",
+          "original_line": 958,
+          "original_end": 961,
+          "title": "calls dup_task_struct(current,node)",
+          "physical_match": true,
+          "source_quote": "\tretval = -ENOMEM;\n\tp = dup_task_struct(current, node);\n\tif (!p)\n\t\tgoto fork_out;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-005",
+          "source_path": "mykernel/sched/forkexec/fork.c",
+          "source_symbol": "copy_process",
+          "original_line": 976,
+          "original_end": 977,
+          "title": "args.name name override gate",
+          "physical_match": true,
+          "source_quote": "\tif (args->name)\n\t\tstrscpy_pad(p->comm, args->name, sizeof(p->comm));",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-006",
+          "source_path": "mykernel/sched/syscall.c",
+          "source_symbol": "MYOS_SYSCALL_DEFINE0(fork)",
+          "original_line": 60,
+          "original_end": 64,
+          "title": "ordinary fork args exitsignal",
+          "physical_match": true,
+          "source_quote": "\tkclone_args_s args = {\n\t\t// .flags = CLONE_FILES,\n\t\t.exit_signal = SIGCHLD,\n\t};\n\treturn kernel_clone(&args);",
+          "disposition": "COMMENT_SPLIT_TO_ACTIVE_ONLY",
+          "new_anchors": [
+            "E139-089"
+          ]
+        },
+        {
+          "old_id": "E138-007",
+          "source_path": "mykernel/sched/forkexec/fork.c",
+          "source_symbol": "kernel_thread",
+          "original_line": 1538,
+          "original_end": 1539,
+          "title": "kernel_thread argument aggregate begins",
+          "physical_match": true,
+          "source_quote": "\tkclone_args_s args = {\n\t\t.flags\t\t\t= ((lower_32_bits(flags) | CLONE_VM |",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-008",
+          "source_path": "mykernel/sched/forkexec/fork.c",
+          "source_symbol": "kernel_thread",
+          "original_line": 1542,
+          "original_end": 1545,
+          "title": "kernel_thread name pointer passed",
+          "physical_match": true,
+          "source_quote": "\t\t.fn\t\t\t\t= fn,\n\t\t.fn_arg\t\t\t= arg,\n\t\t.name\t\t\t= name,\n\t\t.kthread\t\t= 1,",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-009",
+          "source_path": "mykernel/sched/forkexec/fork.c",
+          "source_symbol": "kernel_thread",
+          "original_line": 1548,
+          "original_end": 1550,
+          "title": "kernel_thread calls kernel_clone",
+          "physical_match": true,
+          "source_quote": "\t};\n\n\treturn kernel_clone(&args);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-010",
+          "source_path": "mykernel/lib/string/string.c",
+          "source_symbol": "strscpy",
+          "original_line": 172,
+          "original_end": 176,
+          "title": "strscpy res and count initialization",
+          "physical_match": true,
+          "source_quote": "\tssize_t strscpy(char *dest, const char *src, size_t count)\n\t{\n\t\t// const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;\n\t\tsize_t max = count;\n\t\tlong res = 0;",
+          "disposition": "COMMENT_SPLIT_TO_ACTIVE_ONLY",
+          "new_anchors": [
+            "E139-088"
+          ]
+        },
+        {
+          "old_id": "E138-011",
+          "source_path": "mykernel/lib/string/string.c",
+          "source_symbol": "strscpy",
+          "original_line": 178,
+          "original_end": 179,
+          "title": "strscpy rejects zero count",
+          "physical_match": true,
+          "source_quote": "\t\tif (count == 0 || WARN_ON_ONCE(count > INT_MAX))\n\t\t\treturn -E2BIG;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-012",
+          "source_path": "mykernel/lib/string/string.c",
+          "source_symbol": "strscpy",
+          "original_line": 213,
+          "original_end": 217,
+          "title": "strscpy copies one byte",
+          "physical_match": true,
+          "source_quote": "\t\twhile (count) {\n\t\t\tchar c;\n\n\t\t\tc = src[res];\n\t\t\tdest[res] = c;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-013",
+          "source_path": "mykernel/lib/string/string.c",
+          "source_symbol": "strscpy",
+          "original_line": 218,
+          "original_end": 222,
+          "title": "strscpy detects NUL or increments",
+          "physical_match": true,
+          "source_quote": "\t\t\tif (!c)\n\t\t\t\treturn res;\n\t\t\tres++;\n\t\t\tcount--;\n\t\t}",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-014",
+          "source_path": "mykernel/lib/string/string.c",
+          "source_symbol": "strscpy",
+          "original_line": 224,
+          "original_end": 228,
+          "title": "strscpy overwrites last byte when truncated",
+          "physical_match": true,
+          "source_quote": "\t\t/* Hit buffer length without finding a NUL; force NUL-termination. */\n\t\tif (res)\n\t\t\tdest[res-1] = '\\0';\n\n\t\treturn -E2BIG;",
+          "disposition": "COMMENT_SPLIT_TO_ACTIVE_ONLY",
+          "new_anchors": [
+            "E139-078"
+          ]
+        },
+        {
+          "old_id": "E138-015",
+          "source_path": "mykernel/lib/string/string_helpers.c",
+          "source_symbol": "strscpy_pad",
+          "original_line": 831,
+          "original_end": 835,
+          "title": "pad wrapper calls inner strscpy",
+          "physical_match": true,
+          "source_quote": "ssize_t strscpy_pad(char *dest, const char *src, size_t count)\n{\n\tssize_t written;\n\n\twritten = strscpy(dest, src, count);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-016",
+          "source_path": "mykernel/lib/string/string_helpers.c",
+          "source_symbol": "strscpy_pad",
+          "original_line": 835,
+          "original_end": 837,
+          "title": "pad wrapper early return for negative/full",
+          "physical_match": true,
+          "source_quote": "\twritten = strscpy(dest, src, count);\n\tif (written < 0 || written == count - 1)\n\t\treturn written;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-017",
+          "source_path": "mykernel/lib/string/string_helpers.c",
+          "source_symbol": "strscpy_pad",
+          "original_line": 839,
+          "original_end": 841,
+          "title": "pad wrapper zeros trailing bytes",
+          "physical_match": true,
+          "source_quote": "\tmemset(dest + written + 1, 0, count - written - 1);\n\n\treturn written;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-018",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "__get_task_comm",
+          "original_line": 820,
+          "original_end": 824,
+          "title": "get_task_comm locks tsk and copies into buf",
+          "physical_match": true,
+          "source_quote": "char *__get_task_comm(char *buf, size_t buf_size, task_s *tsk)\n{\n\ttask_lock(tsk);\n\t/* Always NUL terminated and zero-padded */\n\tstrscpy_pad(buf, tsk->comm, buf_size);",
+          "disposition": "COMMENT_SPLIT_TO_ACTIVE_ONLY",
+          "new_anchors": [
+            "E139-090",
+            "E139-083"
+          ]
+        },
+        {
+          "old_id": "E138-019",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "__get_task_comm",
+          "original_line": 824,
+          "original_end": 826,
+          "title": "getter unlocks tsk and returns buf",
+          "physical_match": true,
+          "source_quote": "\tstrscpy_pad(buf, tsk->comm, buf_size);\n\ttask_unlock(tsk);\n\treturn buf;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-020",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "__set_task_comm",
+          "original_line": 836,
+          "original_end": 838,
+          "title": "setter void and task lock",
+          "physical_match": true,
+          "source_quote": "void __set_task_comm(task_s *tsk, const char *buf)\n{\n\ttask_lock(tsk);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-021",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "__set_task_comm",
+          "original_line": 840,
+          "original_end": 841,
+          "title": "setter copies to task inline comm and unlocks",
+          "physical_match": true,
+          "source_quote": "\tstrscpy_pad(tsk->comm, buf, sizeof(tsk->comm));\n\ttask_unlock(tsk);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-022",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "begin_new_exec",
+          "original_line": 851,
+          "original_end": 854,
+          "title": "begin_new_exec me=current",
+          "physical_match": true,
+          "source_quote": "int begin_new_exec(linux_bprm_s * bprm)\n{\n\ttask_s *me = current;\n\tint retval;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-023",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "begin_new_exec",
+          "original_line": 979,
+          "original_end": 979,
+          "title": "setter receives bprm filename",
+          "physical_match": true,
+          "source_quote": "\t__set_task_comm(me, bprm->filename);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-024",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "alloc_bprm",
+          "original_line": 1117,
+          "original_end": 1119,
+          "title": "fd AT_FDCWD chooses filename name",
+          "physical_match": true,
+          "source_quote": "\tif (fd == AT_FDCWD || filename->name[0] == '/') {\n\t\tbprm->filename = filename->name;\n\t} else {",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-025",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "alloc_bprm",
+          "original_line": 1140,
+          "original_end": 1142,
+          "title": "interp initially aliases filename pointer",
+          "physical_match": true,
+          "source_quote": "\t\tbprm->filename = bprm->fdpath;\n\t}\n\tbprm->interp = bprm->filename;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-026",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "do_execve",
+          "original_line": 1438,
+          "original_end": 1442,
+          "title": "do_execve calls do_execveat_common AT_FDCWD",
+          "physical_match": true,
+          "source_quote": "do_execve(filename_s *filename,\n\t\tconst char *const *__argv,\n\t\tconst char *const *__envp) {\n\treturn do_execveat_common(AT_FDCWD,\n\t\t\tfilename, __argv, __envp, 0);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-027",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "MYOS_SYSCALL_DEFINE3(execve,",
+          "original_line": 1460,
+          "original_end": 1463,
+          "title": "execve calls do_execve getname",
+          "physical_match": true,
+          "source_quote": "MYOS_SYSCALL_DEFINE3(execve, const char *,filename,\n\t\tconst char *const __user *, argv,\n\t\tconst char *const __user *, envp) {\n\treturn do_execve(getname(filename), argv, envp);",
+          "disposition": "COMPLETE_EXECVE_MACRO_AND_ACTIVE_RETURN",
+          "new_anchors": [
+            "E139-023"
+          ]
+        },
+        {
+          "old_id": "E138-028",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "do_execveat_common",
+          "original_line": 1297,
+          "original_end": 1298,
+          "title": "error name pointer early PTR_ERR return",
+          "physical_match": true,
+          "source_quote": "\tif (IS_ERR(filename))\n\t\treturn PTR_ERR(filename);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-029",
+          "source_path": "mykernel/sched/forkexec/exec.c",
+          "source_symbol": "do_execveat_common",
+          "original_line": 1314,
+          "original_end": 1316,
+          "title": "valid name reaches alloc_bprm",
+          "physical_match": true,
+          "source_quote": "\tcurrent->flags &= ~PF_NPROC_EXCEEDED;\n\n\tbprm = alloc_bprm(fd, filename, flags);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-030",
+          "source_path": "mykernel/sched/task/task.h",
+          "source_symbol": "task_lock",
+          "original_line": 93,
+          "original_end": 95,
+          "title": "task_lock holds p.alloc_lock",
+          "physical_match": true,
+          "source_quote": "\t\ttask_lock(task_s *p) {\n\t\t\tspin_lock(&p->alloc_lock);\n\t\t}",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-031",
+          "source_path": "mykernel/sched/task/task.h",
+          "source_symbol": "task_unlock",
+          "original_line": 98,
+          "original_end": 100,
+          "title": "task_unlock releases p.alloc_lock",
+          "physical_match": true,
+          "source_quote": "\t\ttask_unlock(task_s *p) {\n\t\t\tspin_unlock(&p->alloc_lock);\n\t\t}",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-032",
+          "source_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "source_symbol": "update_rq_clock",
+          "original_line": 20,
+          "original_end": 24,
+          "title": "rq clock local_clock sample",
+          "physical_match": true,
+          "source_quote": "void update_rq_clock(rq_s *rq)\n{\n\ts64 delta;\n\n\tdelta = local_clock() - rq->clock;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-033",
+          "source_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "source_symbol": "update_rq_clock",
+          "original_line": 24,
+          "original_end": 27,
+          "title": "clock negative delta skips additive write",
+          "physical_match": true,
+          "source_quote": "\tdelta = local_clock() - rq->clock;\n\tif (delta < 0)\n\t\treturn;\n\trq->clock += delta;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-034",
+          "source_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "source_symbol": "__schedule",
+          "original_line": 1064,
+          "original_end": 1067,
+          "title": "clock_update_flags written around call",
+          "physical_match": true,
+          "source_quote": "\t/* Promote REQ to ACT */\n\trq->clock_update_flags <<= 1;\n\tupdate_rq_clock(rq);\n\trq->clock_update_flags = RQCF_UPDATED;",
+          "disposition": "COMMENT_SPLIT_TO_ACTIVE_ONLY",
+          "new_anchors": [
+            "E139-075"
+          ]
+        },
+        {
+          "old_id": "E138-035",
+          "source_path": "mykernel/sched/scheduler/myos_rt.c",
+          "source_symbol": "pick_next_task_myos",
+          "original_line": 12,
+          "original_end": 12,
+          "title": "used jiffies separate arithmetic",
+          "physical_match": true,
+          "source_quote": "\tulong used_jiffies = jiffies - myos_rq->last_jiffies;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-036",
+          "source_path": "mykernel/sched/scheduler/myos_rt.c",
+          "source_symbol": "pick_next_task_myos",
+          "original_line": 14,
+          "original_end": 18,
+          "title": "picker full OR including task state test",
+          "physical_match": true,
+          "source_quote": "\tif ((need_resched() ||\n\t\tcurr_task == rq->idle ||\n\t\tused_jiffies >= rt->time_slice ||\n\t\tcurr_task->__state != TASK_RUNNING) &&\n\t\tmyos_rq->running_lhdr.count > 0)",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-037",
+          "source_path": "mykernel/sched/scheduler/myos_rt.c",
+          "source_symbol": "pick_next_task_myos",
+          "original_line": 56,
+          "original_end": 57,
+          "title": "picker curr and return",
+          "physical_match": true,
+          "source_quote": "\trq->curr = retval;\n\treturn retval;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-038",
+          "source_path": "mykernel/sched/scheduler/scheduler_types.h",
+          "source_symbol": "sched_rt_entity",
+          "original_line": 43,
+          "original_end": 43,
+          "title": "run_list active member E137-048 split",
+          "physical_match": true,
+          "source_quote": "\t\tList_s\t\trun_list;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-039",
+          "source_path": "mykernel/sched/scheduler/scheduler_types.h",
+          "source_symbol": "sched_rt_entity",
+          "original_line": 46,
+          "original_end": 46,
+          "title": "time_slice active member E137-048 split",
+          "physical_match": true,
+          "source_quote": "\t\tuint\t\ttime_slice;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-040",
+          "source_path": "mykernel/sched/runqueue/runqueue_types.h",
+          "source_symbol": "myos_rq",
+          "original_line": 195,
+          "original_end": 196,
+          "title": "running_lhdr and last_jiffies active E137-049 split",
+          "physical_match": true,
+          "source_quote": "\t\tList_hdr_s\t\trunning_lhdr;\n\t\tulong\t\t\tlast_jiffies;\t// abs jiffies when curr-task loaded",
+          "disposition": "PRESERVE_INLINE_COMMENT",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-041",
+          "source_path": "mykernel/sched/scheduler/myos_rt.c",
+          "source_symbol": "pick_next_task_myos",
+          "original_line": 24,
+          "original_end": 25,
+          "title": "generic head removal can pick K or Q",
+          "physical_match": true,
+          "source_quote": "\t\tList_s * next_lp = list_header_remove_head(&myos_rq->running_lhdr);\n\t\twhile (next_lp == NULL);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-042",
+          "source_path": "mykernel/sched/scheduler/myos_rt.c",
+          "source_symbol": "pick_next_task_myos",
+          "original_line": 44,
+          "original_end": 45,
+          "title": "generic reinsert is case-specific current",
+          "physical_match": true,
+          "source_quote": "\t\t\t\tlist_add_to_prev(&rt->run_list, tmp_list);\n\t\t\t\tmyos_rq->running_lhdr.count++;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-043",
+          "source_path": "mykernel/lib/list/double_list.h",
+          "source_symbol": "list_add_to_prev",
+          "original_line": 221,
+          "original_end": 222,
+          "title": "generic before-node insertion",
+          "physical_match": true,
+          "source_quote": "\t\tlist_add_to_prev(List_s *new, List_s *head) {\n\t\t\t__list_add_between(new, head->prev, head);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-044",
+          "source_path": "mykernel/sched/scheduler/myos_rt.c",
+          "source_symbol": "pick_next_task_myos",
+          "original_line": 52,
+          "original_end": 54,
+          "title": "retval assignment and last write not return statement",
+          "physical_match": true,
+          "source_quote": "\t\tsched_rt_entity_s *next_rt = container_of(next_lp, sched_rt_entity_s, run_list);\n\t\tretval = container_of(next_rt, task_s, rt);\n\t\tmyos_rq->last_jiffies = jiffies;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-045",
+          "source_path": "mykernel/sched/scheduler/myos_rt.c",
+          "source_symbol": "pick_next_task_myos",
+          "original_line": 56,
+          "original_end": 57,
+          "title": "actual return statement",
+          "physical_match": true,
+          "source_quote": "\trq->curr = retval;\n\treturn retval;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-046",
+          "source_path": "mykernel/lib/list/double_list.h",
+          "source_symbol": "list_header_remove_head",
+          "original_line": 653,
+          "original_end": 657,
+          "title": "head removal calls list_del_init and decreases count",
+          "physical_match": true,
+          "source_quote": "\t\t\tif (lhdr_p->count > 0) {\n\t\t\t\tList_s *ret_val = lhdr_p->anchor.next;\n\t\t\t\tlist_del_init(ret_val);\n\t\t\t\tlhdr_p->count--;\n\t\t\t\treturn ret_val;",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        },
+        {
+          "old_id": "E138-047",
+          "source_path": "mykernel/lib/list/double_list.h",
+          "source_symbol": "list_del_init",
+          "original_line": 280,
+          "original_end": 282,
+          "title": "removed node selflinks",
+          "physical_match": true,
+          "source_quote": "\t\tlist_del_init(List_s *entry) {\n\t\t\t__list_del_entry(entry);\n\t\t\tINIT_LIST_HEAD(entry);",
+          "disposition": "HISTORICAL_LOCATION",
+          "new_anchors": []
+        }
+      ],
+      "old_47_distinct_source_ranges": 46,
+      "new_92_index": [
+        {
+          "id": "E139-001",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "get_user_arg_ptr",
+          "first_line": 187,
+          "last_line": 191,
+          "role": "A_USER_SLOT",
+          "topic": "read user pointer slot with get_user",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-002",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "get_user_arg_ptr",
+          "first_line": 190,
+          "last_line": 193,
+          "role": "A_USER_SLOT_RET",
+          "topic": "slot fault and native pointer return",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-003",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count",
+          "first_line": 199,
+          "last_line": 203,
+          "role": "A_USER_COUNT_INIT",
+          "topic": "user count init and null array gate",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-004",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count",
+          "first_line": 204,
+          "last_line": 208,
+          "role": "A_USER_COUNT_LOOP",
+          "topic": "user count reads vector pointer and begins null test",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-005",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count",
+          "first_line": 211,
+          "last_line": 215,
+          "role": "A_USER_COUNT_GUARD",
+          "topic": "user count error and max predicates",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-006",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count",
+          "first_line": 216,
+          "last_line": 216,
+          "role": "A_USER_COUNT_INC",
+          "topic": "user count increments i",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-007",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count",
+          "first_line": 221,
+          "last_line": 223,
+          "role": "A_USER_COUNT_RET",
+          "topic": "user count returns i",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-008",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count_strings_kernel",
+          "first_line": 227,
+          "last_line": 231,
+          "role": "A_KCOUNT_NULL",
+          "topic": "kernel count null array early return",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-009",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count_strings_kernel",
+          "first_line": 233,
+          "last_line": 235,
+          "role": "A_KCOUNT_LOOP",
+          "topic": "kernel direct argv[i] read with max gate",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-010",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count_strings_kernel",
+          "first_line": 239,
+          "last_line": 240,
+          "role": "A_KCOUNT_RET",
+          "topic": "kernel count return i",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-011",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__bprm_mm_init",
+          "first_line": 122,
+          "last_line": 124,
+          "role": "B_VMA",
+          "topic": "temporary stack initial vm_end and vm_start",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-012",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__bprm_mm_init",
+          "first_line": 133,
+          "last_line": 134,
+          "role": "B_T",
+          "topic": "initial bprm.p is vm_end-sizeof(void*)",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-013",
+          "path": "mykernel/include/uapi/linux/resource.h",
+          "symbol": "_STK_LIM",
+          "first_line": 65,
+          "last_line": 65,
+          "role": "B_STKLIM",
+          "topic": "_STK_LIM is 8MiB",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-014",
+          "path": "mykernel/include/uapi/linux/limits.h",
+          "symbol": "ARG_MAX",
+          "first_line": 8,
+          "last_line": 8,
+          "role": "B_ARGMAX",
+          "topic": "ARG_MAX constant 131072 bytes",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-015",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "bprm_stack_limits",
+          "first_line": 268,
+          "last_line": 268,
+          "role": "B_LIMIT34",
+          "topic": "active stack limit 3/4 _STK_LIM",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-016",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "bprm_stack_limits",
+          "first_line": 274,
+          "last_line": 274,
+          "role": "B_LIMITMAX",
+          "topic": "active max_t limit with ARG_MAX",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-017",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "bprm_stack_limits",
+          "first_line": 291,
+          "last_line": 294,
+          "role": "B_PTRBUDGET",
+          "topic": "pointer budget and string limit subtraction",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-018",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "bprm_stack_limits",
+          "first_line": 296,
+          "last_line": 296,
+          "role": "B_LIMITCALL",
+          "topic": "stack limit helper invocation",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-019",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "bprm_set_stack_limit",
+          "first_line": 246,
+          "last_line": 249,
+          "role": "B_ARGMIN",
+          "topic": "argmin guard and active p-minus-limit store",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-020",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "alloc_bprm",
+          "first_line": 1117,
+          "last_line": 1119,
+          "role": "B_BPRM_NAME",
+          "topic": "AT_FDCWD selects filename.name",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-021",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "alloc_bprm",
+          "first_line": 1142,
+          "last_line": 1142,
+          "role": "B_INTERP",
+          "topic": "initial interp aliases filename",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-022",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execve",
+          "first_line": 1438,
+          "last_line": 1442,
+          "role": "B_DO_EXEC",
+          "topic": "ordinary do_execve AT_FDCWD",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-023",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "MYOS_SYSCALL_DEFINE3(execve, const char *,filename,",
+          "first_line": 1460,
+          "last_line": 1464,
+          "role": "B_SYSCALL",
+          "topic": "complete execve entry and active return",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-024",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1316,
+          "last_line": 1319,
+          "role": "B_ALLOC",
+          "topic": "bprm allocation and error gate",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-025",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1322,
+          "last_line": 1325,
+          "role": "B_ARGC_WARN",
+          "topic": "user argc counter and warning call",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-026",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1326,
+          "last_line": 1328,
+          "role": "B_ARGC",
+          "topic": "user argc negative guard and store",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-027",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1330,
+          "last_line": 1333,
+          "role": "B_ENVC",
+          "topic": "user environment count and store",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-028",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1335,
+          "last_line": 1337,
+          "role": "B_LIMIT_CHECK",
+          "topic": "limit computation call and error gate",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-029",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1339,
+          "last_line": 1342,
+          "role": "B_EXEC_SAVE",
+          "topic": "filename copied and bprm.exec saved",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-030",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1344,
+          "last_line": 1346,
+          "role": "B_COPY_ENV",
+          "topic": "user environment string copy call",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-031",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1348,
+          "last_line": 1350,
+          "role": "B_COPY_ARG",
+          "topic": "user argument string copy call",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-032",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 305,
+          "last_line": 309,
+          "role": "B_UCOPY_INIT",
+          "topic": "user copy_strings signature",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-033",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 311,
+          "last_line": 313,
+          "role": "B_UCOPY_REVERSE",
+          "topic": "reverse user slot walk",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-034",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 316,
+          "last_line": 318,
+          "role": "B_UCOPY_GET",
+          "topic": "user slot re-read in copy phase",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-035",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 321,
+          "last_line": 323,
+          "role": "B_UCOPY_LEN",
+          "topic": "strnlen_user and zero fault gate",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-036",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 325,
+          "last_line": 327,
+          "role": "B_UCOPY_LENMAX",
+          "topic": "string length validity gate",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-037",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 330,
+          "last_line": 332,
+          "role": "B_UCOPY_P",
+          "topic": "user copy captures old p and subtracts len",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-038",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 333,
+          "last_line": 334,
+          "role": "B_UCOPY_ARGMIN",
+          "topic": "argument minimum guard in user copy",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-039",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 349,
+          "last_line": 353,
+          "role": "B_UCOPY_CHUNK",
+          "topic": "user page byte chunk calculation",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-040",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 354,
+          "last_line": 356,
+          "role": "B_UCOPY_CHUNKSTEP",
+          "topic": "user copy pos/src/len update",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-041",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 361,
+          "last_line": 365,
+          "role": "B_UCOPY_PAGE",
+          "topic": "get_arg_page for user string",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-042",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 367,
+          "last_line": 368,
+          "role": "B_UCOPY_MEMCPY",
+          "topic": "memcpy_to_page from user and put page",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-043",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings",
+          "first_line": 385,
+          "last_line": 387,
+          "role": "B_UCOPY_RET",
+          "topic": "user copy returns zero on successful loop",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-044",
+          "path": "mykernel/lib/string/strnlen_user.c",
+          "symbol": "strnlen_user",
+          "first_line": 120,
+          "last_line": 120,
+          "role": "B_STRNLENUSER",
+          "topic": "user length source strnlen + 1 including NUL",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-045",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_string_kernel",
+          "first_line": 399,
+          "last_line": 402,
+          "role": "B_KCOPY_LEN",
+          "topic": "kernel string length strnlen plus one",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-046",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_string_kernel",
+          "first_line": 410,
+          "last_line": 413,
+          "role": "B_KCOPY_P",
+          "topic": "kernel copy advances source end and decreases p",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-047",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_string_kernel",
+          "first_line": 415,
+          "last_line": 419,
+          "role": "B_KCOPY_CHUNK",
+          "topic": "kernel single-string reverse chunk",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-048",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_string_kernel",
+          "first_line": 420,
+          "last_line": 422,
+          "role": "B_KCOPY_CHUNKSTEP",
+          "topic": "kernel source and pos decrease together",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-049",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_string_kernel",
+          "first_line": 424,
+          "last_line": 426,
+          "role": "B_KCOPY_PAGE",
+          "topic": "kernel page acquired",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-050",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_string_kernel",
+          "first_line": 428,
+          "last_line": 429,
+          "role": "B_KCOPY_MEMCPY",
+          "topic": "kernel memcpy_to_page and put page",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-051",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_string_kernel",
+          "first_line": 432,
+          "last_line": 432,
+          "role": "B_KCOPY_RET",
+          "topic": "kernel string success return",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-052",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings_kernel",
+          "first_line": 437,
+          "last_line": 441,
+          "role": "B_KARRAY_REVERSE",
+          "topic": "kernel reverse array pointer access",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-053",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings_kernel",
+          "first_line": 440,
+          "last_line": 443,
+          "role": "B_KARRAY_COPY",
+          "topic": "kernel helper uses argv[argc]",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-054",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "copy_strings_kernel",
+          "first_line": 448,
+          "last_line": 448,
+          "role": "B_KARRAY_RET",
+          "topic": "kernel vector copy success",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-055",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "setup_arg_pages",
+          "first_line": 478,
+          "last_line": 481,
+          "role": "B_RELOC_P",
+          "topic": "later setup shifts p and arg_start",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-056",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "setup_arg_pages",
+          "first_line": 483,
+          "last_line": 485,
+          "role": "B_RELOC_EXEC",
+          "topic": "later setup shifts exec pointer",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-057",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "AT_EXECFN",
+          "first_line": 229,
+          "last_line": 229,
+          "role": "B_ELF_AUX",
+          "topic": "ELF later uses bprm.exec for AT_EXECFN",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-058",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_EXECFN",
+          "first_line": 38,
+          "last_line": 38,
+          "role": "B_AUX_VALUE",
+          "topic": "AT_EXECFN macro value",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-059",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1358,
+          "last_line": 1360,
+          "role": "C_USER_SYNTH",
+          "topic": "user zero argc synthesized empty string",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-060",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1361,
+          "last_line": 1363,
+          "role": "C_USER_ONE",
+          "topic": "user argc becomes one after copy",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-061",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1365,
+          "last_line": 1367,
+          "role": "C_USER_BOUND",
+          "topic": "user reaches bprm_execve and cleanup",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-062",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1369,
+          "last_line": 1371,
+          "role": "C_USER_RET",
+          "topic": "user putname and retval return",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-063",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1386,
+          "last_line": 1387,
+          "role": "C_KTHREAD_GATE",
+          "topic": "kernel_execve active PF_KTHREAD gate",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-064",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1389,
+          "last_line": 1391,
+          "role": "C_KNAME",
+          "topic": "kernel filename getname_kernel",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-065",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1393,
+          "last_line": 1397,
+          "role": "C_KALLOC",
+          "topic": "kernel bprm allocation error handling",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-066",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1399,
+          "last_line": 1403,
+          "role": "C_KZERO",
+          "topic": "kernel argc zero to -EINVAL before env",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-067",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1404,
+          "last_line": 1404,
+          "role": "C_KARGC",
+          "topic": "kernel stores bprm.argc only for positive count",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-068",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1406,
+          "last_line": 1409,
+          "role": "C_KENV",
+          "topic": "kernel environment counting after argc gate",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-069",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1411,
+          "last_line": 1413,
+          "role": "C_KBUDGET",
+          "topic": "kernel pointer budget check",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-070",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1415,
+          "last_line": 1418,
+          "role": "C_KEXECSAVE",
+          "topic": "kernel filename copy and exec marker",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-071",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1420,
+          "last_line": 1422,
+          "role": "C_KCOPY_ENV",
+          "topic": "kernel environment copy",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-072",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1424,
+          "last_line": 1426,
+          "role": "C_KCOPY_ARG",
+          "topic": "kernel argv copy",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-073",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1428,
+          "last_line": 1430,
+          "role": "C_KBOUND",
+          "topic": "kernel bprm_execve call and cleanup label",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-074",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "kernel_execve",
+          "first_line": 1432,
+          "last_line": 1434,
+          "role": "C_KRETURN",
+          "topic": "kernel putname and retval return",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-075",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "first_line": 1065,
+          "last_line": 1067,
+          "role": "D00_FLAGS",
+          "topic": "caller flags shift then assign RQCF_UPDATED",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-076",
+          "path": "mykernel/sched/scheduler/scheduler_const.h",
+          "symbol": "RQCF_UPDATED",
+          "first_line": 48,
+          "last_line": 48,
+          "role": "D00_UPDATED",
+          "topic": "RQCF_UPDATED is 0x04",
+          "quote_line_count": 1,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-077",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "first_line": 216,
+          "last_line": 220,
+          "role": "D00_A_WRITE",
+          "topic": "strscpy inner byte store before return",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-078",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "first_line": 225,
+          "last_line": 228,
+          "role": "D00_A_REWRITE",
+          "topic": "strscpy overwrite last byte before negative return",
+          "quote_line_count": 4,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-079",
+          "path": "mykernel/lib/string/string_helpers.c",
+          "symbol": "strscpy_pad",
+          "first_line": 835,
+          "last_line": 837,
+          "role": "D00_PAD_EARLY",
+          "topic": "pad wrapper returns negative without memset",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-080",
+          "path": "mykernel/lib/string/string_helpers.c",
+          "symbol": "strscpy_pad",
+          "first_line": 839,
+          "last_line": 841,
+          "role": "D00_PAD_MEMSET",
+          "topic": "pad wrapper zero-fills after short success",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-081",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "dup_task_struct",
+          "first_line": 288,
+          "last_line": 289,
+          "role": "D00_FORK_COPY",
+          "topic": "independent child structure assignment",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-082",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__get_task_comm",
+          "first_line": 820,
+          "last_line": 822,
+          "role": "D00_GET_LOCK",
+          "topic": "getter locks target tsk before copy",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-083",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__get_task_comm",
+          "first_line": 824,
+          "last_line": 826,
+          "role": "D00_GET_COPY",
+          "topic": "getter copy and return buf",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-084",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__set_task_comm",
+          "first_line": 836,
+          "last_line": 838,
+          "role": "D00_SET_LOCK",
+          "topic": "setter void with task lock",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-085",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__set_task_comm",
+          "first_line": 840,
+          "last_line": 841,
+          "role": "D00_SET_COPY",
+          "topic": "setter copy to comm then unlock",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-086",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "first_line": 1297,
+          "last_line": 1298,
+          "role": "D00_EXEC_EARLY",
+          "topic": "error filename early return",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-087",
+          "path": "mykernel/scripts/options_flags.cmake",
+          "symbol": "CMAKE_C_FLAGS",
+          "first_line": 62,
+          "last_line": 66,
+          "role": "D00_CONFIG",
+          "topic": "selected active CMake flags as bounded config evidence",
+          "quote_line_count": 5,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-088",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "first_line": 175,
+          "last_line": 176,
+          "role": "D00_E010",
+          "topic": "E138-010 active max=count, res=0",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-089",
+          "path": "mykernel/sched/syscall.c",
+          "symbol": "MYOS_SYSCALL_DEFINE0(fork",
+          "first_line": 62,
+          "last_line": 64,
+          "role": "D00_E006",
+          "topic": "E138-006 active fork aggregate exit_signal",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-090",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__get_task_comm",
+          "first_line": 820,
+          "last_line": 822,
+          "role": "D00_E018",
+          "topic": "E138-018 active getter header and lock",
+          "quote_line_count": 3,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-091",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "count",
+          "first_line": 208,
+          "last_line": 209,
+          "role": "A_USER_NULL_BREAK",
+          "topic": "user count breaks on null pointer",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        },
+        {
+          "id": "E139-092",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "bprm_stack_limits",
+          "first_line": 276,
+          "last_line": 277,
+          "role": "B_NEGCOUNT_GUARD",
+          "topic": "stack limits explicitly reject negative argc/envc",
+          "quote_line_count": 2,
+          "body_anchored_in": "evidence.md"
+        }
+      ],
+      "new_92_distinct_source_ranges": 91,
+      "E138_010_reanchor": "E139-088 active max=count and res=0; does NOT initialize count parameter",
+      "E138_027_reanchor": "E139-023 execve complete macro definition at 1460–1464 and active return; no preprocessor assumption",
+      "comment_windows_split": [
+        "E138-006→E139-089",
+        "E138-010→E139-088",
+        "E138-014→E139-078",
+        "E138-018→E139-090 and E139-083",
+        "E138-034→E139-075"
+      ],
+      "E138_040_inline_original": "\t\tList_hdr_s\t\trunning_lhdr;\n\t\tulong\t\t\tlast_jiffies;\t// abs jiffies when curr-task loaded",
+      "config_anchor": "E139-087",
+      "p4_limit": "Only selected time CMake activity; no claim all sources/real preprocess lacks other macro",
+      "physical_exact_vs_title": "Old47 physical matches; titles receive separate semantic check"
+    },
+    "R138-04": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_batch": 138,
+      "old_field": "D00.R137-01 caller_flag_values broadly UNKNOWN",
+      "R137_01_prior_C09_verdict": "CLOSED_DOCUMENTATION_ONLY",
+      "clock_flags": [
+        {
+          "stage": "initial",
+          "symbol": "F",
+          "numeric": "NOT_STIPULATED"
+        },
+        {
+          "stage": "after_left_shift",
+          "symbol": "F<<1",
+          "numeric": "NOT_STIPULATED"
+        },
+        {
+          "stage": "after_update_rq_clock_return",
+          "symbol": "RQCF_UPDATED",
+          "hex": "0x04",
+          "decimal": 4
+        }
+      ],
+      "preserve_clock_samples": [
+        {
+          "id": "CLK999",
+          "old_clock": 1000,
+          "sampled_local_clock": 999,
+          "delta": -1,
+          "negative": true,
+          "early_return": true,
+          "clock_write_reached": false,
+          "after": 1000,
+          "value_changed": false
+        },
+        {
+          "id": "CLK1000",
+          "old_clock": 1000,
+          "sampled_local_clock": 1000,
+          "delta": 0,
+          "negative": false,
+          "early_return": false,
+          "clock_write_reached": true,
+          "after": 1000,
+          "value_changed": false
+        },
+        {
+          "id": "CLK1001",
+          "old_clock": 1000,
+          "sampled_local_clock": 1001,
+          "delta": 1,
+          "negative": false,
+          "early_return": false,
+          "clock_write_reached": true,
+          "after": 1001,
+          "value_changed": true
+        }
+      ],
+      "preserve_jiffies_picker": {
+        "jiffies": 106,
+        "last_jiffies": 100,
+        "used": 6,
+        "K_timeslice": 4,
+        "K_next": "Q",
+        "J_timeslice": 9,
+        "J_next": "J"
+      },
+      "evidence": [
+        "E139-075",
+        "E139-076"
+      ]
+    }
+  },
+  "A": {
+    "cases": [
+      {
+        "id": "A0",
+        "vector": null,
+        "description": "argv=NULL",
+        "read": [],
+        "count": 0,
+        "copy": [],
+        "user": {
+          "vector_storage": "NULL",
+          "read_slot_indices_during_count": [],
+          "user_get_user_arg_ptr_calls": 0,
+          "terminal_predicate": "outer argv!=NULL false",
+          "ret": 0,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [],
+          "subsequent_content_read": "no argv copies"
+        },
+        "kernel": {
+          "vector_storage": "NULL",
+          "read_slot_indices_during_count": [],
+          "direct_reads": 0,
+          "ret": 0,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [],
+          "subsequent_content_read": "no argv copies"
+        },
+        "empty_string_counted": false
+      },
+      {
+        "id": "A1",
+        "vector": [
+          null
+        ],
+        "description": "argv[0]=NULL",
+        "read": [
+          0
+        ],
+        "count": 0,
+        "copy": [],
+        "user": {
+          "vector_storage": "valid user pointer slots",
+          "read_slot_indices_during_count": [
+            0
+          ],
+          "user_get_user_arg_ptr_calls": 1,
+          "terminal_predicate": "if (!p) true only at final null slot",
+          "ret": 0,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [],
+          "subsequent_content_read": "no argv copies"
+        },
+        "kernel": {
+          "vector_storage": "valid kernel pointer slots",
+          "read_slot_indices_during_count": [
+            0
+          ],
+          "direct_reads": 1,
+          "ret": 0,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [],
+          "subsequent_content_read": "no argv copies"
+        },
+        "empty_string_counted": false
+      },
+      {
+        "id": "A2",
+        "vector": [
+          "",
+          null
+        ],
+        "description": "argv[0] nonnull pointer to NUL",
+        "read": [
+          0,
+          1
+        ],
+        "count": 1,
+        "copy": [
+          0
+        ],
+        "user": {
+          "vector_storage": "valid user pointer slots",
+          "read_slot_indices_during_count": [
+            0,
+            1
+          ],
+          "user_get_user_arg_ptr_calls": 2,
+          "terminal_predicate": "if (!p) true only at final null slot",
+          "ret": 1,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [
+            0
+          ],
+          "subsequent_content_read": "strnlen_user followed by memcpy_to_page"
+        },
+        "kernel": {
+          "vector_storage": "valid kernel pointer slots",
+          "read_slot_indices_during_count": [
+            0,
+            1
+          ],
+          "direct_reads": 2,
+          "ret": 1,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [
+            0
+          ],
+          "subsequent_content_read": "copy_string_kernel strnlen and memcpy_to_page"
+        },
+        "empty_string_counted": true
+      },
+      {
+        "id": "A3",
+        "vector": [
+          "display",
+          "-q",
+          null
+        ],
+        "description": "two nonempty strings and NULL",
+        "read": [
+          0,
+          1,
+          2
+        ],
+        "count": 2,
+        "copy": [
+          1,
+          0
+        ],
+        "user": {
+          "vector_storage": "valid user pointer slots",
+          "read_slot_indices_during_count": [
+            0,
+            1,
+            2
+          ],
+          "user_get_user_arg_ptr_calls": 3,
+          "terminal_predicate": "if (!p) true only at final null slot",
+          "ret": 2,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [
+            1,
+            0
+          ],
+          "subsequent_content_read": "strnlen_user followed by memcpy_to_page"
+        },
+        "kernel": {
+          "vector_storage": "valid kernel pointer slots",
+          "read_slot_indices_during_count": [
+            0,
+            1,
+            2
+          ],
+          "direct_reads": 3,
+          "ret": 2,
+          "string_contents_read_during_count": false,
+          "copy_stage_slot_indices_when_reached": [
+            1,
+            0
+          ],
+          "subsequent_content_read": "copy_string_kernel strnlen and memcpy_to_page"
+        },
+        "empty_string_counted": false
+      }
+    ],
+    "scope": "count phase only reads pointer slots, not pointed-to characters; copying later re-reads pointers and calls appropriate string functions",
+    "evidence": [
+      "E139-001",
+      "E139-002",
+      "E139-003",
+      "E139-004",
+      "E139-091",
+      "E139-006",
+      "E139-007",
+      "E139-008",
+      "E139-009",
+      "E139-010"
+    ]
+  },
+  "B": {
+    "input": {
+      "filename": "/bin/tool",
+      "filename_ascii_length": 9,
+      "filename_length_with_nul": 10,
+      "argv": [
+        "display",
+        "-q",
+        null
+      ],
+      "envp": [
+        "E=1",
+        "F=xy",
+        null
+      ],
+      "argv_count": 2,
+      "env_count": 2,
+      "T": "initial bprm->p=vma->vm_end-sizeof(void*)",
+      "sizeof_void_ptr_given": 8,
+      "all_strings_ASCII_NUL": true,
+      "one_page_and_sufficient_space": true,
+      "all_fetch_length_page_copy_success": true
+    },
+    "counting_and_budget": {
+      "_STK_LIM": 8388608,
+      "three_quarters_STK_LIM": 6291456,
+      "ARG_MAX": 131072,
+      "pre_pointer_limit": 6291456,
+      "ptr_count": 4,
+      "ptr_size": 32,
+      "limit_after_pointer_reservation": 6291424,
+      "argmin_relative_to_T": -6291424,
+      "pointer_reservation_decrements_p": false,
+      "p_after_limits": "T"
+    },
+    "chrono": [
+      {
+        "case_id": "B1_FILENAME",
+        "source": "bprm->filename alias filename->name",
+        "index": null,
+        "phase": "filename",
+        "helper": "copy_string_kernel",
+        "text": "/bin/tool",
+        "before": 0,
+        "after": -10,
+        "nul_inclusive_byte_length": 10,
+        "source_terminating_nul_index": 9,
+        "entered_p": "T",
+        "left_p": "T-10",
+        "range": {
+          "lo_inclusive": -10,
+          "hi_exclusive": 0
+        },
+        "bytes_hex": [
+          "2F",
+          "62",
+          "69",
+          "6E",
+          "2F",
+          "74",
+          "6F",
+          "6F",
+          "6C",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B2_ENV_F",
+        "source": "envp[1]",
+        "index": 1,
+        "phase": "envp",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "F=xy",
+        "before": -10,
+        "after": -15,
+        "nul_inclusive_byte_length": 5,
+        "source_terminating_nul_index": 4,
+        "entered_p": "T-10",
+        "left_p": "T-15",
+        "range": {
+          "lo_inclusive": -15,
+          "hi_exclusive": -10
+        },
+        "bytes_hex": [
+          "46",
+          "3D",
+          "78",
+          "79",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B3_ENV_E",
+        "source": "envp[0]",
+        "index": 0,
+        "phase": "envp",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "E=1",
+        "before": -15,
+        "after": -19,
+        "nul_inclusive_byte_length": 4,
+        "source_terminating_nul_index": 3,
+        "entered_p": "T-15",
+        "left_p": "T-19",
+        "range": {
+          "lo_inclusive": -19,
+          "hi_exclusive": -15
+        },
+        "bytes_hex": [
+          "45",
+          "3D",
+          "31",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B4_ARG_Q",
+        "source": "argv[1]",
+        "index": 1,
+        "phase": "argv",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "-q",
+        "before": -19,
+        "after": -22,
+        "nul_inclusive_byte_length": 3,
+        "source_terminating_nul_index": 2,
+        "entered_p": "T-19",
+        "left_p": "T-22",
+        "range": {
+          "lo_inclusive": -22,
+          "hi_exclusive": -19
+        },
+        "bytes_hex": [
+          "2D",
+          "71",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B5_ARG_DISPLAY",
+        "source": "argv[0]",
+        "index": 0,
+        "phase": "argv",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "display",
+        "before": -22,
+        "after": -30,
+        "nul_inclusive_byte_length": 8,
+        "source_terminating_nul_index": 7,
+        "entered_p": "T-22",
+        "left_p": "T-30",
+        "range": {
+          "lo_inclusive": -30,
+          "hi_exclusive": -22
+        },
+        "bytes_hex": [
+          "64",
+          "69",
+          "73",
+          "70",
+          "6C",
+          "61",
+          "79",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      }
+    ],
+    "address_order": [
+      {
+        "case_id": "B5_ARG_DISPLAY",
+        "source": "argv[0]",
+        "index": 0,
+        "phase": "argv",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "display",
+        "before": -22,
+        "after": -30,
+        "nul_inclusive_byte_length": 8,
+        "source_terminating_nul_index": 7,
+        "entered_p": "T-22",
+        "left_p": "T-30",
+        "range": {
+          "lo_inclusive": -30,
+          "hi_exclusive": -22
+        },
+        "bytes_hex": [
+          "64",
+          "69",
+          "73",
+          "70",
+          "6C",
+          "61",
+          "79",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B4_ARG_Q",
+        "source": "argv[1]",
+        "index": 1,
+        "phase": "argv",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "-q",
+        "before": -19,
+        "after": -22,
+        "nul_inclusive_byte_length": 3,
+        "source_terminating_nul_index": 2,
+        "entered_p": "T-19",
+        "left_p": "T-22",
+        "range": {
+          "lo_inclusive": -22,
+          "hi_exclusive": -19
+        },
+        "bytes_hex": [
+          "2D",
+          "71",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B3_ENV_E",
+        "source": "envp[0]",
+        "index": 0,
+        "phase": "envp",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "E=1",
+        "before": -15,
+        "after": -19,
+        "nul_inclusive_byte_length": 4,
+        "source_terminating_nul_index": 3,
+        "entered_p": "T-15",
+        "left_p": "T-19",
+        "range": {
+          "lo_inclusive": -19,
+          "hi_exclusive": -15
+        },
+        "bytes_hex": [
+          "45",
+          "3D",
+          "31",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B2_ENV_F",
+        "source": "envp[1]",
+        "index": 1,
+        "phase": "envp",
+        "helper": "copy_strings (user reverse) + strnlen_user",
+        "text": "F=xy",
+        "before": -10,
+        "after": -15,
+        "nul_inclusive_byte_length": 5,
+        "source_terminating_nul_index": 4,
+        "entered_p": "T-10",
+        "left_p": "T-15",
+        "range": {
+          "lo_inclusive": -15,
+          "hi_exclusive": -10
+        },
+        "bytes_hex": [
+          "46",
+          "3D",
+          "78",
+          "79",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      },
+      {
+        "case_id": "B1_FILENAME",
+        "source": "bprm->filename alias filename->name",
+        "index": null,
+        "phase": "filename",
+        "helper": "copy_string_kernel",
+        "text": "/bin/tool",
+        "before": 0,
+        "after": -10,
+        "nul_inclusive_byte_length": 10,
+        "source_terminating_nul_index": 9,
+        "entered_p": "T",
+        "left_p": "T-10",
+        "range": {
+          "lo_inclusive": -10,
+          "hi_exclusive": 0
+        },
+        "bytes_hex": [
+          "2F",
+          "62",
+          "69",
+          "6E",
+          "2F",
+          "74",
+          "6F",
+          "6F",
+          "6C",
+          "00"
+        ],
+        "read_and_copy_conditions": "given valid and successful; one page"
+      }
+    ],
+    "complete_relative_bytes": {
+      "from": -30,
+      "to_exclusive": 0,
+      "bytes_hex": [
+        "64",
+        "69",
+        "73",
+        "70",
+        "6C",
+        "61",
+        "79",
+        "00",
+        "2D",
+        "71",
+        "00",
+        "45",
+        "3D",
+        "31",
+        "00",
+        "46",
+        "3D",
+        "78",
+        "79",
+        "00",
+        "2F",
+        "62",
+        "69",
+        "6E",
+        "2F",
+        "74",
+        "6F",
+        "6F",
+        "6C",
+        "00"
+      ],
+      "length": 30,
+      "ascii_with_embedded_nul": "display\\0-q\\0E=1\\0F=xy\\0/bin/tool\\0",
+      "unique_ASCII_decode_by_intervals": true
+    },
+    "before_copy_filename_source_pointer": "filename->name",
+    "bprm_filename_pointer": "filename->name selected when fd=AT_FDCWD",
+    "bprm_interp_initial_pointer": "bprm->filename",
+    "exec_saved_offset": -10,
+    "argv0_copied_string_offset": -30,
+    "final_p_offset": -30,
+    "source_argv0_pointer_distinct_from_new_stack": true,
+    "next_call": "bprm_execve CALL POINT",
+    "later_setup_arg_pages_shift_and_AT_EXECFN": "DEFERRED not applied before this call",
+    "evidence": [
+      "E139-012",
+      "E139-013",
+      "E139-014",
+      "E139-015",
+      "E139-016",
+      "E139-017",
+      "E139-019",
+      "E139-029",
+      "E139-030",
+      "E139-031",
+      "E139-033",
+      "E139-034",
+      "E139-035",
+      "E139-044",
+      "E139-045",
+      "E139-052",
+      "E139-037",
+      "E139-042",
+      "E139-050",
+      "E139-056",
+      "E139-057"
+    ]
+  },
+  "C": {
+    "shared_input": {
+      "filename": "/bin/tool",
+      "envp": [
+        "E=1",
+        "F=xy",
+        null
+      ],
+      "T": "independent stack T per case, never shared chronology",
+      "user_pointer_success": true,
+      "kernel_current_PF_KTHREAD": false,
+      "alloc_bprm_success_all": true
+    },
+    "cases": [
+      {
+        "id": "C-U0",
+        "entry": "do_execveat_common (ordinary user)",
+        "input_A_id": "A0",
+        "argv": null,
+        "envp": [
+          "E=1",
+          "F=xy",
+          null
+        ],
+        "user_pointer_count_read_indices": [],
+        "kernel_direct_count_read_indices": [],
+        "first_argc_count": 0,
+        "warning_pr_warn_once_call_reached": true,
+        "warning_log_effect": "NOT_OBSERVED",
+        "argc_assignment_reached": true,
+        "argc_first_explicitly_written": 0,
+        "envp_count_reached": true,
+        "envp_count_result": 2,
+        "envp_count_indices": [
+          0,
+          1,
+          2
+        ],
+        "envc_assignment_reached": true,
+        "envc_written": 2,
+        "stack_limits_reached": true,
+        "ptr_budget_bytes": 24,
+        "remaining_string_limit": 6291432,
+        "argmin_relative_to_T": -6291432,
+        "bprm_p_initial": "T",
+        "filename_copy_reached": true,
+        "filename_copy_len_if_reached": 10,
+        "bprm_exec_store_reached": true,
+        "bprm_exec_relative_to_T": -10,
+        "env_copy_reached": true,
+        "env_copy_bytes_if_reached": 9,
+        "argument_copy_called": true,
+        "argv_copy_indices_if_reached": [],
+        "argv_explicit_string_count_if_reached": 0,
+        "argv_explicit_bytes_if_reached": 0,
+        "synth_copy_string_kernel_empty_reached": true,
+        "synth_empty_byte_count": 1,
+        "argc_second_assignment_reached": true,
+        "argc_final_if_reached": 1,
+        "final_p_relative_to_T": -20,
+        "step_boundary": "bprm_execve() call reached",
+        "retval_on_return": "callee_result_unknown_at_call_boundary",
+        "Kthread_entry_gate": "NOT_IN_USER_FUNCTION",
+        "getname_and_alloc_bprm_success_assumed": true,
+        "actual_exec_completion": "NOT_OBSERVED"
+      },
+      {
+        "id": "C-U1",
+        "entry": "do_execveat_common (ordinary user)",
+        "input_A_id": "A1",
+        "argv": [
+          null
+        ],
+        "envp": [
+          "E=1",
+          "F=xy",
+          null
+        ],
+        "user_pointer_count_read_indices": [
+          0
+        ],
+        "kernel_direct_count_read_indices": [],
+        "first_argc_count": 0,
+        "warning_pr_warn_once_call_reached": true,
+        "warning_log_effect": "NOT_OBSERVED",
+        "argc_assignment_reached": true,
+        "argc_first_explicitly_written": 0,
+        "envp_count_reached": true,
+        "envp_count_result": 2,
+        "envp_count_indices": [
+          0,
+          1,
+          2
+        ],
+        "envc_assignment_reached": true,
+        "envc_written": 2,
+        "stack_limits_reached": true,
+        "ptr_budget_bytes": 24,
+        "remaining_string_limit": 6291432,
+        "argmin_relative_to_T": -6291432,
+        "bprm_p_initial": "T",
+        "filename_copy_reached": true,
+        "filename_copy_len_if_reached": 10,
+        "bprm_exec_store_reached": true,
+        "bprm_exec_relative_to_T": -10,
+        "env_copy_reached": true,
+        "env_copy_bytes_if_reached": 9,
+        "argument_copy_called": true,
+        "argv_copy_indices_if_reached": [],
+        "argv_explicit_string_count_if_reached": 0,
+        "argv_explicit_bytes_if_reached": 0,
+        "synth_copy_string_kernel_empty_reached": true,
+        "synth_empty_byte_count": 1,
+        "argc_second_assignment_reached": true,
+        "argc_final_if_reached": 1,
+        "final_p_relative_to_T": -20,
+        "step_boundary": "bprm_execve() call reached",
+        "retval_on_return": "callee_result_unknown_at_call_boundary",
+        "Kthread_entry_gate": "NOT_IN_USER_FUNCTION",
+        "getname_and_alloc_bprm_success_assumed": true,
+        "actual_exec_completion": "NOT_OBSERVED"
+      },
+      {
+        "id": "C-U2",
+        "entry": "do_execveat_common (ordinary user)",
+        "input_A_id": "A2",
+        "argv": [
+          "",
+          null
+        ],
+        "envp": [
+          "E=1",
+          "F=xy",
+          null
+        ],
+        "user_pointer_count_read_indices": [
+          0,
+          1
+        ],
+        "kernel_direct_count_read_indices": [],
+        "first_argc_count": 1,
+        "warning_pr_warn_once_call_reached": false,
+        "warning_log_effect": "NOT_OBSERVED",
+        "argc_assignment_reached": true,
+        "argc_first_explicitly_written": 1,
+        "envp_count_reached": true,
+        "envp_count_result": 2,
+        "envp_count_indices": [
+          0,
+          1,
+          2
+        ],
+        "envc_assignment_reached": true,
+        "envc_written": 2,
+        "stack_limits_reached": true,
+        "ptr_budget_bytes": 24,
+        "remaining_string_limit": 6291432,
+        "argmin_relative_to_T": -6291432,
+        "bprm_p_initial": "T",
+        "filename_copy_reached": true,
+        "filename_copy_len_if_reached": 10,
+        "bprm_exec_store_reached": true,
+        "bprm_exec_relative_to_T": -10,
+        "env_copy_reached": true,
+        "env_copy_bytes_if_reached": 9,
+        "argument_copy_called": true,
+        "argv_copy_indices_if_reached": [
+          0
+        ],
+        "argv_explicit_string_count_if_reached": 1,
+        "argv_explicit_bytes_if_reached": 1,
+        "synth_copy_string_kernel_empty_reached": false,
+        "synth_empty_byte_count": 0,
+        "argc_second_assignment_reached": false,
+        "argc_final_if_reached": 1,
+        "final_p_relative_to_T": -20,
+        "step_boundary": "bprm_execve() call reached",
+        "retval_on_return": "callee_result_unknown_at_call_boundary",
+        "Kthread_entry_gate": "NOT_IN_USER_FUNCTION",
+        "getname_and_alloc_bprm_success_assumed": true,
+        "actual_exec_completion": "NOT_OBSERVED"
+      },
+      {
+        "id": "C-K0",
+        "entry": "kernel_execve (kernel entry)",
+        "input_A_id": "A0",
+        "argv": null,
+        "envp": [
+          "E=1",
+          "F=xy",
+          null
+        ],
+        "user_pointer_count_read_indices": [],
+        "kernel_direct_count_read_indices": [],
+        "first_argc_count": 0,
+        "warning_pr_warn_once_call_reached": false,
+        "warning_log_effect": "NOT_OBSERVED",
+        "argc_assignment_reached": false,
+        "argc_first_explicitly_written": null,
+        "envp_count_reached": false,
+        "envp_count_result": null,
+        "envp_count_indices": [],
+        "envc_assignment_reached": false,
+        "envc_written": null,
+        "stack_limits_reached": false,
+        "ptr_budget_bytes": null,
+        "remaining_string_limit": null,
+        "argmin_relative_to_T": null,
+        "bprm_p_initial": "T",
+        "filename_copy_reached": false,
+        "filename_copy_len_if_reached": null,
+        "bprm_exec_store_reached": false,
+        "bprm_exec_relative_to_T": null,
+        "env_copy_reached": false,
+        "env_copy_bytes_if_reached": null,
+        "argument_copy_called": false,
+        "argv_copy_indices_if_reached": [],
+        "argv_explicit_string_count_if_reached": null,
+        "argv_explicit_bytes_if_reached": null,
+        "synth_copy_string_kernel_empty_reached": false,
+        "synth_empty_byte_count": 0,
+        "argc_second_assignment_reached": false,
+        "argc_final_if_reached": null,
+        "final_p_relative_to_T": 0,
+        "step_boundary": "retval=-EINVAL; goto out_free -> out_ret -> return -EINVAL",
+        "retval_on_return": "-EINVAL",
+        "Kthread_entry_gate": "given !(current.flags & PF_KTHREAD), so proceed",
+        "getname_and_alloc_bprm_success_assumed": true,
+        "actual_exec_completion": "NOT_OBSERVED"
+      },
+      {
+        "id": "C-K1",
+        "entry": "kernel_execve (kernel entry)",
+        "input_A_id": "A1",
+        "argv": [
+          null
+        ],
+        "envp": [
+          "E=1",
+          "F=xy",
+          null
+        ],
+        "user_pointer_count_read_indices": [],
+        "kernel_direct_count_read_indices": [
+          0
+        ],
+        "first_argc_count": 0,
+        "warning_pr_warn_once_call_reached": false,
+        "warning_log_effect": "NOT_OBSERVED",
+        "argc_assignment_reached": false,
+        "argc_first_explicitly_written": null,
+        "envp_count_reached": false,
+        "envp_count_result": null,
+        "envp_count_indices": [],
+        "envc_assignment_reached": false,
+        "envc_written": null,
+        "stack_limits_reached": false,
+        "ptr_budget_bytes": null,
+        "remaining_string_limit": null,
+        "argmin_relative_to_T": null,
+        "bprm_p_initial": "T",
+        "filename_copy_reached": false,
+        "filename_copy_len_if_reached": null,
+        "bprm_exec_store_reached": false,
+        "bprm_exec_relative_to_T": null,
+        "env_copy_reached": false,
+        "env_copy_bytes_if_reached": null,
+        "argument_copy_called": false,
+        "argv_copy_indices_if_reached": [],
+        "argv_explicit_string_count_if_reached": null,
+        "argv_explicit_bytes_if_reached": null,
+        "synth_copy_string_kernel_empty_reached": false,
+        "synth_empty_byte_count": 0,
+        "argc_second_assignment_reached": false,
+        "argc_final_if_reached": null,
+        "final_p_relative_to_T": 0,
+        "step_boundary": "retval=-EINVAL; goto out_free -> out_ret -> return -EINVAL",
+        "retval_on_return": "-EINVAL",
+        "Kthread_entry_gate": "given !(current.flags & PF_KTHREAD), so proceed",
+        "getname_and_alloc_bprm_success_assumed": true,
+        "actual_exec_completion": "NOT_OBSERVED"
+      },
+      {
+        "id": "C-K2",
+        "entry": "kernel_execve (kernel entry)",
+        "input_A_id": "A2",
+        "argv": [
+          "",
+          null
+        ],
+        "envp": [
+          "E=1",
+          "F=xy",
+          null
+        ],
+        "user_pointer_count_read_indices": [],
+        "kernel_direct_count_read_indices": [
+          0,
+          1
+        ],
+        "first_argc_count": 1,
+        "warning_pr_warn_once_call_reached": false,
+        "warning_log_effect": "NOT_OBSERVED",
+        "argc_assignment_reached": true,
+        "argc_first_explicitly_written": 1,
+        "envp_count_reached": true,
+        "envp_count_result": 2,
+        "envp_count_indices": [
+          0,
+          1,
+          2
+        ],
+        "envc_assignment_reached": true,
+        "envc_written": 2,
+        "stack_limits_reached": true,
+        "ptr_budget_bytes": 24,
+        "remaining_string_limit": 6291432,
+        "argmin_relative_to_T": -6291432,
+        "bprm_p_initial": "T",
+        "filename_copy_reached": true,
+        "filename_copy_len_if_reached": 10,
+        "bprm_exec_store_reached": true,
+        "bprm_exec_relative_to_T": -10,
+        "env_copy_reached": true,
+        "env_copy_bytes_if_reached": 9,
+        "argument_copy_called": true,
+        "argv_copy_indices_if_reached": [
+          0
+        ],
+        "argv_explicit_string_count_if_reached": 1,
+        "argv_explicit_bytes_if_reached": 1,
+        "synth_copy_string_kernel_empty_reached": false,
+        "synth_empty_byte_count": 0,
+        "argc_second_assignment_reached": false,
+        "argc_final_if_reached": 1,
+        "final_p_relative_to_T": -20,
+        "step_boundary": "bprm_execve() call reached",
+        "retval_on_return": "callee_result_unknown_at_call_boundary",
+        "Kthread_entry_gate": "given !(current.flags & PF_KTHREAD), so proceed",
+        "getname_and_alloc_bprm_success_assumed": true,
+        "actual_exec_completion": "NOT_OBSERVED"
+      }
+    ],
+    "zero_difference": {
+      "user_U0_U1": "count0, warning call reached, envc2, ptr24, copy_string_kernel empty (1 byte), argc becomes1, p=T-20",
+      "user_U2": "count1 pointer to an empty string; no warning, copy user one NUL, no synthetic path",
+      "kernel_K0_K1": "count0 -> -EINVAL before envp count or budget/copies, cleanup return",
+      "kernel_K2": "count1, normal kernel copy of explicit empty string, p=T-20"
+    },
+    "limits_when_reached": {
+      "stack_string_cap": 6291456,
+      "ptr_budget": 24,
+      "remaining_limit": 6291432,
+      "argmin": "T-6291432"
+    },
+    "no_real_kernel_file_user_execution": true,
+    "evidence": [
+      "E139-025",
+      "E139-026",
+      "E139-027",
+      "E139-059",
+      "E139-060",
+      "E139-061",
+      "E139-063",
+      "E139-066",
+      "E139-067",
+      "E139-068",
+      "E139-069",
+      "E139-070",
+      "E139-071",
+      "E139-072",
+      "E139-073",
+      "E139-074"
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "D139_OLD138_A",
+        "kind": "historical",
+        "label": "138 A1/A4 old graph placed truncate rewrite in PAD node after INNER return"
+      },
+      {
+        "id": "D139_A1_IN",
+        "kind": "given",
+        "label": "A1 old 138 model input"
+      },
+      {
+        "id": "D139_A1_COPY",
+        "kind": "inner_write",
+        "label": "dest[0]='a'"
+      },
+      {
+        "id": "D139_A1_REWRITE",
+        "kind": "inner_write_or_NUL",
+        "label": "strscpy dest[0]=NUL"
+      },
+      {
+        "id": "D139_A1_INNER_RET",
+        "kind": "return",
+        "label": "strscpy result -E2BIG"
+      },
+      {
+        "id": "D139_A1_OUTER",
+        "kind": "wrapper",
+        "label": "strscpy_pad returns -E2BIG immediately; no memset"
+      },
+      {
+        "id": "D139_A1_RESULT",
+        "kind": "buffer",
+        "label": "8 bytes 00 5A 5A 5A 5A 5A 5A 5A"
+      },
+      {
+        "id": "D139_A3_IN",
+        "kind": "given",
+        "label": "A3 old 138 model input"
+      },
+      {
+        "id": "D139_A3_COPY",
+        "kind": "inner_write",
+        "label": "dest[0..2]='ab'+NUL"
+      },
+      {
+        "id": "D139_A3_REWRITE",
+        "kind": "inner_write_or_NUL",
+        "label": "no inner rewrite"
+      },
+      {
+        "id": "D139_A3_INNER_RET",
+        "kind": "return",
+        "label": "strscpy result 2"
+      },
+      {
+        "id": "D139_A3_OUTER",
+        "kind": "wrapper",
+        "label": "strscpy_pad memset indices 3,4 then return 2"
+      },
+      {
+        "id": "D139_A3_RESULT",
+        "kind": "buffer",
+        "label": "8 bytes 61 62 00 00 00 5A 5A 5A"
+      },
+      {
+        "id": "D139_A4_IN",
+        "kind": "given",
+        "label": "A4 old 138 model input"
+      },
+      {
+        "id": "D139_A4_COPY",
+        "kind": "inner_write",
+        "label": "dest[0..3]='abcd'"
+      },
+      {
+        "id": "D139_A4_REWRITE",
+        "kind": "inner_write_or_NUL",
+        "label": "strscpy dest[3]=NUL"
+      },
+      {
+        "id": "D139_A4_INNER_RET",
+        "kind": "return",
+        "label": "strscpy result -E2BIG"
+      },
+      {
+        "id": "D139_A4_OUTER",
+        "kind": "wrapper",
+        "label": "strscpy_pad returns -E2BIG immediately; no memset"
+      },
+      {
+        "id": "D139_A4_RESULT",
+        "kind": "buffer",
+        "label": "8 bytes 61 62 63 00 5A 5A 5A 5A"
+      },
+      {
+        "id": "D139_OLD_B_CHAIN",
+        "kind": "historical",
+        "label": "old B138 P->K->J->GET not valid task object identity"
+      },
+      {
+        "id": "D139_P",
+        "kind": "source_object",
+        "label": "P.comm initial independent parent array"
+      },
+      {
+        "id": "D139_K",
+        "kind": "copied_task",
+        "label": "K.comm full 32-byte independent struct copy"
+      },
+      {
+        "id": "D139_J",
+        "kind": "copied_task",
+        "label": "J.comm full 32-byte independent struct copy"
+      },
+      {
+        "id": "D139_JNAME",
+        "kind": "name_write",
+        "label": "J copy_process strscpy_pad io/NUL plus29 zero"
+      },
+      {
+        "id": "D139_KGET",
+        "kind": "getter",
+        "label": "getter(buf8,K) K.alloc_lock, original buf, init+NUL+3 zeros"
+      },
+      {
+        "id": "D139_C1_PATH",
+        "kind": "given",
+        "label": "C1 bprm filename source given"
+      },
+      {
+        "id": "D139_C1_BPRM",
+        "kind": "pointer",
+        "label": "bprm.filename points to filename.name; task=K"
+      },
+      {
+        "id": "D139_C1_SET_LOCK",
+        "kind": "lock",
+        "label": "setter acquires K.alloc_lock"
+      },
+      {
+        "id": "D139_C1_SET",
+        "kind": "name_write",
+        "label": "setter strscpy_pad into K.comm"
+      },
+      {
+        "id": "D139_C1_SET_UNLOCK",
+        "kind": "unlock",
+        "label": "setter releases K.alloc_lock"
+      },
+      {
+        "id": "D139_C1_GET_LOCK",
+        "kind": "lock",
+        "label": "getter(buf,K) reacquires K.alloc_lock"
+      },
+      {
+        "id": "D139_C1_GET_BYTES",
+        "kind": "byte_result",
+        "label": "8 bytes 2F 6F 70 74 2F 64 65 00; inner -E2BIG; outer original buf pointer"
+      },
+      {
+        "id": "D139_C2_PATH",
+        "kind": "given",
+        "label": "C2 bprm filename source given"
+      },
+      {
+        "id": "D139_C2_BPRM",
+        "kind": "pointer",
+        "label": "bprm.filename points to filename.name; task=K"
+      },
+      {
+        "id": "D139_C2_SET_LOCK",
+        "kind": "lock",
+        "label": "setter acquires K.alloc_lock"
+      },
+      {
+        "id": "D139_C2_SET",
+        "kind": "name_write",
+        "label": "setter strscpy_pad into K.comm"
+      },
+      {
+        "id": "D139_C2_SET_UNLOCK",
+        "kind": "unlock",
+        "label": "setter releases K.alloc_lock"
+      },
+      {
+        "id": "D139_C2_GET_LOCK",
+        "kind": "lock",
+        "label": "getter(buf,K) reacquires K.alloc_lock"
+      },
+      {
+        "id": "D139_C2_GET_BYTES",
+        "kind": "byte_result",
+        "label": "32 bytes 2F 6F 70 74 2F 64 65 6D 6F 2F 61 62 63 64 65 66 67 68 69 6A 6B 6C 6D 6E 6F 70 71 72 73 74 75 00; inner 31; outer original buf pointer"
+      },
+      {
+        "id": "D139_C3_ERR",
+        "kind": "error_gate",
+        "label": "do_execveat_common filename ERR_PTR(-ENOENT)"
+      },
+      {
+        "id": "D139_C3_RET",
+        "kind": "early_return",
+        "label": "PTR_ERR=-ENOENT; no bprm or setter or setter lock"
+      },
+      {
+        "id": "D139_C3_INDEPENDENT_READ",
+        "kind": "new_observation",
+        "label": "separate getter(buf8,K) from original K"
+      },
+      {
+        "id": "D139_C3_LOCK",
+        "kind": "lock",
+        "label": "getter only locks K.alloc_lock"
+      },
+      {
+        "id": "D139_C3_BYTES",
+        "kind": "byte_result",
+        "label": "8 bytes 69 6E 69 74 00 00 00 00; inner 4; outer original buf pointer"
+      },
+      {
+        "id": "D139_OLD_R13803",
+        "kind": "historical",
+        "label": "old report and evidence named nonexistent old_window_crosswalk"
+      },
+      {
+        "id": "D139_TRUE_INDEX",
+        "kind": "evidence_index",
+        "label": "D00[\"R137-02\"].all_73_old_windows + new_47_window_index; E139 92 source windows"
+      },
+      {
+        "id": "D139_FLAGS_F",
+        "kind": "symbolic_input",
+        "label": "rq clock flags F initial value unknown"
+      },
+      {
+        "id": "D139_FLAGS_SHIFT",
+        "kind": "symbolic_write",
+        "label": "rq clock flags assigned F<<1 before update_rq_clock"
+      },
+      {
+        "id": "D139_FLAGS_CALL",
+        "kind": "call",
+        "label": "update_rq_clock may return early inside for negative delta"
+      },
+      {
+        "id": "D139_FLAGS_FINAL",
+        "kind": "known_write",
+        "label": "caller sets clock_update_flags=RQCF_UPDATED=0x04"
+      },
+      {
+        "id": "A139_A0_IN",
+        "kind": "given",
+        "label": "A0 argv=NULL"
+      },
+      {
+        "id": "A139_A0_U_SLOTS",
+        "kind": "user_count_reads",
+        "label": "get_user_arg_ptr count slots none; no string bytes read"
+      },
+      {
+        "id": "A139_A0_U_RESULT",
+        "kind": "count_result",
+        "label": "user count 0"
+      },
+      {
+        "id": "A139_A0_K_SLOTS",
+        "kind": "kernel_count_reads",
+        "label": "direct argv[i] count slots none; no string bytes read"
+      },
+      {
+        "id": "A139_A0_K_RESULT",
+        "kind": "count_result",
+        "label": "kernel count 0"
+      },
+      {
+        "id": "A139_A1_IN",
+        "kind": "given",
+        "label": "A1 argv[0]=NULL"
+      },
+      {
+        "id": "A139_A1_U_SLOTS",
+        "kind": "user_count_reads",
+        "label": "get_user_arg_ptr count slots 0; no string bytes read"
+      },
+      {
+        "id": "A139_A1_U_RESULT",
+        "kind": "count_result",
+        "label": "user count 0"
+      },
+      {
+        "id": "A139_A1_K_SLOTS",
+        "kind": "kernel_count_reads",
+        "label": "direct argv[i] count slots 0; no string bytes read"
+      },
+      {
+        "id": "A139_A1_K_RESULT",
+        "kind": "count_result",
+        "label": "kernel count 0"
+      },
+      {
+        "id": "A139_A2_IN",
+        "kind": "given",
+        "label": "A2 argv[0] nonnull pointer to NUL"
+      },
+      {
+        "id": "A139_A2_U_SLOTS",
+        "kind": "user_count_reads",
+        "label": "get_user_arg_ptr count slots 0,1; no string bytes read"
+      },
+      {
+        "id": "A139_A2_U_RESULT",
+        "kind": "count_result",
+        "label": "user count 1"
+      },
+      {
+        "id": "A139_A2_K_SLOTS",
+        "kind": "kernel_count_reads",
+        "label": "direct argv[i] count slots 0,1; no string bytes read"
+      },
+      {
+        "id": "A139_A2_K_RESULT",
+        "kind": "count_result",
+        "label": "kernel count 1"
+      },
+      {
+        "id": "A139_A3_IN",
+        "kind": "given",
+        "label": "A3 two nonempty strings and NULL"
+      },
+      {
+        "id": "A139_A3_U_SLOTS",
+        "kind": "user_count_reads",
+        "label": "get_user_arg_ptr count slots 0,1,2; no string bytes read"
+      },
+      {
+        "id": "A139_A3_U_RESULT",
+        "kind": "count_result",
+        "label": "user count 2"
+      },
+      {
+        "id": "A139_A3_K_SLOTS",
+        "kind": "kernel_count_reads",
+        "label": "direct argv[i] count slots 0,1,2; no string bytes read"
+      },
+      {
+        "id": "A139_A3_K_RESULT",
+        "kind": "count_result",
+        "label": "kernel count 2"
+      },
+      {
+        "id": "B139_PRE",
+        "kind": "given",
+        "label": "AT_FDCWD /bin/tool argv display,-q env E=1,F=xy; T initial p"
+      },
+      {
+        "id": "B139_LIMIT",
+        "kind": "limit_account",
+        "label": "limit 6291456 pointer budget32 -> remaining6291424; argmin T-6291424; p remains T"
+      },
+      {
+        "id": "B139_B1_FILENAME",
+        "kind": "stack_copy",
+        "label": "bprm->filename alias filename->name: /bin/tool\\0, len10, [T-10,T0)"
+      },
+      {
+        "id": "B139_B2_ENV_F",
+        "kind": "stack_copy",
+        "label": "envp[1]: F=xy\\0, len5, [T-15,T-10)"
+      },
+      {
+        "id": "B139_B3_ENV_E",
+        "kind": "stack_copy",
+        "label": "envp[0]: E=1\\0, len4, [T-19,T-15)"
+      },
+      {
+        "id": "B139_B4_ARG_Q",
+        "kind": "stack_copy",
+        "label": "argv[1]: -q\\0, len3, [T-22,T-19)"
+      },
+      {
+        "id": "B139_B5_ARG_DISPLAY",
+        "kind": "stack_copy",
+        "label": "argv[0]: display\\0, len8, [T-30,T-22)"
+      },
+      {
+        "id": "B139_EXEC_SAVED",
+        "kind": "data_pointer",
+        "label": "bprm.exec saved T-10 after filename copy, not same as argv[0] T-30"
+      },
+      {
+        "id": "B139_FINAL",
+        "kind": "boundary",
+        "label": "final bprm.p=T-30; next is bprm_execve call"
+      },
+      {
+        "id": "B139_LOW",
+        "kind": "memory_layout",
+        "label": "low: display\\0 at [T-30,T-22)"
+      },
+      {
+        "id": "B139_LOW_Q",
+        "kind": "memory_layout",
+        "label": "-q\\0 at [T-22,T-19)"
+      },
+      {
+        "id": "B139_LOW_E",
+        "kind": "memory_layout",
+        "label": "E=1\\0 at [T-19,T-15)"
+      },
+      {
+        "id": "B139_LOW_F",
+        "kind": "memory_layout",
+        "label": "F=xy\\0 at [T-15,T-10)"
+      },
+      {
+        "id": "B139_LOW_NAME",
+        "kind": "memory_layout",
+        "label": "/bin/tool\\0 at [T-10,T)"
+      },
+      {
+        "id": "C139_U0_ENTRY",
+        "kind": "given",
+        "label": "C-U0 A0 argv and env given independently"
+      },
+      {
+        "id": "C139_U0_COUNT",
+        "kind": "count",
+        "label": "user count argv=0; slots "
+      },
+      {
+        "id": "C139_U0_WARN",
+        "kind": "warn_call",
+        "label": "pr_warn_once call point reached; no log delivery claim"
+      },
+      {
+        "id": "C139_U0_ENV",
+        "kind": "env_count",
+        "label": "envp count2 and envc=2; argc initially 0"
+      },
+      {
+        "id": "C139_U0_BUDGET",
+        "kind": "limit",
+        "label": "ptr24, argmin -6291432; p still T"
+      },
+      {
+        "id": "C139_U0_STRINGS",
+        "kind": "stack_copy",
+        "label": "filename10, env9, 0 explicit argv bytes, p before synthesis T-19"
+      },
+      {
+        "id": "C139_U0_SYNTH",
+        "kind": "kernel_string_copy",
+        "label": "copy_string_kernel literal empty string one byte NUL; argc 0->1"
+      },
+      {
+        "id": "C139_U0_BOUND",
+        "kind": "call_boundary",
+        "label": "p=T-20; bprm.exec=T-10; argc1 envc2; bprm_execve CALL reached"
+      },
+      {
+        "id": "C139_U1_ENTRY",
+        "kind": "given",
+        "label": "C-U1 A1 argv and env given independently"
+      },
+      {
+        "id": "C139_U1_COUNT",
+        "kind": "count",
+        "label": "user count argv=0; slots 0"
+      },
+      {
+        "id": "C139_U1_WARN",
+        "kind": "warn_call",
+        "label": "pr_warn_once call point reached; no log delivery claim"
+      },
+      {
+        "id": "C139_U1_ENV",
+        "kind": "env_count",
+        "label": "envp count2 and envc=2; argc initially 0"
+      },
+      {
+        "id": "C139_U1_BUDGET",
+        "kind": "limit",
+        "label": "ptr24, argmin -6291432; p still T"
+      },
+      {
+        "id": "C139_U1_STRINGS",
+        "kind": "stack_copy",
+        "label": "filename10, env9, 0 explicit argv bytes, p before synthesis T-19"
+      },
+      {
+        "id": "C139_U1_SYNTH",
+        "kind": "kernel_string_copy",
+        "label": "copy_string_kernel literal empty string one byte NUL; argc 0->1"
+      },
+      {
+        "id": "C139_U1_BOUND",
+        "kind": "call_boundary",
+        "label": "p=T-20; bprm.exec=T-10; argc1 envc2; bprm_execve CALL reached"
+      },
+      {
+        "id": "C139_U2_ENTRY",
+        "kind": "given",
+        "label": "C-U2 A2 argv and env given independently"
+      },
+      {
+        "id": "C139_U2_COUNT",
+        "kind": "count",
+        "label": "user count argv=1; slots 0,1"
+      },
+      {
+        "id": "C139_U2_ENV",
+        "kind": "env_count",
+        "label": "envp count2 and envc=2; argc initially 1"
+      },
+      {
+        "id": "C139_U2_BUDGET",
+        "kind": "limit",
+        "label": "ptr24, argmin -6291432; p still T"
+      },
+      {
+        "id": "C139_U2_STRINGS",
+        "kind": "stack_copy",
+        "label": "filename10, env9, 1 explicit argv bytes, p before synthesis T-20"
+      },
+      {
+        "id": "C139_U2_BOUND",
+        "kind": "call_boundary",
+        "label": "p=T-20; bprm.exec=T-10; argc1 envc2; bprm_execve CALL reached"
+      },
+      {
+        "id": "C139_K0_ENTRY",
+        "kind": "given",
+        "label": "C-K0 A0 argv and env given independently"
+      },
+      {
+        "id": "C139_K0_COUNT",
+        "kind": "count",
+        "label": "kernel count argv=0; slots "
+      },
+      {
+        "id": "C139_K0_INVALID",
+        "kind": "error_write",
+        "label": "count0 -> retval=-EINVAL; no bprm.argc store, env count, budget or filename copy"
+      },
+      {
+        "id": "C139_K0_CLEAN",
+        "kind": "cleanup",
+        "label": "out_free -> free_bprm -> out_ret putname -> return -EINVAL"
+      },
+      {
+        "id": "C139_K1_ENTRY",
+        "kind": "given",
+        "label": "C-K1 A1 argv and env given independently"
+      },
+      {
+        "id": "C139_K1_COUNT",
+        "kind": "count",
+        "label": "kernel count argv=0; slots 0"
+      },
+      {
+        "id": "C139_K1_INVALID",
+        "kind": "error_write",
+        "label": "count0 -> retval=-EINVAL; no bprm.argc store, env count, budget or filename copy"
+      },
+      {
+        "id": "C139_K1_CLEAN",
+        "kind": "cleanup",
+        "label": "out_free -> free_bprm -> out_ret putname -> return -EINVAL"
+      },
+      {
+        "id": "C139_K2_ENTRY",
+        "kind": "given",
+        "label": "C-K2 A2 argv and env given independently"
+      },
+      {
+        "id": "C139_K2_COUNT",
+        "kind": "count",
+        "label": "kernel count argv=1; slots 0,1"
+      },
+      {
+        "id": "C139_K2_ENV",
+        "kind": "env_count",
+        "label": "envp count2 and envc=2; argc initially 1"
+      },
+      {
+        "id": "C139_K2_BUDGET",
+        "kind": "limit",
+        "label": "ptr24, argmin -6291432; p still T"
+      },
+      {
+        "id": "C139_K2_STRINGS",
+        "kind": "stack_copy",
+        "label": "filename10, env9, 1 explicit argv bytes, p before synthesis T-20"
+      },
+      {
+        "id": "C139_K2_BOUND",
+        "kind": "call_boundary",
+        "label": "p=T-20; bprm.exec=T-10; argc1 envc2; bprm_execve CALL reached"
+      }
+    ],
+    "edges": [
+      {
+        "from": "D139_A1_IN",
+        "to": "D139_A1_COPY",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A1_COPY",
+        "to": "D139_A1_REWRITE",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A1_REWRITE",
+        "to": "D139_A1_INNER_RET",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A1_INNER_RET",
+        "to": "D139_A1_OUTER",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A1_OUTER",
+        "to": "D139_A1_RESULT",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_OLD138_A",
+        "to": "D139_A1_IN",
+        "kind": "CORRECTION_OF_FROZEN_A_GRAPH",
+        "label": ""
+      },
+      {
+        "from": "D139_A3_IN",
+        "to": "D139_A3_COPY",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A3_COPY",
+        "to": "D139_A3_REWRITE",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A3_REWRITE",
+        "to": "D139_A3_INNER_RET",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A3_INNER_RET",
+        "to": "D139_A3_OUTER",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A3_OUTER",
+        "to": "D139_A3_RESULT",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_OLD138_A",
+        "to": "D139_A3_IN",
+        "kind": "CORRECTION_OF_FROZEN_A_GRAPH",
+        "label": ""
+      },
+      {
+        "from": "D139_A4_IN",
+        "to": "D139_A4_COPY",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A4_COPY",
+        "to": "D139_A4_REWRITE",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A4_REWRITE",
+        "to": "D139_A4_INNER_RET",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A4_INNER_RET",
+        "to": "D139_A4_OUTER",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_A4_OUTER",
+        "to": "D139_A4_RESULT",
+        "kind": "BYTE_COPY_THEN_INNER_RETURN_THEN_WRAPPER",
+        "label": ""
+      },
+      {
+        "from": "D139_OLD138_A",
+        "to": "D139_A4_IN",
+        "kind": "CORRECTION_OF_FROZEN_A_GRAPH",
+        "label": ""
+      },
+      {
+        "from": "D139_OLD_B_CHAIN",
+        "to": "D139_P",
+        "kind": "CORRECT_SHARED_PARENT",
+        "label": ""
+      },
+      {
+        "from": "D139_P",
+        "to": "D139_K",
+        "kind": "INDEPENDENT_P_TO_K_STRUCT_COPY",
+        "label": ""
+      },
+      {
+        "from": "D139_P",
+        "to": "D139_J",
+        "kind": "INDEPENDENT_P_TO_J_STRUCT_COPY",
+        "label": ""
+      },
+      {
+        "from": "D139_J",
+        "to": "D139_JNAME",
+        "kind": "NONNULL_NAME_REWRITES_ONLY_J",
+        "label": ""
+      },
+      {
+        "from": "D139_K",
+        "to": "D139_KGET",
+        "kind": "GETTER_DATA_SOURCE_K_ONLY",
+        "label": ""
+      },
+      {
+        "from": "D139_C1_PATH",
+        "to": "D139_C1_BPRM",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C1_BPRM",
+        "to": "D139_C1_SET_LOCK",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C1_SET_LOCK",
+        "to": "D139_C1_SET",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C1_SET",
+        "to": "D139_C1_SET_UNLOCK",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C1_SET_UNLOCK",
+        "to": "D139_C1_GET_LOCK",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C1_GET_LOCK",
+        "to": "D139_C1_GET_BYTES",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C2_PATH",
+        "to": "D139_C2_BPRM",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C2_BPRM",
+        "to": "D139_C2_SET_LOCK",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C2_SET_LOCK",
+        "to": "D139_C2_SET",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C2_SET",
+        "to": "D139_C2_SET_UNLOCK",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C2_SET_UNLOCK",
+        "to": "D139_C2_GET_LOCK",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C2_GET_LOCK",
+        "to": "D139_C2_GET_BYTES",
+        "kind": "SEPARATE_SET_AND_GET_ON_K",
+        "label": ""
+      },
+      {
+        "from": "D139_C3_ERR",
+        "to": "D139_C3_RET",
+        "kind": "EARLY_RETURN_THEN_INDEPENDENT_GETTER",
+        "label": ""
+      },
+      {
+        "from": "D139_C3_RET",
+        "to": "D139_C3_INDEPENDENT_READ",
+        "kind": "EARLY_RETURN_THEN_INDEPENDENT_GETTER",
+        "label": ""
+      },
+      {
+        "from": "D139_C3_INDEPENDENT_READ",
+        "to": "D139_C3_LOCK",
+        "kind": "EARLY_RETURN_THEN_INDEPENDENT_GETTER",
+        "label": ""
+      },
+      {
+        "from": "D139_C3_LOCK",
+        "to": "D139_C3_BYTES",
+        "kind": "EARLY_RETURN_THEN_INDEPENDENT_GETTER",
+        "label": ""
+      },
+      {
+        "from": "D139_OLD_R13803",
+        "to": "D139_TRUE_INDEX",
+        "kind": "REANCHOR_TO_REAL_MACHINE_KEYS",
+        "label": ""
+      },
+      {
+        "from": "D139_FLAGS_F",
+        "to": "D139_FLAGS_SHIFT",
+        "kind": "SOURCE_ORDER_CLOCK_CALL_AND_RETURN",
+        "label": ""
+      },
+      {
+        "from": "D139_FLAGS_SHIFT",
+        "to": "D139_FLAGS_CALL",
+        "kind": "SOURCE_ORDER_CLOCK_CALL_AND_RETURN",
+        "label": ""
+      },
+      {
+        "from": "D139_FLAGS_CALL",
+        "to": "D139_FLAGS_FINAL",
+        "kind": "SOURCE_ORDER_CLOCK_CALL_AND_RETURN",
+        "label": ""
+      },
+      {
+        "from": "A139_A0_IN",
+        "to": "A139_A0_U_SLOTS",
+        "kind": "USER_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A0_U_SLOTS",
+        "to": "A139_A0_U_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "A139_A0_IN",
+        "to": "A139_A0_K_SLOTS",
+        "kind": "INDEPENDENT_KERNEL_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A0_K_SLOTS",
+        "to": "A139_A0_K_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "A139_A1_IN",
+        "to": "A139_A1_U_SLOTS",
+        "kind": "USER_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A1_U_SLOTS",
+        "to": "A139_A1_U_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "A139_A1_IN",
+        "to": "A139_A1_K_SLOTS",
+        "kind": "INDEPENDENT_KERNEL_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A1_K_SLOTS",
+        "to": "A139_A1_K_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "A139_A2_IN",
+        "to": "A139_A2_U_SLOTS",
+        "kind": "USER_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A2_U_SLOTS",
+        "to": "A139_A2_U_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "A139_A2_IN",
+        "to": "A139_A2_K_SLOTS",
+        "kind": "INDEPENDENT_KERNEL_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A2_K_SLOTS",
+        "to": "A139_A2_K_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "A139_A3_IN",
+        "to": "A139_A3_U_SLOTS",
+        "kind": "USER_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A3_U_SLOTS",
+        "to": "A139_A3_U_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "A139_A3_IN",
+        "to": "A139_A3_K_SLOTS",
+        "kind": "INDEPENDENT_KERNEL_VECTOR_COUNT_PATH",
+        "label": ""
+      },
+      {
+        "from": "A139_A3_K_SLOTS",
+        "to": "A139_A3_K_RESULT",
+        "kind": "NULL_SLOT_TERMINATES_NOT_COUNTED",
+        "label": ""
+      },
+      {
+        "from": "B139_PRE",
+        "to": "B139_LIMIT",
+        "kind": "BPRM_STACK_LIMITS_NO_P_DECREMENT",
+        "label": ""
+      },
+      {
+        "from": "B139_LIMIT",
+        "to": "B139_B1_FILENAME",
+        "kind": "KERNEL_FILENAME_COPY",
+        "label": ""
+      },
+      {
+        "from": "B139_B1_FILENAME",
+        "to": "B139_B2_ENV_F",
+        "kind": "USER_ENVP_REVERSE_COPY",
+        "label": ""
+      },
+      {
+        "from": "B139_B2_ENV_F",
+        "to": "B139_B3_ENV_E",
+        "kind": "USER_ENVP_REVERSE_COPY",
+        "label": ""
+      },
+      {
+        "from": "B139_B3_ENV_E",
+        "to": "B139_B4_ARG_Q",
+        "kind": "USER_ARGV_REVERSE_COPY",
+        "label": ""
+      },
+      {
+        "from": "B139_B4_ARG_Q",
+        "to": "B139_B5_ARG_DISPLAY",
+        "kind": "USER_ARGV_REVERSE_COPY",
+        "label": ""
+      },
+      {
+        "from": "B139_B1_FILENAME",
+        "to": "B139_EXEC_SAVED",
+        "kind": "SAVE_BPRM_EXEC_EQUALS_T_MINUS10",
+        "label": ""
+      },
+      {
+        "from": "B139_B5_ARG_DISPLAY",
+        "to": "B139_FINAL",
+        "kind": "RESULT_AFTER_ALL_STRING_COPIES",
+        "label": ""
+      },
+      {
+        "from": "B139_LOW",
+        "to": "B139_LOW_Q",
+        "kind": "INCREASING_ADDRESS_NOT_RUNTIME_ORDER",
+        "label": ""
+      },
+      {
+        "from": "B139_LOW_Q",
+        "to": "B139_LOW_E",
+        "kind": "INCREASING_ADDRESS_NOT_RUNTIME_ORDER",
+        "label": ""
+      },
+      {
+        "from": "B139_LOW_E",
+        "to": "B139_LOW_F",
+        "kind": "INCREASING_ADDRESS_NOT_RUNTIME_ORDER",
+        "label": ""
+      },
+      {
+        "from": "B139_LOW_F",
+        "to": "B139_LOW_NAME",
+        "kind": "INCREASING_ADDRESS_NOT_RUNTIME_ORDER",
+        "label": ""
+      },
+      {
+        "from": "B139_FINAL",
+        "to": "B139_LOW",
+        "kind": "LAYOUT_PROJECTION_NOT_EXECUTION",
+        "label": ""
+      },
+      {
+        "from": "C139_U0_ENTRY",
+        "to": "C139_U0_COUNT",
+        "kind": "EXEC_ENTRY_COUNT_ARGS",
+        "label": ""
+      },
+      {
+        "from": "C139_U0_COUNT",
+        "to": "C139_U0_WARN",
+        "kind": "USER_ZERO_COUNT_WARN_CALL",
+        "label": ""
+      },
+      {
+        "from": "C139_U0_WARN",
+        "to": "C139_U0_ENV",
+        "kind": "ARGC0_STORED_THEN_ENV_COUNT",
+        "label": ""
+      },
+      {
+        "from": "C139_U0_ENV",
+        "to": "C139_U0_BUDGET",
+        "kind": "POINTER_BUDGET_BEFORE_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_U0_BUDGET",
+        "to": "C139_U0_STRINGS",
+        "kind": "FILENAME_THEN_ENV_THEN_ARGV_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_U0_STRINGS",
+        "to": "C139_U0_SYNTH",
+        "kind": "ONLY_USER_ARGC_ZERO_SYNTHESIS",
+        "label": ""
+      },
+      {
+        "from": "C139_U0_SYNTH",
+        "to": "C139_U0_BOUND",
+        "kind": "STOP_AT_BPRM_EXECVE_CALL",
+        "label": ""
+      },
+      {
+        "from": "C139_U1_ENTRY",
+        "to": "C139_U1_COUNT",
+        "kind": "EXEC_ENTRY_COUNT_ARGS",
+        "label": ""
+      },
+      {
+        "from": "C139_U1_COUNT",
+        "to": "C139_U1_WARN",
+        "kind": "USER_ZERO_COUNT_WARN_CALL",
+        "label": ""
+      },
+      {
+        "from": "C139_U1_WARN",
+        "to": "C139_U1_ENV",
+        "kind": "ARGC0_STORED_THEN_ENV_COUNT",
+        "label": ""
+      },
+      {
+        "from": "C139_U1_ENV",
+        "to": "C139_U1_BUDGET",
+        "kind": "POINTER_BUDGET_BEFORE_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_U1_BUDGET",
+        "to": "C139_U1_STRINGS",
+        "kind": "FILENAME_THEN_ENV_THEN_ARGV_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_U1_STRINGS",
+        "to": "C139_U1_SYNTH",
+        "kind": "ONLY_USER_ARGC_ZERO_SYNTHESIS",
+        "label": ""
+      },
+      {
+        "from": "C139_U1_SYNTH",
+        "to": "C139_U1_BOUND",
+        "kind": "STOP_AT_BPRM_EXECVE_CALL",
+        "label": ""
+      },
+      {
+        "from": "C139_U2_ENTRY",
+        "to": "C139_U2_COUNT",
+        "kind": "EXEC_ENTRY_COUNT_ARGS",
+        "label": ""
+      },
+      {
+        "from": "C139_U2_COUNT",
+        "to": "C139_U2_ENV",
+        "kind": "ARGC_NONZERO_STORED_THEN_ENV_COUNT",
+        "label": ""
+      },
+      {
+        "from": "C139_U2_ENV",
+        "to": "C139_U2_BUDGET",
+        "kind": "POINTER_BUDGET_BEFORE_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_U2_BUDGET",
+        "to": "C139_U2_STRINGS",
+        "kind": "FILENAME_THEN_ENV_THEN_ARGV_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_U2_STRINGS",
+        "to": "C139_U2_BOUND",
+        "kind": "STOP_AT_BPRM_EXECVE_CALL",
+        "label": ""
+      },
+      {
+        "from": "C139_K0_ENTRY",
+        "to": "C139_K0_COUNT",
+        "kind": "EXEC_ENTRY_COUNT_ARGS",
+        "label": ""
+      },
+      {
+        "from": "C139_K0_COUNT",
+        "to": "C139_K0_INVALID",
+        "kind": "KERNEL_ZERO_ARG_REJECTION_BEFORE_ENV",
+        "label": ""
+      },
+      {
+        "from": "C139_K0_INVALID",
+        "to": "C139_K0_CLEAN",
+        "kind": "NORMAL_CLEANUP_RETURN_ASSUMED",
+        "label": ""
+      },
+      {
+        "from": "C139_K1_ENTRY",
+        "to": "C139_K1_COUNT",
+        "kind": "EXEC_ENTRY_COUNT_ARGS",
+        "label": ""
+      },
+      {
+        "from": "C139_K1_COUNT",
+        "to": "C139_K1_INVALID",
+        "kind": "KERNEL_ZERO_ARG_REJECTION_BEFORE_ENV",
+        "label": ""
+      },
+      {
+        "from": "C139_K1_INVALID",
+        "to": "C139_K1_CLEAN",
+        "kind": "NORMAL_CLEANUP_RETURN_ASSUMED",
+        "label": ""
+      },
+      {
+        "from": "C139_K2_ENTRY",
+        "to": "C139_K2_COUNT",
+        "kind": "EXEC_ENTRY_COUNT_ARGS",
+        "label": ""
+      },
+      {
+        "from": "C139_K2_COUNT",
+        "to": "C139_K2_ENV",
+        "kind": "ARGC_NONZERO_STORED_THEN_ENV_COUNT",
+        "label": ""
+      },
+      {
+        "from": "C139_K2_ENV",
+        "to": "C139_K2_BUDGET",
+        "kind": "POINTER_BUDGET_BEFORE_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_K2_BUDGET",
+        "to": "C139_K2_STRINGS",
+        "kind": "FILENAME_THEN_ENV_THEN_ARGV_COPY",
+        "label": ""
+      },
+      {
+        "from": "C139_K2_STRINGS",
+        "to": "C139_K2_BOUND",
+        "kind": "STOP_AT_BPRM_EXECVE_CALL",
+        "label": ""
+      },
+      {
+        "from": "B139_EXEC_SAVED",
+        "to": "B139_B2_ENV_F",
+        "kind": "SAVE_EXEC_BEFORE_ENV_COPY",
+        "label": "bprm.exec is saved before environment copy"
+      }
+    ],
+    "node_count": 120,
+    "edge_count": 103
+  },
+  "limitations": {
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "repository_program_script": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU_hardware": "NOT_RUN",
+    "real_file_process_PID_clock_scheduler": "NOT_RUN",
+    "actual_exec_loaded_user_return": "UNKNOWN",
+    "post_setup_arg_pages_absolute_address": "UNKNOWN",
+    "full_ELF_pointer_tables": "NOT_EXPANDED",
+    "all_other_writers": "NOT_SURVEYED"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

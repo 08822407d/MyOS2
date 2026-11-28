@@ -1,0 +1,724 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FORK-FILES-ROLLBACK-44",
+  "record_type": "source_bounded_fork_files_failure_rollback_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-05",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "encoding": "JSON syntax compatible with YAML 1.2",
+  "source_claim_count": 57,
+  "source_claim_ids": [
+    "FR44-A001",
+    "FR44-A002",
+    "FR44-A003",
+    "FR44-A004",
+    "FR44-A005",
+    "FR44-A006",
+    "FR44-A007",
+    "FR44-A008",
+    "FR44-A009",
+    "FR44-A010",
+    "FR44-A011",
+    "FR44-A012",
+    "FR44-A013",
+    "FR44-A014",
+    "FR44-A015",
+    "FR44-A016",
+    "FR44-A017",
+    "FR44-A018",
+    "FR44-A019",
+    "FR44-A020",
+    "FR44-A021",
+    "FR44-A022",
+    "FR44-A023",
+    "FR44-A024",
+    "FR44-A025",
+    "FR44-A026",
+    "FR44-A027",
+    "FR44-A028",
+    "FR44-A029",
+    "FR44-A030",
+    "FR44-A031",
+    "FR44-A032",
+    "FR44-A033",
+    "FR44-A034",
+    "FR44-A035",
+    "FR44-A036",
+    "FR44-A037",
+    "FR44-A038",
+    "FR44-A039",
+    "FR44-A040",
+    "FR44-A041",
+    "FR44-A042",
+    "FR44-A043",
+    "FR44-A044",
+    "FR44-A045",
+    "FR44-A046",
+    "FR44-A047",
+    "FR44-A048",
+    "FR44-A049",
+    "FR44-A050",
+    "FR44-A051",
+    "FR44-A052",
+    "FR44-A053",
+    "FR44-A054",
+    "FR44-A055",
+    "FR44-A056",
+    "FR44-A057"
+  ],
+  "lineage": {
+    "predecessor_batch": "CORE-USER-FILES-COPY-SHARE-43",
+    "parent_result": "9cd9e0ab4d03",
+    "contract": "70-user-fork-files-rollback-contract.md",
+    "review": "CORE-USER-FILES-COPY-SHARE-43-REVIEW-001",
+    "supplements": [
+      "R43-S01",
+      "R43-S02"
+    ]
+  },
+  "counting_assumptions": [
+    "task_s and copied pointer valid if explicitly asserted",
+    "dup_task_struct node=NUMA_NO_NODE required for selected actual alloc assignment",
+    "other calls and task field validity opaque",
+    "valid positive files_struct.refcount and atomic operations normal",
+    "no other writer/callback invalidating tested object, unless noted",
+    "no physical resource free or actual fork runtime certification",
+    "goto fallthrough only if preceding cleanup normally returns"
+  ],
+  "acquisition_states": [
+    {
+      "id": "F0",
+      "stage": "pre-copy_files",
+      "p_files": "borrowed pointer preseed by *p=*current if valid",
+      "files_ref_delta": 0,
+      "owning_new_reference": false,
+      "release_via_exit_files": false,
+      "evidence": [
+        "FR44-A003",
+        "FR44-A007"
+      ]
+    },
+    {
+      "id": "F1",
+      "stage": "copy_files oldf NULL returns0",
+      "p_files": "NULL given valid stable prior copy",
+      "files_ref_delta": 0,
+      "owning_new_reference": false,
+      "release_via_exit_files": "NULL branch, no put",
+      "evidence": [
+        "FR44-A037",
+        "FR44-A049"
+      ]
+    },
+    {
+      "id": "F2",
+      "stage": "copy_files CLONE_FILES normal returns0",
+      "p_files": "same valid oldf borrowed pointer becomes shared owning ref by increment",
+      "files_ref_delta": 1,
+      "owning_new_reference": true,
+      "release_via_exit_files": "one put, n+1->n if positive and stable",
+      "evidence": [
+        "FR44-A003",
+        "FR44-A038",
+        "FR44-A050"
+      ]
+    },
+    {
+      "id": "F3",
+      "stage": "copy_files !CLONE_FILES and dup_fd returns valid newf",
+      "p_files": "new allocated table replacing copied oldf",
+      "files_ref_delta": "newf initialized1; oldf local delta0",
+      "owning_new_reference": true,
+      "release_via_exit_files": "newf 1->0 then attempted per-slot filp_close and files cache free",
+      "evidence": [
+        "FR44-A040",
+        "FR44-A042",
+        "FR44-A046",
+        "FR44-A047"
+      ]
+    },
+    {
+      "id": "F4",
+      "stage": "copy_files outer kmem_cache_alloc returnsNULL and returns nonzero",
+      "p_files": "preseed oldf address; no new ownership acquired",
+      "files_ref_delta": 0,
+      "owning_new_reference": false,
+      "release_via_exit_files": false,
+      "evidence": [
+        "FR44-A039",
+        "FR44-A041",
+        "FR44-A010"
+      ]
+    },
+    {
+      "id": "F5",
+      "stage": "dup_fd inner NULL/invalid old slot",
+      "p_files": "not provably assigned a normally returned newf",
+      "files_ref_delta": "UNKNOWN after invalid access",
+      "owning_new_reference": "NOT_CERTIFIED",
+      "release_via_exit_files": "NO_NORMAL_CALLER_EDGE_CERTIFIED",
+      "evidence": [
+        "FR44-A044"
+      ]
+    }
+  ],
+  "failure_stages": [
+    {
+      "name": "before_copy_files__dup_task_null",
+      "test": "dup_task_struct(current,node) returns NULL",
+      "goto": "fork_out",
+      "file_ownership": "NONE; no child table acquired",
+      "cleanup_chain": [
+        "fork_out"
+      ],
+      "exit_files": "NO_SOURCE_CALL_ON_THIS_EDGE",
+      "error": "retval initially -ENOMEM; after normal fork_out returns ERR_PTR(retval)",
+      "evidence": [
+        "FR44-A007",
+        "FR44-A032"
+      ]
+    },
+    {
+      "name": "before_copy_files__kthread_setup",
+      "test": "PF_KTHREAD and set_kthread_struct returns false",
+      "goto": "bad_fork_cleanup_delayacct",
+      "file_ownership": "p.files may be borrowed pointer from *p=*current, no copy_files acquire",
+      "cleanup_chain": [
+        "bad_fork_cleanup_delayacct",
+        "bad_fork_cleanup_count",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "SKIPPED_BY_GOTO",
+      "error": "retval previously set -ENOMEM unless opaque intervenes; no later assign in selected branch",
+      "evidence": [
+        "FR44-A008",
+        "FR44-A029",
+        "FR44-A030",
+        "FR44-A032"
+      ]
+    },
+    {
+      "name": "before_copy_files__sched_fork",
+      "test": "sched_fork returns nonzero",
+      "goto": "bad_fork_cleanup_policy",
+      "file_ownership": "p.files borrowed/preseed only; no copy_files success",
+      "cleanup_chain": [
+        "bad_fork_cleanup_policy",
+        "bad_fork_cleanup_delayacct",
+        "bad_fork_cleanup_count",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "SKIPPED_BY_GOTO",
+      "error": "retval from sched_fork; exact errno production opaque",
+      "evidence": [
+        "FR44-A009",
+        "FR44-A029",
+        "FR44-A032"
+      ]
+    },
+    {
+      "name": "copy_files_outer_alloc_failure",
+      "test": "oldf valid, CLONE_FILES clear, dup_fd outer kmem_cache_alloc returns NULL",
+      "goto": "bad_fork_cleanup_semundo",
+      "file_ownership": "p.files preseed oldf but has NO new shared-table ref and no new table published",
+      "cleanup_chain": [
+        "bad_fork_cleanup_semundo",
+        "bad_fork_cleanup_security",
+        "bad_fork_cleanup_audit",
+        "bad_fork_cleanup_perf",
+        "bad_fork_cleanup_policy",
+        "bad_fork_cleanup_delayacct",
+        "bad_fork_cleanup_count",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "SKIPPED_BY_GOTO",
+      "error": "copy_files returns -ENOMEM via valid *errorp; later ERR_PTR(-ENOMEM) only if cleanup normal",
+      "evidence": [
+        "FR44-A010",
+        "FR44-A039",
+        "FR44-A041",
+        "FR44-A028",
+        "FR44-A030",
+        "FR44-A032"
+      ]
+    },
+    {
+      "name": "copy_files_inner_null_dereference",
+      "test": "dup_fd inner kzalloc returns NULL on nonNULL old slot",
+      "goto": "NO_CERTIFIED_GOTO",
+      "file_ownership": "not a normally returned copy_files result; copy_files completion not certified",
+      "cleanup_chain": [],
+      "exit_files": "NOT_CERTIFIED",
+      "error": "do not invent -ENOMEM, goto semundo or successful table rollback",
+      "evidence": [
+        "FR44-A044",
+        "FR44-A010"
+      ]
+    },
+    {
+      "name": "copy_fs_failure",
+      "test": "copy_files normal success; copy_fs returns nonzero",
+      "goto": "bad_fork_cleanup_files",
+      "file_ownership": "NULL table or acquired shared+1 or new table ref1 per copy_files branch",
+      "cleanup_chain": [
+        "bad_fork_cleanup_files",
+        "bad_fork_cleanup_semundo",
+        "bad_fork_cleanup_security",
+        "bad_fork_cleanup_audit",
+        "bad_fork_cleanup_perf",
+        "bad_fork_cleanup_policy",
+        "bad_fork_cleanup_delayacct",
+        "bad_fork_cleanup_count",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "DIRECT_SOURCE_CALL_IF_P_VALID",
+      "error": "retval from copy_fs, final ERR_PTR only after cleanup normal",
+      "evidence": [
+        "FR44-A011",
+        "FR44-A027",
+        "FR44-A032"
+      ]
+    },
+    {
+      "name": "copy_sighand_failure",
+      "test": "copy_fs normal; copy_sighand returns nonzero",
+      "goto": "bad_fork_cleanup_fs",
+      "file_ownership": "copy_files already normally succeeded",
+      "cleanup_chain": [
+        "bad_fork_cleanup_fs",
+        "bad_fork_cleanup_files",
+        "bad_fork_cleanup_semundo",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "CONDITIONAL_ON_EXIT_FS_NORMAL_RETURN",
+      "error": "retval from copy_sighand if not clobbered in selected unwind",
+      "evidence": [
+        "FR44-A012",
+        "FR44-A027",
+        "FR44-A032"
+      ]
+    },
+    {
+      "name": "copy_signal_failure",
+      "test": "copy_sighand normal; copy_signal nonzero",
+      "goto": "bad_fork_cleanup_sighand",
+      "file_ownership": "copy_files succeeded",
+      "cleanup_chain": [
+        "bad_fork_cleanup_sighand",
+        "bad_fork_cleanup_fs",
+        "bad_fork_cleanup_files",
+        "bad_fork_cleanup_semundo",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "CONDITIONAL_ON_SIGHAND_CLEANUP_AND_EXIT_FS_NORMAL_RETURN",
+      "error": "retval from copy_signal, subject to normal opaque cleanup",
+      "evidence": [
+        "FR44-A013",
+        "FR44-A026",
+        "FR44-A027"
+      ]
+    },
+    {
+      "name": "copy_mm_failure",
+      "test": "copy_signal normal; copy_mm nonzero",
+      "goto": "bad_fork_cleanup_signal",
+      "file_ownership": "copy_files succeeded",
+      "cleanup_chain": [
+        "bad_fork_cleanup_signal",
+        "bad_fork_cleanup_sighand",
+        "bad_fork_cleanup_fs",
+        "bad_fork_cleanup_files",
+        "bad_fork_cleanup_semundo",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "CONDITIONAL_ON_OPAQUE_CLEANUP_NORMAL_RETURN",
+      "error": "retval from copy_mm",
+      "evidence": [
+        "FR44-A014",
+        "FR44-A026",
+        "FR44-A027"
+      ]
+    },
+    {
+      "name": "copy_namespaces_failure",
+      "test": "copy_mm normal; copy_namespaces nonzero",
+      "goto": "bad_fork_cleanup_mm",
+      "file_ownership": "copy_files succeeded",
+      "cleanup_chain": [
+        "bad_fork_cleanup_mm",
+        "bad_fork_cleanup_signal",
+        "bad_fork_cleanup_sighand",
+        "bad_fork_cleanup_fs",
+        "bad_fork_cleanup_files",
+        "bad_fork_cleanup_semundo",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "CONDITIONAL_ON_MM_AND_OTHER_OPAQUE_CLEANUP",
+      "error": "retval from copy_namespaces",
+      "evidence": [
+        "FR44-A015",
+        "FR44-A025",
+        "FR44-A027"
+      ]
+    },
+    {
+      "name": "copy_thread_failure",
+      "test": "copy_namespaces normal; copy_thread nonzero",
+      "goto": "bad_fork_cleanup_io",
+      "file_ownership": "copy_files succeeded",
+      "cleanup_chain": [
+        "bad_fork_cleanup_io",
+        "bad_fork_cleanup_namespaces",
+        "bad_fork_cleanup_mm",
+        "bad_fork_cleanup_signal",
+        "bad_fork_cleanup_sighand",
+        "bad_fork_cleanup_fs",
+        "bad_fork_cleanup_files",
+        "bad_fork_cleanup_semundo",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "CONDITIONAL_ON_ALL_PRIOR_OPAQUE_CLEANUP",
+      "error": "retval from copy_thread",
+      "evidence": [
+        "FR44-A016",
+        "FR44-A024",
+        "FR44-A025",
+        "FR44-A027"
+      ]
+    },
+    {
+      "name": "alloc_pid_error_pointer",
+      "test": "pid_struct != &init_struct_pid and alloc_pid returns IS_ERR-encoded pointer",
+      "goto": "bad_fork_cleanup_thread",
+      "file_ownership": "copy_files succeeded",
+      "cleanup_chain": [
+        "bad_fork_cleanup_thread",
+        "bad_fork_cleanup_io",
+        "bad_fork_cleanup_namespaces",
+        "bad_fork_cleanup_mm",
+        "bad_fork_cleanup_signal",
+        "bad_fork_cleanup_sighand",
+        "bad_fork_cleanup_fs",
+        "bad_fork_cleanup_files",
+        "bad_fork_cleanup_semundo",
+        "bad_fork_free",
+        "fork_out"
+      ],
+      "exit_files": "CONDITIONAL_ON_EXIT_THREAD_MM_SIGHAND_EXIT_FS_NORMAL_RETURN",
+      "error": "retval=PTR_ERR(pid_struct); last ERR_PTR(retval) if cleanup normal",
+      "evidence": [
+        "FR44-A017",
+        "FR44-A018",
+        "FR44-A023",
+        "FR44-A032",
+        "FR44-A055"
+      ]
+    },
+    {
+      "name": "copy_process_success",
+      "test": "all prerequisites normal and reaches return p",
+      "goto": "NO_GOTO",
+      "file_ownership": "copy_files succeeded (or no old table)",
+      "cleanup_chain": [],
+      "exit_files": "NOT_CALLED_ON_SUCCESS_SOURCE_PATH",
+      "error": "returns task pointer p before cleanup labels",
+      "evidence": [
+        "FR44-A019"
+      ]
+    }
+  ],
+  "cleanup_label_order": [
+    "bad_fork_cancel_cgroup",
+    "bad_fork_put_pidfd",
+    "bad_fork_free_pid",
+    "bad_fork_cleanup_thread",
+    "bad_fork_cleanup_io",
+    "bad_fork_cleanup_namespaces",
+    "bad_fork_cleanup_mm",
+    "bad_fork_cleanup_signal",
+    "bad_fork_cleanup_sighand",
+    "bad_fork_cleanup_fs",
+    "bad_fork_cleanup_files",
+    "bad_fork_cleanup_semundo",
+    "bad_fork_cleanup_security",
+    "bad_fork_cleanup_audit",
+    "bad_fork_cleanup_perf",
+    "bad_fork_cleanup_policy",
+    "bad_fork_cleanup_delayacct",
+    "bad_fork_cleanup_count",
+    "bad_fork_free",
+    "fork_out"
+  ],
+  "label_nuance": {
+    "bad_fork_cancel_cgroup": "label after return p; no active incoming goto found for selected failure stages; do not count as failure cleanup without proven entry",
+    "bad_fork_put_pidfd": "falls through from cancel_cgroup in text, but no active goto from selected error stage; do not infer mandatory pidfd fput",
+    "bad_fork_free_pid": "above cleanup_thread, so alloc_pid error jumping to cleanup_thread skips free_pid label",
+    "bad_fork_cleanup_thread": "exit_thread(p) active; reached for alloc_pid IS_ERR branch, not copy_thread failure goto cleanup_io",
+    "bad_fork_cleanup_io": "commented inner IO cleanup only; fallthrough",
+    "bad_fork_cleanup_namespaces": "commented inner namespaces cleanup only; fallthrough",
+    "bad_fork_cleanup_mm": "conditional mmput(p->mm) if p.mm nonNULL",
+    "bad_fork_cleanup_signal": "only comments before sighand; fallthrough",
+    "bad_fork_cleanup_sighand": "active __cleanup_sighand(p->sighand); old UV-14 can limit continuation",
+    "bad_fork_cleanup_fs": "active exit_fs(p); opaque",
+    "bad_fork_cleanup_files": "active exit_files(p); only if this label reached normally",
+    "bad_fork_cleanup_semundo": "after cleanup_files; no files cleanup when jumped to directly",
+    "bad_fork_free": "task state write and task resource release calls; files ownership already separate",
+    "fork_out": "locks current sighand then returns ERR_PTR(retval) if all relevant steps normal"
+  },
+  "source_ops": {
+    "copy_files": "oldf NULL ->0 unchanged; CLONE_FILES->atomic_inc old table and return0; otherwise dup_fd alloc failure->return error with preseed old pointer, success->p.files newf",
+    "exit_files": "files=tsk.files before lock; if nonNULL set task.files=NULL under task_lock/unlock then put_files_struct",
+    "put_files_struct": "atomic_dec_and_test tables; last ref iterates fd_array up to fd_count calling filp_close on nonNULL then table cache free request",
+    "return_path": "copy_process returns ERR_PTR(retval); kernel_clone checks IS_ERR(p) then returns PTR_ERR(p)",
+    "early_errors": "source guard may ERR_PTR(-EINVAL) before task allocation; not a file rollback",
+    "duplicated_file_objects": "nonshare dup_fd copies file_s for nonNULL slots; safety of copied count/pointer fields constrained by old UV-09"
+  },
+  "err_pointer_model": {
+    "MAX_ERRNO": 4095,
+    "source_symbols": [
+      "ERR_PTR",
+      "PTR_ERR",
+      "IS_ERR_VALUE",
+      "IS_ERR"
+    ],
+    "supported": "negative errno in encoded interval only when valid integers and representable casts",
+    "unsupported": "arbitrary integer, positive return or prior undefined control not automatically an IS_ERR pointer",
+    "input_from_alloc_pid": "PTR_ERR(pid_struct) only after IS_ERR(pid_struct) gate"
+  },
+  "finite_models": [
+    {
+      "id": "M01",
+      "case": "dup_task_struct node=NUMA_NO_NODE, valid allocation, valid *tsk=*orig",
+      "result": "p.files initial pointer value copied, table refcount unchanged by this assignment",
+      "stop": "none"
+    },
+    {
+      "id": "M02",
+      "case": "dup_task_struct node!=NUMA_NO_NODE",
+      "result": "allocation assignment may be skipped; cannot assume initialized tsk",
+      "stop": "first noncertified use/branch"
+    },
+    {
+      "id": "M03",
+      "case": "dup_task_struct returns NULL",
+      "result": "copy_process -> fork_out; no copy_files/exit_files",
+      "stop": "normal ERR_PTR(-ENOMEM) conditional on other cleanup"
+    },
+    {
+      "id": "M04",
+      "case": "set_kthread_struct failure before copy_files",
+      "result": "goto bad_fork_cleanup_delayacct, bypass file cleanup",
+      "stop": "opaque final task cleanup"
+    },
+    {
+      "id": "M05",
+      "case": "sched_fork nonzero before copy_files",
+      "result": "goto bad_fork_cleanup_policy, bypass file cleanup",
+      "stop": "opaque final cleanup"
+    },
+    {
+      "id": "M06",
+      "case": "copy_files oldf NULL returns0; copy_fs fails",
+      "result": "goto files label, exit_files(p) sees NULL and does not put",
+      "stop": "if all steps normal"
+    },
+    {
+      "id": "M07",
+      "case": "copy_files CLONE_FILES oldf count1, valid preseed; copy_fs fails",
+      "result": "1->2 at copy_files, then exit_files puts 2->1",
+      "stop": "if exit_files reached and all atomics normal"
+    },
+    {
+      "id": "M08",
+      "case": "copy_files CLONE_FILES oldf count3; copy_fs fails",
+      "result": "3->4 at copy_files, then cleanup 4->3",
+      "stop": "if no writer/alias mutation"
+    },
+    {
+      "id": "M09",
+      "case": "copy_files outer newf allocation returns NULL; oldf count1",
+      "result": "returns -ENOMEM; goto semundo; no exit_files, old count1 unchanged locally",
+      "stop": "cleanup normal return only"
+    },
+    {
+      "id": "M10",
+      "case": "copy_files outer newf allocation returns NULL; p.files borrowed oldf",
+      "result": "p.files may remain pointer to oldf but no new ref acquired; cleanup skips it",
+      "stop": "opaque task release; no assumption beyond selected"
+    },
+    {
+      "id": "M11",
+      "case": "copy_files dup_fd inner kzalloc NULL",
+      "result": "source invalid *new_fp before normal return; do not assign a later goto",
+      "stop": "inner invalid dereference"
+    },
+    {
+      "id": "M12",
+      "case": "copy_files returns0, nonshare newf count1, copy_fs fails, all new slots initialized valid/NULL",
+      "result": "exit_files p.files=newf: table 1->0, per-slot and table free calls conditional",
+      "stop": "unknown physical reclamation"
+    },
+    {
+      "id": "M13",
+      "case": "nonshare newf count1, uninitialized new slot valid pointer not guaranteed",
+      "result": "cannot certify full exit_files traversal as safe",
+      "stop": "first unproven new slot data/file validity"
+    },
+    {
+      "id": "M14",
+      "case": "copy_sighand returns negative, after copy_files share count2",
+      "result": "goto cleanup_fs; exit_fs then exit_files 2->1 if normal",
+      "stop": "exit_fs may not return"
+    },
+    {
+      "id": "M15",
+      "case": "copy_signal fails after copy_sighand success, shared table count2",
+      "result": "goto cleanup_sighand; __cleanup_sighand then exit_fs then exit_files if normal",
+      "stop": "historical UV-14 possible earlier stop"
+    },
+    {
+      "id": "M16",
+      "case": "copy_mm fails",
+      "result": "goto cleanup_signal then cleanup_sighand/fs/files in source order",
+      "stop": "opaque cleanup may fail first"
+    },
+    {
+      "id": "M17",
+      "case": "copy_namespaces fails, p.mm nonNULL",
+      "result": "goto cleanup_mm, calls mmput before sighand/fs/files",
+      "stop": "mmput may invalidate/no normal return"
+    },
+    {
+      "id": "M18",
+      "case": "copy_namespaces fails, p.mm NULL",
+      "result": "cleanup_mm skips mmput, continues sighand/fs/files",
+      "stop": "opaque cleanup validity still required"
+    },
+    {
+      "id": "M19",
+      "case": "copy_thread fails",
+      "result": "goto cleanup_io then namespaces(mm/sighand/fs/files), not cleanup_thread",
+      "stop": "opaque cleanup"
+    },
+    {
+      "id": "M20",
+      "case": "alloc_pid returns IS_ERR error pointer",
+      "result": "retval=PTR_ERR, goto cleanup_thread; exit_thread then remainder labels",
+      "stop": "exit_thread/others opaque"
+    },
+    {
+      "id": "M21",
+      "case": "pid_struct==&init_struct_pid then no alloc_pid",
+      "result": "alloc_pid branch skipped, no error goto from that source gate",
+      "stop": "subsequent fork steps not audited"
+    },
+    {
+      "id": "M22",
+      "case": "copy_process returns p normally",
+      "result": "does not fall through bad_fork_cancel_cgroup labels, file owner transferred to created task",
+      "stop": "no global task lifecycle claim"
+    },
+    {
+      "id": "M23",
+      "case": "copy_files normal return -ENOMEM (outer alloc failed) and rest cleanup normal",
+      "result": "copy_process returns ERR_PTR(-ENOMEM), kernel_clone IS_ERR then PTR_ERR",
+      "stop": "valid error encoding assumption"
+    },
+    {
+      "id": "M24",
+      "case": "postcopy copy_fs returns representative valid negative errno -ENOMEM",
+      "result": "copy_process ERR_PTR(-ENOMEM) then kernel_clone -ENOMEM if all cleanup normal",
+      "stop": "copy_fs itself opaque; error producer is hypothetical"
+    },
+    {
+      "id": "M25",
+      "case": "hypothetical positive retval after opaque failure",
+      "result": "ERR_PTR(positive) not necessarily IS_ERR; no certified kernel_clone error",
+      "stop": "not an actual proven positive producer"
+    },
+    {
+      "id": "M26",
+      "case": "copy_files CLONE_FILES count1->2 then second cleanup opaque non-return before exit_files",
+      "result": "cannot assert 2->1; source intended exit_files later",
+      "stop": "first non-return opaque cleanup"
+    },
+    {
+      "id": "M27",
+      "case": "before copy_files success, p.files pointer value valid but no matching reference acquired",
+      "result": "goto from pre-copy stage skips exit_files; table count unchanged locally",
+      "stop": "task release internals opaque"
+    },
+    {
+      "id": "M28",
+      "case": "copy_files normal success, oldf NULL, later cleanup stage copy_signal failure",
+      "result": "file cleanup reachable only after sighand/fs return; exit_files then finds NULL",
+      "stop": "earliest opaque invalid stage"
+    },
+    {
+      "id": "M29",
+      "case": "copy_files shared oldf count1 representing static init_files, later failure",
+      "result": "conditional 1->2->1, not final release of static init_files",
+      "stop": "not complete lifetime, CL42-F01 remains open"
+    },
+    {
+      "id": "M30",
+      "case": "nonshare copy_files successful, file slots valid with f_count initialized by by-value copy",
+      "result": "exit_files may call filp_close/fput, but file copy cache/original lifetime unknown",
+      "stop": "UV-09 historical boundary"
+    },
+    {
+      "id": "M31",
+      "case": "after files cleanup returns, put_task_stack or delayed_free_task does not return",
+      "result": "copy_process return ERR_PTR not certified",
+      "stop": "task cleanup opaque"
+    },
+    {
+      "id": "M32",
+      "case": "early invalid clone flags before p allocation",
+      "result": "direct ERR_PTR(-EINVAL) from source early guard, not a files-cleanup return",
+      "stop": "no copy_files call"
+    },
+    {
+      "id": "M33",
+      "case": "copy_files nonshared outer allocation fails, no new table",
+      "result": "p.files remains borrowed initial pointer; direct exit_files omitted; no duplicate decrement from selected path",
+      "stop": "no other indirect destructor paths audited"
+    },
+    {
+      "id": "M34",
+      "case": "copy_process alloc_pid ERR_PTR and p.files shared +1",
+      "result": "cleanup_thread may reach exit_files and decrement if all intervening cleanup returns",
+      "stop": "no claim actual alloc_pid failure or pid release"
+    },
+    {
+      "id": "M35",
+      "case": "bad_fork_put_pidfd label structurally present",
+      "result": "no active goto from selected file-related failure paths found; not a guaranteed step for these paths",
+      "stop": "do not treat label as unconditional control flow"
+    }
+  ],
+  "finite_model_count": 35,
+  "new_finding_count": 0,
+  "history_preserved": [
+    "CORE-USER-FILES-COPY-SHARE-43::FT43-F01",
+    "CORE-USER-FD-CLOSE-42::CL42-F01",
+    "CORE-USER-VFS-BASELINE-05::UV-09",
+    "CORE-USER-VFS-BASELINE-05::UV-10",
+    "CORE-USER-VFS-BASELINE-05::UV-11",
+    "CORE-USER-VFS-BASELINE-05::UV-14",
+    "CORE-USER-SYSCALL-STDIO-08::US-01"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "runtime": "NOT_RUN",
+  "graphviz": "NOT_RUN"
+}

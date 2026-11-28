@@ -1,0 +1,214 @@
+{
+  "task_id": "CORE-USER-MMAP-PROTECTION-20",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "deferred_findings",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra_owner_report_not_backend_attestation",
+  "source_pin_short12": "a039d9803ade",
+  "initial_results_head_short12": "6166b3e2f5b9",
+  "date": "2026-11-01",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "MP20-F01",
+      "kind": "behavioral_security_policy_candidate",
+      "status": "deferred_owner_not_ready",
+      "title": "PROT_READ请求会在非noexec路径主动提升PROT_EXEC",
+      "premises": [
+        "do_mmap收到PROT_READ且归一化步骤抵达",
+        "file=NULL或有效file且path_noexec返回false",
+        "mm.def_flags与其它路径未撤销当前VM_EXEC"
+      ],
+      "source_effect": "prot |= PROT_EXEC，转换VM_EXEC，正常私有映射选择可执行模板",
+      "counterevidence": "表达式是活动代码但可能是本项目明确的策略选择；没有实际用户页执行或安全要求对照",
+      "anchors": [
+        "MP20-A030",
+        "MP20-A037",
+        "MP20-A043",
+        "MP20-A046",
+        "MP20-A047",
+        "MP20-A118",
+        "MP20-A119",
+        "MP20-A128",
+        "MP20-A129",
+        "MP20-A150"
+      ],
+      "needs": "Owner未来单独评估执行权限策略与W^X目标；本批不修改内核"
+    },
+    {
+      "id": "MP20-F02",
+      "kind": "bounded_sync_gap",
+      "status": "needs_evidence",
+      "title": "mmap写锁包装当前没有实际获取和释放锁",
+      "premises": [
+        "当前vm_mmap_pgoff是活动调用路径",
+        "多个VMA变更可能并发且没有已证实的其它同步保护"
+      ],
+      "source_effect": "mmap_write_lock_killable仅return 0，unlock活动体为空，do_mmap未因此获得所称写锁",
+      "counterevidence": "未核完整调用者锁协议和运行中并发条件，不宣称已复现VMA破坏",
+      "anchors": [
+        "MP20-A020",
+        "MP20-A021",
+        "MP20-A026",
+        "MP20-A027",
+        "MP20-A028",
+        "MP20-A029"
+      ],
+      "needs": "后续独立锁/并发专项，当前不产补丁"
+    },
+    {
+      "id": "MP20-F03",
+      "kind": "conditional_fd_pointer_input_gap",
+      "status": "needs_evidence",
+      "title": "fget对fd_count范围内的空fd槽缺少局部NULL保护",
+      "premises": [
+        "fd<current->files->fd_count",
+        "files->fd_array[fd]实际上为NULL且代码走到atomic_long_inc"
+      ],
+      "source_effect": "__simple_fget读取slot后直接&retval->f_count并递增",
+      "counterevidence": "本批没有证明合法运行时存在该空槽或CPU怎样处理非法指针；超范围fd返回NULL可正常走EBADF",
+      "anchors": [
+        "MP20-A012",
+        "MP20-A015",
+        "MP20-A016",
+        "MP20-A017"
+      ],
+      "needs": "需要FD表状态生产者专项证据，避免把纯条件推断当已发生崩溃"
+    },
+    {
+      "id": "MP20-F04",
+      "kind": "conditional_protection_desynchronization_candidate",
+      "status": "needs_evidence",
+      "title": "文件mmap回调若变更VM访问位，vm_page_prot可能仍保留回调前模板",
+      "premises": [
+        "new VMA generated and vm_page_prot assigned",
+        "实际文件回调成功且改变VMA的VM_READ/WRITE/EXEC/SHARED位",
+        "没有别的生产者重新生成或协调保护模板"
+      ],
+      "source_effect": "回调后可更新局部vm_flags/再次merge，但本函数末尾vma_set_page_prot为注释",
+      "counterevidence": "当前核到的FAT32→generic_file_mmap代表回调只设置vm_ops，未见其改访问flags；没有对全部回调穷举",
+      "anchors": [
+        "MP20-A090",
+        "MP20-A091",
+        "MP20-A094",
+        "MP20-A095",
+        "MP20-A096",
+        "MP20-A097",
+        "MP20-A102",
+        "MP20-A107",
+        "MP20-A114",
+        "MP20-A115",
+        "MP20-A116",
+        "MP20-A117",
+        "MP20-A122",
+        "MP20-A144"
+      ],
+      "needs": "未来仅在证实回调能改访问位及真正消费时评估风险"
+    },
+    {
+      "id": "MP20-F05",
+      "kind": "mapping_semantics_candidate",
+      "status": "needs_evidence",
+      "title": "文件MAP_SHARED使用只读fd时活动代码清除VM_SHARED而保留VM_MAYSHARE",
+      "premises": [
+        "file分支MAP_SHARED或VALIDATE达到共享门",
+        "file->f_mode包含FMODE_READ但缺FMODE_WRITE",
+        "路径未在其他检查中提前拒绝"
+      ],
+      "source_effect": "vm_flags先OR VM_SHARED|VM_MAYSHARE，然后AND掉VM_MAYWRITE|VM_SHARED，后续模板按已经变动的VM_SHARED选择",
+      "counterevidence": "此可为主动表达只读共享保护的内部约定；不能仅凭名称认定其违约或数据隔离错误",
+      "anchors": [
+        "MP20-A058",
+        "MP20-A060",
+        "MP20-A063",
+        "MP20-A064",
+        "MP20-A073",
+        "MP20-A074",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A122",
+        "MP20-A135",
+        "MP20-A136",
+        "MP20-A137"
+      ],
+      "needs": "与设计协议及文件共享一致性目标对照"
+    },
+    {
+      "id": "MP20-F06",
+      "kind": "file_access_rule_candidate",
+      "status": "deferred_owner_not_ready",
+      "title": "append-only inode且fd可写时共享映射检查不依赖PROT_WRITE",
+      "premises": [
+        "文件分支选MAP_SHARED或MAP_SHARED_VALIDATE",
+        "IS_APPEND(inode)为真且file->f_mode含FMODE_WRITE",
+        "PROT_READ请求等此前门正常通过"
+      ],
+      "source_effect": "直接- EACCES，即使PROT_WRITE未设置",
+      "counterevidence": "可能是保守写保护策略；与用户O_APPEND是不同概念，未证实真实文件触发",
+      "anchors": [
+        "MP20-A061",
+        "MP20-A062",
+        "MP20-A113",
+        "MP20-A149"
+      ],
+      "needs": "后续有独立业务需求才判断是否应收窄条件"
+    }
+  ],
+  "evidence_appends": [
+    {
+      "qualified_id": "CORE-USER-VMA-LIFETIME-14::VL14-F05",
+      "kind": "evidence_append",
+      "preserve_old_status": true,
+      "claim": "simple_mmap_region会在新VMA/文件回调结果已知之前调用simple_munmap_vma_range；若后续回调或分配失败，不能仅凭错误返回推导前面旧VMA变化已经完整回滚",
+      "anchors": [
+        "MP20-A075",
+        "MP20-A087",
+        "MP20-A089",
+        "MP20-A091",
+        "MP20-A103",
+        "MP20-A104",
+        "MP20-A105",
+        "MP20-A106"
+      ],
+      "consumption": "R14-S01明确brk字段的恢复例外；这里只追加覆盖旧映射的条件路径，不重新裁定14"
+    },
+    {
+      "qualified_id": "CORE-USER-ANON-ZERO-19::AZ19-F03",
+      "kind": "evidence_append",
+      "preserve_old_status": true,
+      "claim": "第19批的共享零页异常RW输入，取决于本批上游VM_READ/WRITE/EXEC/SHARED实际转换及新VMA vm_page_prot；需合读R19-S02的check_pgprot/massage_pgprot支持掩码，不用裸pgprot值推断最终PTE",
+      "anchors": [
+        "MP20-A037",
+        "MP20-A043",
+        "MP20-A046",
+        "MP20-A047",
+        "MP20-A090",
+        "MP20-A118",
+        "MP20-A119",
+        "MP20-A120",
+        "MP20-A121",
+        "MP20-A122",
+        "MP20-A127",
+        "MP20-A128",
+        "MP20-A129",
+        "MP20-A130"
+      ],
+      "consumption": "19回执限定继续有效，不重新宣布可写零页已经出现"
+    }
+  ],
+  "new_findings_count": 6,
+  "evidence_appends_count": 2,
+  "prior_results_unchanged": true,
+  "owner_decisions_requested_now": [],
+  "limits": [
+    "not observed runtime bugs",
+    "conditional state/callback outcomes require actual producers and validity",
+    "no source code fixes or patch authorization",
+    "R19-S01/S02/S03 and R14-S01/S02 mandatory consumption qualifiers"
+  ]
+}

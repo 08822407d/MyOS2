@@ -1,0 +1,163 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-STRING-COMPARE-123",
+  "record_type": "bounded_deferred_findings_and_R122_01",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "produced_by": "GPT-6（会话自报，后端不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "date": "2026-11-22",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "D00_R122_01": "OPEN",
+  "C08_prior_closed": [
+    "R120-02",
+    "R121-01",
+    "R121-02"
+  ],
+  "prior_batch_verdicts": {
+    "120": "PASS_PENDING_LOCAL_COMPOSITE",
+    "121": "PASS_PENDING_LOCAL_COMPOSITE",
+    "122": "RETURN"
+  },
+  "items": [
+    {
+      "id": "R122-01",
+      "category": "D00_ONE_OPEN_RETURN",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "mainline": "OPEN",
+      "source": [
+        "mykernel/fs/vfs/open.c:266-270",
+        "mykernel/fs/vfs/namei.c:916-929,983-996",
+        "myinitramfs/myshell/myshell.c:349-375",
+        "libio/fileops.c:178,267,339-340",
+        "libio/iofopen.c:83-87"
+      ],
+      "claim": "Owner of direct calls reconnected: do_sys_open calls build_open_how and do_sys_openat2; do_creatat/do_mkdirat own i_op indirect method and cleanup direct calls; rm/rmdir own strerror and printf; C121 cases include actual three-level NULL transfer",
+      "limitation": "Original122/earlier artifacts frozen, only additive remedy. C08 still must verify true edge types and source call ownership",
+      "next": "C08 Pro independent close/reject after checking direct-call list and forbidden calls, per-case negative paths",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-LIBC-LINK",
+      "category": "SOURCE_PROVENANCE",
+      "status": "NEEDS_EVIDENCE",
+      "source": [
+        "myinitramfs/mylib/myglibc/string/CMakeLists.txt",
+        "myinitramfs/mylib/myglibc/CMakeLists.txt",
+        "myinitramfs/CMakeLists.txt",
+        "myinitramfs/myshell/CMakeLists.txt"
+      ],
+      "claim": "In-repo strcmp/strncmp bodies and declarations exist; separate mylibc STATIC target has string/*.c, but top initramfs references external musl-gcc and sh, no proven link to inrepo mylibc",
+      "limitation": "Actual sh uses strcmp/strncmp from UNKNOWN binary libc; exact negative returns/bytes counts are conditional",
+      "next": "inspect actual compiler and link map only on separately approved project scope",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-ENCODING",
+      "category": "BYTE_MODEL",
+      "status": "NEEDS_EVIDENCE",
+      "source": [
+        "string/strcmp.c:29-44",
+        "string/strncmp.c:31-71"
+      ],
+      "claim": "Byte comparison casts to unsigned char; supplied high-byte example 0x80 vs 0x7f yields +1 for chosen in-repo function",
+      "limitation": "No Unicode collation or locale semantics, not a claim about arbitrary UTF-8 characters",
+      "next": "none within this ASCII and explicit-byte study",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-POINTER-VALIDITY",
+      "category": "INPUT_PRECONDITION",
+      "status": "NEEDS_EVIDENCE",
+      "source": [
+        "string/strcmp.c:37-40",
+        "string/strncmp.c:41-70"
+      ],
+      "claim": "Read and pointer increments require readable terminated byte arrays or sufficient readable n bytes; paper cases satisfy",
+      "limitation": "NULL, invalid pointer, overrun and non-NUL inputs intentionally excluded; n=0 uses valid pointers without dereference",
+      "next": "future separate memory-safety analysis, not authorized here",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-N-LIMIT",
+      "category": "LIMITED_COMPARISON_BOUNDARY",
+      "status": "NEEDS_EVIDENCE",
+      "source": [
+        "string/strncmp.c:36-70"
+      ],
+      "claim": "n=0 returns 0 without loads, n>=4 uses groups of four then remainder; early stops on first-string NUL or different bytes",
+      "limitation": "Return=0 under n exhaustion is only equality of checked prefix, not full NUL-terminated string equivalence",
+      "next": "no shell strncmp substitution; continue only if C08 designs caller coverage",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-CMD-TABLE",
+      "category": "CALLER-SNAPSHOT",
+      "status": "NEEDS_EVIDENCE",
+      "source": [
+        "myshell.c:44-56,144-151,185"
+      ],
+      "claim": "Ten fixed command entries and find_cmd linear strcmp scanning used for paper call-counts",
+      "limitation": "Only static table; real dispatch, malloc, memory faults and dynamic command additions not analyzed",
+      "next": "use already-reviewed 119 for broader parse/dispatch questions",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-CD-RESULT",
+      "category": "CALLER-SNAPSHOT",
+      "status": "NEEDS_EVIDENCE",
+      "source": [
+        "myshell.c:188-211"
+      ],
+      "claim": "cd path '.' returns1 before chdir, './' reaches chdir request after nonzero comparison",
+      "limitation": "No actual chdir return, cwd change, getcwd cache or error text confirmed",
+      "next": "consume C08 118 reviewed context for cwd and memory limits",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-LS-DIRENT",
+      "category": "CALLER-SNAPSHOT",
+      "status": "NEEDS_EVIDENCE",
+      "source": [
+        "myshell.c:214-242"
+      ],
+      "claim": "One given valid readdir entry with d_name '.', '..' or '.config'; strcmp short-circuits second compare for '.', name printf only for .config",
+      "limitation": "Assumes opendir successful, a valid terminated d_name, later readdir NULL; not evidence of filesystem directory records or stdout write",
+      "next": "consume C08 116 review and separate runtime task if ever authorized",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC123-RUNTIME",
+      "category": "LOCAL_VALIDATION",
+      "status": "NOT_RUN",
+      "source": [
+        "agent-workspace/tasks/00-gpt-task-protocol-v2.md"
+      ],
+      "claim": "Source windows and bounded JS integer models checked; no kernel/user executable code run",
+      "limitation": "Full P9, C/ASM compiler, preprocessor, linker, Graphviz, QEMU/hardware, file/dir operations all NOT_RUN",
+      "next": "C08 Pro independent static review, full local gate only under appropriate separate authorization",
+      "owner_now": "NONE"
+    }
+  ],
+  "task_constraints": {
+    "current_writable_dir_only": "user-libc-string-compare-123",
+    "source_pin_short12": "a039d9803ade",
+    "parent_execution_short12": "7d0e810ec4ff",
+    "local_full_P9": "NOT_RUN",
+    "repo_build": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_system_files": "NOT_RUN",
+    "runtime_shell_used_libc": "UNKNOWN",
+    "actual_callback_result_and_screen_output": "UNKNOWN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

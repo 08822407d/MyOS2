@@ -1,0 +1,325 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-BUILD-CONTRACT-85",
+  "record_type": "bounded_defect_candidate_and_evidence_gap_ledger",
+  "produced_by": "GPT-6; backend unknown",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-13",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_SUBMITTED_MAINLINE_PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "open_questions": [
+    "BB85-U01",
+    "BB85-U02",
+    "BB85-U03",
+    "BB85-U04",
+    "BB85-U05",
+    "BB85-U06",
+    "BB85-U07",
+    "BB85-U08"
+  ],
+  "R84_01": {
+    "prior_batch_status": "RETURN_DOCUMENTATION_ONLY",
+    "D00_state": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "old_six_files_modified": false,
+    "old_comment_modified": false,
+    "do_not_close": true,
+    "location": "facts-and-boundaries.yaml::D00",
+    "nine_old_anchor_errors": "ER84-E06/E07/E09/E12/E13/E18/E20/E22/E38",
+    "technical_core": "RETAINED_WITH_R84_S01_S02_S03"
+  },
+  "new_conditional_candidates": [
+    {
+      "id": "BB85-F01",
+      "kind": "conditional_source_risk_candidate_not_runtime_bug",
+      "label": "无glob匹配时复制脚本提前下标访问",
+      "condition": "root_dir.glob('**/asm-offsets.c.s') yields empty list",
+      "source_evidence": [
+        "BB85-E096",
+        "BB85-E097",
+        "BB85-E116"
+      ],
+      "supported_conditional_conclusion": "matching_files[0] is accessed inside if without checking list length",
+      "impact_if_triggered": "Python IndexError prevents this copy stage; CMake failure behavior/file state not observed",
+      "status": "needs_evidence",
+      "scope": "fixed time source only",
+      "not_run": true,
+      "not_patch_authorization": true
+    },
+    {
+      "id": "BB85-F02",
+      "kind": "conditional_source_risk_candidate_not_runtime_bug",
+      "label": "offset生成器在单token marker缺值时触发下标错误",
+      "condition": "a quoted ->NAME marker contains no ASCII space",
+      "source_evidence": [
+        "BB85-E100",
+        "BB85-E101"
+      ],
+      "supported_conditional_conclusion": "fields has length1 while fields[0] is true, so fields[1] is accessed without sufficient length guard",
+      "impact_if_triggered": "generator exits with exception before opening output file; actual marker format unknown",
+      "status": "needs_evidence",
+      "scope": "fixed time source only",
+      "not_run": true,
+      "not_patch_authorization": true
+    },
+    {
+      "id": "BB85-F03",
+      "kind": "conditional_source_risk_candidate_not_runtime_bug",
+      "label": "连续ASCII空格可能吞掉有效偏移字段",
+      "condition": "quoted marker has NAME followed by two spaces then $number",
+      "source_evidence": [
+        "BB85-E101",
+        "BB85-E104"
+      ],
+      "supported_conditional_conclusion": "re.split('[ ]') gives empty fields[1] and code writes an empty non-define line",
+      "impact_if_triggered": "header can lack expected macro under this hypothetical text; compiler output not observed",
+      "status": "needs_evidence",
+      "scope": "fixed time source only",
+      "not_run": true,
+      "not_patch_authorization": true
+    },
+    {
+      "id": "BB85-F04",
+      "kind": "conditional_source_risk_candidate_not_runtime_bug",
+      "label": "ARCH默认条件引用展开后的变量名而不是字面ARCH",
+      "condition": "CMake project input ARCH unset or points to a name whose DEFINED status differs",
+      "source_evidence": [
+        "BB85-E051",
+        "BB85-E038",
+        "BB85-E046"
+      ],
+      "supported_conditional_conclusion": "the guard expression literally uses ${ARCH} inside DEFINED test",
+      "impact_if_triggered": "incorrect or unexpected arch path/source set possible only subject to real CMake semantics and caller vars",
+      "status": "needs_evidence",
+      "scope": "fixed time source only",
+      "not_run": true,
+      "not_patch_authorization": true
+    },
+    {
+      "id": "BB85-F05",
+      "kind": "conditional_source_risk_candidate_not_runtime_bug",
+      "label": "偏移头新鲜度与POST_BUILD删除/再生顺序可能脱钩",
+      "condition": "kernel/asm-offset targets incremental, source-tree output already exists; compound rm && command and later copy/gen may fail",
+      "source_evidence": [
+        "BB85-E068",
+        "BB85-E073",
+        "BB85-E074",
+        "BB85-E075",
+        "BB85-E076",
+        "BB85-E087",
+        "BB85-E088"
+      ],
+      "supported_conditional_conclusion": "declared dependency and tracked header alone are not a freshness certificate",
+      "impact_if_triggered": "header may be stale, deleted, or inconsistent; exact outcome unknown without generator/docs/real build",
+      "status": "needs_evidence",
+      "scope": "fixed time source only",
+      "not_run": true,
+      "not_patch_authorization": true
+    }
+  ],
+  "new_uncertainty_gaps": [
+    {
+      "id": "BB85-U01",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": "实际ARCH/CMake条件与变量/目录作用域",
+      "missing_proof": "CMake if expansion, project config args, parent overrides not executed",
+      "source_evidence": [
+        "BB85-E033",
+        "BB85-E051",
+        "BB85-E046",
+        "BB85-E047"
+      ],
+      "future_verification_gate": "independent approved CMake configure/trace, currently prohibited",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    },
+    {
+      "id": "BB85-U02",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": "完整source glob、KBUILD过滤及下级target属性",
+      "missing_proof": "source collection and target mutation beyond bounded seen CMake files not exhaustively enumerated",
+      "source_evidence": [
+        "BB85-E038",
+        "BB85-E039",
+        "BB85-E040",
+        "BB85-E041",
+        "BB85-E042",
+        "BB85-E044",
+        "BB85-E050"
+      ],
+      "future_verification_gate": "full evaluated source list/compile database after separately authorized build",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    },
+    {
+      "id": "BB85-U03",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": "实发C/ASM编译选项与rip_rel_ptr分支",
+      "missing_proof": "common variables, arch nested flags, DEBUG and __pic__ do not prove effective macro values or generated machine code",
+      "source_evidence": [
+        "BB85-E052",
+        "BB85-E055",
+        "BB85-E056",
+        "BB85-E057",
+        "BB85-E023",
+        "BB85-E024",
+        "BB85-E025"
+      ],
+      "future_verification_gate": "actual compile command or preprocess separately authorized, not within85",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    },
+    {
+      "id": "BB85-U04",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": "save-temps输出路径、basename和匹配数",
+      "missing_proof": "copy script assumes **/asm-offsets.c.s, no current generated assembly was read",
+      "source_evidence": [
+        "BB85-E071",
+        "BB85-E074",
+        "BB85-E096",
+        "BB85-E116"
+      ],
+      "future_verification_gate": "bounded generator artifact and actual command output on authorized environment",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    },
+    {
+      "id": "BB85-U05",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": "CMake POST_BUILD && 与rm/exit传播",
+      "missing_proof": "generator-specific tokenization or shell invocation undocumented in current permitted source",
+      "source_evidence": [
+        "BB85-E073",
+        "BB85-E074",
+        "BB85-E075"
+      ],
+      "future_verification_gate": "official versioned CMake/generator documentation or separately authorized controlled run; not guessed",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    },
+    {
+      "id": "BB85-U06",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": "偏移数值当前ABI、parser的真实输入和生成头新鲜度",
+      "missing_proof": "existing header stores TASK_threadsp=552/PTREGS_SIZE=176 without current producer run; C types changed unknown",
+      "source_evidence": [
+        "BB85-E078",
+        "BB85-E079",
+        "BB85-E087",
+        "BB85-E088",
+        "BB85-E092",
+        "BB85-E093",
+        "BB85-E094",
+        "BB85-E095",
+        "BB85-E100",
+        "BB85-E101"
+      ],
+      "future_verification_gate": "actual current object/assembly/header mechanically compared under separate permission",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    },
+    {
+      "id": "BB85-U07",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": ".ref.data最终孤儿节/GC/PHDR及init_top_pgt节归属",
+      "missing_proof": "script matches no .ref.data explicitly and uninitialized C root may be BSS or COMMON candidate",
+      "source_evidence": [
+        "BB85-E002",
+        "BB85-E014",
+        "BB85-E029",
+        "BB85-E061",
+        "BB85-E109",
+        "BB85-E113",
+        "BB85-E114"
+      ],
+      "future_verification_gate": "real linked ELF map/section & segment headers; no actual linked artifact available",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    },
+    {
+      "id": "BB85-U08",
+      "kind": "evidence_gap_not_confirmed_bug",
+      "label": "链接成功、512MiB配置覆盖和镜像安装/启动",
+      "missing_proof": "1GiB ASSERT not substitute for 512MiB high PMD extent; output/install declarations not observations",
+      "source_evidence": [
+        "BB85-E004",
+        "BB85-E005",
+        "BB85-E008",
+        "BB85-E030",
+        "BB85-E062",
+        "BB85-E108"
+      ],
+      "future_verification_gate": "actual configuration and link map/install/boot evidence only with fresh authorization",
+      "status": "deferred_needs_evidence",
+      "not_closed_by_85": true
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "id": "ER84-F02/ER84-U01",
+      "new_evidence": [
+        "BB85-E051",
+        "BB85-E052",
+        "BB85-E053",
+        "BB85-E055",
+        "BB85-E056",
+        "BB85-E057",
+        "BB85-E023",
+        "BB85-E024",
+        "BB85-E025",
+        "BB85-E047",
+        "BB85-E048"
+      ],
+      "consumption": "more precise flag definitions and PIC branches; not verified final machine code; old status unchanged"
+    },
+    {
+      "id": "ER84-F03/ER84-U07",
+      "new_evidence": [
+        "BB85-E004",
+        "BB85-E005",
+        "BB85-E008",
+        "BB85-E030",
+        "BB85-E031",
+        "BB85-E061"
+      ],
+      "consumption": "linker bound and static mapping sizing separable; not actual link map; old status unchanged"
+    },
+    {
+      "id": "ER84-F05/ER84-U02",
+      "new_evidence": [
+        "BB85-E002",
+        "BB85-E014",
+        "BB85-E106",
+        "BB85-E109",
+        "BB85-E111",
+        "BB85-E112",
+        "BB85-E113",
+        "BB85-E114"
+      ],
+      "consumption": "ref.data orphan and C root BSS candidates not treated as confirmed loss; old status unchanged"
+    },
+    {
+      "id": "ER84-F01/F04,other U",
+      "new_evidence": [],
+      "consumption": "not closed; no new nonzero relocation runtime demonstration"
+    },
+    {
+      "id": "PT81-U03/U06;DM82-U08;TI83-F/U",
+      "new_evidence": [],
+      "consumption": "R81/R82/R83 mandatory supplemental interpretations still apply; no repeated root cause count"
+    }
+  ],
+  "classification": {
+    "new_candidate_count": 5,
+    "new_gap_count": 8,
+    "old_findings_recounted_as_new": 0,
+    "source_level_only": true,
+    "mainline_acceptance": "PENDING",
+    "future_Pro_review_requested": true,
+    "Owner_decisions_requested_now": [],
+    "kernel_or_script_fix_authorized": false
+  }
+}

@@ -1,0 +1,369 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95",
+  "record_type": "incremental_bounded_console_static_candidates_and_evidence_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-13",
+  "produced_by": "GPT-6（visible family; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "date": "2026-11-17",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PENDING_MAINLINE_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "D00": "NOT_REQUIRED",
+  "new_candidates": [
+    {
+      "id": "CN95-F01",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F01",
+      "topic": "注销接口无活动删除与返回值",
+      "kind": "STATIC_INTERFACE_GAP_NOT_OBSERVED_RUNTIME_BUG",
+      "statement": "unregister_console虽声明int，活动体仅初始化res=1、局部变量；实际删除链表节点、维护count、return res均为//注释。因此本快照不存在经此函数证明的删除行为，若调用者消费返回值会遇非void落尾的C语义门。",
+      "preconditions": [
+        "代码按固定time编译选择并假设某调用者进入unregister_console",
+        "本范围没有证实实际调用或返回消费"
+      ],
+      "first_proof_gate": "必须获得真实caller与对象生命周期/非void返回合同；不要凭名称或旧Linux原实现判定立即崩溃",
+      "distinct_root": "独立注册节点生命周期缺口；不重报94日志回调或91–93格式器",
+      "evidence_ids": [
+        "CN95-E013",
+        "CN95-E014",
+        "CN95-E019",
+        "CN95-E021"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-F02",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F02",
+      "topic": "退格列零无符号回绕后先绘字",
+      "kind": "STATIC_CONDITIONAL_GLYPH_ADDRESS_CANDIDATE",
+      "statement": "position_t.XPosition为unsigned int；处于0时遇BS执行--产生无符号最大值，比较<0永假，然后以回绕位置的乘积交kputchar；直到绘字之后才有末尾坐标回卷。",
+      "preconditions": [
+        "已有有效的一字节BS输入",
+        "进入当前myos_tty_write_color分支，XPosition==0",
+        "依目标uint宽度/隐式转换定义与运行时FB对象约束分层"
+      ],
+      "first_proof_gate": "最早在Pos.XPosition*XCharSize至int参数转换和fb指针范围停止；不能把后置wrap当事前校验",
+      "distinct_root": "本批独立控制字符坐标/像素消费者问题",
+      "evidence_ids": [
+        "CN95-E032",
+        "CN95-E033",
+        "CN95-E034",
+        "CN95-E038",
+        "CN95-E040",
+        "CN95-E046",
+        "CN95-E049"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-F03",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F03",
+      "topic": "视频清屏字符串数组的cols容量门",
+      "kind": "STATIC_CONDITIONAL_BOUNDED_ARRAY_CANDIDATE",
+      "statement": "myos_init_video的linebuf[4096]先全零再按floor(XResolution/8)循环逐项写空格。若cols==4096，长度数组内已无NUL，后续%s源对象停止；若cols>=4097，i==4096首次越界写先于format。",
+      "preconditions": [
+        "framebuffer.X_Resolution等于指定模型对应的有效无符号宽度",
+        "有效函数入口及此前Pos/锁初始化已完成"
+      ],
+      "first_proof_gate": "cols=4096先证printf对真实4096字节对象的字符串边界；cols>4096先停止于循环数组写，不能合成单条可运行轨迹",
+      "distinct_root": "启动宽度生产与首次字符串构造边界，区别93通用printf源对象候选",
+      "evidence_ids": [
+        "CN95-E055",
+        "CN95-E056",
+        "CN95-E057",
+        "CN95-E058",
+        "CN95-E061",
+        "CN95-E062"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-F04",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F04",
+      "topic": "彩色格式化逻辑长度作为直接画字实际长度",
+      "kind": "STATIC_CONDITIONAL_CONSUMER_LENGTH_GAP",
+      "statement": "color_printk用static char buf[4096]、vsnprintf(buf,PAGE_SIZE,...)、返回int i后无长度截断地将i交给myos_tty_write_color(size_t length)。若格式逻辑需求4097且前序格式化可定义完成，后续读取索引4096超出真实buf。",
+      "preconditions": [
+        "固定x86页宏PAGE_SHIFT12产生PAGE_SIZE4096且被实际选中",
+        "vsnprintf此前对大尺寸合法对象算术的旧停门已有可证条件",
+        "后续writer遍历至buf索引4096"
+      ],
+      "first_proof_gate": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01和CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U06先行；此处仅新增下游消费界，不重发同一格式器根因",
+      "distinct_root": "直接彩色输出消费者传错可读长度，独立于91/92格式器内部指针根因",
+      "evidence_ids": [
+        "CN95-E028",
+        "CN95-E029",
+        "CN95-E042",
+        "CN95-E043",
+        "CN95-E044",
+        "CN95-E045"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-F05",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F05",
+      "topic": "帧缓冲像素步长和像素字宽合同",
+      "kind": "STATIC_CONDITIONAL_VIDEO_LAYOUT_CANDIDATE",
+      "statement": "生产者保存PixperScanline=framebuffer_pitch/(bpp/8)，FB_size=width*height*bpp/8；kputchar却以unsigned int*和XResolution行步长逐像素绘制。若bpp!=32或pitch像素数!=width，几何有效不能确保实际地址/行界有效。",
+      "preconditions": [
+        "存在有效的MULTIBOOT_FRAMEBUFFER tag",
+        "x/y及宽高在所选设备条件成立",
+        "FB内存真实布局与写入权限必须由其它证据提供"
+      ],
+      "first_proof_gate": "必须先证bpp/8非零、producer乘积、实际u32可写像素对象、pitch与映射；不能断言当前机器采用24位模式",
+      "distinct_root": "属于本批帧缓冲生产者到glyph寻址范围，非94环形日志区间",
+      "evidence_ids": [
+        "CN95-E046",
+        "CN95-E049",
+        "CN95-E052",
+        "CN95-E060",
+        "CN95-E061",
+        "CN95-E062",
+        "CN95-E063"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-F06",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F06",
+      "topic": "输入长度size_t与局部int循环计数域差异",
+      "kind": "STATIC_HUGE_INPUT_DOMAIN_GAP",
+      "statement": "myos_tty_write_color签名length为size_t，循环变量count为int。若由合法的巨大输入使循环跨过INT_MAX，后增count存在有符号溢出的证明门，不能凭unsigned count回调签覆盖所有size_t输入。",
+      "preconditions": [
+        "真实source长且连续可读并满足反复迭代所有前提",
+        "count持续增长至int最大值",
+        "编译器/ABI和控制字符不改变总增量模型"
+      ],
+      "first_proof_gate": "未证明实际调用者产生该巨大长度；仅作为接口域阻断，不重复格式器对象界根因",
+      "distinct_root": "本批tty实际消费者局部计数类型差异",
+      "evidence_ids": [
+        "CN95-E017",
+        "CN95-E028",
+        "CN95-E029",
+        "CN95-E030",
+        "CN95-E037"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "CN95-U01",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U01",
+      "topic": "注销与读接口消费者是否实际使用",
+      "missing_evidence": "尚无实际unregister_console调用者、生命周期清理需求或myos_tempcon_read返回值的消费路径；静态空体不等于已发生设备错误",
+      "first_proof_gate": "最早遇非void无返回值被消费之前必须获得真实调用路径",
+      "evidence_ids": [
+        "CN95-E013",
+        "CN95-E014",
+        "CN95-E018",
+        "CN95-E019"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-U02",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U02",
+      "topic": "实有控制台对象与write字段范围",
+      "missing_evidence": "已确认内置myos_tempcon.write指向非NULL myos_tempcon_write，但尚未盘点其它有可能登记的console_s，也无真实多对象并发时序",
+      "first_proof_gate": "PK94-U03仅将内置对象子项收窄，绝不签所有console均合法",
+      "evidence_ids": [
+        "CN95-E010",
+        "CN95-E019",
+        "CN95-E020",
+        "CN95-E022",
+        "CN95-E025",
+        "CN95-E066"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-U03",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U03",
+      "topic": "列表和画字锁的真实并发保证",
+      "missing_evidence": "register_console中的列表更新、vprintk/console_unlock部分锁注释；tty调用spin_lock但缺实测并发/中断与锁初始化跨调用证明",
+      "first_proof_gate": "顺序静态模型不能替代并发执行；锁对象是否已初始化取决于video先后",
+      "evidence_ids": [
+        "CN95-E005",
+        "CN95-E007",
+        "CN95-E024",
+        "CN95-E026",
+        "CN95-E028",
+        "CN95-E056",
+        "CN95-E064",
+        "CN95-E067",
+        "CN95-E069"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-U04",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U04",
+      "topic": "直接color_printk格式化结果域及对象界",
+      "missing_evidence": "vsnprintf逻辑返回字节数可能大于缓冲保存字节数；特别是返回4096会包含终止NUL，而需求4097可能越界，真实前序格式调用是否良定义未证",
+      "first_proof_gate": "严格保留KN91-U01/PF92-U06的C对象及格式器首停止门",
+      "evidence_ids": [
+        "CN95-E042",
+        "CN95-E043",
+        "CN95-E044",
+        "CN95-E045"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-U05",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05",
+      "topic": "视频信息和映射阶段真实可用性",
+      "missing_evidence": "只读到parse_tag中的FRAMEBUFFER直接生产者、FB字段与myos_init_VBE_mapping调用文本；未证实tag实际存在、地址映射、颜色深度、pitch、硬件有效",
+      "first_proof_gate": "Pos.FB_addr赋值及FB_size大小不认证任何成功设备写",
+      "evidence_ids": [
+        "CN95-E052",
+        "CN95-E055",
+        "CN95-E059",
+        "CN95-E060",
+        "CN95-E061",
+        "CN95-E062",
+        "CN95-E063"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-U06",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U06",
+      "topic": "字符字模与实际framebuffer跨度",
+      "missing_evidence": "已读font_ascii[256][16]及kputchar 8×16索引；仍未认证FB_length真实指针分配、每行Pitch、设备像素字宽和缓存属性",
+      "first_proof_gate": "数学最大下标须先通过有符号乘法、C指针对象及写权限",
+      "evidence_ids": [
+        "CN95-E046",
+        "CN95-E047",
+        "CN95-E048",
+        "CN95-E049",
+        "CN95-E050",
+        "CN95-E051",
+        "CN95-E052",
+        "CN95-E062"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-U07",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U07",
+      "topic": "PR17接收日志到实际显示",
+      "missing_evidence": "补齐了固定内置注册/回调→writer→glyph静态链，但没有读取/认证全console设备或实际屏幕显示；上游环尾prefix、等mask全圈以及LF缺失旧门仍在",
+      "first_proof_gate": "只认证回调的有条件源级消费，不认证设备显示；PK94-U07部分收窄未关闭",
+      "evidence_ids": [
+        "CN95-E017",
+        "CN95-E019",
+        "CN95-E022",
+        "CN95-E024",
+        "CN95-E025",
+        "CN95-E026",
+        "CN95-E029",
+        "CN95-E037",
+        "CN95-E046",
+        "CN95-E066",
+        "CN95-E070"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CN95-U08",
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U08",
+      "topic": "非标准输入和编译器ABI的实际可达性",
+      "missing_evidence": "unsigned XPosition回绕后传int、width*y算式、超长count int、自定义list DEBUG/RELEASE选择、运行时注册者身份未建可执行证据",
+      "first_proof_gate": "这些不是已执行的程序测试；完整P9、编译、链接、Graphviz、QEMU、实机与并发全部NOT_RUN",
+      "evidence_ids": [
+        "CN95-E029",
+        "CN95-E032",
+        "CN95-E033",
+        "CN95-E034",
+        "CN95-E040",
+        "CN95-E046",
+        "CN95-E049",
+        "CN95-E067",
+        "CN95-E069"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U03",
+      "disposition": "STATIC_NARROWED_BUILTIN_ONLY",
+      "note": "实际myos_tempcon.write静态非空；register无一般write筛选，94对任意未知console的缺口仍在"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U07",
+      "disposition": "STATIC_NARROWED_BUILTIN_CALLBACK",
+      "note": "已找到内置adapter→tty→glyph，但真实像素对象和实际显示仍未知"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F04",
+      "disposition": "RETAIN",
+      "note": "无LF而con_start推进的本源行为仍独立存在；95不重做"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F05",
+      "disposition": "RETAIN_FIRST_RING_CONTIGUITY_GATE",
+      "note": "equal-mask整圈span不能直接当可读线性对象传builtin writer"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F06",
+      "disposition": "RETAIN_FIRST_RING_TAIL_PREFIX_GATE",
+      "note": "环尾<...>解析在producer侧可能先越界"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01",
+      "disposition": "RETAIN_FIRST_FORMAT_STOP",
+      "note": "%pe pointer()无活动return仍未认证正常输出"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "disposition": "RETAIN_C_OBJECT_GATE",
+      "note": "格式化buffer指针和长度合法性必须先证明"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U06",
+      "disposition": "RETAIN_KN91_ALIAS_NO_DUPLICATE",
+      "note": "先前数学字符预算不构成真实C对象合法性"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01/R90-02",
+      "disposition": "CLOSED_NOT_REOPENED"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01",
+      "disposition": "RETAINED_SOURCE_STATUS_UNCHANGED_WITHDRAWN_EMPTY_LINE_JUDGMENT"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 6,
+    "new_gaps": 8,
+    "confirmed_runtime_bugs": 0,
+    "old_qualified_roots_reissued": 0,
+    "kernel_changes": 0,
+    "owner_manual_actions_now": 0
+  },
+  "limits": [
+    "只覆盖内置myos_tempcon，一般console和其它设备未审",
+    "任何疑似UB均是具体输入及上游先行门的条件模型，不签同次可执行轨迹",
+    "完全无构建、预处理、库函数运行、Graphviz、硬件、实机、真实并发",
+    "Pro独立主线只可PASS_PENDING_LOCAL，不在本执行者自行宣告95通过"
+  ]
+}

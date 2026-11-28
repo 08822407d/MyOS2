@@ -1,0 +1,161 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ENTRY-STACK-BINDING-66",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "R65-01 documentation_disposition_submitted; not self-closed",
+  "prior64": "CLOSED_DOCUMENTATION_ONLY, PASS_PENDING_LOCAL",
+  "new_findings": [
+    {
+      "id": "SB66-F01",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F01",
+      "kind": "conditional_source_risk_not_runtime_bug",
+      "status": "needs_evidence",
+      "premises": [
+        "pcpu TSS.sp0仍为初始poison表达式",
+        "cpu_init_exception_handling设置了该TSS的GDT描述符并请求TR加载",
+        "在任何有效update_task_stack之前实际发生需sp0的用户到内核切换"
+      ],
+      "claim": "这组条件若成立，则本包尚不能从固定源码建立有效内核入口栈指针；不是首次入栈已失败的运行证明",
+      "counter_evidence": "可能更早有未审sp0赋值或先完成调度切换，实际启动和CPU时序未核",
+      "first_stop": "最早在启动调用顺序及CPU实际TR/sp0读取处",
+      "related": [
+        "CORE-USER-EXCEPTION-ENTRY-65::EE65-U06"
+      ],
+      "owner_action_now": "none",
+      "runtime_reproduced": false
+    },
+    {
+      "id": "SB66-F02",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F02",
+      "kind": "conditional_source_risk_not_runtime_bug",
+      "status": "needs_evidence",
+      "premises": [
+        "__switch_to已越过save_fsgs等前置callee",
+        "执行current_task、top_of_stack、load_sp0三次不同store",
+        "相关消费者能在某个中间状态读取到这些值"
+      ],
+      "claim": "所读源中存在明确的写入次序，但没有证明单次原子发布或在所有异常入口期间一致可见",
+      "counter_evidence": "调度关中断/锁/上下文切换协议可能提供充分序列化；没有实测竞态或不同CPU消费",
+      "first_stop": "在真实异步消费者、可见性和中断门验证之前",
+      "related": [
+        "CORE-USER-EXCEPTION-ENTRY-65::EE65-F03"
+      ],
+      "owner_action_now": "none",
+      "runtime_reproduced": false
+    },
+    {
+      "id": "SB66-F03",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F03",
+      "kind": "conditional_source_risk_not_runtime_bug",
+      "status": "needs_evidence",
+      "premises": [
+        "task_stack_page返回指针经loff_t有符号整数转换",
+        "加上THREAD_SIZE减padding并转回pt_regs_s*后减一",
+        "源基址和长度满足对象范围/对齐要求"
+      ],
+      "claim": "32KiB/176字节代数只在数值、转换、对象和对齐前提下成立，不能直接推断所有高半区内核指针的定义良好算术",
+      "counter_evidence": "实际编译器和地址范围可能使该写法正常；无具体坏值/溢出复现",
+      "first_stop": "指针到loff_t转换、溢出或不合法指针算术的首次失败",
+      "related": [
+        "CORE-USER-EXCEPTION-ENTRY-65::EE65-U03"
+      ],
+      "owner_action_now": "none",
+      "runtime_reproduced": false
+    },
+    {
+      "id": "SB66-F04",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F04",
+      "kind": "conditional_source_risk_not_runtime_bug",
+      "status": "needs_evidence",
+      "premises": [
+        "next->thread.sp有效指向匹配inactive_task_frame的栈",
+        "六个pop后ret_addr为可用返回地址",
+        "__switch_to前置callee及其C函数正常返回"
+      ],
+      "claim": "汇编save/load+六对push/pop+jmp __switch_to仅给出已构造inactive frame的恢复契约；新fork和首次用户态路径须另查生产者",
+      "counter_evidence": "copy_thread等可按约构造有效首帧，本包未读到完整过程不能否定",
+      "first_stop": "new task frame producer or invalid next->thread.sp",
+      "related": [
+        "CORE-USER-EXCEPTION-ENTRY-65::EE65-U05"
+      ],
+      "owner_action_now": "none",
+      "runtime_reproduced": false
+    }
+  ],
+  "new_findings_count": 4,
+  "evidence_gaps": [
+    {
+      "id": "SB66-U01",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U01",
+      "status": "needs_evidence",
+      "detail": "init_stack linker assignment vs C array declaration; final allocated placement/size/alignment and active linker map not measured",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SB66-U02",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U02",
+      "status": "needs_evidence",
+      "detail": "kmalloc(THREAD_SIZE) actual allocation backing, alignment, lifetime and pointer validity not checked",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SB66-U03",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U03",
+      "status": "needs_evidence",
+      "detail": "TSS descriptor bytes, TR register state, CPU use of sp0 not measured",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SB66-U04",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U04",
+      "status": "needs_evidence",
+      "detail": "cpu_init_exception_handling/cpu_init/update_task_stack exact first-entry order and initial CPL3 entry not established",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SB66-U05",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U05",
+      "status": "needs_evidence",
+      "detail": "perCPU/GDT/GS base and cross-core visibility, asynchronous consistency and lock/IRQ protocol not audited",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SB66-U06",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U06",
+      "status": "needs_evidence",
+      "detail": "copy_thread/ret_from_fork_asm new inactive frame producer and first-user-entry requirements opaque",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SB66-U07",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U07",
+      "status": "needs_evidence",
+      "detail": "hardware exception stack selection versus software entry_SYSCALL_64 stack swap and saved user RSP not simulated",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SB66-U08",
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U08",
+      "status": "needs_evidence",
+      "detail": "regenerated TASK_threadsp/PTREGS_SIZE offsets and CPU #PF/#GP hardware frames from 65 remain NOT_RUN",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "confirmed_runtime_bugs": 0,
+  "old_findings_unchanged": true,
+  "phase": 2
+}

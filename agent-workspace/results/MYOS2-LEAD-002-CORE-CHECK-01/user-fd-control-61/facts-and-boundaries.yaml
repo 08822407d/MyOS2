@@ -1,0 +1,1548 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FD-CONTROL-61",
+  "record_type": "bounded_fd_control_facts_and_history",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "contract91_short12": "4de8f7b487d3",
+  "result_base_short12": "1a6ef1c7a5aa",
+  "read_channel": "GitHub_connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/fs/syscall.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "52d9349ab8e3",
+      "ranges": "74-91;102-136;139-162",
+      "role": "main",
+      "symbols": [
+        "MYOS_SYSCALL_DEFINE3(fcntl)",
+        "MYOS_SYSCALL_DEFINE1(dup)",
+        "MYOS_SYSCALL_DEFINE2(dup2)",
+        "MYOS_SYSCALL_DEFINE3(lseek)"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/fcntl.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "63b52ad144e0",
+      "ranges": "1-128 FULL",
+      "role": "main",
+      "symbols": [
+        "do_fcntl",
+        "check_fcntl_cmd"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/file.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0dd75836ead2",
+      "ranges": "129-150;184-194;229-241",
+      "role": "main",
+      "symbols": [
+        "alloc_fd",
+        "fd_install",
+        "f_dupfd"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "447307aaa4b1",
+      "ranges": "278-309;354-364",
+      "role": "main",
+      "symbols": [
+        "FAT32_lseek",
+        "FAT32_file_ops"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/file.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "18d22c0c6f4d",
+      "ranges": "29-40;51-69",
+      "role": "direct dependency",
+      "symbols": [
+        "fd_s",
+        "__to_fd",
+        "fdget_raw",
+        "fdput"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "fe527991618b",
+      "ranges": "95-101;865-896;905-908;1858-1863",
+      "role": "direct dependency",
+      "symbols": [
+        "FMODE_PATH",
+        "file_s",
+        "get_file",
+        "file_ops_s"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/file_table.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "8be78d1df129",
+      "ranges": "108-129",
+      "role": "direct dependency",
+      "symbols": [
+        "fput"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/fdtable.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "fac0384dc371",
+      "ranges": "21-24;48-69",
+      "role": "type dependency",
+      "symbols": [
+        "NR_OPEN_DEFAULT",
+        "files_struct_s"
+      ]
+    },
+    {
+      "path": "mykernel/sched/task/task.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "6f085938ffa2",
+      "ranges": "103-119",
+      "role": "direct dependency",
+      "symbols": [
+        "task_rlimit",
+        "rlimit"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/resource.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "567901b49c2d",
+      "ranges": "30-32",
+      "role": "type dependency",
+      "symbols": [
+        "RLIMIT_NOFILE"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/fcntl.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "306e0a2bfb3b",
+      "ranges": "62-63;100-104;159-160;187",
+      "role": "type dependency",
+      "symbols": [
+        "O_CLOEXEC",
+        "F_DUPFD",
+        "F_GETFD",
+        "F_SETFD",
+        "F_GETFL",
+        "F_SETFL",
+        "FD_CLOEXEC",
+        "F_LINUX_SPECIFIC_BASE"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/linux/fcntl.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "edc30400f649",
+      "ranges": "17-18",
+      "role": "type dependency",
+      "symbols": [
+        "F_DUPFD_CLOEXEC"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/syscalls.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "6cc2f85fec90",
+      "ranges": "1383-1397",
+      "role": "macro dependency",
+      "symbols": [
+        "MYOS_SYSCALL_DEFINE1",
+        "MYOS_SYSCALL_DEFINE2",
+        "MYOS_SYSCALL_DEFINE3",
+        "IF_ALERT_DUMMY_SYSCALL",
+        "ALERT_DUMMY_SYSCALL"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "4224440c2c48",
+      "ranges": "241-251",
+      "role": "macro dependency",
+      "symbols": [
+        "__MYOS_SYSCALL_DEFINEx"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/linux/fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "d923e007ba7b",
+      "ranges": "43-48",
+      "role": "type dependency",
+      "symbols": [
+        "SEEK_SET",
+        "SEEK_CUR",
+        "SEEK_END",
+        "SEEK_DATA",
+        "SEEK_HOLE",
+        "SEEK_MAX"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ef531baa8317",
+      "ranges": "37;62;103-105",
+      "role": "type dependency",
+      "symbols": [
+        "off_t",
+        "loff_t",
+        "uint",
+        "ulong"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0246766d9a75",
+      "ranges": "88-89",
+      "role": "type dependency",
+      "symbols": [
+        "__kernel_off_t",
+        "__kernel_loff_t"
+      ]
+    }
+  ],
+  "prior_review_disposition": {
+    "batch60": "PASS_PENDING_LOCAL; R60-S01/S02 mandatory; no D00",
+    "batch58": "PASS_PENDING_LOCAL; R58C-S01 B25 reviewer objection withdrawn, not an executor defect",
+    "batch59": "PASS_PENDING_LOCAL; R59-S01/S02 only f_pos comparison",
+    "batches40_to43": "PASS_PENDING_LOCAL with respective R40-S01/S02, R41-S01/S02, R42-S01/S02, R43-S01/S02",
+    "old_artifacts_changed": false
+  },
+  "fcntl_dispatch_matrix": [
+    {
+      "mode": "ordinary_valid_file",
+      "cmd": "F_DUPFD",
+      "cmd_value_source": 0,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "f_dupfd(argi,file,0)",
+      "source_level_result": "f_dupfd(argi,file,0)",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "ordinary_valid_file",
+      "cmd": "F_DUPFD_CLOEXEC",
+      "cmd_value_source": 1030,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "f_dupfd(argi,file,O_CLOEXEC)",
+      "source_level_result": "f_dupfd(argi,file,O_CLOEXEC)",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "ordinary_valid_file",
+      "cmd": "F_GETFD",
+      "cmd_value_source": 1,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "do_fcntl default -EINVAL because case commented",
+      "source_level_result": "do_fcntl default -EINVAL because case commented",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "ordinary_valid_file",
+      "cmd": "F_SETFD",
+      "cmd_value_source": 2,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "do_fcntl default -EINVAL because case commented",
+      "source_level_result": "do_fcntl default -EINVAL because case commented",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "ordinary_valid_file",
+      "cmd": "F_GETFL",
+      "cmd_value_source": 3,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "returns filp->f_flags",
+      "source_level_result": "returns filp->f_flags",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "ordinary_valid_file",
+      "cmd": "F_SETFL",
+      "cmd_value_source": 4,
+      "check_fcntl_cmd_whitelisted": false,
+      "actual_switch_action": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF",
+      "source_level_result": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "ordinary_valid_file",
+      "cmd": "UNRECOGNIZED",
+      "cmd_value_source": 9999,
+      "check_fcntl_cmd_whitelisted": false,
+      "actual_switch_action": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF",
+      "source_level_result": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "FMODE_PATH_valid_file",
+      "cmd": "F_DUPFD",
+      "cmd_value_source": 0,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "f_dupfd(argi,file,0)",
+      "source_level_result": "f_dupfd(argi,file,0)",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "FMODE_PATH_valid_file",
+      "cmd": "F_DUPFD_CLOEXEC",
+      "cmd_value_source": 1030,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "f_dupfd(argi,file,O_CLOEXEC)",
+      "source_level_result": "f_dupfd(argi,file,O_CLOEXEC)",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "FMODE_PATH_valid_file",
+      "cmd": "F_GETFD",
+      "cmd_value_source": 1,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "do_fcntl default -EINVAL because case commented",
+      "source_level_result": "do_fcntl default -EINVAL because case commented",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "FMODE_PATH_valid_file",
+      "cmd": "F_SETFD",
+      "cmd_value_source": 2,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "do_fcntl default -EINVAL because case commented",
+      "source_level_result": "do_fcntl default -EINVAL because case commented",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "FMODE_PATH_valid_file",
+      "cmd": "F_GETFL",
+      "cmd_value_source": 3,
+      "check_fcntl_cmd_whitelisted": true,
+      "actual_switch_action": "returns filp->f_flags",
+      "source_level_result": "returns filp->f_flags",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "FMODE_PATH_valid_file",
+      "cmd": "F_SETFL",
+      "cmd_value_source": 4,
+      "check_fcntl_cmd_whitelisted": false,
+      "actual_switch_action": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF",
+      "source_level_result": "early -EBADF before do_fcntl, but fdput runs",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    },
+    {
+      "mode": "FMODE_PATH_valid_file",
+      "cmd": "UNRECOGNIZED",
+      "cmd_value_source": 9999,
+      "check_fcntl_cmd_whitelisted": false,
+      "actual_switch_action": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF",
+      "source_level_result": "early -EBADF before do_fcntl, but fdput runs",
+      "fdget_raw_flags": 3,
+      "normal_final_fdput": "fput requested even for error/default and F_GETFL",
+      "premise": "valid task/files/fd_array slot/file; method normal, no earlier pointer failure"
+    }
+  ],
+  "dup_alias_reference_traces": {
+    "traces": [
+      {
+        "case": "success_from0_initial_count1",
+        "initial_count": 1,
+        "valid_from": true,
+        "selected_new_slot": 1,
+        "increment": "get_file 1→2",
+        "install": "two distinct fd slots point same file_s",
+        "outer_fdput": "fput 2→1",
+        "end_count": 1,
+        "object_lifetime": "no new counted reference remains for new alias at this wrapper scope",
+        "premise": "stable valid file, single caller, atomic count operations normal, no other writers"
+      },
+      {
+        "case": "success_initial_count2",
+        "initial_count": 2,
+        "valid_from": true,
+        "selected_new_slot": 2,
+        "increment": "get_file 2→3",
+        "install": "same file_s pointer",
+        "outer_fdput": "fput 3→2",
+        "end_count": 2,
+        "object_lifetime": "global refcount unchanged; new alias count not separately proved"
+      },
+      {
+        "case": "success_initial_count3",
+        "initial_count": 3,
+        "valid_from": true,
+        "selected_new_slot": 4,
+        "increment": "get_file 3→4",
+        "install": "same pointer",
+        "outer_fdput": "fput 4→3",
+        "end_count": 3,
+        "object_lifetime": "other owners opaque"
+      },
+      {
+        "case": "success_O_CLOEXEC",
+        "initial_count": 1,
+        "valid_from": true,
+        "selected_new_slot": 1,
+        "increment": "1→2",
+        "install": "flags passed into alloc_fd but not read in alloc_fd or fd_install",
+        "outer_fdput": "2→1",
+        "end_count": 1,
+        "object_lifetime": "close-on-exec bit effect not established"
+      },
+      {
+        "case": "from_ge_nofile",
+        "initial_count": 1,
+        "valid_from": false,
+        "selected_new_slot": null,
+        "increment": "no get_file",
+        "install": "none",
+        "outer_fdput": "1→0; filp_cachep free requested",
+        "end_count": 0,
+        "object_lifetime": "existing source slot still stores pointer conditionally; existing US-01"
+      },
+      {
+        "case": "from_ge_nofile_multi_count",
+        "initial_count": 2,
+        "valid_from": false,
+        "selected_new_slot": null,
+        "increment": "none",
+        "install": "none",
+        "outer_fdput": "2→1",
+        "end_count": 1,
+        "object_lifetime": "remaining holders unknown"
+      },
+      {
+        "case": "F_GETFL_count1",
+        "initial_count": 1,
+        "valid_from": null,
+        "selected_new_slot": null,
+        "increment": "no get_file",
+        "install": "none",
+        "outer_fdput": "1→0",
+        "end_count": 0,
+        "object_lifetime": "existing US-01, f_flags return independent of physical free"
+      },
+      {
+        "case": "F_GETFD_allowed_but_unimplemented_count1",
+        "initial_count": 1,
+        "valid_from": null,
+        "selected_new_slot": null,
+        "increment": "no get_file",
+        "install": "none",
+        "outer_fdput": "1→0",
+        "end_count": 0,
+        "object_lifetime": "default -EINVAL and prior US-01"
+      },
+      {
+        "case": "alloc_fd_unknown_no_slot",
+        "initial_count": 1,
+        "valid_from": true,
+        "selected_new_slot": null,
+        "increment": "not reached in safe proof",
+        "install": "not reached",
+        "outer_fdput": "cannot infer",
+        "end_count": null,
+        "object_lifetime": "uninitialized fd return is earliest invalid control boundary"
+      },
+      {
+        "case": "fd_install_bad_index_or_occupied",
+        "initial_count": 1,
+        "valid_from": true,
+        "selected_new_slot": null,
+        "increment": "only if valid alloc_fd output",
+        "install": "needs legal index/BUG_ON macro path; otherwise stop",
+        "outer_fdput": "cannot infer",
+        "end_count": null,
+        "object_lifetime": "no rollback or counted result after first invalidity"
+      },
+      {
+        "case": "two_aliases_after_first",
+        "initial_count": 1,
+        "valid_from": true,
+        "selected_new_slot": 2,
+        "increment": "1→2",
+        "install": "source and first alias already exist; second installed",
+        "outer_fdput": "2→1",
+        "end_count": 1,
+        "object_lifetime": "3 fd slots share one file_s pointer; not a measured reference bug"
+      }
+    ],
+    "allocator_finite_cases": [
+      {
+        "id": "first_empty",
+        "start": 0,
+        "end": 3,
+        "slots": "0=NULL,1=busy,2=busy",
+        "result": "select0"
+      },
+      {
+        "id": "skip_busy",
+        "start": 1,
+        "end": 3,
+        "slots": "1=busy,2=NULL",
+        "result": "select2"
+      },
+      {
+        "id": "from_last_free",
+        "start": 255,
+        "end": 257,
+        "slots": "255=NULL",
+        "result": "select255 before reading index256"
+      },
+      {
+        "id": "all_256_busy_end_256",
+        "start": 0,
+        "end": 256,
+        "slots": "0..255 busy",
+        "result": "no assignment to local uint fd before return; stop"
+      },
+      {
+        "id": "last_busy_then_beyond",
+        "start": 255,
+        "end": 257,
+        "slots": "255 busy",
+        "result": "attempt fd_array[256], earliest invalid array index"
+      },
+      {
+        "id": "from_256",
+        "start": 256,
+        "end": 300,
+        "slots": "fixed physical fd_array length256",
+        "result": "attempt fd_array[256] at first scan"
+      },
+      {
+        "id": "empty_range",
+        "start": 5,
+        "end": 5,
+        "slots": "no scan",
+        "result": "uninitialized local fd return; cannot assert errno"
+      },
+      {
+        "id": "end_257_early_free",
+        "start": 0,
+        "end": 257,
+        "slots": "0=NULL",
+        "result": "select0 before out-of-range index"
+      },
+      {
+        "id": "end_0_after_narrowing",
+        "start": 0,
+        "end": 0,
+        "slots": "no scan after ulong→uint model",
+        "result": "no fd assignment; output undefined"
+      }
+    ],
+    "rlimit_boundary": "from uint vs ulong nofile; alloc_fd signature accepts uint end; ulong nofile to uint conversion may truncate if out-of-range",
+    "no_reservation_in_alloc_fd": true,
+    "O_CLOEXEC_source_flag": "fcntl passes O_CLOEXEC to f_dupfd; current alloc_fd flags unused and fd_install does not set any per-fd bit",
+    "file_s_alias": "new fd and original fd point to same file_s if installed; not copy of file_s"
+  },
+  "seek_position_return_matrix": {
+    "model_inputs": [
+      {
+        "id": "SET_zero",
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "0",
+        "file_pos_after": "0",
+        "callback_result": "0"
+      },
+      {
+        "id": "SET_eof",
+        "whence": 0,
+        "offset": "10",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "10",
+        "file_pos_after": "10",
+        "callback_result": "10"
+      },
+      {
+        "id": "SET_beyond",
+        "whence": 0,
+        "offset": "11",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "11",
+        "file_pos_after": "5",
+        "callback_result": "-EOVERFLOW"
+      },
+      {
+        "id": "SET_negative",
+        "whence": 0,
+        "offset": "-1",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "-1",
+        "file_pos_after": "5",
+        "callback_result": "-EOVERFLOW"
+      },
+      {
+        "id": "CUR_plus3",
+        "whence": 1,
+        "offset": "3",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "8",
+        "file_pos_after": "8",
+        "callback_result": "8"
+      },
+      {
+        "id": "CUR_minus5",
+        "whence": 1,
+        "offset": "-5",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "0",
+        "file_pos_after": "0",
+        "callback_result": "0"
+      },
+      {
+        "id": "CUR_minus6",
+        "whence": 1,
+        "offset": "-6",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "-1",
+        "file_pos_after": "5",
+        "callback_result": "-EOVERFLOW"
+      },
+      {
+        "id": "END_minus2",
+        "whence": 2,
+        "offset": "-2",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "8",
+        "file_pos_after": "8",
+        "callback_result": "8"
+      },
+      {
+        "id": "END_eof",
+        "whence": 2,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "10",
+        "file_pos_after": "10",
+        "callback_result": "10"
+      },
+      {
+        "id": "END_plus1",
+        "whence": 2,
+        "offset": "1",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "11",
+        "file_pos_after": "5",
+        "callback_result": "-EOVERFLOW"
+      },
+      {
+        "id": "SEEK_DATA3",
+        "whence": 3,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "default",
+        "file_pos_after": "5",
+        "callback_result": "FAT32_lseek -EINVAL if selected and valid, outer whence3 passes <SEEK_MAX4"
+      },
+      {
+        "id": "SEEK_HOLE4",
+        "whence": 4,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "not invoked",
+        "file_pos_after": "5",
+        "callback_result": "syscall early -EINVAL"
+      },
+      {
+        "id": "bad_fd_ge_fd_count",
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "not invoked",
+        "file_pos_after": "unknown",
+        "callback_result": "syscall early -EBADF if files valid and range comparison completes"
+      },
+      {
+        "id": "slot_NULL",
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "first invalid fp->f_op read",
+        "file_pos_after": "unknown",
+        "callback_result": "no safe zero or errno"
+      },
+      {
+        "id": "f_op_NULL",
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "no llseek dispatch",
+        "file_pos_after": "5",
+        "callback_result": "ret initialized0 returned; not proof position now0"
+      },
+      {
+        "id": "llseek_NULL",
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "no llseek dispatch",
+        "file_pos_after": "5",
+        "callback_result": "same source default ret0"
+      },
+      {
+        "id": "CUR_signed_overflow",
+        "whence": 1,
+        "offset": "1",
+        "initial_pos": "9223372036854775807",
+        "size": "9223372036854775807",
+        "expected_pos": "signed addition outside range",
+        "file_pos_after": "unproven",
+        "callback_result": "analysis STOP before -EOVERFLOW guarantee"
+      },
+      {
+        "id": "END_signed_overflow",
+        "whence": 2,
+        "offset": "1",
+        "initial_pos": "5",
+        "size": "9223372036854775807",
+        "expected_pos": "signed addition outside range",
+        "file_pos_after": "unproven",
+        "callback_result": "analysis STOP"
+      },
+      {
+        "id": "two_fd_alias_seek",
+        "whence": 1,
+        "offset": "2",
+        "initial_pos": "5",
+        "size": "10",
+        "expected_pos": "7",
+        "file_pos_after": "7",
+        "callback_result": "7 if valid shared file_s and method; both slots observe same f_pos"
+      }
+    ],
+    "constants": {
+      "SEEK_SET": 0,
+      "SEEK_CUR": 1,
+      "SEEK_END": 2,
+      "SEEK_DATA": 3,
+      "SEEK_HOLE": 4,
+      "SEEK_MAX": 4
+    },
+    "source_types": {
+      "syscall_fd": "unsigned int",
+      "syscall_whence": "unsigned int",
+      "syscall_offset": "off_t via __kernel_off_t = long",
+      "fat_offset": "loff_t via __kernel_loff_t = long long",
+      "fat_pos": "long",
+      "outer_ret": "unsigned long",
+      "wrapper_return": "long (source macro, not preprocessed)"
+    },
+    "conditional_cast": "negative loff_t callback result implicitly converts to ulong and then to long at syscall wrapper; LP64 two's-complement modulo model is not compiled ABI evidence",
+    "directory_comparison": "R59 FAT32_getdents64 uses ctx.pos=-1 sentinel and resets iobuf cursor on other positions; does not establish universal seek semantics"
+  },
+  "finite_model_cases": [
+    {
+      "id": "A-CMD-1",
+      "group": "A",
+      "input": {
+        "mode": "ordinary_valid_file",
+        "cmd": "F_DUPFD",
+        "cmd_value": 0
+      },
+      "outcome": "f_dupfd(argi,file,0)"
+    },
+    {
+      "id": "A-CMD-2",
+      "group": "A",
+      "input": {
+        "mode": "ordinary_valid_file",
+        "cmd": "F_DUPFD_CLOEXEC",
+        "cmd_value": 1030
+      },
+      "outcome": "f_dupfd(argi,file,O_CLOEXEC)"
+    },
+    {
+      "id": "A-CMD-3",
+      "group": "A",
+      "input": {
+        "mode": "ordinary_valid_file",
+        "cmd": "F_GETFD",
+        "cmd_value": 1
+      },
+      "outcome": "do_fcntl default -EINVAL because case commented"
+    },
+    {
+      "id": "A-CMD-4",
+      "group": "A",
+      "input": {
+        "mode": "ordinary_valid_file",
+        "cmd": "F_SETFD",
+        "cmd_value": 2
+      },
+      "outcome": "do_fcntl default -EINVAL because case commented"
+    },
+    {
+      "id": "A-CMD-5",
+      "group": "A",
+      "input": {
+        "mode": "ordinary_valid_file",
+        "cmd": "F_GETFL",
+        "cmd_value": 3
+      },
+      "outcome": "returns filp->f_flags"
+    },
+    {
+      "id": "A-CMD-6",
+      "group": "A",
+      "input": {
+        "mode": "ordinary_valid_file",
+        "cmd": "F_SETFL",
+        "cmd_value": 4
+      },
+      "outcome": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF"
+    },
+    {
+      "id": "A-CMD-7",
+      "group": "A",
+      "input": {
+        "mode": "ordinary_valid_file",
+        "cmd": "UNRECOGNIZED",
+        "cmd_value": 9999
+      },
+      "outcome": "do_fcntl default -EINVAL if not PATH; PATH early -EBADF"
+    },
+    {
+      "id": "A-CMD-8",
+      "group": "A",
+      "input": {
+        "mode": "FMODE_PATH_valid_file",
+        "cmd": "F_DUPFD",
+        "cmd_value": 0
+      },
+      "outcome": "f_dupfd(argi,file,0)"
+    },
+    {
+      "id": "A-CMD-9",
+      "group": "A",
+      "input": {
+        "mode": "FMODE_PATH_valid_file",
+        "cmd": "F_DUPFD_CLOEXEC",
+        "cmd_value": 1030
+      },
+      "outcome": "f_dupfd(argi,file,O_CLOEXEC)"
+    },
+    {
+      "id": "A-CMD-10",
+      "group": "A",
+      "input": {
+        "mode": "FMODE_PATH_valid_file",
+        "cmd": "F_GETFD",
+        "cmd_value": 1
+      },
+      "outcome": "do_fcntl default -EINVAL because case commented"
+    },
+    {
+      "id": "A-CMD-11",
+      "group": "A",
+      "input": {
+        "mode": "FMODE_PATH_valid_file",
+        "cmd": "F_SETFD",
+        "cmd_value": 2
+      },
+      "outcome": "do_fcntl default -EINVAL because case commented"
+    },
+    {
+      "id": "A-CMD-12",
+      "group": "A",
+      "input": {
+        "mode": "FMODE_PATH_valid_file",
+        "cmd": "F_GETFL",
+        "cmd_value": 3
+      },
+      "outcome": "returns filp->f_flags"
+    },
+    {
+      "id": "A-CMD-13",
+      "group": "A",
+      "input": {
+        "mode": "FMODE_PATH_valid_file",
+        "cmd": "F_SETFL",
+        "cmd_value": 4
+      },
+      "outcome": "early -EBADF before do_fcntl, but fdput runs"
+    },
+    {
+      "id": "A-CMD-14",
+      "group": "A",
+      "input": {
+        "mode": "FMODE_PATH_valid_file",
+        "cmd": "UNRECOGNIZED",
+        "cmd_value": 9999
+      },
+      "outcome": "early -EBADF before do_fcntl, but fdput runs"
+    },
+    {
+      "id": "A-ARG-1",
+      "group": "A",
+      "input": "0",
+      "output": "0",
+      "limit": "exact within int32 range"
+    },
+    {
+      "id": "A-ARG-2",
+      "group": "A",
+      "input": "1",
+      "output": "1",
+      "limit": "exact within int32 range"
+    },
+    {
+      "id": "A-ARG-3",
+      "group": "A",
+      "input": "255",
+      "output": "255",
+      "limit": "exact within int32 range"
+    },
+    {
+      "id": "A-ARG-4",
+      "group": "A",
+      "input": "256",
+      "output": "256",
+      "limit": "exact within int32 range"
+    },
+    {
+      "id": "A-ARG-5",
+      "group": "A",
+      "input": "2147483647",
+      "output": "2147483647",
+      "limit": "exact within int32 range"
+    },
+    {
+      "id": "A-ARG-6",
+      "group": "A",
+      "input": "2147483648",
+      "output": "-2147483648",
+      "limit": "out of int range: implementation-defined conversion; target low32 only an explicitly assumed implementation"
+    },
+    {
+      "id": "A-ARG-7",
+      "group": "A",
+      "input": "4294967295",
+      "output": "-1",
+      "limit": "out of int range: implementation-defined conversion; target low32 only an explicitly assumed implementation"
+    },
+    {
+      "id": "A-ARG-8",
+      "group": "A",
+      "input": "4294967296",
+      "output": "0",
+      "limit": "out of int range: implementation-defined conversion; target low32 only an explicitly assumed implementation"
+    },
+    {
+      "id": "A-ARG-9",
+      "group": "A",
+      "input": "4294967301",
+      "output": "5",
+      "limit": "out of int range: implementation-defined conversion; target low32 only an explicitly assumed implementation"
+    },
+    {
+      "id": "A-ARG-10",
+      "group": "A",
+      "input": "18446744073709551615",
+      "output": "-1",
+      "limit": "out of int range: implementation-defined conversion; target low32 only an explicitly assumed implementation"
+    },
+    {
+      "id": "B-ALLOC-1",
+      "group": "B",
+      "input": {
+        "start": 0,
+        "end": 3,
+        "slots": "0=NULL,1=busy,2=busy"
+      },
+      "outcome": "select0"
+    },
+    {
+      "id": "B-ALLOC-2",
+      "group": "B",
+      "input": {
+        "start": 1,
+        "end": 3,
+        "slots": "1=busy,2=NULL"
+      },
+      "outcome": "select2"
+    },
+    {
+      "id": "B-ALLOC-3",
+      "group": "B",
+      "input": {
+        "start": 255,
+        "end": 257,
+        "slots": "255=NULL"
+      },
+      "outcome": "select255 before reading index256"
+    },
+    {
+      "id": "B-ALLOC-4",
+      "group": "B",
+      "input": {
+        "start": 0,
+        "end": 256,
+        "slots": "0..255 busy"
+      },
+      "outcome": "no assignment to local uint fd before return; stop"
+    },
+    {
+      "id": "B-ALLOC-5",
+      "group": "B",
+      "input": {
+        "start": 255,
+        "end": 257,
+        "slots": "255 busy"
+      },
+      "outcome": "attempt fd_array[256], earliest invalid array index"
+    },
+    {
+      "id": "B-ALLOC-6",
+      "group": "B",
+      "input": {
+        "start": 256,
+        "end": 300,
+        "slots": "fixed physical fd_array length256"
+      },
+      "outcome": "attempt fd_array[256] at first scan"
+    },
+    {
+      "id": "B-ALLOC-7",
+      "group": "B",
+      "input": {
+        "start": 5,
+        "end": 5,
+        "slots": "no scan"
+      },
+      "outcome": "uninitialized local fd return; cannot assert errno"
+    },
+    {
+      "id": "B-ALLOC-8",
+      "group": "B",
+      "input": {
+        "start": 0,
+        "end": 257,
+        "slots": "0=NULL"
+      },
+      "outcome": "select0 before out-of-range index"
+    },
+    {
+      "id": "B-ALLOC-9",
+      "group": "B",
+      "input": {
+        "start": 0,
+        "end": 0,
+        "slots": "no scan after ulong→uint model"
+      },
+      "outcome": "no fd assignment; output undefined"
+    },
+    {
+      "id": "B-REF-1",
+      "group": "B",
+      "input": "success_from0_initial_count1",
+      "output": {
+        "end_count": 1,
+        "slot": "two distinct fd slots point same file_s"
+      },
+      "limit": "no new counted reference remains for new alias at this wrapper scope"
+    },
+    {
+      "id": "B-REF-2",
+      "group": "B",
+      "input": "success_initial_count2",
+      "output": {
+        "end_count": 2,
+        "slot": "same file_s pointer"
+      },
+      "limit": "global refcount unchanged; new alias count not separately proved"
+    },
+    {
+      "id": "B-REF-3",
+      "group": "B",
+      "input": "success_initial_count3",
+      "output": {
+        "end_count": 3,
+        "slot": "same pointer"
+      },
+      "limit": "other owners opaque"
+    },
+    {
+      "id": "B-REF-4",
+      "group": "B",
+      "input": "success_O_CLOEXEC",
+      "output": {
+        "end_count": 1,
+        "slot": "flags passed into alloc_fd but not read in alloc_fd or fd_install"
+      },
+      "limit": "close-on-exec bit effect not established"
+    },
+    {
+      "id": "B-REF-5",
+      "group": "B",
+      "input": "from_ge_nofile",
+      "output": {
+        "end_count": 0,
+        "slot": "none"
+      },
+      "limit": "existing source slot still stores pointer conditionally; existing US-01"
+    },
+    {
+      "id": "B-REF-6",
+      "group": "B",
+      "input": "from_ge_nofile_multi_count",
+      "output": {
+        "end_count": 1,
+        "slot": "none"
+      },
+      "limit": "remaining holders unknown"
+    },
+    {
+      "id": "B-REF-7",
+      "group": "B",
+      "input": "F_GETFL_count1",
+      "output": {
+        "end_count": 0,
+        "slot": "none"
+      },
+      "limit": "existing US-01, f_flags return independent of physical free"
+    },
+    {
+      "id": "B-REF-8",
+      "group": "B",
+      "input": "F_GETFD_allowed_but_unimplemented_count1",
+      "output": {
+        "end_count": 0,
+        "slot": "none"
+      },
+      "limit": "default -EINVAL and prior US-01"
+    },
+    {
+      "id": "B-REF-9",
+      "group": "B",
+      "input": "alloc_fd_unknown_no_slot",
+      "output": {
+        "end_count": null,
+        "slot": "not reached"
+      },
+      "limit": "uninitialized fd return is earliest invalid control boundary"
+    },
+    {
+      "id": "B-REF-10",
+      "group": "B",
+      "input": "fd_install_bad_index_or_occupied",
+      "output": {
+        "end_count": null,
+        "slot": "needs legal index/BUG_ON macro path; otherwise stop"
+      },
+      "limit": "no rollback or counted result after first invalidity"
+    },
+    {
+      "id": "B-REF-11",
+      "group": "B",
+      "input": "two_aliases_after_first",
+      "output": {
+        "end_count": 1,
+        "slot": "source and first alias already exist; second installed"
+      },
+      "limit": "3 fd slots share one file_s pointer; not a measured reference bug"
+    },
+    {
+      "id": "C-SEEK-1",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "0",
+        "file_position": "0"
+      }
+    },
+    {
+      "id": "C-SEEK-2",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "10",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "10",
+        "file_position": "10"
+      }
+    },
+    {
+      "id": "C-SEEK-3",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "11",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "-EOVERFLOW",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-4",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "-1",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "-EOVERFLOW",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-5",
+      "group": "C",
+      "input": {
+        "whence": 1,
+        "offset": "3",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "8",
+        "file_position": "8"
+      }
+    },
+    {
+      "id": "C-SEEK-6",
+      "group": "C",
+      "input": {
+        "whence": 1,
+        "offset": "-5",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "0",
+        "file_position": "0"
+      }
+    },
+    {
+      "id": "C-SEEK-7",
+      "group": "C",
+      "input": {
+        "whence": 1,
+        "offset": "-6",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "-EOVERFLOW",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-8",
+      "group": "C",
+      "input": {
+        "whence": 2,
+        "offset": "-2",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "8",
+        "file_position": "8"
+      }
+    },
+    {
+      "id": "C-SEEK-9",
+      "group": "C",
+      "input": {
+        "whence": 2,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "10",
+        "file_position": "10"
+      }
+    },
+    {
+      "id": "C-SEEK-10",
+      "group": "C",
+      "input": {
+        "whence": 2,
+        "offset": "1",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "-EOVERFLOW",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-11",
+      "group": "C",
+      "input": {
+        "whence": 3,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "FAT32_lseek -EINVAL if selected and valid, outer whence3 passes <SEEK_MAX4",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-12",
+      "group": "C",
+      "input": {
+        "whence": 4,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "syscall early -EINVAL",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-13",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "syscall early -EBADF if files valid and range comparison completes",
+        "file_position": "unknown"
+      }
+    },
+    {
+      "id": "C-SEEK-14",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "no safe zero or errno",
+        "file_position": "unknown"
+      }
+    },
+    {
+      "id": "C-SEEK-15",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "ret initialized0 returned; not proof position now0",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-16",
+      "group": "C",
+      "input": {
+        "whence": 0,
+        "offset": "0",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "same source default ret0",
+        "file_position": "5"
+      }
+    },
+    {
+      "id": "C-SEEK-17",
+      "group": "C",
+      "input": {
+        "whence": 1,
+        "offset": "1",
+        "initial_pos": "9223372036854775807",
+        "size": "9223372036854775807"
+      },
+      "outcome": {
+        "callback": "analysis STOP before -EOVERFLOW guarantee",
+        "file_position": "unproven"
+      }
+    },
+    {
+      "id": "C-SEEK-18",
+      "group": "C",
+      "input": {
+        "whence": 2,
+        "offset": "1",
+        "initial_pos": "5",
+        "size": "9223372036854775807"
+      },
+      "outcome": {
+        "callback": "analysis STOP",
+        "file_position": "unproven"
+      }
+    },
+    {
+      "id": "C-SEEK-19",
+      "group": "C",
+      "input": {
+        "whence": 1,
+        "offset": "2",
+        "initial_pos": "5",
+        "size": "10"
+      },
+      "outcome": {
+        "callback": "7 if valid shared file_s and method; both slots observe same f_pos",
+        "file_position": "7"
+      }
+    }
+  ],
+  "finite_model_count": 63,
+  "model_groups": {
+    "A": 24,
+    "B": 20,
+    "C": 19
+  },
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "fdget_raw/__to_fd flags3 without get_file; fdput fput extra, duplicated fcntl new slot consumer not new root",
+      "original_state_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "close directly kfree instead of reference fput, use for cross-interface caveat only",
+      "original_state_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-11",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "uninitialized alloc_fd result/out-of-bound fd, do not reassign to DC61",
+      "original_state_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-09",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "dup_fd copies file object not same as f_dupfd alias",
+      "original_state_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "__simple_fget count increment and NULL issue differs from fdget_raw",
+      "original_state_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-FD-CLOSE-42::CL42-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "static init_files source/free is separate prior lifetime issue",
+      "original_state_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-FILES-COPY-SHARE-43::FT43-F01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "dup_fd copies file_s with unchecked kzalloc, not f_dupfd",
+      "original_state_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "FAT directory iterate ctx.pos reset is separate from FAT32_lseek f_pos",
+      "original_state_unchanged": true
+    }
+  ],
+  "unproven": [
+    "real fd index file validity under current task",
+    "physical file_s and file cache lifetime",
+    "actual O_CLOEXEC per-fd state/exec path",
+    "actual syscall wrapper preprocessing/ABI behavior",
+    "actual lseek disk/file size and underlying FAT runtime",
+    "all concurrent f_count writers",
+    "C implementation-defined cast results for out-of-range signed input",
+    "safety of out-of-bounds fd_array input or missing methods",
+    "f_dupfd allocation complete or reservation fairness"
+  ]
+}

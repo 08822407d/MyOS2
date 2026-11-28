@@ -1,0 +1,117 @@
+// ---
+// task_id: MYOS2-LEAD-002-CORE-CHECK-01
+// track_id: MYOS2-LEAD-002
+// followup_id: CORE-USER-EARLY-ROOT-HANDOFF-84
+// produced_by: GPT-6 (Chat self-report, backend not attested)
+// model_per_owner: GPT-6 + Extra (owner-reported)
+// date: 2026-11-13
+// base_snapshot: time
+// read_channel: connector
+// status: final_static_only
+// runtime_evidence: NOT_RUN
+// ---
+// G01/G02/G03 static source paths only. Solid edge = source statement or explicit call.
+// Dashed edge = conditional prerequisite/inferred handoff; no boot or CPU execution validated.
+digraph ER84_Early_Root_Handoff {
+  graph [rankdir=LR, labelloc=t, label="ER84 static page-table storage/fixup/C-entry handoff (time@a039d9803ade; NOT_RUN)"];
+  node [shape=box, fontsize=10];
+  edge [fontsize=9];
+  subgraph cluster_A {
+    label="G01/A: static storage and high mapping";
+    a_startup [label="head_64.S startup_64\n.head.text.startup"];
+    a_root [label="early_top_pgt\n.init.data 1x4KiB\n[511] -> level3"];
+    a_dynamic [label="early_dynamic_pgts\n.init.data 64x4KiB"];
+    a_level3 [label="level3_kernel_pgt\n.data 1x4KiB\n[510]=kernel [511]=fixmap"];
+    a_level2 [label="level2_kernel_pgt\n.data 256/512 x8-byte\nPMDS base i*2MiB"];
+    a_fixmap [label="level2_fixmap_pgt\n.data 512 zero"];
+    a_initroot [label="init_top_pgt\nC global 512x8-byte\nBSS/COMMON candidate"];
+    a_initialcode [label="initial_code\n.ref.data (orphan placement unproved)"];
+    a_imgconf [label="KERNEL_IMAGE_SIZE\n512MiB /1GiB conditional", shape=note];
+    a_link [label="kernel.lds\nentry/sections/BSS/_end\nASSERT <=1GiB", shape=note];
+    a_root -> a_level3 [label="entry 511 initial"];
+    a_level3 -> a_level2 [label="PUD 510 initial"];
+    a_level3 -> a_fixmap [label="PUD 511 initial"];
+    a_imgconf -> a_level2 [label="PMDS count"];
+    a_link -> a_root [label=".init.data", style=dashed];
+    a_link -> a_initroot [label="BSS candidate", style=dashed];
+    a_link -> a_initialcode [label="placement unproved", style=dashed];
+  }
+  subgraph cluster_B {
+    label="G02/B: early address fixup and identity window";
+    b_boot_regs [label="boot 1:1 mapping, RSI/R15\nand GDT/IDT helper", shape=note];
+    b_p2v [label="p2v_offset\nRIP(common) - linked common"];
+    b_startupC [label="__startup_64\nRIP physical _text"];
+    b_physguard [label="if physaddr >>46\nspin forever", shape=diamond];
+    b_delta [label="load_delta=base+p2v\nphys_base=load_delta"];
+    b_alignguard [label="if delta &~PMD_MASK\nspin forever", shape=diamond];
+    b_hfix [label="root[511] += delta\nlevel3[510,511] += delta"];
+    b_scratch [label="PUD=early_pgts[0]\nPMD=early_pgts[1]\nnext_early_pgt=2"];
+    b_i [label="PGD[i],PGD[i+1] -> PUD\nunder phys<2^46: i<=127"];
+    b_pud [label="PUD[j%512],PUD[(j+1)%512]\n-> same PMD"];
+    b_pmd [label="N=ceil((_end-_text)/2MiB)\nPMD[(start_slot+k)%512]\n=physical+flags"];
+    b_memcpy [label="boot_params / multiboot_MBI\nselected memcpy"];
+    b_return [label="return 0"];
+    b_cr3 [label="mov %rax,%cr3\nrax=return+RIP(early_top)"];
+    b_hi [label="jmp linked common_startup_64"];
+    b_delta_nonzero [label="ER84-F01 nonzero delta\nstatic high PMD leaves not fixed", shape=note];
+    b_boot_regs -> b_p2v [label="if helper returns", style=dashed];
+    a_startup -> b_p2v [label="assembly"];
+    b_p2v -> b_startupC [label="rdi p2v,rsi saved boot param"];
+    b_startupC -> b_physguard;
+    b_physguard -> b_delta [label="phys<2^46"];
+    b_physguard -> b_physguard [label="invalid: nonreturn"];
+    b_delta -> b_alignguard;
+    b_alignguard -> b_hfix [label="2MiB aligned"];
+    b_alignguard -> b_alignguard [label="misaligned: nonreturn"];
+    a_root -> b_hfix [label="fixup slot511"];
+    a_level3 -> b_hfix [label="fixup PUD pointers"];
+    a_dynamic -> b_scratch [label="two pages"];
+    b_hfix -> b_scratch [label="if addresses accessible",style=dashed];
+    b_scratch -> b_i -> b_pud -> b_pmd -> b_memcpy -> b_return -> b_cr3 -> b_hi;
+    b_delta -> b_delta_nonzero [label="delta!=0",style=dashed];
+    b_delta_nonzero -> a_level2 [label="condition: leaf mismatch risk",style=dashed];
+  }
+  subgraph cluster_C {
+    label="G03/C: later C root lifetime and handoff";
+    c_common [label="common_startup_64\ninside secondary_startup_64"];
+    c_call [label="call *initial_code(%rip)\nC entry pointer"];
+    c_entry [label="x86_64_start_kernel"];
+    c_bss [label="clear_bss\n[__bss_start,__bss_stop)"];
+    c_clear [label="clear_page(init_top_pgt)"];
+    c_idt [label="idt_setup_early_handler"];
+    c_early [label="myos_early_init_system"];
+    c_exit [label="if early callee does not return\nno root copy / start_kernel",shape=note];
+    c_copy [label="init_top_pgt[511]=early_top_pgt[511]\nONE value, shared child"];
+    c_startkernel [label="start_kernel"];
+    c_setup [label="setup_arch(NULL)"];
+    c_alloc [label="early_alloc_pgt_buf"];
+    c_direct [label="myos_early_map_pgt_buf_into_directmap\nearly root then copy direct-map root"];
+    c_map [label="init_mem_mapping"];
+    c_final [label="load_cr3(swapper_pg_dir)\n__flush_tlb_all()"];
+    c_unknown [label="active CR3 / pagewalk /\nTLB hardware state unproved",shape=note];
+    b_hi -> c_common [label="target address; mapping gate",style=dashed];
+    a_initialcode -> c_call [label="function pointer"];
+    c_common -> c_call [label="after stack/segments, conditional"];
+    c_call -> c_entry [label="if target mapped / call succeeds",style=dashed];
+    c_entry -> c_bss -> c_clear -> c_idt -> c_early -> c_copy -> c_startkernel -> c_setup;
+    c_early -> c_exit [label="non-return hypothetical",style=dashed];
+    a_initroot -> c_clear;
+    a_root -> c_copy [label="source entry511"];
+    a_initroot -> c_copy [label="dest entry511"];
+    c_setup -> c_alloc -> c_direct -> c_map -> c_final;
+    a_root -> c_direct [label="direct-map slot"];
+    a_initroot -> c_direct [label="copy after flush"];
+    a_initroot -> c_final [label="swapper_pg_dir alias"];
+    c_final -> c_unknown [label="not hardware test",style=dashed];
+  }
+  subgraph cluster_limit {
+    label="Review inherited limits (not new execution paths)";
+    l81 [label="R81-S01/S02/S03\nPT81-U03/U06",shape=note];
+    l82 [label="R82-S01/S02/S03\nDM82-U08",shape=note];
+    l83 [label="R83-S01/S02/S03\nTI83-F/U boundaries",shape=note];
+    l81 -> c_direct [style=dashed,label="not closed"];
+    l82 -> c_map [style=dashed,label="phase/count limited"];
+    l83 -> b_pmd [style=dashed,label="present/index/actual writes"];
+  }
+}
+// The graph is source-derived; no DOT tool or repository code executed.

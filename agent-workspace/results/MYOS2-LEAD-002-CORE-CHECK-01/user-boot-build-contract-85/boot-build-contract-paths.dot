@@ -1,0 +1,127 @@
+// ---
+// task_id: MYOS2-LEAD-002-CORE-CHECK-01
+// track_id: MYOS2-LEAD-002
+// followup_id: CORE-USER-BOOT-BUILD-CONTRACT-85
+// produced_by: GPT-6 (backend unknown)
+// model_per_owner: GPT-6 + Extra
+// date: 2026-11-13
+// base_snapshot: time
+// read_channel: connector
+// status: static_analysis_pending_mainline
+// build_execution: NOT_RUN
+// ---
+// This graph is a source-program/control/dependency view only.
+// Solid = direct text include, macro, target declaration or exact consumer.
+// Dashed = conditional artifact creation or unresolved data effect.
+// Dotted = local source order, declared command sequence or conditional stage, NOT a C call.
+// Labels distinguish CMake declaration from executed processes.
+digraph BB85_BootBuild_Contract {
+  graph [rankdir=LR, label="BB85 build inputs / offsets / link handoff (source only, NOT_RUN)", labelloc=t, fontsize=15];
+  node [shape=box, fontsize=10];
+  edge [fontsize=9];
+  subgraph cluster_A {
+    label="G01/A | CMake source selection and configuration";
+    root [label="mykernel/CMakeLists.txt\nproject ASM C"];
+    vars [label="SCRIPTS_PATH / ARCH\nPROJECT_SOURCE_DIR"];
+    options [label="options_flags.cmake\nCFLAGS/ASMFLAGS/link strings"];
+    debug [label="CMAKE_BUILD_TYPE\n-DDEBUG vs -DRELEASE",shape=note];
+    glob_kbuild [label="KBUILD_FILES\narch/ARCH/kbuild/*"];
+    glob_C [label="KERNEL_C_SRCS\nGLOB_RECURSE *.c"];
+    glob_S [label="KERNEL_ASM_SRCS\nGLOB_RECURSE *.S"];
+    remove [label="list REMOVE_ITEM\nKBUILD_FILES"];
+    kernel [label="kernel target\ntarget_sources and includes"];
+    arch [label="add_subdirectory(arch)\nthen add_subdirectory(ARCH)"];
+    archflags [label="arch/x86_64\nchild CMAKE_C_FLAGS"];
+    srcC [label="head64.c\nC candidate"];
+    srcS [label="head_64.S\nASM candidate"];
+    root -> vars [label="set"];
+    vars -> options [label="include"];
+    options -> debug [label="conditional branch"];
+    root -> glob_kbuild [label="file GLOB"];
+    root -> glob_C [label="file GLOB"];
+    root -> glob_S [label="file GLOB"];
+    glob_kbuild -> remove [label="exclusion inputs"];
+    glob_C -> remove [label="C list"];
+    glob_S -> remove [label="ASM list"];
+    remove -> kernel [label="target_sources"];
+    glob_C -> srcC [label="possible match", style=dashed];
+    glob_S -> srcS [label="possible match", style=dashed];
+    kernel -> arch [label="add_subdirectory declaration"];
+    arch -> archflags [label="subdir variable update"];
+    archflags -> kernel [style=dashed,label="effective flags unresolved"];
+  }
+  subgraph cluster_B {
+    label="G02/B | asm-offset generator chain";
+    off_tgt [label="asm-offset target\nadd_executable + -save-temps"];
+    off_c [label="arch/ARCH/kbuild/asm-offsets.c"];
+    off_64 [label="asm-offsets_64.c\nincluded source"];
+    kbuild_macros [label="kbuild.h\nOFFSET -> DEFINE -> .ascii"];
+    type_defs [label="task_struct.thread.sp\npt_regs fields",shape=note];
+    temp_s [label="expected asm-offsets.c.s\nactual compiler path UNKNOWN"];
+    post [label="asm-offset POST_BUILD\nrm / copy / generate COMMAND texts"];
+    copy [label="asm-offset_copy_asm.py\nglob and matching_files[0]"];
+    interm [label="source-tree asm-offsets.s"];
+    gen [label="asm-offsets_generate.py\nmarker regex / split / open output"];
+    header [label="include/generated/asm-offsets.h\ntracked snapshot (freshness UNKNOWN)"];
+    asmcons [label="head_64.S uses\nTASK_threadsp(%rax)"];
+    stale [label="no-match / IndexError / malformed field\npossible old or absent header",shape=note];
+    root -> off_tgt [label="include target_kbuild"];
+    off_tgt -> off_c [label="target_sources"];
+    off_c -> off_64 [label="source #include"];
+    off_c -> kbuild_macros [label="OFFSET/DEFINE source use"];
+    off_64 -> kbuild_macros [label="OFFSET source use"];
+    type_defs -> kbuild_macros [label="offsetof/sizeof expressions"];
+    off_tgt -> temp_s [style=dashed,label="-save-temps expectation"];
+    off_tgt -> post [label="POST_BUILD declaration"];
+    temp_s -> copy [style=dashed,label="glob candidate"];
+    post -> copy [style=dotted,label="COMMAND copy text"];
+    copy -> interm [style=dashed,label="conditional shutil.copy"];
+    post -> gen [style=dotted,label="next COMMAND text"];
+    interm -> gen [style=dashed,label="input candidate"];
+    gen -> header [style=dashed,label="conditional write after parse"];
+    copy -> stale [style=dashed,label="empty/multiple matches"];
+    gen -> stale [style=dashed,label="missing fields/spacing"];
+    header -> asmcons [label="source #include and macro use; freshness unknown"];
+    off_tgt -> kernel [label="add_dependencies(kernel,asm-offset) declared"];
+  }
+  subgraph cluster_C {
+    label="G03/C | link script and delivery boundary";
+    target_link [label="target_kernel.cmake\n-T arch/ARCH/kernel.lds"];
+    lds [label="kernel.lds\nENTRY/PHDRS/SECTIONS/ASSERT"];
+    text_output [label=".text output\nKEEP(.head.text.startup/.head.text)"];
+    init_output [label=".init.data output\nmatch .init.data"];
+    data_output [label=".data output\nmatch .data/.data.rel*"];
+    bss_output [label=".bss output\nmatch .bss*/COMMON"];
+    refdata [label="initial_code .ref.data input\nfinal orphan mapping UNKNOWN"];
+    rootpgt [label="init_top_pgt C global\nBSS/COMMON candidate"];
+    entry [label="phys_startup_64\nstartup_64 - high link base"];
+    phdr [label="text/data PT_LOAD declarations\nreal ELF UNKNOWN"];
+    finalelf [label="kernel executable\nnot linked or observed"];
+    install [label="install(TARGETS kernel DESTINATION boot)\nNOT_RUN"];
+    copied [label="POST_BUILD header copy\nNOT_RUN"];
+    kernel -> target_link [label="target_link_options"];
+    target_link -> lds [label="-T path declaration"];
+    lds -> entry [label="linker source expression"];
+    srcS -> text_output [style=dashed,label="expected input section"];
+    lds -> text_output [label="KEEP/wildcard source"];
+    lds -> init_output [label="section input pattern"];
+    lds -> data_output [label="section input pattern"];
+    lds -> bss_output [label="section input pattern"];
+    srcS -> refdata [label="__REFDATA + initial_code"];
+    refdata -> lds [style=dashed,label="orphan placement unproved"];
+    rootpgt -> bss_output [style=dashed,label="compiler section unresolved"];
+    lds -> phdr [label="PHDRS declarations"];
+    phdr -> finalelf [style=dashed,label="only if link succeeds"];
+    finalelf -> install [style=dashed,label="install separate stage"];
+    kernel -> copied [style=dotted,label="POST_BUILD command text"];
+  }
+  subgraph cluster_D {
+    label="D00 | R84-01 annotation-only";
+    return84 [label="R84-01: documentation RETURN\nE06/E07/E09/E12/E13/E18/E20/E22/E38",shape=note];
+    fix85 [label="BB85-E001..E032 + E119\nnew compliant short anchors\nold 84 original preserved",shape=note];
+    mainline [label="C06 Pro independent adjudication\nPENDING; no self-closure",shape=note];
+    return84 -> fix85 [label="correction map"];
+    fix85 -> mainline [style=dashed,label="review to close; not yet"];
+  }
+}
+// No CMake/Python/GCC/linker/Graphviz or repository code executed to construct this file.

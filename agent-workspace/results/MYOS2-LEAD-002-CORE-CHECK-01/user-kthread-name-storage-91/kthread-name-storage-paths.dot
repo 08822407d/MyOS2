@@ -1,0 +1,130 @@
+// MYOS2-LEAD-002-CHAT-EXEC-12 | CORE-USER-KTHREAD-NAME-STORAGE-91
+// Static source/ownership diagram only, fixed time@a039d9803ade.
+// Blue solid = direct active function invocation; black solid = data/macro dependency;
+// dotted = local source order, or copy/assignment flow annotated at each edge;
+// dashed = conditional path, hypothetical state, historical corrective mapping, not direct call.
+// Not a complete CFG, not an execution/scheduling guarantee. Graphviz NOT_RUN.
+digraph KN91_Name_Storage {
+  graph [rankdir=LR,labelloc=t,label="91: format counts, two-pass heap name, full vs short task name, bounded cleanup"];
+  node [shape=box,fontsize=10]; edge [fontsize=9];
+
+  subgraph cluster_D00 {
+    label="D00 / R90-01 and R90-02 append-only correction, pending C06 Pro";
+    old_mf [shape=note,label="old90 MANIFEST P6 canonical fields missing\noriginal six raw tag counts 0/0/0/0/0/59\nhistorical constructor 59/59/0 not P6"];
+    p6 [shape=note,label="91 MANIFEST own canonical P6 fields\nverified_claims / quotes_reconfirmed / downgraded_to_inferred\npostwrite raw all-file count must match"];
+    old013 [shape=note,label="IDA90-E013: 3 independent macros\nwrongly quoted under IDA_BITMAP_LONGS"];
+    cnst [label="KN91-E001 MYOS_IDR_BUF_SIZE=32768"];
+    chunk [label="KN91-E002 IDA_CHUNK_SIZE"];
+    longs [label="KN91-E003 IDA_BITMAP_LONGS"];
+    bits [label="KN91-E004 IDA_BITMAP_BITS"];
+    dependent [shape=note,label="old facts source_ledger / ida_units\nIDA matrices and M04/07/08/12\nIDA90-F04/U01/U02 / G01/A / DOT cluster_A"];
+    old_mf -> p6 [style=dashed,label="new batch only; no old edit"];
+    old013 -> chunk [style=dashed,label="replace one mixed anchor"];
+    old013 -> longs [style=dashed,label="replace independently"];
+    old013 -> bits [style=dashed,label="replace independently"];
+    cnst -> chunk [label="macro dependency"];
+    chunk -> longs [label="macro dependency"];
+    longs -> bits [label="macro dependency"];
+    bits -> dependent [style=dashed,label="old consumers use new anchors"];
+  }
+
+  subgraph cluster_A {
+    label="A: actual worker name / requested vs written character counts";
+    worker [label="worker_pool_s/worker_s fields\ncpu, pool.id, worker.id, attrs.nice"];
+    workerfmt [label="format_worker_id(buf,size,worker,pool)"];
+    fmt_cpu [label="cpu >=0:\nkworker/%d:%d%s ; nice<0 => H"];
+    fmt_unbound [label="cpu <0:\nkworker/u%d:%d"];
+    fmt_dying [label="pool NULL:\nkworker/dying"];
+    fixed [label="KN91-E005/E081\nWORKER_ID_LEN=10+WQ_NAME_LEN=42"];
+    idbuf [label="create_worker stack char id_buf[42]\nformat_worker_id return ignored"];
+    scnprintf [label="scnprintf -> vscnprintf -> vsnprintf"];
+    vsnprintf [label="vsnprintf: logical str advance\nconditional physical writes, NUL if size>0\nreturn str-buf (demand)"];
+    vscnprintf [label="vscnprintf: return i or size-1 or 0\nwritten character count"];
+    via [shape=note,label="under int32/correct format:\nCPU <=31 chars; unbound <=32\nsize42 fits; not runtime attestation"];
+    worker -> workerfmt [label="format input"];
+    workerfmt -> fmt_cpu [style=dashed,label="if pool && cpu>=0"];
+    workerfmt -> fmt_unbound [style=dashed,label="if pool && cpu<0"];
+    workerfmt -> fmt_dying [style=dashed,label="if !pool"];
+    fmt_cpu -> scnprintf [color=blue,label="actual branch calls"];
+    fmt_unbound -> scnprintf [color=blue,label="actual branch calls"];
+    fmt_dying -> scnprintf [color=blue,label="actual branch calls"];
+    scnprintf -> vscnprintf [color=blue,label="direct call"];
+    vscnprintf -> vsnprintf [color=blue,label="direct call"];
+    vsnprintf -> vscnprintf [style=dotted,label="returns i for clamp"];
+    fixed -> idbuf [label="buffer size"];
+    idbuf -> workerfmt [color=blue,label="actual call"];
+    fmt_cpu -> via [style=dashed,label="conditional bound"];
+    fmt_unbound -> via [style=dashed,label="conditional bound"];
+  }
+
+  subgraph cluster_B {
+    label="B: two-pass name allocation and request error categories";
+    public [label="kthread_create_on_node\nva_start/va_end wrapper"];
+    internal [label="__kthread_create_on_node\nkmalloc(create_info)"];
+    first [label="kvasprintf:\nva_copy(aq, ap)\nfirst=vsnprintf(NULL,0,fmt,aq)\nva_end(aq)"];
+    alloc [label="kmalloc(first+1,gfp)\nif NULL return NULL"];
+    second [label="second=vsnprintf(p,first+1,fmt,ap)\nfirst!=second WARN commented\nreturn p"];
+    mut [shape=note,label="va_copy copies argument cursor\nNOT pointed-to %s string bytes\nstable / growing / shrinking input hypotheses"];
+    nameerr [label="name p NULL -> ERR_PTR(-ENOMEM)\ngoto free_create; kfree(create)"];
+    queue [label="name allocated:\ncreate.full_name=p, list queue\nwake kthreadd; wait done"];
+    taskres [label="task=create.result\nkfree(create); return task"];
+    err [shape=note,label="name allocation success != task success\nERR_PTR vs NULL distinguished\nwait completion != thread execution"];
+    idbuf -> public [color=blue,label="%s, stack buffer borrowed"];
+    public -> internal [color=blue,label="actual wrapper call"];
+    internal -> first [color=blue,label="kvasprintf called"];
+    first -> alloc [style=dotted,label="normal first return"];
+    alloc -> second [style=dotted,label="if p valid"];
+    first -> mut [style=dashed,label="conditional string input mutation"];
+    mut -> second [style=dashed,label="different second pass contents"];
+    alloc -> nameerr [style=dashed,label="if NULL"];
+    second -> queue [style=dotted,label="normal p return"];
+    queue -> taskres [style=dotted,label="if done/wait return"];
+    nameerr -> err [style=dashed,label="error result"];
+    taskres -> err [style=dashed,label="task result distinct"];
+  }
+
+  subgraph cluster_C {
+    label="C: name objects / task.comm / readback / conditional release";
+    create [label="kthd_create_info_s create\nfull_name pointer and done/result"];
+    full [label="kvasprintf heap string p\nfull_name data, separate allocation"];
+    forkname [label="create_kthread -> kernel_thread\nargs.name = create.full_name"];
+    short [label="copy_process if args.name:\nstrscpy_pad(task.comm,name,32)\nshort <=31 chars + NUL"];
+    priv [label="set_kthread_struct:\nkzalloc(kthread_s)\ntask.worker_private=kthread"];
+    kstart [label="kthread if done valid:\nself.full_name=create.full_name\nno deep copy"];
+    notify [label="create.result=current\ncomplete(done)\ncreator frees create"];
+    get [label="get_kthread_comm is void\nprivate full_name first; else fallback"];
+    getfull [label="strscpy_pad(buf, full_name, buf_size)\ncopy retval discarded"];
+    getshort [label="__get_task_comm\nlock, strscpy_pad(task.comm), unlock\nreturns buf"];
+    setshort [label="__set_task_comm\nlock, strscpy_pad(task.comm), unlock"];
+    scpy [label="strscpy size 0 -> -E2BIG\nNUL or buffer full -> copy count/-E2BIG"];
+    pad [label="strscpy_pad: optional zero tail\ntruncation result not propagated by get"];
+    kfail [label="create_kthread pid <0:\nkfree(create.full_name)\nresult ERR_PTR / complete if done"];
+    nodone [label="kthread xchg done=NULL:\nkfree(full_name) and create; exit"];
+    freect [label="free_kthread_struct invoked:\nworker_private=NULL\nkfree(full_name), kfree(kthread)"];
+    notcalled [shape=note,label="fork.c free_task direct call commented\nfree exists != exit invokes it\nunknown other users"];
+    full -> create [label="assign pointer"];
+    queue -> create [style=dotted,label="request fields live"];
+    create -> forkname [color=blue,label="call via create_kthread"];
+    forkname -> short [style=dotted,label="kernel clone name consumer"];
+    priv -> kstart [label="private target"];
+    create -> kstart [style=dotted,label="if done valid"];
+    kstart -> notify [style=dotted,label="after local assignment"];
+    full -> kstart [label="pointer identity"];
+    short -> getshort [label="fallback source"];
+    kstart -> getfull [label="full name source"];
+    get -> getfull [style=dashed,label="if full_name"];
+    get -> getshort [style=dashed,label="if missing"];
+    getfull -> pad [color=blue,label="strscpy_pad call"];
+    getshort -> pad [color=blue,label="strscpy_pad call"];
+    setshort -> pad [color=blue,label="write caller"];
+    pad -> scpy [color=blue,label="strscpy call"];
+    create -> kfail [style=dashed,label="if pid <0"];
+    create -> nodone [style=dashed,label="if exchanged done NULL"];
+    kstart -> freect [style=dashed,label="only if separate real call"];
+    freect -> notcalled [style=dashed,label="not an active caller edge"];
+  }
+  limits [shape=note,label="STATIC_ONLY; full P9/runtime NOT_RUN\nR90-01/02 correction pending C06 Pro\nR89 closed; 53 corrected; 68 prior limits\nno batch92, no PR merge"];
+  p6 -> limits [style=dashed,label="author submission only"];
+  taskres -> limits [style=dashed,label="no running claim"];
+  freect -> limits [style=dashed,label="no lifetime closure"];
+}

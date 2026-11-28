@@ -1,0 +1,986 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-STDIO-FILE-OPEN-121",
+  "record_type": "bounded_source_and_paper_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "produced_by": "GPT-6（后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "date": "2026-11-22",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "pins_short12": {
+    "lead": "52ad1a8582e8",
+    "execution_parent": "9ea23faa4ab7",
+    "time": "a039d9803ade",
+    "master": "e8e60cd19540"
+  },
+  "D00": {
+    "R117_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "batches": [
+        {
+          "batch": 117,
+          "original_windows": 88,
+          "literal_prefixes": 89,
+          "qualifications": "ORIGINAL_88_CANDIDATES",
+          "nonwindow_location": "MANIFEST:113"
+        },
+        {
+          "batch": 118,
+          "original_windows": 91,
+          "literal_prefixes": 92,
+          "qualified_candidates": 89,
+          "disqualified": [
+            "CW118-E051",
+            "CW118-E052"
+          ]
+        },
+        {
+          "batch": 119,
+          "original_windows": 46,
+          "literal_prefixes": 46,
+          "qualified_candidates": 43,
+          "disqualified": [
+            "IN119-E020",
+            "IN119-E021",
+            "IN119-E022"
+          ]
+        },
+        {
+          "batch": 120,
+          "original_windows": 81,
+          "literal_prefixes": 81,
+          "qualified_candidates": 80,
+          "disqualified": [
+            "FC120-E072"
+          ],
+          "reason": "E072 label crosses sysexit_ret_addr 74 before line75; replacement separate 71-73,74-76,79-81"
+        }
+      ]
+    },
+    "R120_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "layer_table": [
+        {
+          "layer": "shell_C_caller",
+          "paths": [
+            "myinitramfs/myshell/myshell.c:331-334",
+            "myshell.c:343-346",
+            "myshell.c:355-360",
+            "myshell.c:369-374"
+          ],
+          "status": "DIRECT_SOURCE_CALLS_OF_creat_mkdir_rmdir_unlink",
+          "actual_binary_link": "UNKNOWN"
+        },
+        {
+          "layer": "myglibc_user_stub",
+          "paths": [
+            "myinitramfs/mylib/myglibc/syscall/syscall.c:53-57"
+          ],
+          "status": "IN_REPO_SYSCALL_STUB_MACRO_INSTANCES",
+          "actual_binary_link": "UNKNOWN"
+        },
+        {
+          "layer": "kernel_syscall_numbers",
+          "paths": [
+            "mykernel/arch/x86_64/include/asm/unistd_64.h:103-108"
+          ],
+          "values": {
+            "mkdir": 83,
+            "rmdir": 84,
+            "creat": 85,
+            "unlink": 87
+          },
+          "status": "SOURCE_MACRO_POSITIONS"
+        },
+        {
+          "layer": "kernel_switch",
+          "paths": [
+            "mykernel/arch/x86_64/include/asm/syscalls_64.h:44-48"
+          ],
+          "status": "ACTIVE_MAPPING_INSTANCES_CONDITIONAL_ON_RUNTIME_CALL"
+        },
+        {
+          "layer": "actual_initramfs_toolchain",
+          "paths": [
+            "myinitramfs/CMakeLists.txt:3,40-51",
+            "myinitramfs/myshell/CMakeLists.txt:1-10"
+          ],
+          "status": "TEXT_INTENT_MUSL_EXTERNAL",
+          "actual_musl_binary_link_verified": false
+        },
+        {
+          "layer": "errno_and_output",
+          "paths": [
+            "myinitramfs/mylib/myglibc/syscall/syscall.c:71-81",
+            "myinitramfs/mylib/myglibc/stdio/errlist.c:23-31",
+            "myinitramfs/mylib/myglibc/stdio/printf.c:17-25"
+          ],
+          "status": "SYSCALL_ERRNO_WRITE_IS_COMMENTED;__get_errlist_NEGATIVE_ABS_THEN_INDEX;PRINTF_WRITE_IF_THIS_IMPL_SELECTED",
+          "actual_console_text": "NOT_RUN"
+        }
+      ],
+      "P03_corrected_real_lines": [
+        103,
+        104,
+        106,
+        108
+      ],
+      "P10_corrected_function_range": [
+        770,
+        823
+      ],
+      "errlist": "if errnum <0 negate; return _sys_errlist_internal[errnum]",
+      "cross_link_contract": "all conditional until actual library verified"
+    },
+    "R120_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "cases": [
+        {
+          "case_id": "D121-A01",
+          "cmd": "touch",
+          "argc": 2,
+          "kernel_path": "do_creatat",
+          "method_exists": false,
+          "callback_called": false,
+          "kernel_return": "-EPERM",
+          "conditional_user_interface_return": "-EPERM_if_library_exposes_unmodified_result",
+          "builtin_local_err": "-EPERM_under_same_condition",
+          "builtin_return": 0,
+          "done_path_create_called": false,
+          "putname_called": false
+        },
+        {
+          "case_id": "D121-A02",
+          "cmd": "touch",
+          "argc": 2,
+          "kernel_path": "do_creatat",
+          "method_exists": true,
+          "callback_given": 0,
+          "callback_called": true,
+          "kernel_return": 0,
+          "conditional_user_interface_return": 0,
+          "builtin_local_err": 0,
+          "builtin_return": 0,
+          "done_path_create_called": true,
+          "putname_called": true
+        },
+        {
+          "case_id": "D121-A03",
+          "cmd": "touch",
+          "argc": 1,
+          "kernel_path": null,
+          "method_exists": null,
+          "callback_called": false,
+          "kernel_return": null,
+          "conditional_user_interface_return": null,
+          "builtin_return": -1,
+          "done_path_create_called": false,
+          "putname_called": false
+        },
+        {
+          "case_id": "D121-B01",
+          "cmd": "mkdir",
+          "argc": 2,
+          "kernel_path": "do_mkdirat",
+          "method_exists": false,
+          "callback_called": false,
+          "kernel_return": "-EPERM",
+          "conditional_user_interface_return": "-EPERM_if_library_exposes_unmodified_result",
+          "builtin_local_err": "-EPERM_under_same_condition",
+          "builtin_return": 0,
+          "done_path_create_called": false,
+          "putname_called": false
+        },
+        {
+          "case_id": "D121-B02",
+          "cmd": "mkdir",
+          "argc": 2,
+          "kernel_path": "do_mkdirat",
+          "method_exists": true,
+          "callback_given": 0,
+          "callback_called": true,
+          "kernel_return": 0,
+          "conditional_user_interface_return": 0,
+          "builtin_return": 0,
+          "done_path_create_called": true,
+          "putname_called": true
+        },
+        {
+          "case_id": "D121-B03",
+          "cmd": "mkdir",
+          "argc": 2,
+          "kernel_path": "do_mkdirat",
+          "filename_create_result": "ERR_PTR(-2)",
+          "valid_name_assumed": true,
+          "method_exists": null,
+          "callback_called": false,
+          "kernel_return": -2,
+          "conditional_user_interface_return": "-2_if_library_exposes_unmodified_result",
+          "builtin_return": 0,
+          "done_path_create_called": false,
+          "putname_called": true
+        },
+        {
+          "case_id": "D121-B04",
+          "cmd": "mkdir",
+          "argc": 3,
+          "kernel_path": null,
+          "callback_called": false,
+          "kernel_return": null,
+          "builtin_return": -1,
+          "done_path_create_called": false,
+          "putname_called": false
+        },
+        {
+          "case_id": "D121-R01",
+          "cmd": "rm",
+          "argc": 1,
+          "unlink_called": false,
+          "user_return": null,
+          "builtin_return": -1,
+          "own_printf": false
+        },
+        {
+          "case_id": "D121-R02",
+          "cmd": "rm",
+          "argc": 2,
+          "unlink_called": true,
+          "user_return": 0,
+          "builtin_return": 0,
+          "own_printf": false
+        },
+        {
+          "case_id": "D121-R03",
+          "cmd": "rm",
+          "argc": 2,
+          "unlink_called": true,
+          "user_return": -5,
+          "builtin_return": -5,
+          "own_printf": true,
+          "format": "rm: %s: %s\n",
+          "args": [
+            "strerror(errno)",
+            "note"
+          ],
+          "cross_command_rmdir_reachable": false,
+          "exact_errno_text": "UNPROVEN"
+        },
+        {
+          "case_id": "D121-D01",
+          "cmd": "rmdir",
+          "argc": 1,
+          "rmdir_called": false,
+          "user_return": null,
+          "builtin_return": -1,
+          "own_printf": false
+        },
+        {
+          "case_id": "D121-D02",
+          "cmd": "rmdir",
+          "argc": 2,
+          "rmdir_called": true,
+          "user_return": 0,
+          "builtin_return": 0,
+          "own_printf": false
+        },
+        {
+          "case_id": "D121-D03",
+          "cmd": "rmdir",
+          "argc": 2,
+          "rmdir_called": true,
+          "user_return": -5,
+          "builtin_return": -5,
+          "own_printf": true,
+          "format": "rmdir: %s: %s\n",
+          "args": [
+            "strerror(errno)",
+            "docs"
+          ],
+          "cross_command_rm_reachable": false,
+          "exact_errno_text": "UNPROVEN"
+        }
+      ],
+      "required": {
+        "creat_method_missing_path_to_builtin0": true,
+        "mkdir_method_missing_path_to_builtin0": true,
+        "both_bypass_done_and_putname": true,
+        "rm_rmdir_disjoint_directed_branches": true
+      }
+    }
+  },
+  "A_entry_build": {
+    "CMake_sources": [
+      {
+        "path": "myinitramfs/CMakeLists.txt",
+        "items": [
+          "project(MyOS2_Initramfs ASM C) before compiler variable",
+          "MUSL_PATH external /home/cheyh/projs/musl/build",
+          "add_subdirectory(myinit)",
+          "add_subdirectory(myshell)"
+        ],
+        "actual_binary_verified": false
+      },
+      {
+        "path": "myinitramfs/myshell/CMakeLists.txt",
+        "items": [
+          "add_executable(sh ...)",
+          "no target_link_libraries(sh mylibc) in this inspected file"
+        ],
+        "actual_binary_verified": false
+      },
+      {
+        "path": "myinitramfs/mylib/CMakeLists.txt",
+        "items": [
+          "add_subdirectory(myglibc)"
+        ],
+        "connected_to_read_top_level": false
+      },
+      {
+        "path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+        "items": [
+          "add_library(mylibc STATIC)",
+          "add_subdirectory(libio)"
+        ],
+        "actual_linked_to_sh": false
+      },
+      {
+        "path": "myinitramfs/mylib/myglibc/libio/CMakeLists.txt",
+        "items": [
+          "file(GLOB LIBIO_C_SRCS *.c)",
+          "target_sources(mylibc PUBLIC ...)"
+        ],
+        "actual_compiled_or_linked": false
+      }
+    ],
+    "symbol_evidence_roles": {
+      "libio_stdio_h_public_declaration": "declaration_only",
+      "include_stdio_h_line193": "function_like_macro_definition",
+      "iofopen_new_fopen": "body_in_repo",
+      "iofopen_alias_lines90_96": "commented_aliases"
+    },
+    "wrapper_cases": [
+      {
+        "case_id": "A121-01",
+        "call_site": "inrepo_macro_and_new_fopen_conditional",
+        "malloc_result": "P_VALID_WRITABLE_FILE",
+        "fp_before_known_fields": {},
+        "only_wrapper_write": {
+          "_fileno": -1
+        },
+        "lower_file_fopen_invoked": true,
+        "other_fields_known_from_wrapper": [],
+        "actual_sh_uses_this_source": "NOT_PROVEN"
+      },
+      {
+        "case_id": "A121-02",
+        "call_site": "inrepo_new_fopen",
+        "malloc_result": "NULL",
+        "first_failed_premise": "valid writable FILE pointer before new_f->_fileno assignment",
+        "return_value": "NOT_MODELED_UNDER_INVALID_ACCESS",
+        "lower_file_fopen_invoked": "NOT_PROVEN",
+        "actual_sh_uses_this_source": "NOT_PROVEN"
+      },
+      {
+        "case_id": "A121-03",
+        "call_site": "direct_inner_file_fopen_not_same_as_new_fopen",
+        "fp_before_known_fields": {
+          "_fileno": 7
+        },
+        "first_gate": "_fileno != -1",
+        "return_value": "NULL",
+        "open_calls": 0,
+        "_fileno_after": 7,
+        "valid_new_fopen_path": false
+      }
+    ]
+  },
+  "B_mode_parser": {
+    "source_header_numerics_if_selected": {
+      "RDONLY": 0,
+      "WRONLY": 1,
+      "RDWR": 2,
+      "CREAT": 512,
+      "EXCL": 2048,
+      "TRUNC": 1024,
+      "APPEND": 8,
+      "CLOEXEC": 4194304,
+      "LARGEFILE": 0
+    },
+    "IO_flags": {
+      "NO_READS": 4,
+      "NO_WRITES": 8,
+      "IS_APPENDING": 4096,
+      "MMAP": 1,
+      "NOTCANCEL": 2,
+      "CLOEXEC": 64
+    },
+    "mode_cases": [
+      {
+        "case_id": "B121-01",
+        "mode": "r",
+        "first": "r",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1
+        ],
+        "last_recognized_index": 0,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 0,
+        "oflags": 0,
+        "read_write": 8,
+        "oprot": 438,
+        "posix_mode": 0,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 0,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 0,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-02",
+        "mode": "w",
+        "first": "w",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1
+        ],
+        "last_recognized_index": 0,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 1,
+        "oflags": 1536,
+        "read_write": 4,
+        "oprot": 438,
+        "posix_mode": 1537,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 1537,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 0,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-03",
+        "mode": "a+",
+        "first": "a",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "+",
+            "action": "omode_O_RDWR_keep_only_IO_IS_APPENDING"
+          },
+          {
+            "index": 2,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1,
+          2
+        ],
+        "last_recognized_index": 1,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 2,
+        "oflags": 520,
+        "read_write": 4096,
+        "oprot": 438,
+        "posix_mode": 522,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 522,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 0,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-04",
+        "mode": "wbx",
+        "first": "w",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "b",
+            "action": "last_recognized_only"
+          },
+          {
+            "index": 2,
+            "char": "x",
+            "action": "oflags_OR_O_EXCL"
+          },
+          {
+            "index": 3,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1,
+          2,
+          3
+        ],
+        "last_recognized_index": 2,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 1,
+        "oflags": 3584,
+        "read_write": 4,
+        "oprot": 438,
+        "posix_mode": 3585,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 3585,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 0,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-05",
+        "mode": "re",
+        "first": "r",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "e",
+            "action": "oflags_OR_O_CLOEXEC_flags2_OR_CLOEXEC"
+          },
+          {
+            "index": 2,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1,
+          2
+        ],
+        "last_recognized_index": 0,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 0,
+        "oflags": 4194304,
+        "read_write": 8,
+        "oprot": 438,
+        "posix_mode": 4194304,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 4194304,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 64,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-06",
+        "mode": "q",
+        "first": "q",
+        "parse_accepted": false,
+        "open_requested": false,
+        "reason": "INVALID_FIRST_CHARACTER",
+        "errno_assignment_active": false,
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-07",
+        "mode": "rmmmmmmZ",
+        "first": "r",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          },
+          {
+            "index": 2,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          },
+          {
+            "index": 3,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          },
+          {
+            "index": 4,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          },
+          {
+            "index": 5,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          },
+          {
+            "index": 6,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          }
+        ],
+        "suffix_indices_read": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "last_recognized_index": 0,
+        "stop_reason": "I_BECOMES_7_SIX_SUFFIXES_MAX",
+        "first_unread_suffix_index": 7,
+        "omode": 0,
+        "oflags": 0,
+        "read_write": 8,
+        "oprot": 438,
+        "posix_mode": 0,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 0,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 1,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-08",
+        "mode": "rmce",
+        "first": "r",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          },
+          {
+            "index": 2,
+            "char": "c",
+            "action": "flags2_OR_NOTCANCEL"
+          },
+          {
+            "index": 3,
+            "char": "e",
+            "action": "oflags_OR_O_CLOEXEC_flags2_OR_CLOEXEC"
+          },
+          {
+            "index": 4,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "last_recognized_index": 0,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 0,
+        "oflags": 4194304,
+        "read_write": 8,
+        "oprot": 438,
+        "posix_mode": 4194304,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 4194304,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 67,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-09",
+        "mode": "rmce",
+        "first": "r",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "m",
+            "action": "flags2_OR_MMAP"
+          },
+          {
+            "index": 2,
+            "char": "c",
+            "action": "flags2_OR_NOTCANCEL"
+          },
+          {
+            "index": 3,
+            "char": "e",
+            "action": "oflags_OR_O_CLOEXEC_flags2_OR_CLOEXEC"
+          },
+          {
+            "index": 4,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "last_recognized_index": 0,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 0,
+        "oflags": 4194304,
+        "read_write": 8,
+        "oprot": 438,
+        "posix_mode": 4194304,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 4194304,
+        "prior_flags2_model": 32,
+        "flags2_after_model": 99,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      },
+      {
+        "case_id": "B121-10",
+        "mode": "r?b",
+        "first": "r",
+        "parse_accepted": true,
+        "open_requested": true,
+        "suffix": [
+          {
+            "index": 1,
+            "char": "?",
+            "action": "default_ignore"
+          },
+          {
+            "index": 2,
+            "char": "b",
+            "action": "last_recognized_only"
+          },
+          {
+            "index": 3,
+            "char": "NUL",
+            "action": "break_switch_then_loop"
+          }
+        ],
+        "suffix_indices_read": [
+          1,
+          2,
+          3
+        ],
+        "last_recognized_index": 2,
+        "stop_reason": "NUL",
+        "first_unread_suffix_index": null,
+        "omode": 0,
+        "oflags": 0,
+        "read_write": 8,
+        "oprot": 438,
+        "posix_mode": 0,
+        "open_flag_expression": "(omode | oflags) | O_LARGEFILE",
+        "open_flags_numeric_only_if_selected_HEADER_defines_O_LARGEFILE_0": 0,
+        "prior_flags2_model": 0,
+        "flags2_after_model": 0,
+        "actual_new_malloc_flags2_initialization": "NOT_SHOWN",
+        "hypothetical_selected_header": {
+          "O_CLOEXEC_present": true,
+          "O_LARGEFILE_present_and_zero": true,
+          "preexisting_flags2_value_explicit": true
+        }
+      }
+    ],
+    "max_suffix_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "max_suffix_count": 6,
+    "last_recognized_read_after_parser_in_active_code": false,
+    "helper_flags2_or_cases": [
+      "B121-08",
+      "B121-09"
+    ],
+    "new_fopen_only_initializes_fileno": true,
+    "actual_flags2_value_unknown_without_explicit_prior_assumption": true,
+    "read_write_passed_down_but_IO_mask_flags_commented": true,
+    "O_LARGEFILE_conditional": "__USE_LARGEFILE64",
+    "O_CLOEXEC_conditional": "__USE_XOPEN2K8"
+  },
+  "C_fd_and_FILE": {
+    "cases": [
+      {
+        "case_id": "C121-01",
+        "mode": "r",
+        "outer_malloc": "P_VALID",
+        "prior_fileno": -1,
+        "given_open_return": -1,
+        "open_calls": 1,
+        "open_request": {
+          "filename": "note",
+          "flag_expression": "O_RDONLY | O_LARGEFILE",
+          "prot_octal": "0666",
+          "read_write_argument": 8
+        },
+        "fileno_after": -1,
+        "inner_result": null,
+        "wrapper_result": null,
+        "fd_success": false,
+        "fp_freed_in_read_functions": false,
+        "FILE_flags_status": "UNKNOWN"
+      },
+      {
+        "case_id": "C121-02",
+        "mode": "r",
+        "outer_malloc": "P_VALID",
+        "prior_fileno": -1,
+        "given_open_return": 0,
+        "open_calls": 1,
+        "open_request": {
+          "filename": "note",
+          "flag_expression": "O_RDONLY | O_LARGEFILE",
+          "prot_octal": "0666",
+          "read_write_argument": 8
+        },
+        "fileno_after": 0,
+        "inner_result": "SAME_P",
+        "wrapper_result": "SAME_P",
+        "fd_success": true,
+        "fp_freed_in_read_functions": false,
+        "FILE_flags_status": "UNKNOWN"
+      },
+      {
+        "case_id": "C121-03",
+        "mode": "r",
+        "outer_malloc": "P_VALID",
+        "prior_fileno": -1,
+        "given_open_return": 5,
+        "open_calls": 1,
+        "open_request": {
+          "filename": "note",
+          "flag_expression": "O_RDONLY | O_LARGEFILE",
+          "prot_octal": "0666",
+          "read_write_argument": 8
+        },
+        "fileno_after": 5,
+        "inner_result": "SAME_P",
+        "wrapper_result": "SAME_P",
+        "fd_success": true,
+        "fp_freed_in_read_functions": false,
+        "FILE_flags_status": "UNKNOWN"
+      },
+      {
+        "case_id": "C121-04",
+        "mode": "q",
+        "outer_malloc": "P_VALID",
+        "prior_fileno": -1,
+        "given_open_return": null,
+        "open_calls": 0,
+        "fileno_after": -1,
+        "inner_result": null,
+        "wrapper_result": null,
+        "first_exit": "INVALID_FIRST_CHAR",
+        "errno_from_this_function": "NOT_SET__commented_out"
+      },
+      {
+        "case_id": "C121-05",
+        "mode": "r",
+        "call_site": "direct_inner",
+        "prior_fileno": 7,
+        "given_open_return": null,
+        "open_calls": 0,
+        "fileno_after": 7,
+        "inner_result": null,
+        "wrapper_result": "NOT_APPLICABLE",
+        "first_exit": "ALREADY_OPEN_GATE"
+      }
+    ],
+    "fp_identity": "returned fp same as malloced new_f on successful open",
+    "failure_pointer_behavior": "NULL on open<0 or bad mode or already-open",
+    "malloc_failure": "no local null check before dereference",
+    "flags_and_offset_storage": "not_proven_initialized",
+    "on_open_failure_fp_freed_in_read_bodies": false,
+    "open_args": "filename, (omode|oflags)|O_LARGEFILE, oprot=0666; read_write is NOT forwarded to open",
+    "fd_zero_valid": true
+  },
+  "limitations": {
+    "actual_sh_libc": "UNKNOWN",
+    "external_musl": "NOT_READ",
+    "compiled_binary": "NOT_RUN",
+    "P9_local": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "build": "NOT_RUN",
+    "link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_operations": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

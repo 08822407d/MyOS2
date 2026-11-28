@@ -1,0 +1,165 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-TASK-STORAGE-LIFETIME-74",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "produced_by": "GPT-6 self-reported",
+  "model_per_owner": "next-tier GPT-6 + Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-12",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "d46bab628653",
+  "D00": "documentation_disposition_submitted",
+  "prior_return_id": "R73-01",
+  "prior_mainline_status": "RETURN_DOCUMENTATION",
+  "prior_return_closed_by_executor": false,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "TSL74-F01",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-F01",
+      "status": "needs_evidence",
+      "kind": "conditional_task_list_initialization_overwritten_by_struct_copy",
+      "claim": "In dup_task_struct on a valid node and allocation, INIT_LIST_S(&tsk->tasks) runs before *tsk=*orig; the whole assignment overwrites the just-initialized task-list links with the predecessor's copied values. Only selected copy_process later publishes a task using list_header_add_to_tail(&all_task_lhdr,&p->tasks), which rewrites links under its own valid assumptions; no actual list corruption, user-visible behavior or runtime fault has been demonstrated. This candidate concerns any intermediate observer or alternate consumer requiring detached task list identity before that later insertion.",
+      "premises": [
+        "valid orig, tsk and list source; copy succeeds",
+        "intermediate operation requires newly initialized independent tsk.tasks before it is relinked",
+        "no intervening explicit successful reset of tsk.tasks"
+      ],
+      "counter_evidence": "the selected later list_header_add_to_tail overwrites task node next/prev as part of insertion; source does not establish a failing intermediate observer or multi-CPU violation",
+      "first_stop": "function-specific consumer timing and actual all_task link invariants; existing task lookup/observer lifetime unknown",
+      "anchors": [
+        "A06",
+        "A07",
+        "A17",
+        "A14",
+        "A21"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "TSL74-U01",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U01",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "`get_task_struct`/`put_task_struct` active definitions, all aliases/function-pointer callers, task.usage holders and proper last-owner semantics were not proven by bounded selected-source/default-branch search; the observed pid helpers contain commented increments.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "TSL74-U02",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U02",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "`put_task_stack` has no active `stack_refcount` decrement and field declaration is commented; actual stack owner graph, CPU executing that stack, concurrent readers and last-holder state unproved.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "TSL74-U03",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U03",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "No selected normal do_exit→do_task_dead→finish_task_switch active task/stack release; historical UV-15/SF-C3-37/R15 limit survives and no guaranteed permanent physical leak is asserted.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "TSL74-U04",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U04",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "kfree stack/task requests are recorded but complete allocator provenance, physical effects, invalid or NULL pointer handling and any temporal ABA/double free are outside this work.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "TSL74-U05",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U05",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "node!=NUMA_NO_NODE uses uninitialized `tsk`; this is existing UV-16, not a new TSL74 duplicate; other direct copy_process/dup_task_struct producers not globally enumerated.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "TSL74-U06",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U06",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "On allocated task, INIT_LIST_S before *tsk=*orig is overwritten; intermediate consumers and final list locking/teardown not proven, see TSL74-F01.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "TSL74-U07",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U07",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "The initial init_task.stack is static init_stack, whereas new task stacks are requested from kmalloc; stack pointer owner/source validity must be checked individually.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "TSL74-U08",
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U08",
+      "status": "needs_evidence",
+      "kind": "evidence_gap",
+      "detail": "Whole-program build/preprocessor, hosted C behavior, complete local P9, Graphviz, QEMU/real kernel, concurrent task/stack access, and actual last-free observed behavior all NOT_RUN.",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "new_findings_count": 1,
+  "evidence_gaps_count": 8,
+  "observed_runtime_bugs": 0,
+  "historical_qualified_ids": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-16",
+      "status": "deferred_owner_not_ready",
+      "disposition": "preserved, no re-numbering; new node source/stop anchors A03–A05,A15"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-15",
+      "status": "deferred_owner_not_ready",
+      "disposition": "preserved, no re-numbering; absent selected normal destructor path and task/stack ownership not proven"
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11-REVIEW-001",
+      "disposition": "R11 §3 bare task vs pid_s reference retained"
+    },
+    {
+      "qualified_id": "CORE-USER-FORK-FILES-ROLLBACK-44-REVIEW-001",
+      "disposition": "R44 §2–4 earliest cleanup and returned-object limits retained"
+    },
+    {
+      "qualified_id": "CORE-USER-EXIT-REAP-73-REVIEW-001::R73-01",
+      "status": "OPEN_PENDING_C05",
+      "disposition": "74 D00 documentation_disposition_submitted only; author does not close review return"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-CONTEXT-15-REVIEW-001",
+      "disposition": "R15-S02 context_switch finish path condition preserved"
+    }
+  ],
+  "existing_records_not_changed": true,
+  "owner_decisions_requested_now": [],
+  "disallowed": [
+    "no kernel changes/patches",
+    "no old report/comment modification",
+    "no self-close R73-01",
+    "no self-sign 74",
+    "no start 75",
+    "no build/execute/script/graphviz/real test",
+    "no new branch/PR or PR metadata change"
+  ]
+}

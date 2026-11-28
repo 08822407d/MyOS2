@@ -1,0 +1,1101 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-RETURN-SIGNAL-09
+record_type: deferred_findings_increment
+produced_by: Claude Code desktop app (Code tab), local session f464c1b9-9b25-4af2-8f2d-d419b3b601fd (MYOS2-A-CC02 内核分析本地执行)
+model: unknown_or_not_attestable
+model_declared_by_runtime: claude-opus-5-5
+date: '2026-10-29'
+base_snapshot: kernel=time a039d9803ade；执行分支起点 8983a9235c8a（短 SHA）
+policy_ref: agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）
+policy_status: ACTIVE_RECORD_FIRST_OWNER_REPAIR_DEFERRED
+owner_action_now: none
+owner_decisions_requested_now: []
+kernel_change_authorized: false
+candidate_A_adopted: false
+candidate_B_adopted: false
+scope: 只登记本批新增条目（RS-01…RS-14）、对 CORE-USER-BOUNDARIES-07::UB-09 的两条证据追加，以及三条文档勘误（ER-01、ER-02 处置 08 的 SR08-01、SR08-02，ER-03 收窄 07 UB-09 的一句）；不复制旧问题全文，不改 05/07/08 原文件，不重编号，不自动关闭旧条目。
+id_convention: related、target、qualified_id 与正文中的旧条目一律写全名；RS-xx、ER-xx 指本文件，AD*/QD*/SD*/VT-*/RT-*/FF-*/RR-*/FN-* 指本包 facts-and-boundaries.yaml，NVR-x 指其 next_validation_candidates。
+empty_set_statement: 本批发现集合非空：14 项新条目、2 项证据追加、3 项文档勘误。检查范围限于 facts-and-boundaries.yaml 中实际读到的源码；没有登记的部分不等于已确认安全。
+errata_scope_statement: ER-01、ER-02 处置主线回执 CORE-USER-SYSCALL-STDIO-08-REVIEW-001 退回的 SR08-01、SR08-02；ER-03 是本批取证中发现的 07 表述条件遗漏。05/07/08 中“未读/未追”的说法属于覆盖状态，在 facts 的 gap_status 中更新，不算勘误。
+mainline_open_points: ['RS-12 与 CORE-USER-VFS-BASELINE-05::UV-14 同源（copy_sighand 不装新对象），可由主线决定并入 UV-14；本批按 05 自己“同一处注释的不同后果分开登记”的先例单列，并保留 exec.c 的第二个根因。', 'CORE-USER-BOUNDARIES-07::UB-09 关于“号不小于 453 时返回原号”的说法：本批以勘误 ER-03 收窄、另以两条证据追加补充，没有另立新条目；主线也可改为新条目。', FN-01（sigcontext 的 trapno/err/cr2 取自没有活动写入者的字段）与 FN-02（get_sigframe 的旧式备用栈分支进不去）登记为事实而非缺陷；主线可按 05 中 UV-03、UV-16 的先例改登为潜伏条目。, RS-01 是由头文件包含次序推出的结论，任务书禁止预处理，需构建侧核实（NVR-2）；若它不成立，RS-08、RS-09 与建帧侧的事实才在运行中可达。, '任务切换的 FPU 缺口只记在 RS-10 中，没有独立条目：__switch_to 的活动文本中没有 switch_fpu（SD-91），thread 结构中的 struct fpu 成员被注释（QD-131），__switch_to_asm 只压入通用寄存器 entry_64.S:215（QD-L04），mykernel 的 .S 与 .c 中没有活动的 fxsave、xsave、fxrstor、xrstor（QD-130）。CORE-CHECK-01 的已有包都没有登记（MYOS2-DR-005 的 MANIFEST.md 高风险 correctness 第 5 条与 cards/fpu-xstate.md §4 已有速查结论：__switch_to 的 FPU prepare/finish 被注释、状态 partial/high-risk，但不是可按 qualified_id 选取的延期条目）：scheduler-order-02（results.yaml、evidence.md）与 core 包中没有 FPU 文本；CORE-SCHED-INTEGRATION-03::SF-C5-18 只引用 __switch_to:380，CORE-SCHED-INTEGRATION-03::GAP-03 说明 switch_to 展开链未逐段引用。影响面大于信号路径（推断：中断出口在 !in_atomic() 时调用 schedule()，AD3-14）。任务书 §3 不展开调度器与 FPU/SIMD，本批不另立条目；是否在调度侧另立条目由主线决定。']
+kinds_allowed: [source_fact, conditional_inference, limited_host_observation, policy_proposal, evidence_gap, documentation_erratum]
+statuses_allowed: [deferred_owner_not_ready, needs_evidence, superseded_interpretation]
+resume_order: [agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）, 本轨道最新主线检查点与对应审查回执（agent/MYOS2-LEAD-002 的 checkpoints/、reviews/）, 本包 stdio-08-disposition.md、user-return-signal.md 与 facts-and-boundaries.yaml, 被选条目的 qualified_id（本文件）, 原证据（anchors/queries 所指 time 源码）与当时最新的 time]
+counts:
+  findings: 14
+  evidence_appends: 2
+  errata: 3
+  findings_by_status: {deferred_owner_not_ready: 13, needs_evidence: 1, superseded_interpretation: 0}
+findings:
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-01
+  id: RS-01
+  title: （按 include 顺序推断）signal.c 翻译单元里 UAPI_SA_FLAGS 不含 SA_RESTORER：rt_sigaction 存入的 sa_flags 被清掉这一位，投递时 x64_setup_rt_frame 第 168 行判断成立、第 169 行返回 -EFAULT
+  kind: [conditional_inference, evidence_gap]
+  status: needs_evidence
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-01, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.action_mask_syscalls, ipc.signal.frame_setup]
+  claim: '本条是由 include 文本推出的预处理推断，没有预处理或编译输出核实，需要构建侧检查 NVR-2，所以状态为 needs_evidence。
+
+    一、掩码怎样定：signal_const.h:89-95 在 #ifndef __ARCH_UAPI_SA_FLAGS 内按 #ifdef SA_RESTORER 二选一，已定义时取 SA_RESTORER signal_const.h:91（QD-L33），否则取 0 signal_const.h:93（QD-L33）；UAPI_SA_FLAGS 把它并入 AD2-18。其余各位在 signal-defs.h 中依次为 0x1、0x2、0x4、0x800、0x08000000、0x10000000、0x40000000、0x80000000，都不是 0x04000000 QD-148；signal-defs.h 只在 :51-54 的注释里提到 SA_RESTORER。
+
+    二、核对过的包含关系（a039d9803ade 源码文本）：
+
+    (1) 全仓只有一处 SA_RESTORER 定义 AD2-01；__ARCH_UAPI_SA_FLAGS 只在 signal_const.h:91、:93 定义；构建文件（options_flags.cmake:17、21、34-35、58-70 与 arch/x86_64/CMakeLists.txt:2-4 的 -D 列表）都不含这两个名字 QD-139。
+
+    (2) 头文件中只有 include/uapi/linux/signal.h:5 包含 <asm/signal.h>；另外 3 处在 .c 文件（arch/x86_64/myos/syscall.c:14、sched/forkexec/fork.c:26、sched/forkexec/kthread.c:13），不属于本翻译单元。<uapi/linux/signal.h> 只被 lock_IPC/signal/signal.h:10 包含。signal_const.h 只被 lock_IPC/lock_ipc_const.h:9 包含，lock_ipc_const.h 由 signal.h:6 包含。引号形式的 "signal.h" 另有两处：arch/x86_64/lock_IPC/signal/signal_api_arch.h:5 按同目录规则指向 arch/x86_64/lock_IPC/signal/signal.h（只含 myos_debug_option.h 与两个 arch 头），lock_IPC/signal/signal_api.h:4 指向受守卫保护的 lock_IPC/signal/signal.h。<linux/sched/signal.h>、<uapi/asm-generic/signal.h> 等同名头都不包含上述两个头 QD-140。
+
+    (3) signal.c 第 1 行只有 #define SIGNAL_DEFINATION signal.c:1（QD-L31），这个宏只在 signal.h:132 的 #if 中使用，位于 :10 之后，不影响包含顺序 QD-142。第 2 行的 #include "signal.h" 是本翻译单元的第一个包含，按引号包含先查本目录的规则指向 lock_IPC/signal/signal.h；signal.c 的其余包含都在它之后 QD-143。
+
+    (4) 守卫名 _LINUX_SIGNAL_H_、_LOCK_IPC_CONST_H_、_SIGNAL_CONSTS_H_ 各只出现在自己的文件里，没有 #undef QD-141。所以 signal.h:10 在本翻译单元只处理一次，而且在 :4、:6、:7、:8 的整个传递闭包之后；闭包中即使再包含 signal.h，也被守卫挡住。因此不必穷举 :4、:6 的传递包含（例如 :6 已经经 semaphore_const.h:4、lock_ipc_type_declaration.h:6 带入 signal-defs.h）。
+
+    (5) 没有宏形式的 #include 或 #include_next QD-144；被 #include 的 .c 只有 kbuild 的 asm-offsets_64.c QD-145。
+
+    (6) 构建：全仓的 -include/-imacros 只命中 compiler_types.h:135，它在 :130-137 的块注释里 QD-146；按名检索到的编译选项设置只有 target_kbuild.cmake:19，给 asm-offset 目标加 -save-temps QD-147；C 编译带 -nostdinc options_flags.cmake:43（QD-L41）；signal.c 由 GLOB_RECURSE 收入 KERNEL_C_SRCS CMakeLists.txt:30（QD-L02），随后只从中去掉 kbuild 文件 CMakeLists.txt:32（QD-L02）。
+
+    据此推断：在 signal.c 翻译单元中，signal_const.h:90 被处理时 SA_RESTORER 还没有定义，:93 生效，UAPI_SA_FLAGS 不含 0x04000000。
+
+    三、数据流（活动代码）：sys_rt_sigaction 复制用户 sigaction 后调用 do_sigaction，这是 do_sigaction 唯一的活动调用点 AD2-19 QD-72。sys_rt_sigaction 在另一个翻译单元，但掩码在 do_sigaction 所在的 signal.c 翻译单元展开。do_sigaction 对 act 与 oact 各做一次掩码 signal.c:1197（QD-L31） SD-92；:1199 的 sigaction_compat_abi 是注释，之后没有活动代码按名加回这一位 SD-93；然后在 :1204 写入 action[sig-1] AD2-17。投递时，get_signal 只在表项既不是 SIG_IGN 也不是 SIG_DFL 时把它复制进 ksig->ka AD3-18；arch_do_signal_or_restart 调 handle_signal AD0-08；handle_signal 在 :204 调 setup_rt_frame AD0-07；setup_rt_frame 唯一的活动分支转调 x64_setup_rt_frame，ia32/x32 分支（:153-159）都是注释 signal.c:161（QD-L09）。x64_setup_rt_frame 的 :167 是 /* */ 注释，:168 判断 sa_flags 不含 SA_RESTORER，:169 返回 -EFAULT AD0-13 SD-94；get_sigframe 在这之后的 :171 才被调用 AD3-12。'
+  premises: [signal.c 翻译单元的预处理顺序如 claim 第二段所述：这是由 include 文本与守卫推出的，没有预处理输出，NVR-2 未运行。, '构建中没有本次检索看不到的注入：例如 CMake 首次配置时经环境变量 CFLAGS 或命令行带入的 CMAKE_C_FLAGS 初值（options_flags.cmake 把内核选项拼在原值之后 options_flags.cmake:40（QD-L41）；CMake 初值的来源属外部语义，未核），或仓库外的构建包装在 signal_const.h 之前定义了 SA_RESTORER 或 __ARCH_UAPI_SA_FLAGS。', '用户进程经 rt_sigaction（13 号，CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB 中的活动表项）为某个信号装了 sa_handler 不是 SIG_DFL/SIG_IGN 的处理函数，之后该信号在一次经 syscall_exit_to_user_mode 的返回中被 get_signal 选中。']
+  impact: '以下都以推断成立为条件，只描述源码数据流，不断言运行结果。
+
+    - 经 rt_sigaction 安装的处理函数，存入 action[] 的 sa_flags 都没有 SA_RESTORER，与用户是否设置无关；经 oact 读回的 sa_flags 也没有这一位（:1196-1197，再由 sys_rt_sigaction 写回用户 AD2-20）。
+
+    - 投递时 x64_setup_rt_frame 在 :169 返回。这发生在 get_sigframe 之前（:171 是它唯一的活动调用点 QD-71），也在全部帧写入之前，还在把 regs 改成处理函数入口之前 AD0-16。handle_signal 只在 :204 记下 failed，:222 的 signal_setup_done 是注释（RS-02）。这条失败路径上没有活动的 SIGSEGV 发送代码，源码上也不会把 regs->ip 改成处理函数地址。按源码数据流，经 rt_sigaction 注册的处理函数都投递不出去。
+
+    - 对经 rt_sigaction 注册的处理函数，signal_64.c:171 之后（含 get_sigframe）都到不了。因此 RS-08、RS-09 与 RS-10 的建帧一侧都以“RS-01 不成立”为前提。本包两条只记事实的记录也受影响：sigcontext 的 trapno/err/cr2 写入 AD3-11 到不了；get_sigframe 的旧式 altstack 分支要求 sa_flags 不含 SA_RESTORER signal.c:66（QD-L09），而 get_sigframe 只在 :168 判断之后才被调用，所以这个分支无论本条是否成立都进不去；本条成立时，连 get_sigframe 本身也到不了。
+
+    - RS-12 中“一个进程装的处理函数地址被别的进程当作有效地址”的后果被遮蔽：失败发生在 regs->ip 被改写之前。但 SA_RESETHAND 在 UAPI_SA_FLAGS 之内，带它的表项仍会先在 get_signal 中被复位（见 RS-02）。
+
+    - 内核不再建立信号帧，rt_sigreturn 只能由用户直接发出 15 号调用进入，帧内容完全由用户给出（推断）；RS-06、RS-07 与 RS-10 的恢复一侧不受本条影响。
+
+    - 若推断不成立（SA_RESTORER 被保留），上述条目按各自前提成立；RS-02 的失败来源只剩“注册时不带 SA_RESTORER”与“SA_SIGINFO 复制失败”两种。'
+  counter_evidence: [这是 include 文本推断，没有预处理输出。若构建中有前提 2 所说的注入，结论反转。, 检索范围内没有反证：SA_RESTORER 的唯一定义、包含位点、守卫名、宏形式包含、强制包含、-D 列表都已核对（见 claim 第二段）。, 'signal_64.c 翻译单元中 SA_RESTORER 必须已定义，否则 :168 无法编译（推断）。两个翻译单元看到的状态不同并不矛盾：掩码在 signal.c 翻译单元的 do_sigaction 中展开，这正是推断的关键。', '没有找到绕过 do_sigaction 改写标志的代码：sa_flags 的赋值只有 :1195、:1197 两处掩码，action[] 的整体写入只有 :1204 与 fork.c:765 按值复制父任务的表 QD-149；get_signal 只写 sa_handler signal.c:943（QD-L31）。词法检索不能排除经函数指针或宏拼接的写入。', '只有用户真的装了处理函数并收到该信号时才有后果。仓库内的活动用户源码没有可达的注册：myinitramfs 中唯一的 signal() 调用在 tests.c 的 test_all 里，test_all 唯一的调用点 myshell.c:81 是注释 QD-150；libc 内部未知（CORE-USER-VFS-BASELINE-05::GAP-U10）。']
+  unknown: [signal.c 翻译单元的真实预处理结果（NVR-2）。, 构建环境是否经 CFLAGS 等途径注入宏定义（静态检索看不到）。, 'libc 的 sigaction/signal 是否设置 SA_RESTORER 与 sa_restorer（CORE-USER-VFS-BASELINE-05::GAP-U10，NVR-4）；若本条成立，这一点不改变投递结果。', 若本条不成立，RS-08、RS-09 与 RS-10 建帧一侧仍要按各自前提另行确认。]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - {query: QD-L33, path: mykernel/lock_IPC/signal/signal_const.h, line: 91, expect: SA_RESTORER}
+  - {query: QD-L33, path: mykernel/lock_IPC/signal/signal_const.h, line: 93, expect: "__ARCH_UAPI_SA_FLAGS\t0"}
+  - AD2-18
+  - AD2-01
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1, expect: '#define SIGNAL_DEFINATION'}
+  - AD2-19
+  - AD2-20
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1197, expect: oact->sa.sa_flags &= UAPI_SA_FLAGS}
+  - AD2-17
+  - AD3-18
+  - AD0-08
+  - AD0-07
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 161, expect: 'x64_setup_rt_frame(ksig, regs)'}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 171, expect: frame = get_sigframe(}
+  - AD0-16
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 66, expect: '!(ka->sa.sa_flags & SA_RESTORER)'}
+  - AD3-11
+  - {query: QD-L41, path: mykernel/scripts/options_flags.cmake, line: 40, expect: '${CMAKE_C_FLAGS} ${RELEASE_FLAG}'}
+  - {query: QD-L41, path: mykernel/scripts/options_flags.cmake, line: 43, expect: -nostdinc}
+  - {query: QD-L02, path: mykernel/CMakeLists.txt, line: 30, expect: GLOB_RECURSE KERNEL_C_SRCS}
+  - QD-139
+  - QD-140
+  - QD-141
+  - QD-142
+  - QD-143
+  - QD-144
+  - QD-145
+  - QD-146
+  - QD-147
+  - QD-148
+  - QD-149
+  - QD-72
+  - QD-71
+  - QD-150
+  - SD-92
+  - SD-93
+  - SD-94
+  - {query: QD-L02, path: mykernel/CMakeLists.txt, line: 32, expect: REMOVE_ITEM KERNEL_C_SRCS}
+  - AD0-13
+  - AD3-12
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 943, expect: ka->sa.sa_handler = SIG_DFL}
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-02', 'CORE-USER-RETURN-SIGNAL-09::RS-08', 'CORE-USER-RETURN-SIGNAL-09::RS-09', 'CORE-USER-RETURN-SIGNAL-09::RS-10', 'CORE-USER-RETURN-SIGNAL-09::RS-06', 'CORE-USER-RETURN-SIGNAL-09::RS-07', 'CORE-USER-RETURN-SIGNAL-09::RS-12', 'CORE-USER-VFS-BASELINE-05::GAP-U10']
+  blocks: {static_work: false, future_runtime: NVR-2 的结果决定 RS-08、RS-09、RS-10 建帧一侧和两条事实记录在运行时能否到达；也影响 NVR-1 中处理函数投递的观察解释}
+  future_verification:
+    candidates: [NVR-2]
+    authorization_needed: [预处理或编译授权（本任务禁止）]
+  reopen_conditions: 拿到 NVR-2（预处理或编译 signal.c 翻译单元）的授权与结果时；或 lock_IPC/signal/signal.h、lock_ipc_const.h、signal_const.h、include/uapi/linux/signal.h、arch/x86_64/include/asm/signal.h 的包含关系或构建选项改变时。开工前重核这些文件。
+  ai_suggestion: 可调整包含关系，让 signal_const.h 处理 :89-95 时已能看到 SA_RESTORER，或由 arch 头直接给出 __ARCH_UAPI_SA_FLAGS；先用 NVR-2 确认现状。建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-02
+  id: RS-02
+  title: handle_signal 建帧失败后没有任何处理（signal_setup_done 被注释）：已出队的信号被静默丢弃，重启表对 ax/ip 的改写原样留在 pt_regs
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-02, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.delivery_dispatch, ipc.signal.syscall_restart, ipc.signal.frame_setup]
+  claim: '一、先改写。handle_signal 先判断是否来自系统调用：syscall_get_nr 返回 (int)orig_ax AD0-01。再按 syscall_get_error 的结果改写 regs->ax、regs->ip；这个结果取自 regs->ax，经 IS_ERR_VALUE 过滤 AD0-02 AD0-03。改写规则见 signal.c:176（QD-L09） AD0-05 AD0-06 AD3-04。
+
+    二、失败无人处理。handle_signal 在 :204 调 setup_rt_frame，把结果记入 failed AD0-07。failed 只在 :205 被读 SD-96：成功时只清 DF/RF/TF signal.c:216（QD-L09），失败时什么也不做。:222 的 signal_setup_done(failed, ksig, stepping) 是 // 注释 SD-97；mykernel 中 signal_setup_done 没有定义，force_sigsegv 只有一条注释掉的 extern（include/linux/sched/signal.h:135），signal_delivered 没有出现 QD-151。handle_signal 返回后，mykernel/arch/x86_64/lock_IPC/signal/signal.c 的 arch_do_signal_or_restart 在 :251 直接 return，跳过 :254-270 的无处理函数重启分支 AD0-08。它在 exit_to_user_mode_loop 中只被无条件调用一次，外层循环与门禁都是注释（CORE-USER-BOUNDARIES-07::AB2-12、CORE-USER-BOUNDARIES-07::SB-14、CORE-USER-BOUNDARIES-07::SB-15），同一次返回不会重试。
+
+    三、信号已出队。进入 handle_signal 之前，get_signal 已把信号出队 signal.c:916（QD-L31）：collect_signal 清位、摘链 signal.c:187（QD-L31），再释放节点 signal.c:195（QD-L31）。get_signal 先把动作复制进 ksig->ka，带 SA_ONESHOT 时再把表项复位为 SIG_DFL signal.c:942（QD-L31），然后 break 返回 signal.c:945（QD-L31）。
+
+    四、负返回的来源。源码上能使 setup_rt_frame 返回负值的只有两处，都在 mykernel/arch/x86_64/lock_IPC/signal/signal_64.c 的 x64_setup_rt_frame 中：:168-169 的 SA_RESTORER 判断 AD0-13，以及 SA_SIGINFO 时 copy_siginfo_to_user 失败（signal_64.c:189-191）AD0-14。函数里共有三处活动的 return -EFAULT SD-95，第三处在 Efault 标号下 signal_64.c:236（QD-L10）。到这个标号有两条路：unsafe_put_user 的 goto，以及 :185 处 unsafe_put_sigcontext 的 goto signal_64.c:137（QD-L10）。后者只在 __unsafe_setup_sigcontext 返回非 0 时跳转，而它只能经自己 :133 的 Efault 返回 -EFAULT signal_64.c:134（QD-L10），那里同样只由 unsafe_put_user 到达（RS-08）。unsafe_put_user 展开为 put_user，put_user 的值恒为 -ENOERR（即 0）AD2-03 AD2-02，所以两条路都到不了。两个失败点都在改写 regs 的 di/ax/si/dx/ip/sp/cs（:198-230）之前 AD0-16。
+
+    五、顺序本身是有意的：成功时 :108、:120 把改写后的 ax、ip 存进 sigcontext AD0-12 signal_64.c:120（QD-L10），rt_sigreturn 经 restore_sigcontext 恢复 AD3-09。缺陷只在失败分支没有任何处理。'
+  premises: ['handle_signal 被调用。按源码，这就等于 get_signal 在 :945 选中了 sa_handler 既不是 SIG_IGN 也不是 SIG_DFL 的表项：默认致命动作的 do_group_exit 是注释（RS-03），那条路不会返回 true。', 'setup_rt_frame 返回负值，二者之一。(a) ksig->ka.sa.sa_flags 不含 SA_RESTORER：若 RS-01 成立，经 rt_sigaction 注册的处理函数全都如此；若不成立，取决于注册时是否带这一位（libc 在仓库外）。(b) 带 SA_SIGINFO 且 copy_siginfo_to_user 返回非零 signal.c:1063（QD-L31）：源码上只对应 copy_to_user 或 clear_user 的地址检查失败 AD2-12 uaccess_64.h:192（QD-L07）。copy_user_generic 或 __clear_user 要返回剩余字节数，只能靠 _ASM_EXTABLE_UA 登记的修复跳转 uaccess_64.h:115、:179（QD-L07），而 mykernel 中没有异常表的查找或修复函数 QD-76，按 RS-06、RS-07 的同一推断到不了。帧地址由用户可控的 regs->sp 或 sigaltstack 经 get_sigframe 算出，而 :178-186 已先直接写过帧（RS-08）；(b) 在什么条件下能不先出错就到达，没有确认（推断）。', （只对“改写保留”这一后果）(int)regs->orig_ax != -1，且 regs->ax 恰好是 -516、-514、-512、-513 之一，即 -ERESTART_RESTARTBLOCK、-ERESTARTNOHAND、-ERESTARTSYS、-ERESTARTNOINTR。]
+  impact: '- 源码层面：已出队的这次信号没有投递，也没有替代处理：没有 SIGSEGV 发送代码，没有重新入队，没有打印。带 SA_ONESHOT 的表项已复位为 SIG_DFL；按 CORE-USER-VFS-BASELINE-05::UV-14，各任务共用 init_sighand，复位对所有任务生效（推断，见 RS-12）。
+
+    - regs 的 ip/sp/cs 不会被改成处理函数入口。返回段怎样装入这些槽，依 CORE-USER-BOUNDARIES-07::FP-3 的描述（推断）。
+
+    - 满足前提 3 时，pt_regs 的 ax/ip 槽保留重启表的改写：-516、-514，以及不带 SA_RESTART 的 -512，变成 -EINTR；-513，以及带 SA_RESTART 的 -512，变成 ax=orig_ax、ip-=2。静态阅读只能确认槽里的值；它们怎样带回用户态、ip-=2 之后怎样执行，都是推断，NOT_RUN。不满足前提 3 时，ax 保持原值（分派写入的值，或越界号时的原 rax），这是本包 ER-02 所说“有信号递送时 ax 也可能不变”的情形之一。
+
+    - 前提 3 目前没有内核侧触发源，属潜在问题：按检索，活动代码显式产生 -ERESTART* 的只有 completion.h:52（受 signal_pending_state 门控；wait_for_common 唯一的活动调用点以 TASK_UNINTERRUPTIBLE 调用，所在的 wait_for_completion 是 void 函数，返回值不外传 QD-154）和没有调用者的 restart_syscall()（signal.h:462-464）QD-152 QD-153。已知能让 regs->ax 等于这些值的只有越界号：分派不写 ax，ax 保留用户 rax（CORE-USER-BOUNDARIES-07::UB-09；本包 ER-03 对其作了限定）。
+
+    - 若 RS-01 成立，所有经 rt_sigaction 注册的处理函数的投递都落入本条失败路径（条件推断）。'
+  counter_evidence: ['带 SA_RESTORER 注册、帧地址可写的处理函数不会进入失败路径，但这要求 RS-01 不成立；libc 的做法在仓库外（CORE-USER-VFS-BASELINE-05::GAP-U10）。', “先改写再建帧”不是缺陷：成功路径把改写后的值存进帧，rt_sigreturn 再恢复。, 帧写入本身不会以负返回值出现（Efault 标号到不了）；写入出错时的去向属 RS-08。, 与 Linux 对照（只作对照，不是 MyOS2 的行为）：Linux 在这里经 signal_setup_done 处理失败。即使在本树恢复这一调用，get_signal 的默认致命动作 do_group_exit 也是注释（RS-03），推不出进程会结束。]
+  unknown: ['用户程序或 libc 是否会不带 SA_RESTORER 注册处理函数（CORE-USER-VFS-BASELINE-05::GAP-U10，NVR-4）。', 'copy_siginfo_to_user 在运行时失败的实际条件：源码上只剩地址检查失败一种；帧地址怎样不在 :178-186 的直接写入中先出错、而在 :190 被拒，没有确认（推断，NOT_RUN）。', 41 个活动系统调用的返回值能否经别的路径等于 -ERESTART*：本条只按名检索了显式产生点，没有逐个追处理函数的返回值。, 改写后的 ax/ip 回到用户态之后的实际执行（NOT_RUN，NVR-1）。]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - AD0-01
+  - AD0-02
+  - AD0-03
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 176, expect: 'syscall_get_error(current, regs)'}
+  - AD0-05
+  - AD0-06
+  - AD3-04
+  - AD0-07
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 216, expect: regs->flags &= ~(X86_EFLAGS_DF}
+  - AD0-08
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 916, expect: dequeue_synchronous_signal(&ksig->info)}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 187, expect: list_header_delete_node(&pending->list}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 195, expect: __sigqueue_free(first)}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 942, expect: ka->sa.sa_flags & SA_ONESHOT}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 945, expect: break; /* will return non-zero}
+  - AD0-14
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 236, expect: return -EFAULT}
+  - AD0-16
+  - AD2-03
+  - AD2-02
+  - AD0-12
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 120, expect: 'unsafe_put_user(regs->ip, &sc->ip'}
+  - AD3-09
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1063, expect: 'copy_to_user(to, from'}
+  - AD2-12
+  - QD-151
+  - QD-152
+  - QD-153
+  - QD-154
+  - SD-96
+  - SD-97
+  - SD-95
+  - CORE-USER-BOUNDARIES-07::AB2-12
+  - CORE-USER-BOUNDARIES-07::SB-14
+  - CORE-USER-BOUNDARIES-07::SB-15
+  - CORE-USER-BOUNDARIES-07::FP-3
+  - CORE-USER-BOUNDARIES-07::UB-09
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 115, expect: '_ASM_EXTABLE_UA(1b, 2b)'}
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 179, expect: '_ASM_EXTABLE_UA(1b, 2b)'}
+  - QD-76
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 137, expect: '#define unsafe_put_sigcontext'}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 134, expect: return -EFAULT}
+  - AD0-13
+  - AD3-12
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 192, expect: '__access_ok(to, n)'}
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-01', 'CORE-USER-RETURN-SIGNAL-09::RS-03', 'CORE-USER-RETURN-SIGNAL-09::RS-05', 'CORE-USER-RETURN-SIGNAL-09::RS-08', 'CORE-USER-RETURN-SIGNAL-09::RS-12', 'CORE-USER-RETURN-SIGNAL-09::ER-02', 'CORE-USER-RETURN-SIGNAL-09::ER-03', 'CORE-USER-BOUNDARIES-07::UB-09', 'CORE-USER-VFS-BASELINE-05::UV-14', 'CORE-USER-RETURN-SIGNAL-09::RS-06', 'CORE-USER-RETURN-SIGNAL-09::RS-07']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中处理函数投递、SA_ONESHOT 复位与重启改写的观察解释}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；或 RS-01 经 NVR-2 有了结论（它决定本条失败路径覆盖多少处理函数）。开工前重核 handle_signal、x64_setup_rt_frame 与 get_signal。
+  ai_suggestion: 可在建帧失败时给出明确处置（例如恢复 signal_setup_done 并补上它所依赖的发送路径），并决定失败时是否保留重启改写；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-03
+  id: RS-03
+  title: get_signal 的默认动作只剩置 PF_SIGNALED：致命、停止、核心转储类信号出队后，任务既不退出也不停止
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-03, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.signal_selection, ipc.signal.syscall_restart]
+  claim: 'get_signal 每轮先出队，再按动作表分流。出队会删除信号：collect_signal 在 :183 清除 pending 位（signal.c:183（QD-L31））；同号信号排了多份时位保留，下一轮再取一份。分流时，活动正文只有 3 处 continue（SIG_IGN、默认忽略、SIGNAL_UNKILLABLE 且不是 kernel-only）和 2 处 break（两个出队函数都返回 0、装有处理函数）（SD-104、SD-105）。其余 SIG_DFL 信号都落到 fatal: 标签。停止分支（:968-1000）、核心转储（:1012-1025）和 do_group_exit（:1039）都在 // 注释中，活动正文里没有退出、停止或核心转储调用（SD-103）；唯一的活动语句是 :1010 的 current->flags |= PF_SIGNALED（signal.c:1010（QD-L31）），其后没有 break（SD-105），回到 for(;;) 继续出队，循环之后才在 signal.c:1042（QD-L31） 解锁。落到这里的有 SIGKILL、SIGTERM、SIGINT、SIGQUIT、SIGSEGV、SIGSTOP/SIGTSTP/SIGTTIN/SIGTTOU，以及 32 号起的实时信号：siginmask 要求 sig < SIGRTMIN（值为 32），所以实时信号永远不属于默认忽略（QD-182）。PF_SIGNALED 在全仓库只有定义和这一处写入，没有读取者（QD-178）。按名检索，也没有别的活动路径会因信号让任务退出：do_exit 的活动调用只有 do_group_exit（exit.c:219）、kthread.c:139 和 exit 系统调用（sched/syscall.c:72），fatal_signal_pending 只在 signal.h 的辅助函数里用到（QD-180）。信号被消耗后，get_signal 接着取下一个：之后若没有装处理函数的信号，返回 false，arch_do_signal_or_restart 走与“没有任何信号”相同的分支（arch signal.c:255-270）；若取到装有处理函数的信号，返回 true，进入 handle_signal（AD0-08）。那个分支的进入条件是 syscall_get_nr(current, regs) != -1，syscall_get_nr 返回 int 化的 orig_ax（QD-184、AD0-01）；系统调用返回时 orig_ax 是入口 rax（rt_sigreturn 除外，它把 orig_ax 置为 -1），低 32 位为 0xFFFFFFFF 的越界调用例外（推断：GCC 取低 32 位）。进入后，switch 只在 regs->ax 恰好是 -ERESTARTNOHAND、-ERESTARTSYS、-ERESTARTNOINTR、-ERESTART_RESTARTBLOCK 之一时才改写帧（AD1-07）。所以是否重启由 ax 决定，不由致命信号本身决定。'
+  premises: ['信号已进入目标任务的私有或共享 pending，且不在其 blocked 中。当前唯一的活动发送链是 sys_kill（lock_IPC/syscall.c:99）→ kill_something_info → kill_proc_info → group_send_sig_info → send_signal_locked → __send_signal_locked（QD-190），只处理 pid > 0；pid <= 0 时 kill_something_info 在 :766 原地 while (1)（QD-189）。写哪个 pending 由 kill_proc_info 中固定的 PIDTYPE_TGID 决定（signal.c:725），经 :733 → :682 → :660 到 :497 选中共享 pending；lock_IPC/syscall.c:97 的 PIDTYPE_TGID 只交给 prepare_kill_siginfo 决定 si_code（:1079 得 SI_USER）（QD-191）。', '对应表项的 sa_handler 为 SIG_DFL。这是全系统条件，不是单个进程的条件：经 fork 产生的任务共用 init_sighand 的动作表（CORE-USER-VFS-BASELINE-05::UV-14，后果见 CORE-USER-RETURN-SIGNAL-09::RS-12），初值为 SIG_DFL；任何一个任务用 rt_sigaction 改了某个可捕获信号，所有任务上该信号会不会走到 :1010 都随之改变。SIGKILL、SIGSTOP 恒为 SIG_DFL：init_sighand 初值为 SIG_DFL，do_sigaction 拒绝修改 kernel-only 信号（QD-187），ignore_signals、flush_signal_handlers 都只在注释中（QD-186）。仓库内的活动用户程序没有安装处理函数：唯一的 signal(SIGTERM, …) 在 test_all 中，而 test_all 的唯一调用 myshell.c:81 是注释（QD-188）；libc 内部属 CORE-USER-VFS-BASELINE-05::GAP-U10。', 'get_signal 被调用：只在目标任务下一次经 syscall_exit_to_user_mode 返回时，即系统调用返回或 fork 子任务第一次返回（CORE-USER-BOUNDARIES-07::QB-43；门禁被注释的情况见 CORE-USER-RETURN-SIGNAL-09::RS-04）。首个程序经 kjmp_to_doexecve 进入用户态那一次不经过这一步（CORE-USER-BOUNDARIES-07::FP-1）。']
+  impact: 源码层面：发给普通进程的 SIGKILL、SIGTERM、SIGINT 等默认致命信号不会结束进程，停止类信号不会让进程停止，信号只是被静默消耗。消耗发生在目标任务下一次经 syscall_exit_to_user_mode 返回时；发送端也不唤醒目标，因为 complete_signal 的唯一调用 signal.c:597 被注释（QD-167）。1 号任务例外：copy_process 对 is_child_reaper 为真（pid 号为 1）的线程组首任务置 SIGNAL_UNKILLABLE（is_child_reaper 分支 fork.c:1321（QD-L39），置位在下一行 fork.c:1322），这是该标志唯一的置位点（QD-181）；copy_signal 为每个新进程新建清零的 signal_s（QD-202），所以推断只有 1 号任务带这个位。它收到的 SIGTERM、SIGINT、SIGQUIT、SIGSEGV、SIGTSTP、SIGTTIN、SIGTTOU 和实时信号在 :964-966 直接 continue，同样被静默丢弃，到不了 :1010；只有 SIGKILL、SIGSTOP 到达 :1010（signal.c:964（QD-L31））。父任务方面：即使将来接上 do_group_exit，父任务能否看到“因信号终止”的状态仍受 CORE-USER-VFS-BASELINE-05::UV-15、CORE-USER-VFS-BASELINE-05::LBU-01 限制（wait4 为空、exit_notify 不通知父任务），这不是本条造成的。重启方面：返回时若 regs->ax 恰好是四个 ERESTART 码之一，arch_do_signal_or_restart 会设 ax=orig_ax、ip-=2，-ERESTART_RESTARTBLOCK 时写回 219（见 CORE-USER-RETURN-SIGNAL-09::RS-05）。在 mykernel 中按名检索，活动代码显式产生这些码的只有两处：completion.h:52（受 signal_pending_state 门控，按 RS-04 推断不进入）和没有调用者的 restart_syscall()（signal.h:464）（QD-183、QD-169）。另有两类来源：号不小于 453 的越界号路径把原号留在 ax（CORE-USER-BOUNDARIES-07::UB-09）；没有活动 return 的处理函数（dup、dup2、wait4，见 CORE-USER-BOUNDARIES-07::UB-10、CORE-USER-VFS-BASELINE-05::UV-15）的返回值在 C 语义下未定义，静态阅读不能排除它们等于这些码。rt_sigreturn 不在此列：restore_sigcontext 把 orig_ax 置为 -1（QD-185），重启分支不进入。以上只描述源码分支，不断言运行结果。
+  counter_evidence: ['可能是作者有意保留的未实现状态：do_group_exit 存在，并被 exit_group 活动调用（sched/syscall.c:137），另有 forkexec_api.h:59 的原型声明（不是调用）；get_signal 中的两处只在注释里（QD-179）。', '发送端对 complete_signal 的唯一调用也被注释（signal.c:597），整条默认致命路径都未启用，不是单点遗漏（QD-167）。', '即使接上 do_group_exit，CORE-USER-VFS-BASELINE-05::UV-15 指出 do_exit 与 exit_notify 本身也有缺口。', '对 1 号任务，非 kernel-only 信号在 :964-966 continue 是源码中保留的分支，不属于本条所说的缺失。']
+  unknown: [运行期是否真有信号到达用户进程（NOT_RUN）。, kernel_init 是否拿到 1 号（alloc_pid 未追）。, 'libc 内部是否安装处理函数（CORE-USER-VFS-BASELINE-05::GAP-U10）。', PF_SIGNALED 与退出路径的检索都是词法检索，覆盖不到以数值 0x00000400 写出的用法或函数指针调用。]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 183, expect: 'sigdelset(&pending->signal, sig)'}
+  - SD-104
+  - SD-105
+  - SD-103
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1010, expect: current->flags |= PF_SIGNALED}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1042, expect: spin_unlock_irq(&sighand->siglock)}
+  - QD-182
+  - QD-178
+  - QD-180
+  - AD0-08
+  - QD-184
+  - AD1-07
+  - QD-190
+  - QD-189
+  - QD-191
+  - QD-187
+  - QD-186
+  - QD-188
+  - QD-167
+  - {query: QD-L39, path: mykernel/sched/forkexec/fork.c, line: 1321, expect: ->child_reaper = p}
+  - QD-181
+  - QD-202
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 964, expect: signal->flags & SIGNAL_UNKILLABLE}
+  - QD-183
+  - QD-169
+  - QD-185
+  - QD-179
+  - CORE-USER-BOUNDARIES-07::QB-43
+  - CORE-USER-BOUNDARIES-07::FP-1
+  - AD0-01
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-04', 'CORE-USER-RETURN-SIGNAL-09::RS-05', 'CORE-USER-RETURN-SIGNAL-09::RS-12', 'CORE-USER-VFS-BASELINE-05::UV-15', 'CORE-USER-VFS-BASELINE-05::LBU-01', 'CORE-USER-VFS-BASELINE-05::UV-02', 'CORE-USER-BOUNDARIES-07::UB-09', 'CORE-USER-BOUNDARIES-07::UB-10']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中信号投递与进程退出的结果解释}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 默认致命动作、停止动作与退出、回收（CORE-USER-VFS-BASELINE-05::UV-15）彼此依赖，以后宜放在同一个专项里处理；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-04
+  id: RS-04
+  title: TIF_SIGPENDING 机制整体停用：两处门禁被注释，置位端不可达、清除端不存在；每次经 syscall_exit_to_user_mode 返回都无条件执行一遍 get_signal 并加解 siglock
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-04, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.pending_flag, entry.syscall_return_work, ipc.signal.syscall_restart]
+  claim: '返回尾无条件进入信号处理这一侧，07 已记录：exit_to_user_mode_loop 中按 _TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL 判断的 if 被注释，arch_do_signal_or_restart(regs) 成为无条件调用（CORE-USER-BOUNDARIES-07::AB2-12、CORE-USER-BOUNDARIES-07::SB-14、CORE-USER-BOUNDARIES-07::SB-15），调用方传入的 ti_work 是字面量 0（CORE-USER-BOUNDARIES-07::QB-65）。本条新增以下四点。(1) get_signal 自己的门禁也被注释：活动正文中没有 task_sigpending 调用（SD-106）。所以每次调用都在 :827 取 sighand->siglock（AD2-14），整个循环只在 :1042 解锁一次（signal.c:1042（QD-L31）；fatal: 处 :1003 的解锁是注释）；活动正文中加锁、解锁各一处，没有活动的 goto（SD-107、SD-62）。每轮先调用 dequeue_synchronous_signal，它返回 0 时再调用 dequeue_signal（signal.c:916（QD-L31））；没有同步信号时，dequeue_synchronous_signal 在 :317-318 做一次位图判断就返回 0（signal.c:317（QD-L31））。(2) 在 mykernel/ 范围按名检索，TIF_SIGPENDING 共 12 处：定义 2、活动置位 3（signal.c:108、368，signal.h:463）、活动读取 1（signal.h:470）、注释 6；没有清除语句（QD-162、QD-163）。三处置位都不可达：calculate_sigpending 的唯一调用在 schedule_tail 中（scheduler_core.c:891），是注释（QD-166）；signal_wake_up_state 只经宏 signal_wake_up 与 ptrace_signal_wake_up 进入，前者唯一的活动使用在 complete_signal 内（signal.c:477），后者没有使用者（QD-168），而 complete_signal 的唯一调用 signal.c:597 是注释（QD-167）；restart_syscall 只有声明和定义，没有调用者（QD-169）。(3) 出队路径上的 recalc_sigpending（signal.c:269、344）以及其余 4 处调用都是注释；它在 mykernel 中只有 include/linux/sched/signal.h:178 的 extern 声明，没有定义（QD-165）。(4) signal_pending() 只看 TIF_NOTIFY_SIGNAL 与 TIF_SIGPENDING（signal.h:481（QD-L32）），TIF_NOTIFY_SIGNAL 同样没有置位语句（QD-164）。'
+  premises: ['范围限定：本条只涉及经 syscall_exit_to_user_mode 返回用户态的两条路径，即 do_syscall_64（arch/x86_64/entry/common.c:49）与 ret_from_fork（process_arch.c:79）（CORE-USER-BOUNDARIES-07::QB-43、CORE-USER-BOUNDARIES-07::AB2-11）。首个程序经 kjmp_to_doexecve 的内联汇编直接跳到 syscall_return_via_sysret，不经过它（CORE-USER-BOUNDARIES-07::FP-1）。按名检索，arch_do_signal_or_restart 的活动调用只有 entry/common.c:34（QD-170），入口汇编中对这几个函数的 call 只有 entry_64.S:281 一处，而且是注释（QD-171）。推断：中断与异常的返回（sa_entintr_retp 末尾 iretq）不做信号检查。', 'thread_info.flags 没有以按名检索之外的方式被置位。源码层面已核：thread_info 结构中没有 union（QD-176）；INIT_THREAD_INFO 把 flags 初始化为 0，由 init_task.c:74 使用（QD-175）；fork 的 *tsk = *orig 只继承父任务已有的位（fork.c:288（QD-L39））；mykernel 的 .S 文件中没有 thread_info 或 TI_flags 访问（QD-177）。']
+  impact: 当前（源码层面）：每个系统调用返回，以及每个 fork 子任务第一次返回，都会无门禁地执行一遍 get_signal，并对 siglock 加锁、解锁。这把锁在全体经 fork 产生的任务之间共享（CORE-USER-VFS-BASELINE-05::UV-14；后果见 CORE-USER-RETURN-SIGNAL-09::RS-12）。TIF_SIGPENDING 没有可达的置位路径，TIF_NOTIFY_SIGNAL 没有置位语句，初值为 0，所以推断 signal_pending() 恒为假。潜在（现有活动等待路径都不受影响）：msleep_interruptible、down_interruptible、down_killable、down_timeout 等等待入口在 mykernel 中没有活动调用者，只有定义、声明和注释（QD-172）；wait_for_common 的唯一活动调用者 wait_for_completion 传 TASK_UNINTERRUPTIBLE（QD-173）；对不含 TASK_INTERRUPTIBLE、TASK_WAKEKILL 的状态，signal_pending_state 在 signal.h:501 直接返回 0，不读 TIF 位（QD-174）。将来若出现会检查信号的可中断等待（经 signal_pending 或 signal_pending_state 判断；现有以 TASK_INTERRUPTIBLE 睡眠的 kthreadd、devtmpfsd 与三个请求线程都不检查，QD-223、QD-225）：只恢复置位端而出队侧仍不重算时，get_signal 取空 pending 后该位会一直保持，这类等待会一直被判为有信号；只恢复两处门禁而不恢复置位端时，信号永远不会被取出（推断）。对 CORE-USER-BOUNDARIES-07::UB-06 所述的清零帧情形，会在零帧上执行 get_signal 与 arch_do_signal_or_restart（未追）。
+  counter_evidence: [get_signal 不依赖该位，投递时的选择逻辑不受影响。, 可能是作者有意整体停用 TIF_SIGPENDING，改为每次返回无条件检查。, 'ti_work 恒为 0（CORE-USER-BOUNDARIES-07::QB-65），即使恢复 entry/common.c:33 的判断也恒为假——现状是门禁被删，而不是被 0 短路。', 'pending 为空时，每次只多出几次位图判断（dequeue_synchronous_signal 的 :317，以及 dequeue_signal 在 signal.c:237-241 对私有、共享 pending 各一次 next_signal），不遍历队列。']
+  unknown: [每次返回加解 siglock 的实际开销与锁序影响（NOT_RUN）。, '零帧（CORE-USER-BOUNDARIES-07::UB-06）上走完整 get_signal 的后果（未追）。', 函数指针、宏拼接或数值写法置位 thread_info.flags 的可能（词法检索覆盖不到）。]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - CORE-USER-BOUNDARIES-07::AB2-12
+  - CORE-USER-BOUNDARIES-07::SB-14
+  - CORE-USER-BOUNDARIES-07::SB-15
+  - CORE-USER-BOUNDARIES-07::QB-65
+  - CORE-USER-BOUNDARIES-07::QB-43
+  - CORE-USER-BOUNDARIES-07::AB2-11
+  - CORE-USER-BOUNDARIES-07::FP-1
+  - SD-106
+  - AD2-14
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1042, expect: spin_unlock_irq(&sighand->siglock)}
+  - SD-107
+  - SD-62
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 916, expect: dequeue_synchronous_signal(&ksig->info)}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 317, expect: 'pending->signal.sig[0] & ~tsk->blocked'}
+  - QD-162
+  - QD-163
+  - QD-166
+  - QD-168
+  - QD-167
+  - QD-169
+  - QD-165
+  - {query: QD-L32, path: mykernel/lock_IPC/signal/signal.h, line: 481, expect: TIF_NOTIFY_SIGNAL}
+  - QD-164
+  - QD-170
+  - QD-171
+  - QD-176
+  - QD-175
+  - {query: QD-L39, path: mykernel/sched/forkexec/fork.c, line: 288, expect: '*tsk = *orig'}
+  - QD-177
+  - QD-172
+  - QD-173
+  - QD-174
+  - QD-223
+  - QD-224
+  - QD-225
+  related: ['CORE-USER-BOUNDARIES-07::entry.syscall_frame_return', 'CORE-USER-BOUNDARIES-07::sched.forkexec.fork_child_return', 'CORE-USER-BOUNDARIES-07::UB-06', 'CORE-USER-VFS-BASELINE-05::UV-14', 'CORE-USER-RETURN-SIGNAL-09::RS-03', 'CORE-USER-RETURN-SIGNAL-09::RS-12']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中返回尾信号检查与加解锁的观察}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 以后若恢复门禁，宜同时恢复置位端（complete_signal → signal_wake_up）、出队后的 recalc_sigpending 与它的定义；只恢复一端会落入上面两种潜在情形。建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-05
+  id: RS-05
+  title: 重启写回的 219（__NR_restart_syscall）没有分派表项，restart_block 续做机制整体缺失（潜伏）
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-05, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.syscall_restart]
+  claim: '没有处理函数时（get_signal 为假），arch_do_signal_or_restart 对 -ERESTART_RESTARTBLOCK 执行 regs->ax = get_nr_restart_syscall(regs) 与 regs->ip -= 2（AD1-09）。CONFIG_IA32_EMULATION 与 CONFIG_X86_X32_ABI 在 mykernel 中没有定义，构建文件中也没有出现（QD-48、QD-49），所以 get_nr_restart_syscall 只编入 #else 分支的 return __NR_restart_syscall;（AD3-05），值为 219（AD0-04）。mykernel 中取值 219 的 __NR_ 定义只有这一个（QD-47）；syscalls_64.h 与 syscall_64.c 中没有 219 或 restart 的项（QD-46；41 个活动表项见 CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB）。219 小于 __NR_syscalls（453），以 219 进入时 do_syscall_64 会调用 x64_sys_call（CORE-USER-SYSCALL-STDIO-08::AS2-05、CORE-USER-SYSCALL-STDIO-08::AS2-12）；switch 中没有 case 219，走 default 进入 __x64_sys_ni_syscall，打印后 while (1)（CORE-USER-SYSCALL-STDIO-08::AS2-08、CORE-USER-SYSCALL-STDIO-08::AS2-06）。续做所需的 restart_block 机制在源码中整体缺失：task_struct 的成员、init_task 中的初值、restore_sigcontext 中的复位（restore_sigcontext 由 rt_sigreturn 调用，SD-44）、sys_restart_syscall 的声明都在 // 注释中，全树也没有 struct restart_block 的定义（QD-50）。sys_restart_syscall 的声明还位于 #ifndef CONFIG_ARCH_HAS_SYSCALL_WRAPPER 段（316 至 1273 行）内（QD-52），而内核以 -DCONFIG_ARCH_HAS_SYSCALL_WRAPPER 编译（CORE-USER-SYSCALL-STDIO-08::AS2-19），整段不编入。restart_block 唯一的非注释引用在 arch signal.c:228，位于未定义的 #ifdef CONFIG_IA32_EMULATION 内（QD-51）。'
+  premises: [某次经 syscall_exit_to_user_mode 返回时，帧中 regs->ax 的 64 位值恰为 -516，即 -ERESTART_RESTARTBLOCK（数值见 QD-57）, 同一次返回时 (int)regs->orig_ax ≠ -1：syscall_get_nr 返回 int 化的 orig_ax（AD0-01），它是无处理函数分支的进入条件（AD3-07）, '同一次返回时 get_signal 为假；为真时 arch_do_signal_or_restart 调用 handle_signal 后直接返回（AD0-08）。get_signal 为假也包括出队的信号只有 SIG_IGN 或 SIG_DFL 动作的情形，默认致命动作不终止任务（CORE-USER-RETURN-SIGNAL-09::RS-03）', '用户态随后在 ip-2 处再次执行 syscall 指令（推断：依赖 sysretq 以 rcx 返回、ip-2 处恰为 2 字节的 syscall 指令，属 ISA 外部语义，未核；返回段把 regs->ip 装入 rcx 见 CORE-USER-BOUNDARIES-07::SB-02、CORE-USER-BOUNDARIES-07::FP-3）']
+  impact: 前提成立时，任务以 219 再次进入内核，停在 __x64_sys_ni_syscall 的 while (1)，原来的调用不会续做（推断，NOT_RUN）。在当前树中，这个后果与用户直接以 219（或任何小于 453 而不在表中的号）发出系统调用相同，即 CORE-USER-BOUNDARIES-07::UB-09 的表内缺项循环；经越界号途径到达（本包对 UB-09 的越界号证据追加），也不带来 UB-09 与该追加之外的新后果。本条的独立内容是一处潜伏的不一致：活动的重启分支写回一个没有处理函数的号，续做机制只剩注释。将来若某个系统调用返回 -ERESTART_RESTARTBLOCK，且返回时 get_signal 为假，就会落到这里（推断）。有处理函数时，handle_signal 先把这个码改成 -EINTR，不写 219（AD0-05）。到达途径：按名字与字面量检索，活动代码中没有返回或赋值 -ERESTART_RESTARTBLOCK、-516 的语句（QD-54），其余出现只是两个 case 标签、errno.h 中的定义与 errname.c 的名字表（QD-53）。目前已知、能由源码确定构造的到达途径是越界号：用户 rax 为 -516 时 do_syscall_64 不写 ax，帧中 ax 与 orig_ax 都是这个值（CORE-USER-SYSCALL-STDIO-08::AS2-02、CORE-USER-SYSCALL-STDIO-08::AS2-05；推断）。
+  counter_evidence: [按名字与字面量检索，活动代码中没有 -ERESTART_RESTARTBLOCK 的生产者（QD-54、QD-53）, 有处理函数时，这个码被改成 -EINTR，不写 219（AD0-05）, '当前树中直接以 219 号发出系统调用就能到达同一个 while (1)（CORE-USER-BOUNDARIES-07::UB-09），本条不带来新的能力', arch_do_signal_or_restart 只经 syscall_exit_to_user_mode 到达，后者的活动调用点只有 do_syscall_64 与 ret_from_fork（QD-61、QD-62）。经 rt_sigreturn 恢复出 ax = -516 不构成另一条途径，因为 restore_sigcontext 同时把 orig_ax 置为 -1（AD0-11）；ret_from_fork 的两条路径把 ax 置 0（QD-55），同样不进本分支]
+  unknown: ['部分活动处理函数没有活动 return，返回值经包装写进 regs->ax，在 C 语义下未定义，静态阅读不能排除恰为 -516：dup、dup2（CORE-USER-BOUNDARIES-07::UB-10、CORE-USER-BOUNDARIES-07::SB-05、CORE-USER-BOUNDARIES-07::SB-06）；函数体为空的 wait4（CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB、CORE-USER-VFS-BASELINE-05::UV-15）；lseek 原样返回 f_op->llseek 的结果（CORE-USER-SYSCALL-STDIO-08::AS3-29、SD-43），而挂在 def_blk_fops 与 simple_dir_operations 上的 blkdev_llseek、dcache_dir_lseek 都没有活动 return（QD-56、SD-41、SD-42）', 'sysretq 是否以 rcx 返回、ip-2 处是否为 2 字节的 syscall 指令（ISA 外部语义；CORE-USER-VFS-BASELINE-05::GAP-U04 的剩余部分，本包 NVR-3）', 运行时是否真的以 219 再次进入（NOT_RUN）]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence: [AD1-09, AD3-05, AD0-04, AD0-08, AD3-07, AD0-01, AD0-05, AD0-11, QD-48, QD-49, QD-47, QD-46, QD-50, QD-51, QD-52, QD-53, QD-54, QD-55, QD-56, QD-57, QD-61, QD-62, SD-44, SD-43, SD-41, SD-42, 'CORE-USER-SYSCALL-STDIO-08::AS2-02', 'CORE-USER-SYSCALL-STDIO-08::AS2-05', 'CORE-USER-SYSCALL-STDIO-08::AS2-06', 'CORE-USER-SYSCALL-STDIO-08::AS2-08', 'CORE-USER-SYSCALL-STDIO-08::AS2-12', 'CORE-USER-SYSCALL-STDIO-08::AS2-19', 'CORE-USER-SYSCALL-STDIO-08::AS3-29', 'CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB', 'CORE-USER-BOUNDARIES-07::SB-02', 'CORE-USER-BOUNDARIES-07::SB-05', 'CORE-USER-BOUNDARIES-07::SB-06', 'CORE-USER-BOUNDARIES-07::SB-15']
+  related: ['CORE-USER-BOUNDARIES-07::UB-09', 'CORE-USER-BOUNDARIES-07::UB-10', 'CORE-USER-SYSCALL-STDIO-08::entry.syscall_table', 'CORE-USER-RETURN-SIGNAL-09::RS-02', 'CORE-USER-RETURN-SIGNAL-09::RS-03', 'CORE-USER-RETURN-SIGNAL-09::ER-03', 'CORE-USER-VFS-BASELINE-05::GAP-U04']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中对重启改写与 219 再入的观察解释}
+  future_verification:
+    candidates: [NVR-1, NVR-3]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像, 外部资料研究授权]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；time 中出现返回 -ERESTART_RESTARTBLOCK 的系统调用、恢复 restart_block 或 sys_restart_syscall、或 syscalls_64.h 加入 219 时，重核 arch signal.c、unistd_64.h 与 syscalls_64.h。
+  ai_suggestion: 补齐 restart_block 之前，可让写回的号与分派表保持一致：为 219 加表项并实现续做，或在无处理函数分支不写回 219；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-06
+  id: RS-06
+  title: rt_sigreturn 读用户帧时没有出错出口：get_user 的返回值恒为 0，copy_from_user 的失败返回依赖无人查找的异常表；帧地址非负但不可访问时回不到 badframe
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-06, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.sigreturn_restore, arch.x86_64.user_access]
+  claim: '15 号 rt_sigreturn 以 regs->sp - 8 作帧地址，先用 access_ok 检查整帧，再用两处 get_user 读 uc.uc_sigmask 与 uc.uc_flags AD3-13 signal_64.c:256（QD-L10）。函数体中只有这一处地址检查 SD-76。access_ok 落到 x86 的 __access_ok：asm/uaccess.h:14 先包含 uaccess_64.h，其 :92 的宏让 access_ok.h 中的通用版本被 #ifndef 跳过 uaccess_64.h:92（QD-L07）。它的常量分支只看地址的符号位，另一分支只看符号位与回绕，都不查映射 AD2-05 AD2-04。get_user 是活动宏：它把用户地址处的值直接读进变量，宏的表达式值（返回值）恒为 -ENOERR，即 0 uaccess.h:99（QD-L06） errno-base.h:5（QD-L27）。读进变量的是用户地址处的内容，不是 0。所以 :257、:259 的 goto badframe 在源码上不可达。restore_sigcontext 只在 copy_from_user 返回非 0 时返回 false AD3-08 SD-77。copy_from_user 本身不做 access_ok（与 RS-11 共用这一事实）AD2-10 AD2-11 SD-78。它要返回非 0，只能靠 copy_user_generic 中 _ASM_EXTABLE_UA 登记的修复跳转 uaccess_64.h:115（QD-L07）。mykernel 中异常表只有 uaccess_64.h:115、179 两个生产者，没有任何查找或修复函数 QD-112 QD-76 QD-113。据此推断 copy_from_user 的失败返回也到不了（依赖 _ASM_EXTABLE_UA 的设计语义）。所以源码上能到达 badframe 的只有 :254 的 access_ok 失败（见 RS-07）。帧地址非负时，两处 get_user 在内核态直接解引用用户给出的地址：源码顺序上 :256 访问 &frame->uc.uc_sigmask 在先，:258 访问 &frame->uc.uc_flags 在后，都不是 frame 本身。两者中先访问到不可访问地址的那一处，会引发异常（推断，外部硬件语义，未核）。按源码静态阅读，去向分三种。① 地址小于 TASK_SIZE_MAX，即 (1<<47)-PAGE_SIZE page_const_arch.h:86（QD-L13） page_const_arch.h:88（QD-L13）：#PF 经 exception_handler 的 PAGE_FAULT_VEC 分支交给 exc_page_fault，再到 handle_page_fault、do_user_addr_fault interrupt.c:151（QD-L14） fault.c:460（QD-L12） AD2-08；simple_find_vma 只返回包含该地址的 VMA vm_map.h:258（QD-L38），找不到就进 myos_bad_area，打印后无条件 while (1) AD2-07 fault.c:99（QD-L12）。栈下方的地址也直接到这里，扩栈分支到不了（CORE-MM-BASELINE-04::MC-22、LB-04）。② 地址在 [TASK_SIZE_MAX, 1<<47) 内：fault_in_kernel_space 为真，进入 do_kern_addr_fault 的 while (1) fault.c:115（QD-L12） AD2-06。③ 1<<47 及以上、符号位为 0 的非规范地址：按外部语义产生 #GP（未核）；源码上同经 exception_handler，在 GEN_PROT_VEC 分支进入 excep_gen_prot interrupt.c:148（QD-L14），以 while (1) 结束 AD2-09。三种都是内核内自旋，只有第一种在 myos_bad_area。被 :56 的 copy_from_user 复制的 uc_mcontext 位于两处 get_user 的地址之间 ucontext.h:6（QD-L28） ucontext.h:10（QD-L28），而 :56 在两处 get_user 都返回后才执行；所以本入口的出错先发生在 get_user（推断；结构大小与 VMA 边界未核）。上述出错去向本身已由 CORE-MM-BASELINE-04::MC-23、MC-22、LB-04、LB-05、E27 登记。本条只新增三点：rt_sigreturn 这个入口；get_user 的返回值恒为 0，使 :257、:259 的 goto badframe 不可达；异常表只有生产者、没有消费者，使 :56-57 的失败返回也到不了（推断）。copy_from_user 不做 access_ok 属 RS-11，在本入口没有单独后果：:254 已按整帧长度做过 access_ok，被复制的 uc_mcontext 又夹在先执行的两处 get_user 的地址之间（推断）。'
+  premises: ['用户直接发出 15 号调用（rt_sigreturn 是活动表项，CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB），或在处理函数中改了 rsp 再返回；即所用的帧不是内核刚建立的那一个', 'regs->sp - 8 按有符号数非负，能通过 :254 的 access_ok；并且 :256 或 :258 访问的地址不可访问（不在任何 VMA 内，或是非规范地址）', '内核态访问这类地址会引发 #PF 或 #GP（外部硬件语义，未核）；之后按所读源码分派']
+  impact: 推断：任何用户程序都能发出 15 号调用，并让 rsp - 8 指向非负、但不在任何 VMA 内的地址。这时 rt_sigreturn 既不返回 -EFAULT，也不走 badframe；任务按上述去向在内核里打印后自旋，不收到信号，也不回到用户态。后果与 CORE-MM-BASELINE-04::MC-23 同类：用户程序本来就能用普通的用户态越界访问到达同一类 while (1)，所以本条不带来新的能力。本条的缺陷在于两点：rt_sigreturn 自己的 badframe 出口只剩 access_ok 失败这一条路，对非负但不可访问的帧地址不可达；内核态读用户地址时没有 -EFAULT 出口。自旋的任务能否被换下、会不会拖住整机，取决于中断出口的调度，见 CORE-MM-BASELINE-04::DR-01 以及 05 对 MC-23 的状态说明，本条不另作判断。CORE-USER-BOUNDARIES-07::UB-07 的未知项（内核态访问用户地址出错时的处理路径）由 MC-23 回答，不算本条新增。正常的信号返回不触发本条。
+  counter_evidence: [正常信号返回时，帧位于投递时刚写过的用户栈上；若 RS-01 成立，内核根本不建帧，15 号调用的帧只能由用户直接给出, 'frame 按有符号数为负时，:254 的 access_ok 会拦下并走 badframe，不访问用户内存（RS-07）', '地址落在某个 VMA 内时，缺页交给 myos_handle_mm_fault；结果非 0 时在 fault.c:324 自旋 fault.c:323（QD-L12）（CORE-MM-BASELINE-04::MC-23），结果为 0 时按源码继续处理；这些情形不属本条']
+  unknown: [非负地址在当前页表中是否已有映射（例如启动时留下的低端映射）未核；若已映射，get_user 与 copy_from_user 不会出错，而是把该处内容当作帧读入（推断）, sizeof(rt_sigframe_s) 是否不大于 PAGE_SIZE，以及编译器是否折叠 __builtin_constant_p（决定 access_ok 走哪个分支，见 RS-07）, VMA 边界是否按页对齐（影响“本入口先在 get_user 出错”这一推断）, 内核态访问未映射或非规范用户地址时产生哪种异常（外部硬件语义）；运行时是否真的进入这些自旋（NOT_RUN）]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - AD3-13
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 256, expect: '&frame->uc.uc_sigmask'}
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 92, expect: '#define __access_ok __access_ok'}
+  - AD2-05
+  - AD2-04
+  - {query: QD-L06, path: mykernel/arch/x86_64/include/asm/uaccess.h, line: 99, expect: '#define get_user(x, ptr)'}
+  - {query: QD-L27, path: mykernel/include/uapi/asm-generic/errno-base.h, line: 5, expect: ENOERR}
+  - AD3-08
+  - AD2-10
+  - AD2-11
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 115, expect: '_ASM_EXTABLE_UA(1b, 2b)'}
+  - {query: QD-L13, path: mykernel/arch/x86_64/mm/page/page_const_arch.h, line: 86, expect: << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE}
+  - {query: QD-L13, path: mykernel/arch/x86_64/mm/page/page_const_arch.h, line: 88, expect: '#define TASK_SIZE_MAX'}
+  - {query: QD-L14, path: mykernel/arch/x86_64/myos/interrupt.c, line: 151, expect: 'exc_page_fault(regs, regs->orig_ax)'}
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 460, expect: 'handle_page_fault(regs, error_code'}
+  - AD2-08
+  - {query: QD-L38, path: mykernel/mm/vm_map/vm_map.h, line: 258, expect: vma->vm_start && addr < vma->vm_end}
+  - AD2-07
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 99, expect: 'color_printk(RED, BLACK, buf)'}
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 115, expect: address >= TASK_SIZE_MAX}
+  - AD2-06
+  - AD2-09
+  - {query: QD-L28, path: mykernel/include/uapi/asm-generic/ucontext.h, line: 10, expect: uc_sigmask;}
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 323, expect: fault = myos_handle_mm_fault(}
+  - SD-76
+  - SD-77
+  - SD-78
+  - QD-112
+  - QD-76
+  - QD-113
+  - CORE-MM-BASELINE-04::MC-23
+  - CORE-MM-BASELINE-04::MC-22
+  - CORE-MM-BASELINE-04::LB-04
+  - CORE-MM-BASELINE-04::LB-05
+  - CORE-MM-BASELINE-04::E27
+  - CORE-MM-BASELINE-04::DR-01
+  - CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB
+  - {query: QD-L14, path: mykernel/arch/x86_64/myos/interrupt.c, line: 148, expect: excep_gen_prot(regs)}
+  - {query: QD-L28, path: mykernel/include/uapi/asm-generic/ucontext.h, line: 6, expect: uc_flags;}
+  related: ['CORE-MM-BASELINE-04::MC-23', 'CORE-MM-BASELINE-04::MC-22', 'CORE-MM-BASELINE-04::LB-04', 'CORE-MM-BASELINE-04::LB-05', 'CORE-MM-BASELINE-04::DR-01', 'CORE-MM-BASELINE-04::E27', 'CORE-USER-BOUNDARIES-07::UB-07', 'CORE-USER-RETURN-SIGNAL-09::RS-07', 'CORE-USER-RETURN-SIGNAL-09::RS-11', 'CORE-USER-RETURN-SIGNAL-09::RS-01']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中对 rt_sigreturn 坏帧地址路径的观察解释}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 signal_64.c、asm/uaccess.h、uaccess_64.h、linux/kernel/uaccess.h 与 fault.c 是否仍如此。
+  ai_suggestion: 可让 get_user、copy_from_user 在出错时真正返回 -EFAULT（例如在缺页入口按异常表修复），或在 rt_sigreturn 中先确认整帧落在当前任务的 VMA 内；对照 Linux 只作参考；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-07
+  id: RS-07
+  title: rt_sigreturn 的 badframe 只 return 0：access_ok 拒绝的帧（源码上唯一能到达 badframe 的情形）不产生任何信号，调用以 rax=0 返回到 syscall 的下一条指令（推断），寄存器没有按用户帧恢复
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-07, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.sigreturn_restore]
+  claim: badframe 标签 signal_64.c:274（QD-L10） 之后，只有被注释的 signal_fault 和活动的 return 0。mykernel 中没有 signal_fault 的定义，它只出现在这一行注释里 QD-114；rt_sigreturn 的活动文本中也没有别的发信号调用 SD-79。不借助 RS-06，也能确定源码上能到达 badframe 的只有 :254 的 access_ok 失败，理由有三。① get_user 的表达式值恒为 -ENOERR，即 0 uaccess.h:99（QD-L06） errno-base.h:5（QD-L27），所以 :256、:258 不会跳到 badframe signal_64.c:256（QD-L10）。② restore_sigcontext 只在 :56-57 返回 false AD3-08 SD-77；copy_from_user 要返回非 0，只能来自 copy_user_generic 中 _ASM_EXTABLE_UA 的修复跳转 uaccess_64.h:115（QD-L07）。③ mykernel 中没有异常表的查找或修复函数 QD-76。②③ 合起来推断 :263-264 也到不了 signal_64.c:263（QD-L10）。access_ok 的失败条件 AD3-13 AD2-05 AD2-04：frame 按有符号数为负，就足以失败，两个分支都如此；若走非常量分支，frame 落在 2^63 以下 sizeof(*frame) 字节以内时也会失败。走哪个分支取决于编译器是否内联并折叠 __builtin_constant_p，源码层面无法确定（推断）。仓库默认脚本以 Debug 构建类型调用内核构建，构建文本中没有 -O 选项 QD-115 QD-116；这只是可能不折叠的一个例子（编译期推断，未构建；CMake 对 Debug 的默认附加选项属外部语义）。走 badframe 时 restore_sigcontext 没有执行，所以 :83 的 orig_ax = -1 也没有执行，orig_ax 仍是入口压入的 15 AD0-11。返回值 0 经包装链原样交回（CORE-USER-SYSCALL-STDIO-08::AS2-09、AS2-10、AS2-11），do_syscall_64 把它写进 regs->ax（CORE-USER-BOUNDARIES-07::AB2-14）。随后经返回尾进入返回段，rcx 装入帧中原 ip，推断回到发出 15 号调用的下一条指令（sysretq 以 rcx 为返回地址属 ISA 语义，未核）；这一点以返回尾中的 arch_do_signal_or_restart 没有投递信号为条件，它被无条件调用（CORE-USER-BOUNDARIES-07::AB2-12）signal.c:250（QD-L09）。“regs 中除 ax 外都不变”默认 current_pt_regs() 与 do_syscall_64 收到的 regs 是同一帧；这一点属推断，归 07 的范围。
+  premises: ['regs->sp ≥ 0x8000000000000008 或 regs->sp < 8，使 frame = regs->sp - 8 按有符号数为负，两个分支都会失败；或在非常量分支下，frame 落在 [2^63 - sizeof(*frame), 2^63)。rsp 落在 [0x8000000000000000, 0x8000000000000008) 时 frame 非负，常量分支下会通过 access_ok', '用户直接发出 15 号调用（活动表项，CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB）']
+  impact: 推断：badframe 路径上没有活动代码产生信号。调用以 rax=0 返回到 syscall 的下一条指令，寄存器没有按用户帧恢复。在本条前提下，返回后的 rsp 仍是那个负值或小于 8 的值；随后用户代码访问栈的结果，取决于未追的用户态缺页处理，也取决于 syscall 之后的用户代码。该路径在 :254 就返回，内核没有访问用户帧，影响限于发出调用的进程本身。对照 Linux（不是 MyOS2 的源码事实）：这里的 signal_fault 会对当前任务强制发送 SIGSEGV；即使在 Linux 中，这个信号也可能被已安装的处理函数接住。条件推断：若将来 copy_from_user 的失败返回变得可达（例如接入异常表），会出现阻塞掩码已按用户帧写回 signal.c:1093（QD-L31）、寄存器却没有恢复的半恢复状态，因为 :261 的 set_current_blocked 在 :263 的 restore_sigcontext 之前；这是同一缺口（badframe 不发信号）的后果，不是独立问题。
+  counter_evidence: [正常的信号返回不会走到这个分支, 返回尾中的 arch_do_signal_or_restart 照常运行。此时 orig_ax 为 15、ax 为 0，syscall_get_error 得 0，不命中任何 -ERESTART* 分支，不改写 ax/ip（推断）AD0-09, '返回尾若有可投递的信号仍会投递，但在本条前提下这不是缓解：投递时 get_sigframe 以同一个 regs->sp 为基准 signal.c:44（QD-L09），帧写入前没有 access_ok（RS-08）。这一后果属于建帧路径，这里只交叉引用，不并入本条，也不能写成无害；若 RS-01 成立，投递在 signal_64.c:168 就失败，不写帧']
+  unknown: [用户态 syscall 之后的代码（本区只追到 restorer 指针为止，未读）, 编译器是否折叠 __builtin_constant_p，以及 sizeof(rt_sigframe_s) 是否不大于 PAGE_SIZE（决定 access_ok 走哪个分支；未构建）, current_pt_regs() 与 do_syscall_64 收到的 regs 是否同一帧（取决于入口压栈总量是否等于 sizeof(pt_regs_s)，属 07 范围，推断一致）]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 274, expect: 'badframe:'}
+  - {query: QD-L06, path: mykernel/arch/x86_64/include/asm/uaccess.h, line: 99, expect: '#define get_user(x, ptr)'}
+  - {query: QD-L27, path: mykernel/include/uapi/asm-generic/errno-base.h, line: 5, expect: ENOERR}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 256, expect: if (get_user(}
+  - AD3-08
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 115, expect: '_ASM_EXTABLE_UA(1b, 2b)'}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 263, expect: '!restore_sigcontext('}
+  - AD3-13
+  - AD2-05
+  - AD2-04
+  - AD0-11
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 250, expect: 'handle_signal(&ksig, regs)'}
+  - AD0-09
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 44, expect: ulong sp = regs->sp}
+  - SD-79
+  - SD-77
+  - QD-114
+  - QD-76
+  - QD-115
+  - QD-116
+  - CORE-USER-BOUNDARIES-07::AB2-12
+  - CORE-USER-BOUNDARIES-07::AB2-14
+  - CORE-USER-SYSCALL-STDIO-08::AS2-09
+  - CORE-USER-SYSCALL-STDIO-08::AS2-10
+  - CORE-USER-SYSCALL-STDIO-08::AS2-11
+  - CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1093, expect: tsk->blocked = *newset}
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-06', 'CORE-USER-RETURN-SIGNAL-09::RS-08', 'CORE-USER-RETURN-SIGNAL-09::RS-02', 'CORE-USER-RETURN-SIGNAL-09::RS-03', 'CORE-USER-VFS-BASELINE-05::UV-02']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中对 rt_sigreturn 坏帧路径的观察解释}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 signal_64.c 的 badframe 段与 uaccess_64.h 的 __access_ok。
+  ai_suggestion: badframe 可改为对当前任务发送 SIGSEGV；但本树中 force_sig 一类函数没有活动调用，需先确认可用的发送路径；而且按 RS-03，默认动作在 get_signal 中只置 PF_SIGNALED，即使送出 SIGSEGV，进程也不会因此结束（推断）；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-08
+  id: RS-08
+  title: 信号帧主体写入前没有 access_ok：user_access_begin 被注释，unsafe_put_user 展开为全局的裸存储 put_user，两处 Efault 标号不可达（潜伏：以 RS-01 不成立为前提）
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-08, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.frame_setup, arch.x86_64.user_access]
+  claim: x64_setup_rt_frame 中 :174-175 的 user_access_begin 检查是 // 注释 SD-80。该函数与 get_sigframe 的活动文本中都没有 access_ok，也没有 stac/clac SD-80 SD-81。unsafe_put_user 是 asm/uaccess.h:538 注释标明的 MyOS2 简化实现，展开为 put_user AD2-03；put_user 是 *(ptr) = x 的语句表达式，值为 -ENOERR，即 0 AD2-02 errno-base.h:5（QD-L27）。它们是全树唯一的活动定义，Linux 原定义都在注释中 QD-117。所以经 unsafe_put_user 写入的字段，写之前都没有地址检查。这些字段是 pretcode，以及 uc 下的 uc_flags、uc_link、uc_stack、uc_mcontext、uc_sigmask：见 :178-186 signal_64.c:180（QD-L10） signal_64.c:185（QD-L10），以及展开进来的 __unsafe_setup_sigcontext（:101-131）与 :144-158 的 unsafe_put_sigmask、unsafe_save_altstack 两个宏。两处 Efault 标号完全不可达 signal_64.c:134（QD-L10） signal_64.c:236（QD-L10）。两个函数体中都没有显式 goto SD-82 SD-83。:234 只能经 unsafe_put_user 的 goto，或 unsafe_put_sigcontext 的 goto 到达 signal_64.c:137（QD-L10）；后者只在 __unsafe_setup_sigcontext 返回非 0 时跳转；而 __unsafe_setup_sigcontext 返回 -EFAULT 只能经它自己的 :133，那里同样只由 unsafe_put_user 到达。帧地址从 regs->sp 算出 signal.c:44（QD-L09）：减去 128 字节红区 signal.c:49（QD-L09），减去帧大小 signal.c:76（QD-L09），按 16 字节向下取整再减 8 signal.c:85（QD-L09）。regs->sp 是入口 entry_SYSCALL_64 原样保存的用户 rsp（CORE-USER-BOUNDARIES-07::AB2-13、SB-01）；从入口经 exit_to_user_mode_loop、arch_do_signal_or_restart、handle_signal 到 get_sigframe，已读代码中没有对它的检查。设置 SA_SIGINFO 时，frame->info 走 copy_siginfo_to_user，再到 copy_to_user，这条路上有 access_ok signal.c:1063（QD-L31） AD2-12；但它在 :189-191 才执行 AD0-14，晚于 :178-186 的无检查写入；检查失败时，x64_setup_rt_frame 只是在这些写入之后返回 -EFAULT。SA_ONSTACK 换栈与 arch signal.c:98 的 (void __user *)-1L 返回，在本树中静态不可达（推断）：换栈语句 signal.c:59（QD-L09） 只在 :58 的 sas_ss_flags(sp) == 0 成立时执行，而 sas_ss_size 为 0 时它返回 SS_DISABLE signal.h:436（QD-L32）；活动代码对 sas_ss_sp、sas_ss_size 只有置 0 的写入 QD-118；init_task 的静态初值中没有 sas_ss 项，按 C 规则为 0 QD-119；sigaltstack 不在分派表中 QD-120；legacy 分支要求不带 SA_RESTORER signal.c:66（QD-L09），与 :168 的门互斥 AD0-13。
+  premises: ['执行越过 signal_64.c:168 的 SA_RESTORER 门，即 RS-01 不成立：处理函数的 sa_flags 保留了 SA_RESTORER', 'get_signal 选中一个非 SIG_IGN、非 SIG_DFL 的用户处理函数 signal.c:938（QD-L31），经 arch_do_signal_or_restart 交给 handle_signal signal.c:250（QD-L09），再经 setup_rt_frame 到达 x64_setup_rt_frame AD0-07 signal.c:161（QD-L09）', '投递时 regs->sp 使帧地址落在未映射地址或非用户地址上；regs->sp 是入口原样保存的用户 rsp（CORE-USER-BOUNDARIES-07::AB2-13、SB-01），到 get_sigframe 之前没有检查']
+  impact: '条件推断（前提见 premises）：帧写入的目标地址只由用户 rsp 决定，内核不检查就直接存储。若该写入引发 #PF，源码中的分派路径为 PAGE_FAULT_VEC → exc_page_fault → handle_page_fault interrupt.c:151（QD-L14） fault.c:460（QD-L12） AD2-08：地址不小于 TASK_SIZE_MAX 时进入 do_kern_addr_fault 的 while (1) AD2-06；否则经 do_user_addr_fault，地址不在任何 VMA 内时进入 myos_bad_area 的 while (1) AD2-07 fault.c:100（QD-L12）；命中 VMA 而 myos_handle_mm_fault 结果非 0 时，在 :324 自旋 fault.c:323（QD-L12）。这些出口以及“没有信号路径”已由 CORE-MM-BASELINE-04::MC-23、LB-05 登记，本条只引用；simple_find_vma 只返回包含地址的 VMA、扩栈分支不可达，见 CORE-MM-BASELINE-04::LB-04。若目标是已映射的内核地址，源码层面没有任何检查阻止这次写入（运行时语义未核）。若帧地址是非规范地址，按外部语义产生的是 #GP 而不是 #PF，源码上经 GEN_PROT_VEC 分支进 excep_gen_prot 的 while (1) interrupt.c:148（QD-L14） AD2-09（推断，硬件语义未核）。本条中属于信号帧、且是新内容的只有两项：写前缺 access_ok；Efault 不可达。缺少缺页修复是全内核的情况：#PF 路径中没有异常表查找 QD-76，不是信号帧特有的。根因是全树唯一的活动 put_user 定义（裸存储）；其他活动调用点用同一语义 QD-122，它们各自是否先做 access_ok，本次未核，不在本条范围。按当前源码，若 RS-01 成立，:168 对经 rt_sigaction 安装的处理函数都返回 -EFAULT，本条只是潜伏缺陷。'
+  counter_evidence: ['SA_SIGINFO 时，frame->info 经 copy_to_user 写入，有 access_ok（mykernel/include/linux/kernel/uaccess.h:176）；但它在 :189-191 才执行，拦不住 :178-186 的主体写入', '若 RS-01 成立（按 include 文本推断其成立，未做预处理验证），:168 对经 rt_sigaction 安装的处理函数都返回 -EFAULT，本条在当前源码上静态不可达', 缺 stac/clac 是源码事实，但在本源码中没有单独后果：活动源码没有开启 CR4.SMAP QD-121；固件或引导器留下的 CR4 初值属运行时语义，不作断言, 'SA_ONSTACK 换栈与 -1L 返回静态不可达，不构成本条的触发路径。即使可达，第一笔写入 &frame->uc.uc_flags 的地址是 -1+8，回绕后为 7（C 中指针溢出属未定义行为，推断），小于 TASK_SIZE_MAX，按源码走 do_user_addr_fault；只有 :184 写 &frame->pretcode 时目标为 0xFFFFFFFFFFFFFFFF']
+  unknown: [内核态写未映射地址或内核地址时的硬件行为（外部语义，不作断言）；运行时是否出现这些情形（NOT_RUN）, 其他 put_user/get_user 活动调用点（binfmt_elf.c、exec.c、fork.c、time/syscall.c）是否先做 access_ok（本条范围外，未核）, 'libc 安装处理函数时是否设置 SA_RESTORER（CORE-USER-VFS-BASELINE-05::GAP-U10）']
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - AD2-03
+  - AD2-02
+  - {query: QD-L27, path: mykernel/include/uapi/asm-generic/errno-base.h, line: 5, expect: ENOERR}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 180, expect: '&frame->uc.uc_stack'}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 185, expect: '&frame->uc.uc_mcontext'}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 134, expect: return -EFAULT}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 236, expect: return -EFAULT}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 137, expect: '#define unsafe_put_sigcontext'}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 44, expect: ulong sp = regs->sp}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 49, expect: sp -= 128}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 85, expect: 'round_down(sp, FRAME_ALIGNMENT) - 8'}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1063, expect: 'copy_to_user(to, from'}
+  - AD0-14
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 59, expect: sp = current->sas_ss_sp}
+  - {query: QD-L32, path: mykernel/lock_IPC/signal/signal.h, line: 436, expect: '!current->sas_ss_size'}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 66, expect: '!(ka->sa.sa_flags & SA_RESTORER)'}
+  - AD0-13
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 938, expect: ka->sa.sa_handler != SIG_DFL}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 250, expect: 'handle_signal(&ksig, regs)'}
+  - AD0-07
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 161, expect: 'x64_setup_rt_frame(ksig, regs)'}
+  - {query: QD-L14, path: mykernel/arch/x86_64/myos/interrupt.c, line: 151, expect: 'exc_page_fault(regs, regs->orig_ax)'}
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 460, expect: 'handle_page_fault(regs, error_code'}
+  - AD2-08
+  - AD2-06
+  - AD2-07
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 323, expect: fault = myos_handle_mm_fault(}
+  - SD-80
+  - SD-81
+  - SD-82
+  - SD-83
+  - QD-117
+  - QD-118
+  - QD-119
+  - QD-120
+  - QD-121
+  - QD-122
+  - QD-76
+  - CORE-USER-BOUNDARIES-07::AB2-13
+  - CORE-USER-BOUNDARIES-07::SB-01
+  - CORE-MM-BASELINE-04::MC-23
+  - CORE-MM-BASELINE-04::LB-05
+  - CORE-MM-BASELINE-04::LB-04
+  - CORE-MM-BASELINE-04::E27
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 76, expect: sp -= frame_size}
+  - AD2-12
+  - {query: QD-L14, path: mykernel/arch/x86_64/myos/interrupt.c, line: 148, expect: excep_gen_prot(regs)}
+  - AD2-09
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 100, expect: while (1);}
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-01', 'CORE-USER-RETURN-SIGNAL-09::RS-06', 'CORE-USER-RETURN-SIGNAL-09::RS-07', 'CORE-USER-RETURN-SIGNAL-09::RS-09', 'CORE-USER-RETURN-SIGNAL-09::RS-10', 'CORE-USER-RETURN-SIGNAL-09::RS-11', 'CORE-MM-BASELINE-04::MC-23', 'CORE-MM-BASELINE-04::LB-04', 'CORE-MM-BASELINE-04::LB-05', 'CORE-MM-BASELINE-04::E27', 'CORE-USER-BOUNDARIES-07::UB-07', 'CORE-USER-SYSCALL-STDIO-08::US-05']
+  blocks: {static_work: false, future_runtime: 只有 RS-01 不成立（NVR-2 的结果）时，NVR-1 才可能观察到本条}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: RS-01 经 NVR-2 判定不成立时重开；或 Owner 明确表示准备好并给出专项范围许可。开工前重核 signal_64.c、arch signal.c 与 asm/uaccess.h。
+  ai_suggestion: 可恢复整帧的 access_ok（user_access_begin 一类），并让 put_user 在出错时返回 -EFAULT；根因在全局的 put_user 定义，改动会同时影响 binfmt_elf.c、exec.c、fork.c、time/syscall.c 等调用点；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-09
+  id: RS-09
+  title: x64_setup_rt_frame 把未初始化的局部变量 uc_flags 写入 ucontext（frame_uc_flags 被注释；潜伏：以 RS-01 不成立为前提）
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-09, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.frame_setup]
+  claim: x64_setup_rt_frame 在 :165 声明 ulong uc_flags，没有初值 signal_64.c:165（QD-L10）。:172 的 uc_flags = frame_uc_flags(regs) 在 // 注释中 SD-85 QD-123。:178 把它写进帧的 uc.uc_flags signal_64.c:178（QD-L10）。函数体的活动文本中，这个局部变量只出现两次，即声明与这次读取；没有赋值，也没有取地址 SD-84 SD-85。unsafe_put_user 展开为 put_user 的直接存储，值恒为 -ENOERR AD2-03 AD2-02；Linux 原定义（asm/uaccess.h:432）在注释中 QD-117。所以 :178 等于执行 frame->uc.uc_flags = (ulong)uc_flags，不会走 Efault；:174-175 的 user_access_begin 被注释，写前没有检查。字段类型为 ulong ucontext.h:6（QD-L28）。写入目标是 get_sigframe 算出的帧地址；帧地址本身的问题见 RS-08，不并入本条。signal_64.c 中 uc_flags 共 8 处命中：活动 6 处（:49、:165、:178、:249、:258、:263），注释 2 处（:89、:172）QD-123。frame_uc_flags 与 UC_* 标志在 mykernel/ 中都没有定义，只出现在注释里 QD-124。构建文本中没有自动初始化局部变量的编译选项 QD-125。
+  premises: ['(i) 某个非 SIG_IGN、非 SIG_DFL 的用户处理函数已安装，它对应的信号被 get_signal 取出 signal.c:938（QD-L31），再经 entry/common.c:34（CORE-USER-BOUNDARIES-07::AB2-12）→ arch signal.c:248、:250 signal.c:250（QD-L09） → :204 AD0-07 → :161 signal.c:161（QD-L09） 到达 x64_setup_rt_frame', '(ii) 该处理函数的 sa_flags 保留了 SA_RESTORER，才能越过 :168 AD0-13。前提状态：do_sigaction 在 lock_IPC/signal/signal.c:1195 用 UAPI_SA_FLAGS 做掩码 signal.c:1195（QD-L31）；按 include 文本推断 UAPI_SA_FLAGS 不含 SA_RESTORER（RS-01），所以 (ii) 在当前源码上不成立，:178 静态不可达。这是推断，未做预处理验证（NVR-2）', '(iii) 有用户程序实际安装处理函数并收到信号。仓库内唯一的 signal() 调用在 myinitramfs/myshell/tests.c:7 的 test_all 中 tests.c:7（QD-L01） QD-126；test_all 唯一的调用点 myshell.c:81 在注释中 QD-127。仓库外 libc 是否设置 SA_RESTORER 属 CORE-USER-VFS-BASELINE-05::GAP-U10']
+  impact: 若前提成立，:178 把未初始化自动变量 uc_flags 的值写进帧中的 uc.uc_flags。uc_flags 是地址从未被取用的自动变量；按 C11 6.3.2.1p2（外部语言标准），读取它属未定义行为。写出的值取决于编译产物：可能是寄存器或栈中的内核残留，也可能是编译器选定的任意值；编译产物中该变量的存放位置（寄存器或栈槽）静态无法判定。因此可能把内核数据泄露到用户可读内存（推断）。按当前源码，:168 的门对经 rt_sigaction 安装的处理函数都返回 -EFAULT，本条目前是潜伏缺陷。恢复侧不受影响：rt_sigreturn 在 :258 读回 uc_flags，在 :263 传给 restore_sigcontext；后者使用这个形参的代码只在 :89-90 的注释中 SD-86。
+  counter_evidence: ['若 RS-01 成立（核对者按 include 文本独立推断其成立），:178 静态不可达', 恢复侧不受这个值影响：restore_sigcontext 中使用 uc_flags 的 UC_STRICT_RESTORE_SS/force_valid_ss 段被注释]
+  unknown: [编译产物中 uc_flags 的存放位置（寄存器或栈槽）以及实际写出的值（未构建）, 'libc 安装处理函数时是否设置 SA_RESTORER（CORE-USER-VFS-BASELINE-05::GAP-U10）']
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 165, expect: ulong uc_flags;}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 178, expect: 'uc_flags, &frame->uc.uc_flags'}
+  - AD2-03
+  - AD2-02
+  - {query: QD-L28, path: mykernel/include/uapi/asm-generic/ucontext.h, line: 6, expect: ulong}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 938, expect: ka->sa.sa_handler != SIG_DFL}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 250, expect: 'handle_signal(&ksig, regs);'}
+  - AD0-07
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 161, expect: 'x64_setup_rt_frame(ksig, regs)'}
+  - AD0-13
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1195, expect: act->sa.sa_flags &= UAPI_SA_FLAGS}
+  - {query: QD-L01, path: myinitramfs/myshell/tests.c, line: 7, expect: signal(SIGTERM}
+  - SD-84
+  - SD-85
+  - SD-86
+  - QD-117
+  - QD-123
+  - QD-124
+  - QD-125
+  - QD-126
+  - QD-127
+  - CORE-USER-BOUNDARIES-07::AB2-12
+  - CORE-USER-VFS-BASELINE-05::GAP-U10
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-01', 'CORE-USER-RETURN-SIGNAL-09::RS-08', 'CORE-USER-VFS-BASELINE-05::UV-16']
+  blocks: {static_work: false, future_runtime: 只有 RS-01 不成立（NVR-2 的结果）时，NVR-1 才可能观察到本条}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: RS-01 经 NVR-2 判定不成立时重开；或 Owner 明确表示准备好并给出专项范围许可。开工前重核 x64_setup_rt_frame。
+  ai_suggestion: 可先把 uc_flags 初始化为 0，或补上 frame_uc_flags；后者与 UC_* 标志在 mykernel/ 中都没有定义，只取消 :172 的注释无法直接编译（推断）；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-10
+  id: RS-10
+  title: 信号路径既不保存也不恢复 FPU/扩展状态：sc->fpstate 被写成非零地址（默认情形为被中断代码红区的底端 regs->sp - 128），那里没有 FPU 数据
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-10, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.frame_setup, ipc.signal.sigreturn_restore]
+  claim: '建帧侧：get_sigframe 中 fpu__alloc_mathframe 被注释，*fpstate 直接取当时的 sp signal.c:74（QD-L09），之后才减去帧大小 signal.c:76（QD-L09）。保存 FPU 的 copy_fpstate_to_sigframe（:102）也被注释，get_sigframe 随后直接返回 sp signal.c:105（QD-L09） SD-87。math_size、buf_fx 只在声明处置 0，没有其他活动使用 SD-88。红区扣减无条件执行 signal.c:49（QD-L09）。所以默认情形下 fpstate = regs->sp - 128，即被中断代码 128 字节红区的最低地址。因 fpu__alloc_mathframe 被注释，不预留浮点区；指针落在红区底端，帧在它下方，帧末端至少比它低 8 字节 signal.c:85（QD-L09）。切入备用栈时，fpstate 会是 sas_ss_sp + sas_ss_size，即备用栈末端之后的第一个地址；但本树中这一情形静态不可达（RS-08）。__unsafe_setup_sigcontext 把这个非零地址写进 sc->fpstate signal_64.c:127（QD-L10）。而 sigcontext_64 的成员声明自己约定：没有 FPU/扩展上下文时该字段为 0 signal_types_arch.h:46（QD-L11）。handle_signal 成功分支在 :216 清 DF、RF、TF signal.c:216（QD-L09），其后让处理函数从新 FPU 状态开始的 fpu__clear_user_states（:220）是注释 SD-89。恢复侧：sigctx_s 经 lock_ipc_type_declaration_arch.h 的 #else 分支映射到 sigcontext_64；restore_sigcontext 用 copy_from_user 读入 reserved1 之前的全部字段，fpstate 在其中 AD3-08；但 fpu__restore_sig 被注释，函数以 return true 结束 signal_64.c:93（QD-L10）。读进来的 sc.fpstate 在活动代码中不被使用 SD-90 QD-128。mykernel 中与 FPU 保存、恢复相关的钩子都只在注释中 QD-129；.S 与 .c 文件中也没有活动的 fxsave、xsave、fxrstor、xrstor 一类指令 QD-130（同一检索扩到全部 mykernel 文件时，头文件中的命中只是特性位宏与注释文字）。任务切换同样不切换 FPU：__switch_to 的活动文本中没有 switch_fpu SD-91；thread 结构中的 struct fpu 成员被注释 QD-131；__switch_to_asm 只压入通用寄存器 entry_64.S:215（QD-L04）（220 行再压 r15，之后换栈、依次弹出、跳到 __switch_to）。'
+  premises: [信号处理函数修改了 x87/SSE 寄存器，或 MXCSR、x87 控制字, 'SSE 在用户态可用。内核源码没有确立这一点：设置 CR4.OSFXSR/OSXMMEXCPT 的代码（fpu/init.c:14-19）被注释 QD-132；C 侧的 __write_cr4 只在注释中 QD-133；活动的 CR4 写入只在启动汇编中，置的是 FSGSBASE 与第 5、16 位 QD-134；myloader 中没有 CR4 相关文本 QD-135。所以这一前提取决于引导时留下的 CR4（源码之外，外部语义，未核）。x87 一侧，fpu__init_cpu_generic 有活动代码清除 CR0.TS|EM init.c:22（QD-L08），经 fpu__init_system 调用', '建帧侧：执行越过 signal_64.c:168 的 SA_RESTORER 门（RS-01 不成立）；恢复侧：用户直接发出 15 号调用即可到达']
+  impact: 推断：rt_sigreturn 不恢复信号前的 FPU/SSE 状态。被中断代码继续执行时，寄存器中是处理函数结束后留下的内容；其间其他任务或内核代码是否再改动，未核。依据：__switch_to 不切换 FPU；中断出口在 !in_atomic() 时调用 schedule() AD3-14；内核 C 编译选项没有禁用 SSE QD-136，编译产物是否使用向量寄存器未核。内核侧确实不解引用 fpstate 指针；但用户态若按“非零即有效”的约定去读或改 ucontext 中的浮点区，读到或改到的是红区原有的内容，改写也不会生效（推断，用户代码未核）。处理函数入口继承被中断代码的浮点控制状态（MXCSR、x87 控制字），而不是复位状态（推断）。信号只在两处投递：do_syscall_64 返回 common.c:49（QD-L03） 与 ret_from_fork（CORE-USER-BOUNDARIES-07::AB2-11），都经 exit_to_user_mode_loop 的无条件调用（CORE-USER-BOUNDARIES-07::AB2-12）QD-137；中断返回路径不投递 QD-138。所以被中断的总是一条 syscall 指令，或新任务的首次返回。按 SysV x86-64 调用约定（外部 ABI，本次未在仓库内核对），xmm0–xmm15 都不跨函数调用保存，跨调用保存的是 MXCSR 控制位与 x87 控制字。所以主要受影响的是这些控制状态，以及跨 syscall 指令持有向量寄存器的代码（例如内联 syscall）。任务切换的 FPU 缺口覆盖面更大：中断后的 schedule() 可以在任意用户指令边界换出任务；信号路径上的缺失只是其中一部分。建帧侧以 RS-01 不成立为前提；恢复侧经用户直接发出 15 号调用仍可达，但那时帧本来就由用户给出。
+  counter_evidence: [内核侧不解引用帧中的 fpstate 指针，因为恢复侧跳过了 FPU 恢复, '用户程序不使用浮点与 SSE 时没有影响（init、libc 的实际使用情况未核，CORE-USER-VFS-BASELINE-05::GAP-U10）', 若 RS-01 成立，建帧侧在当前源码上静态不可达]
+  unknown: [用户程序实际如何使用 FPU/SSE, 引导固件留下的 CR4 是否使 SSE 在用户态可用（源码之外）, 内核编译产物是否使用 xmm 寄存器（未构建）；若使用，用户的 FPU/SSE 状态在每次进入内核后都得不到保护，信号路径只是其中一部分]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 74, expect: '*fpstate = (void __user *)sp'}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 105, expect: return (void __user *)sp;}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 49, expect: sp -= 128;}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 85, expect: 'round_down(sp, FRAME_ALIGNMENT) - 8'}
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 127, expect: '&sc->fpstate'}
+  - {query: QD-L11, path: mykernel/arch/x86_64/lock_IPC/signal/signal_types_arch.h, line: 46, expect: Zero when no FPU/extended context}
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 216, expect: regs->flags &= ~(X86_EFLAGS_DF}
+  - AD3-08
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 93, expect: return true;}
+  - {query: QD-L04, path: mykernel/arch/x86_64/entry/entry_64.S, line: 215, expect: '%rbp'}
+  - AD3-14
+  - {query: QD-L03, path: mykernel/arch/x86_64/entry/common.c, line: 49, expect: syscall_exit_to_user_mode(regs);}
+  - {query: QD-L08, path: mykernel/arch/x86_64/kernel/fpu/init.c, line: 22, expect: cr0 &= ~(X86_CR0_TS|X86_CR0_EM);}
+  - SD-87
+  - SD-88
+  - SD-89
+  - SD-90
+  - SD-91
+  - QD-128
+  - QD-129
+  - QD-130
+  - QD-131
+  - QD-136
+  - QD-137
+  - QD-138
+  - QD-132
+  - QD-133
+  - QD-134
+  - QD-135
+  - CORE-USER-BOUNDARIES-07::AB2-11
+  - CORE-USER-BOUNDARIES-07::AB2-12
+  - CORE-SCHED-INTEGRATION-03::SF-C5-18
+  - CORE-SCHED-INTEGRATION-03::GAP-03
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 76, expect: sp -= frame_size;}
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-01', 'CORE-USER-RETURN-SIGNAL-09::RS-08', 'CORE-SCHED-INTEGRATION-03::GAP-03', 'CORE-SCHED-INTEGRATION-03::SF-C5-18']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中对处理函数前后浮点状态的观察解释}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可，或调度侧开始补任务切换的 FPU 保存时一并重开；开工前重核 get_sigframe、restore_sigcontext 与 __switch_to。
+  ai_suggestion: 在 FPU 上下文管理整体补上之前，可先让 sc->fpstate 写 0，以符合结构体自身“无 FPU 上下文时为 0”的约定；完整做法需要任务切换与信号路径一起保存、恢复 FPU 状态；任务切换的 FPU 缺口是否在调度侧单独登记，见主线开放点第 5 项；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-11
+  id: RS-11
+  title: copy_from_user 的活动实现不做 access_ok：rt_sigaction 的 act、rt_sigprocmask 的 nset 不经地址半区检查就被当作复制源
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-11, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [arch.x86_64.user_access, ipc.signal.action_mask_syscalls]
+  claim: '一、调用点。两个信号设置系统调用先检查 sigsetsize，再用 copy_from_user 读入用户结构：rt_sigaction syscall.c:33（QD-L37）；rt_sigprocmask syscall.c:61（QD-L37） syscall.c:67（QD-L37）。
+
+    二、copy_from_user 不检查地址。copy_from_user（mykernel/include/linux/kernel/uaccess.h:185-194）无条件转调 _inline_copy_from_user，check_copy_size 与 #ifdef 分支都是 // 注释 uaccess.h:190（QD-L25） SD-98。_inline_copy_from_user（:149-167）中，:153 的 access_ok 条件行和 :163 的闭括号，连同 :152、:154-160、:162，都是 // 注释；:161 的 raw_copy_from_user 是活动代码，所以无条件执行 AD2-10 uaccess.h:161（QD-L25） SD-99 SD-100。raw_copy_from_user 转调 copy_user_generic uaccess_64.h:127（QD-L07）；后者只有 stac、ALTERNATIVE("rep movsb", …) 与 clac，没有地址判断 uaccess_64.h:104（QD-L07） SD-102。它登记了一个 _ASM_EXTABLE_UA 表项 uaccess_64.h:115（QD-L07） QD-156，但 mykernel 中没有异常表的消费者 QD-157。
+
+    三、对照。_inline_copy_to_user 保留活动的 access_ok AD2-12 SD-101。access_ok 只有一处定义 access_ok.h:41（QD-L26）。asm/uaccess.h 先在 :14 包含 uaccess_64.h，再在 :16 包含 access_ok.h QD-158；access_ok.h 的另一个包含者 uapi/asm-generic/uaccess.h 没有被任何文件包含 QD-159。uaccess_64.h:92 的宏 uaccess_64.h:92（QD-L07） 使 access_ok.h:19 的通用版本被跳过，所以用的是 x86 的 __access_ok。若编译器内联并把 __builtin_constant_p 折叠为真，对这里的小常量尺寸，它就是 valid_user_address(ptr) uaccess_64.h:85（QD-L07），即 (long)x >= 0 AD2-04 QD-160；否则走另一支，要求起始地址加长度后仍非负且不回绕 AD2-05。走哪一支源码上不能确定（推断，未构建，同 RS-07），两支都拒绝负的起始地址。
+
+    四、结论与范围。act、nset 不经 valid_user_address 判定就成为复制源。copy_from_user 全仓只有这一个定义，活动调用点 5 处：本条两处，以及 arch/x86_64/lock_IPC/signal/signal_64.c:56、fs/fat/myos_fat32.c:227、time/misc/time_misc.c:279 QD-155。其中 signal_64.c:56 的调用方 sys_rt_sigreturn 先自己做了 access_ok，不受本条影响（见 counter_evidence）；后两处本条未追。CORE-USER-VFS-BASELINE-05::UV-05、CORE-USER-BOUNDARIES-07::UB-07、CORE-USER-SYSCALL-STDIO-08::US-05 讲的是根本没有调用复制原语；本条讲的是复制原语自身缺 access_ok，两者不重复。'
+  premises: ['rt_sigaction 以 act != NULL 调用，或 rt_sigprocmask 以 nset != NULL 调用（13、14 号是 CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB 中的活动表项）。', 'sigsetsize == sizeof(sigset_t)；否则 syscall.c:31、:62 先返回 -EINVAL，到不了复制。', '传入的地址属于 x86 __access_ok 会拒绝的那一类（假如 copy_from_user 做了这项检查）：常量分支下即不满足 valid_user_address 的高半区地址（含内核地址）；若走非常量分支，还包括起点落在 [2^63 − n, 2^63) 的低半区地址（n 为复制长度：act 为 sizeof(new_sa.sa)，nset 为 sizeof(sigset_t)）。走哪个分支取决于编译器是否内联并折叠 __builtin_constant_p，源码层面无法确定（推断，同 RS-07；未构建）。其余低半区地址有没有 access_ok 结果都一样，所以只有这一类地址受本条影响。']
+  impact: '- 源码层面：这类地址不会因 access_ok 失败而得到 -EFAULT，复制照常发起。
+
+    - 若该地址在内核态可读（运行时语义，未核），读到的内容进入后续处理（推断）。rt_sigaction：先要通过 do_sigaction 的检查，即合法信号号且不是 SIGKILL/SIGSTOP signal.c:1170（QD-L31），以及原表项不是 SA_IMMUTABLE signal.c:1176（QD-L31） QD-73；随后 sa_flags 按 UAPI_SA_FLAGS 截位，sa_mask 去掉 SIGKILL/SIGSTOP，在 :1204 写入 action[sig-1] AD2-17。rt_sigprocmask：先去掉 SIGKILL/SIGSTOP，再调 sigprocmask syscall.c:69（QD-L37）；how 为 SIG_BLOCK、SIG_UNBLOCK、SIG_SETMASK 时经 __set_current_blocked 写入 tsk->blocked，否则返回 -EINVAL AD2-15 signal.c:1157（QD-L31） signal.c:1093（QD-L31）。未经校验的读取发生在这些检查之前（:33 先于 :36，:67 先于 :71）；sig 或 how 无效时读取照样发生，只是内容不落表。
+
+    - 按源码数据流，落表的内容之后可以经下一次 rt_sigaction 的 oact 或 rt_sigprocmask 的 oset 复制回用户内存（推断）：AD2-16 AD2-20；AD2-21 AD2-22。其中 sa_flags 经过掩码，SIGKILL/SIGSTOP 位被去掉。
+
+    - 若该地址没有映射：缺页经 interrupt.c:151（QD-L14） → fault.c:460（QD-L12） → AD2-08。地址不小于 TASK_SIZE_MAX 时 fault.c:115（QD-L12） 为真，进入 do_kern_addr_fault，它唯一的活动语句是 while (1) AD2-06。源码中没有把这种缺页转成 -EFAULT 的路径（没有异常表消费者）。“这类地址都不小于 TASK_SIZE_MAX”是推断，TASK_SIZE_MAX 的数值本条未核。非规范地址引发哪种异常属硬件语义，未核；若是 #GP，excep_gen_prot 同样以 while (1) 结束 AD2-09。'
+  counter_evidence: ['copy_to_user 方向保留 access_ok，oact/oset 写回前有地址半区检查；但只有半区一层：常量分支只查起始地址 valid_user_address(to)（uaccess_64.h:85-86），另一分支查起始地址加长度后仍非负且不回绕；走哪一支源码上不能确定（推断，同 RS-07）。低半区中通过检查、却不可访问的地址照样在内核里出错，去向按地址分（推断，#PF、#GP 是否产生属硬件语义）：小于 TASK_SIZE_MAX 且找不到 VMA 时 myos_bad_area 打印后 while (1) AD2-07 fault.c:99（QD-L12）；TASK_SIZE_MAX 到 2^47 之间进 do_kern_addr_fault 的 while (1) AD2-06；2^47 以上的非规范地址产生 #GP，进 excep_gen_prot 的 while (1) AD2-09；小于 TASK_SIZE_MAX 而命中 VMA 时交给 myos_handle_mm_fault，结果非 0 时在 do_user_addr_fault 中自旋（见 RS-06、RS-08）。都没有异常表兜底。', rt_sigreturn 路径不受本条影响：sys_rt_sigreturn 先自己做 access_ok AD3-13，再由 restore_sigcontext 调 copy_from_user AD3-08。, copy_user_generic 带 stac/clac 与 _ASM_EXTABLE_UA 表项，看起来有兜底；但 mykernel 中没有异常表消费者，这层兜底在源码层面不存在。]
+  unknown: [运行时传入的高半区地址是否映射、可读（NOT_RUN）。, 非规范地址的异常类型（硬件语义，外部，未核）。, 'fs/fat/myos_fat32.c:227 与 time/misc/time_misc.c:279 两个调用者的后果（本条范围外，未追）。', ALTERNATIVE 的替换序列引用的 rep_movs_alternative 在 mykernel 中只有声明 QD-161，链接与替换行为未追。, '用户程序与 libc 传给这两个调用的指针从哪里来（CORE-USER-VFS-BASELINE-05::GAP-U10，NVR-4）。', 编译器是否折叠 __builtin_constant_p（决定 access_ok 走哪个分支，进而决定前提 3 的地址范围与 copy_to_user 方向检查的内容；见 RS-07，未构建）]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - {query: QD-L37, path: mykernel/lock_IPC/syscall.c, line: 33, expect: 'copy_from_user(&new_sa.sa, act'}
+  - {query: QD-L37, path: mykernel/lock_IPC/syscall.c, line: 61, expect: sigsetsize != sizeof(sigset_t)}
+  - {query: QD-L37, path: mykernel/lock_IPC/syscall.c, line: 67, expect: 'copy_from_user(&new_set, nset'}
+  - {query: QD-L25, path: mykernel/include/linux/kernel/uaccess.h, line: 190, expect: '_inline_copy_from_user(to, from, n)'}
+  - AD2-10
+  - {query: QD-L25, path: mykernel/include/linux/kernel/uaccess.h, line: 161, expect: 'raw_copy_from_user(to, from, n)'}
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 127, expect: return copy_user_generic(dst}
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 104, expect: stac();}
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 115, expect: '_ASM_EXTABLE_UA(1b, 2b)'}
+  - AD2-12
+  - {query: QD-L26, path: mykernel/include/uapi/asm-generic/access_ok.h, line: 41, expect: 'define access_ok(addr, size)'}
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 92, expect: define __access_ok __access_ok}
+  - {query: QD-L07, path: mykernel/arch/x86_64/include/asm/uaccess_64.h, line: 85, expect: __builtin_constant_p(size <= PAGE_SIZE)}
+  - AD2-04
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1170, expect: (act && sig_kernel_only(sig))}
+  - QD-73
+  - AD2-17
+  - {query: QD-L37, path: mykernel/lock_IPC/syscall.c, line: 69, expect: sigmask(SIGKILL)|sigmask(SIGSTOP)}
+  - AD2-15
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1157, expect: __set_current_blocked(&newset);}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1093, expect: tsk->blocked = *newset;}
+  - AD2-16
+  - AD2-20
+  - AD2-21
+  - AD2-22
+  - {query: QD-L14, path: mykernel/arch/x86_64/myos/interrupt.c, line: 151, expect: 'exc_page_fault(regs, regs->orig_ax);'}
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 460, expect: handle_page_fault(regs}
+  - AD2-08
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 115, expect: address >= TASK_SIZE_MAX}
+  - AD2-06
+  - AD2-09
+  - AD2-07
+  - {query: QD-L12, path: mykernel/arch/x86_64/mm/fault.c, line: 99, expect: 'color_printk(RED, BLACK, buf);'}
+  - AD3-13
+  - AD3-08
+  - QD-155
+  - QD-156
+  - QD-157
+  - QD-158
+  - QD-159
+  - QD-160
+  - QD-161
+  - SD-98
+  - SD-99
+  - SD-100
+  - SD-101
+  - SD-102
+  - AD2-05
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 1176, expect: k->sa.sa_flags & SA_IMMUTABLE}
+  related: ['CORE-USER-BOUNDARIES-07::UB-07', 'CORE-USER-SYSCALL-STDIO-08::US-05', 'CORE-USER-VFS-BASELINE-05::UV-05', 'CORE-USER-RETURN-SIGNAL-09::RS-06', 'CORE-USER-RETURN-SIGNAL-09::RS-08', 'CORE-USER-RETURN-SIGNAL-09::RS-12', 'CORE-USER-VFS-BASELINE-05::UV-14']
+  blocks: {static_work: false, future_runtime: 无；NVR-4 只能说明 libc 传给这两个调用的指针来源}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 include/linux/kernel/uaccess.h 与 arch/x86_64/include/asm/uaccess_64.h 是否仍如此。
+  ai_suggestion: 可恢复 _inline_copy_from_user 中的 access_ok 判断，与 _inline_copy_to_user 对齐；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-12
+  id: RS-12
+  title: 所有经 fork 产生的任务共用 init_sighand：get_signal 与 do_sigaction 读写全局动作表并取全局 siglock，exec 也不复位处理函数
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-12, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [sched.forkexec.signal_state_inherit, ipc.signal.signal_selection]
+  claim: 共用机制本身 05 已记录：copy_sighand 分配新对象，但安装语句被注释（CORE-USER-VFS-BASELINE-05::A-C2-11），子任务继续指向静态的 init_sighand（CORE-USER-VFS-BASELINE-05::UV-14、CORE-USER-VFS-BASELINE-05::sched.forkexec.copy_process_resources）。本条只补以下三点。(1) 全树负向检索：在 mykernel 中给任务 sighand 字段赋值的活动语句只有 init_task.c:124 的静态初值，fork.c:759 是注释（QD-192；05 的 Q31 只查了 init_task.c）。dup_task_struct 以 *tsk = *orig 整体复制，把父任务的 sighand 指针原样带给子任务（fork.c:288（QD-L39））。dup_task_struct 的唯一活动调用在 copy_process 中（fork.c:959，以 current 为原型），copy_process 的唯一活动调用在 kernel_clone 中（fork.c:1485）（QD-193）；活动代码中没有调用者传入 CLONE_SIGHAND（CORE-USER-VFS-BASELINE-05::Q32）。推断：每个经 fork 产生的任务，其 sighand 都等于 &init_sighand。(2) 信号路径都作用在这个共享对象上。get_signal 在 :805 取 curr->sighand、在 :931 取动作表项；do_sigaction 在 :1173 取址（QD-194），在 :1204 以 *k = *act 写入（QD-195）。get_signal 在 :940 把表项复制到 ksig->ka；表项带 SA_ONESHOT（定义为 SA_RESETHAND，且 SA_RESETHAND 在 UAPI_SA_FLAGS 中，QD-196）时，:943 把共享表项改回 SIG_DFL（signal.c:942（QD-L31））。对 siglock 调用 spin_lock_irq 的活动点共 6 处：calculate_sigpending（:107，没有活动调用者）、get_signal（:827）、__set_current_blocked（:1108）、do_sigaction（:1175）、copy_sighand（fork.c:764）、copy_process 的 fork_out（fork.c:1429）（QD-197）。没有 CLONE_SIGHAND，所以每次 fork 都走 copy_sighand 中 :764 的加锁分支。发信号一侧不取这把锁：group_send_sig_info 中的 lock_task_sighand 是注释（signal.c:681），上面的加锁点中也没有发送端。(3) 第二个根因在 exec：begin_new_exec 中的 unshare_sighand（exec.c:930）与 flush_signal_handlers（exec.c:984）都是注释；这两个函数在 mykernel 中没有活动定义或调用（QD-186）。动作表的活动写入只有 init_task.c:58 的初值、signal.c:943、signal.c:1204，以及 fork.c:765 对未安装新对象的 memcpy，exec.c 中没有（QD-195）。所以 exec 既不复位处理函数，也不让新映像得到私有的动作表。05 在 CORE-USER-VFS-BASELINE-05::sched.forkexec.exec_mm_switch 中以阅读记录写过“信号处理器重置被注释”，但没有行号，也没有登记后果；本条补上行号与后果。登记说明：本条与 CORE-USER-VFS-BASELINE-05::UV-14 根源相同；按 05 自己的先例（UV-14 作为同一处注释的另一后果单独登记），这里作为新条目。主线可以决定把本条并入 CORE-USER-VFS-BASELINE-05::UV-14，并入时 exec.c 的第二个根因应一并保留。本条也回答 CORE-MM-BASELINE-04::DR-04 的未知项“信号处理语义因共用 init_sighand 而产生的影响”。
+  premises: ['CORE-USER-VFS-BASELINE-05::UV-14 所确立的事实成立：任务共用静态的 init_sighand。', '处理函数相关的后果还要求两件事：某个进程用 rt_sigaction（13 号，CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB 中的活动表项）安装了用户处理函数；有信号排入另一个进程 B 的 pending，例如 kill(2) 且 pid > 0 时经 lock_IPC/syscall.c:99 → kill_something_info → kill_proc_info → group_send_sig_info → send_signal_locked（QD-190）。发送路径本身是否正确，不在本条范围内。', 共享 siglock 这一项不依赖处理函数安装。]
+  impact: 推断，均为源码级数据流。(a) A 安装的处理函数地址，会被 A 的祖先、兄弟、无关进程，以及任何进程 exec 之后的新映像的 get_signal 当作有效处理函数，经 ksig->ka 交给 handle_signal（AD0-08），再由 x64_setup_rt_frame 写入 regs->ip（QD-199），而该地址属于另一个地址空间。handle_signal 与 x64_setup_rt_frame 的活动代码都不校验 sa_handler 地址，唯一的标志检查是 SA_RESTORER（见 CORE-USER-RETURN-SIGNAL-09::RS-01）。(b) 对 A 的后代（A 安装之后 fork、且没有 exec 的子进程），按 fork 继承语义这个地址本来有效；缺陷在于此后任何一方调用 sigaction 都会改写同一张表，双方都看得到。(c) SA_RESETHAND 在任何一个进程中触发，都会把所有进程的该项复位为 SIG_DFL。(d) 所有任务的 get_signal（每次系统调用返回都经 entry/common.c:34 进入，见 CORE-USER-RETURN-SIGNAL-09::RS-04）、do_sigaction、__set_current_blocked，以及 copy_sighand 与 fork_out，都对同一个 init_sighand.siglock 调用 spin_lock_irq。spin_lock_irq 展开为 raw_spin_lock_irq（QD-198），后者依次调用 local_irq_disable、preempt_disable、arch_spin_lock（SD-110）。是否真的形成争用取决于并发前提；CORE-USER-VFS-BASELINE-05::DRU-06 与 CORE-MM-BASELINE-04::DR-05 对此都没有定论，所以这里只作条件推断。(e) RS-01 成立时，投递先在 x64_setup_rt_frame 的 SA_RESTORER 检查处失败，被遮蔽的只有“跳到另一地址空间的处理函数”这一项；get_signal 中的出队，以及 :942-943 对共享表的 SA_ONESHOT 复位，都发生在 handle_signal 之前，不被遮蔽；建帧失败之后也没有后续处理（CORE-USER-RETURN-SIGNAL-09::RS-02）。(f) 仓库内构建的用户程序没有活动的处理函数安装：myinitramfs/myshell/tests.c:7 的 signal(SIGTERM, …) 只在 test_all 中，而 test_all 的唯一调用 myshell.c:81 是注释（QD-188）。所以 (a)(b)(c) 对仓库内现有程序是潜伏的；共享 siglock 一项不受这条限定影响。
+  counter_evidence: ['CLONE_SIGHAND 分支 refcount_inc 的共享是正确语义（fork.c:754-756），但活动代码中没有调用者传入 CLONE_SIGHAND（CORE-USER-VFS-BASELINE-05::Q32）。', 如果用户态没有进程安装处理函数，处理函数相关的后果不会显现；仓库内现有程序就是这样（QD-188）。, 发信号一侧不取 siglock，所以在这把锁上的只有上面列出的几处（QD-197）。]
+  unknown: ['libc 内部是否安装处理函数（CORE-USER-VFS-BASELINE-05::GAP-U10）。', '并发前提下 siglock 是否形成争用（CORE-USER-VFS-BASELINE-05::DRU-06、CORE-MM-BASELINE-04::DR-05 未定）。', 函数指针或宏拼接写入 sighand 字段的可能（词法检索覆盖不到）。]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - CORE-USER-VFS-BASELINE-05::A-C2-11
+  - CORE-USER-VFS-BASELINE-05::Q31
+  - CORE-USER-VFS-BASELINE-05::Q32
+  - QD-192
+  - {query: QD-L39, path: mykernel/sched/forkexec/fork.c, line: 288, expect: '*tsk = *orig;'}
+  - QD-193
+  - QD-194
+  - QD-195
+  - QD-196
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 942, expect: ka->sa.sa_flags & SA_ONESHOT}
+  - QD-197
+  - QD-186
+  - QD-190
+  - AD0-08
+  - QD-199
+  - QD-198
+  - SD-110
+  - QD-188
+  related: ['CORE-USER-VFS-BASELINE-05::UV-14', 'CORE-USER-VFS-BASELINE-05::sched.forkexec.copy_process_resources', 'CORE-USER-VFS-BASELINE-05::sched.forkexec.exec_mm_switch', 'CORE-MM-BASELINE-04::RF-02', 'CORE-MM-BASELINE-04::DR-04', 'CORE-USER-RETURN-SIGNAL-09::RS-01', 'CORE-USER-RETURN-SIGNAL-09::RS-02', 'CORE-USER-RETURN-SIGNAL-09::RS-04']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中处理函数投递与 fork、exec 之后信号语义的观察}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可，或主线决定并入 CORE-USER-VFS-BASELINE-05::UV-14 时；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 以后若修，copy_sighand 的安装语句、begin_new_exec 的 unshare_sighand 与 flush_signal_handlers、以及 UV-14 的失败清理宜作为一组处理；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-13
+  id: RS-13
+  title: fork 子任务继承父任务的私有 pending 位图：init_sigpending 只重置链表、不清位图（潜伏）
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-13, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [sched.forkexec.signal_state_inherit, ipc.signal.signal_selection]
+  claim: 'dup_task_struct 用 *tsk = *orig 整体复制任务结构（fork.c:288（QD-L39））。task_s 中的 blocked 与 pending 都是按值内嵌的成员（QD-201）。copy_process 随后对子任务调用 init_sigpending(&p->pending)（fork.c:1024），但 init_sigpending 中的 sigemptyset(&sig->signal) 被注释，只执行 INIT_LIST_HEADER_S（signal.h:390（QD-L32）、SD-109）。init_sigpending 在 mykernel 中只有这一个函数体（QD-203），它位于 signal.h 的 #if defined(SIGNAL_DEFINATION) || !(DEBUG) 内；Debug 构建只在 signal.c 中得到它的外部定义，Release 构建在各编译单元中是 static inline（QD-204），两种构建用的是同一份函数体。所以子任务的私有链表为空，私有位图却保留 fork 时父任务的值。子任务的 blocked 同样原样继承：在 sched/、arch/x86_64/sched/、init/ 中对 ->blocked 或 .blocked 的活动写入只有 init_task 的静态初值，copy_process 中的 siginitsetinv(&p->blocked, …)（fork.c:971）是注释（QD-200）。共享 pending 不受影响：copy_signal 用 kmem_cache_zalloc 新建 signal_s（QD-202），并对共享 pending 调 init_sigpending（fork.c:811）；当前唯一的用户入口 fork 不带 CLONE_THREAD（sys_fork 的 flags 为 0，见 CORE-USER-VFS-BASELINE-05::sched.forkexec.copy_process_resources）。本条与 CORE-USER-VFS-BASELINE-05::UV-16 同在 dup_task_struct，但不是同一个缺陷。'
+  premises: [fork 时父任务的私有 pending 位图非空。, 该位不在子任务从父任务继承的 blocked 中；否则要等子任务解除屏蔽。, '存在以 PIDTYPE_PID 写私有 pending 的活动发送路径。本快照中没有：pending 位图只有一个活动写入点 signal.c:581（QD-206，其余活动命中是局部 mask、声明与定义），只在 type == PIDTYPE_PID 时写进私有 pending（:497）；它唯一的活动调用链在 kill_proc_info 中固定传 PIDTYPE_TGID（QD-191、QD-190）；init_task 的私有位图静态为 0（QD-205）。CORE-USER-RETURN-SIGNAL-09::RS-14 留下的残留位同样落在私有 pending，但 RS-14 本身也是潜伏的。']
+  impact: 推断：子任务在某次经 syscall_exit_to_user_mode 返回、且该位不在其 blocked 中时，get_signal 以 curr->blocked 为掩码出队（signal.c:918（QD-L31）），next_signal 用 x = *s &~ *m 排除被屏蔽的位（AD2-13），于是选出继承来的位。对 SYNCHRONOUS_MASK 内的信号，先调用的 dequeue_synchronous_signal 在子任务的空链表上返回 0，之后才进入 dequeue_signal。collect_signal 在链表中找不到节点，先在 :183 清位，再走回退分支，合成 si_code=SI_USER、si_pid=0、si_uid=0 的 siginfo（signal.c:183（QD-L31）、signal.c:205（QD-L31））。时机分两种：父任务 fork 时未屏蔽的位，在子任务第一次返回（ret_from_fork，CORE-USER-BOUNDARIES-07::AB2-11）时就被选出；已屏蔽的位，要等子任务经 sigprocmask 的 SIG_UNBLOCK 或 SIG_SETMASK（QD-207），或经 rt_sigreturn 的 set_current_blocked 解除屏蔽之后的下一次返回。之后按本快照的分支处理：SIG_IGN 或默认忽略时丢弃；装有处理函数时 break，由 handle_signal 投递；其余默认动作只置 PF_SIGNALED，循环继续（CORE-USER-RETURN-SIGNAL-09::RS-03），不能理解为子任务因此终止。结果是子任务处理一个从未发给它的信号。父任务自己的位与 sigqueue 节点不受影响，所以同一次发送可能被父子各处理一次（推断）。copy_process 中 fork 前重算挂起状态的 recalc_sigpending（fork.c:952）也是注释（QD-165）。
+  counter_evidence: [按源码检索，私有 pending 位图没有活动的写入路径，推断它始终为空，所以本条目前是潜伏缺陷（QD-206、QD-191）。, 'lock_IPC/syscall.c:97 中的 PIDTYPE_TGID 只交给 prepare_kill_siginfo 决定 si_code（signal.c:1079），不决定写入哪个 pending；路由是 syscall.c:99 → signal.c:763 → :725 → :733 → :682 → :660 → :497（QD-191、QD-190）。']
+  unknown: [函数指针或宏拼接写入私有 pending 位图的可能（词法检索覆盖不到）。]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - {query: QD-L39, path: mykernel/sched/forkexec/fork.c, line: 288, expect: '*tsk = *orig;'}
+  - QD-201
+  - {query: QD-L32, path: mykernel/lock_IPC/signal/signal.h, line: 390, expect: INIT_LIST_HEADER_S(&sig->list);}
+  - SD-109
+  - QD-203
+  - QD-204
+  - QD-200
+  - QD-202
+  - QD-206
+  - QD-191
+  - QD-190
+  - QD-205
+  - AD2-13
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 183, expect: 'sigdelset(&pending->signal, sig);'}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 205, expect: info->si_code = SI_USER;}
+  - QD-207
+  - QD-165
+  - CORE-USER-BOUNDARIES-07::AB2-11
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 918, expect: 'dequeue_signal(curr, &curr->blocked'}
+  related: ['CORE-USER-VFS-BASELINE-05::UV-16', 'CORE-USER-VFS-BASELINE-05::sched.forkexec.copy_process_resources', 'CORE-USER-BOUNDARIES-07::sched.forkexec.fork_child_return', 'CORE-USER-RETURN-SIGNAL-09::RS-14', 'CORE-USER-RETURN-SIGNAL-09::RS-03', 'CORE-USER-RETURN-SIGNAL-09::RS-04']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中 fork 子任务信号行为的观察；本快照前提不满足，需要先有写私有 pending 的发送路径}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: 出现以 PIDTYPE_PID 写私有 pending 的发送路径时（例如启用 tkill、tgkill、force_sig 一类或缺页发信号），或 Owner 给出专项范围许可时；开工前重核 time 源码。
+  ai_suggestion: 以后若修，恢复 init_sigpending 中的 sigemptyset 即可让位图与链表一致；建议不等于决定。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::RS-14
+  id: RS-14
+  title: dequeue_synchronous_signal 的第二次遍历从表头开始，必然在 sync 自身或排在它之前的同号节点处命中 still_pending：该函数不清除 pending 位（潜伏）
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml, entry_id: RS-14, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [ipc.signal.signal_selection]
+  claim: 树内被注释的原写法 list_for_each_entry_continue 从 pos 的下一个节点继续查找（double_list_macro.h:209-210 整段被 // 注释；signal.c:337 的使用也被注释，QD-214）。本树在 :338 换成 list_header_for_each_container（signal.c:338（QD-L31））。这个宏展开为 list_for_each_entry(pos, &((header)->anchor), member)（double_list_macro.h:346（QD-L30）），后者以 list_first_entry 起步，即 list_entry((ptr)->next, …)，从 anchor.next 开始（QD-216）。两个宏各只有一处定义（QD-215），位于 double_list_macro.h 的头文件守卫内，double_list.h:136 在条件编译块之外包含它（QD-217）。函数中两次遍历都用这个宏（SD-64）。第一次遍历在 :326-329 选中 sync 后 goto next，此时 sync 仍在链表中（signal.c:327（QD-L31）），要到 :347 才摘下。所以第二次遍历最迟在 sync 本身就满足 :339，随即 goto still_pending。:343 的 sigdelset 只有循环自然结束时才能到达，源码上不可达；它是函数中唯一的 sigdelset（SD-108、signal.c:347（QD-L31））。节点在 :347 摘下、:349 释放，pending 位保留。残留位要到下一次经 dequeue_signal → collect_signal 出队时，才由 :183 清除；:183 在 if (first) 之前，无条件执行（signal.c:183（QD-L31）），所以没有其他同号节点时只多出队一次。
+  premises: [当前任务的私有 pending 链表中有 si_code > SI_USER（SI_USER 定义为 0，QD-209）、信号号属于 SYNCHRONOUS_MASK 的 sigqueue 节点。, '私有 pending 链表中没有其他与 sync 同号的节点。若还有同号节点（在 sync 之前或之后都算），保留 pending 位本来就是对的；后果只在 sync 是该信号唯一节点时出现。本树 __send_signal_locked 中的 legacy_queue 检查被注释（signal.c:504，QD-210），同号多节点可能出现，所以这条前提必须写明。', ':317 只检查 pending->signal.sig[0] 中是否存在任一未被 blocked 屏蔽的 SYNCHRONOUS_MASK 位，并不针对被选中的节点（signal.c:317（QD-L31））；第一次遍历 :324-331 也不检查 blocked。后续的重复出队还要求该信号在下一次 next_signal 时仍未被屏蔽（:130 x = *s &~ *m，AD2-13）。']
+  impact: 推断：get_signal 每轮先调用 dequeue_synchronous_signal，返回 0 时再调用 dequeue_signal（signal.c:916（QD-L31））。残留位让 :317 通过，但链表里已没有合格节点，所以 :332 返回 0；接着 dequeue_signal 经 next_signal 优先选中同步位，collect_signal 找不到节点，在 :183 清位，并由回退分支合成 siginfo（si_code=SI_USER、si_pid=0、si_uid=0，signal.c:205（QD-L31）），与原始 siginfo 不符。重复出队的时机分两种。走 continue 或落空的分支，即 SIG_IGN（:936-937）、默认忽略（:951-952）、SIGNAL_UNKILLABLE（:964-966），以及默认致命动作（只置 PF_SIGNALED，:1039 的 do_group_exit 被注释，见 CORE-USER-RETURN-SIGNAL-09::RS-03）之后，循环继续，重复出队发生在同一次 get_signal 的下一轮。装有处理函数时，get_signal 在 :945 break 返回，重复出队发生在下一次 get_signal（entry/common.c:34 无条件调用，见 CORE-USER-RETURN-SIGNAL-09::RS-04）。若该处理函数带 SA_ONESHOT，第一次投递时 :942-943 已把表项复位为 SIG_DFL（signal.c:942（QD-L31）），第二次走默认动作分支，不会再进入处理函数；否则同一个同步信号会被第二次投递，第二次带的是合成的 siginfo。arch 信号目录中与 blocked 相关的活动代码只有 rt_sigreturn 中的 set_current_blocked（QD-208），handle_signal 中的 signal_setup_done 被注释（CORE-USER-RETURN-SIGNAL-09::RS-02），所以投递时不会把该信号加入 blocked（推断）。
+  counter_evidence: ['当前活动代码中找不到满足前提的生产者。向任何 sigpending 链表插入节点的活动语句只有 signal.c:532（__send_signal_locked 内，QD-211），目标链表由 :497 按 type 选择；唯一的活动发送链固定 PIDTYPE_TGID（signal.c:725），节点进共享 pending，si_code 由 :1079 定为 SI_USER（QD-191、QD-190）；而 dequeue_synchronous_signal 只扫描私有 pending，并要求 si_code > SI_USER。force_sig*、send_sig*、kill_pid*、do_notify_parent 等内核发信号接口只出现在注释中（QD-213）；SEND_SIG_PRIV 只有宏定义、case 标签和注释，没有调用者传入（QD-212）；rt_sigqueueinfo、tkill、tgkill 不在活动系统调用表中（CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB）。所以目前是潜伏缺陷。', 'collect_signal（:175）同样从表头遍历，但它只在找到第二个同号节点时才 goto still_pending（:176-178），与它上方被注释的 list_for_each_entry 写法（:174）语义一致，不受影响。']
+  unknown: [函数指针、宏拼接等词法检索覆盖不到的写法，是否会把 si_code > 0 的同步信号排入私有 pending。, 要等将来出现发送同步信号的活动路径（例如缺页或陷阱发信号）时才可能显现；当前 mykernel 中按名检索没有这样的活动调用（QD-213、QD-190）。]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence:
+  - QD-214
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 338, expect: list_header_for_each_container(q}
+  - {query: QD-L30, path: mykernel/lib/list/double_list_macro.h, line: 346, expect: define list_header_for_each_container}
+  - QD-216
+  - QD-215
+  - QD-217
+  - SD-64
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 327, expect: q->info.si_signo) & SYNCHRONOUS_MASK}
+  - SD-108
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 347, expect: 'delete_node(&pending->list, &sync->list'}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 183, expect: 'sigdelset(&pending->signal, sig);'}
+  - QD-209
+  - QD-210
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 317, expect: 'pending->signal.sig[0] & ~tsk->blocked'}
+  - AD2-13
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 916, expect: dequeue_synchronous_signal(&ksig->info)}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 205, expect: info->si_code = SI_USER;}
+  - {query: QD-L31, path: mykernel/lock_IPC/signal/signal.c, line: 942, expect: ka->sa.sa_flags & SA_ONESHOT}
+  - QD-208
+  - QD-211
+  - QD-191
+  - QD-190
+  - QD-213
+  - QD-212
+  - CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB
+  related: ['CORE-USER-RETURN-SIGNAL-09::RS-13', 'CORE-USER-RETURN-SIGNAL-09::RS-03', 'CORE-USER-RETURN-SIGNAL-09::RS-02', 'CORE-USER-RETURN-SIGNAL-09::RS-04', 'CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB']
+  blocks: {static_work: false, future_runtime: 影响 NVR-1 中同步信号投递的观察；本快照前提不满足，需要先有同步信号的生产者}
+  future_verification:
+    candidates: [NVR-1]
+    authorization_needed: [完整内核构建授权（full_kernel_build_authorized）, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: 出现向私有 pending 排入 si_code > 0 同步信号的活动路径时，或 Owner 给出专项范围许可时；开工前重核 time 源码。
+  ai_suggestion: 以后若修，可让第二次遍历从 sync 的下一个节点继续，与 :337 被注释的原写法一致；建议不等于决定。
+evidence_appends:
+- target: CORE-USER-BOUNDARIES-07::UB-09
+  status_change: none
+  note: 只追加证据，原条目与状态不改，不构成修复授权。UB-09 第三个边角（SYSRET 适用性判断不被使用、没有 IRET 后备）已由 CORE-USER-BOUNDARIES-07 记录（SB-01、SB-16、FP-3），这里不重复。本条只补一环：15 号 rt_sigreturn 是把用户内存中的值写进这些被检查字段的直接入口。05 没有相关条目；07 把信号子系统列为端点（CORE-USER-BOUNDARIES-07::entry.syscall_frame_return 的 not_covered）；08 只在分派表中列出 15 号（CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB），并把信号处理内部列为未覆盖。是否唯一入口没有穷尽：信号投递时 ip 也会被设为用户登记的 sa_handler；59 号 execve 走到 START_THREAD 时，ip 也会被写为 elf_entry（RT-36）。SYSRET 不适用时的硬件行为仍属外部语义（CORE-USER-BOUNDARIES-07::NVB-4、本包 NVR-3），本追加不断言运行时后果。
+  added_facts: ['15 号 rt_sigreturn 是活动表项（CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB）。它取 current_pt_regs()（SD-48），即 task_pt_regs(current)（QD-64），改写的就是 entry_SYSCALL_64 建立、返回段消费的那块帧（沿用 07 的推导：CORE-USER-BOUNDARIES-07::EB-23、CORE-USER-BOUNDARIES-07::VT-KFRAME；生成偏移的数值未核）。', 'rt_sigreturn 对帧只做地址范围检查（access_ok，AD3-13），restore_sigcontext 只检查 copy_from_user 的结果（AD3-08），都不检查取到的字段值；restore_sigcontext 中没有 force_valid_ss 调用（SD-50）。帧所在内存不可读时的去向见 CORE-USER-RETURN-SIGNAL-09::RS-06（读帧没有容错）与 CORE-USER-RETURN-SIGNAL-09::RS-07（badframe 只返回 0）。', 'restore_sigcontext 把 sc 中的 cx、sp、ip、r11 原样写进帧，cs、ss 取 sc 值或上 3，flags 只按 FIX_EFLAGS 取用户位（SD-49、AD3-09、AD3-10），FIX_EFLAGS 含 TF 与 RF（QD-63）。这些正是 do_syscall_64 中 SYSRET 适用性判断读取的字段：cx 与 ip、r11 与 flags、cs 与 ss、ip 上界、flags 的 RF/TF（SD-08、CORE-USER-BOUNDARIES-07::SB-16）；sp 不在判断之列（SD-09）。sigcontext_64 中 cs、ss 是 __u16（QD-65），能写入任意 64 位值的是 ip、sp、cx、r11 等通用寄存器字段。', '这些写入原样到达判断与返回段，需要三个前提。(a) 该次出口没有成功建立信号帧：get_signal 为假，或建帧失败。建帧失败时 x64_setup_rt_frame 在改写寄存器之前返回，例如没有 SA_RESTORER 时在 168-169 行返回（AD3-12；CORE-USER-RETURN-SIGNAL-09::RS-01、CORE-USER-RETURN-SIGNAL-09::RS-02）。建帧成功时，x64_setup_rt_frame 改写 ax、ip、sp、cs（SD-47），ss 不等于 __USER_DS 时调用 force_valid_ss（SD-38），handle_signal 还清掉 DF、RF、TF（SD-51），TF/RF 与 cs 两项不适用条件随之消失，ip 改由 sa_handler 决定。(b) 帧地址通过 access_ok，且帧所在内存可读。(c) restore_sigcontext 把 orig_ax 置为 -1（AD0-11），所以这次出口的重启 switch 不改写恢复值。', '在上述前提下，经 rt_sigreturn 写入的值原样到达 do_syscall_64 的判断。判断返回的 bool 不被入口汇编检查（CORE-USER-BOUNDARIES-07::SB-01、CORE-USER-BOUNDARIES-07::SB-16），按调用约定它在 %rax 中，随后被 POP_REGS 的 popq %rax 覆盖（QD-58；推断）。本仓库 do_syscall_64 自己的注释写明不适用时应改走 IRET 退出路径（AD3-01），入口汇编中没有对应分支，返回一律走 sysretq。在 SYSRET 判断涉及的字段中，返回段只消费 flags 与 ip（sp 另经 popq %rsp 装入，ax 等其余通用寄存器另经 POP_REGS 装入）：187-192 行的六次 xchg 把它们换进 R11、RCX 槽，193 行 POP_REGS 再装入 r11、rcx（CORE-USER-BOUNDARIES-07::SB-02、QD-58）；addq $0x28 跳过的五格是 irq_nr、orig_ax、RIP 槽（此时存 sc.cx）、CS 槽、EFLAGS 槽（此时存 sc.r11），SS 槽在 popq %rsp 取 SP 槽之后不再被读取（CORE-USER-BOUNDARIES-07::FP-3、CORE-USER-BOUNDARIES-07::VT-PTREGS）。所以恢复出的 cs、ss 对返回没有作用，sc.cx、sc.r11 也回不到用户寄存器。', 信号投递只经 syscall_exit_to_user_mode：它的活动调用点只有 do_syscall_64 与 ret_from_fork，__syscall_exit_to_user_mode_work、exit_to_user_mode_loop、arch_do_signal_or_restart 各只有一个活动调用点（QD-61、QD-62）；中断与异常返回经 excep_hwint_context，它不调用这些函数（SD-52）。推断：信号只在系统调用出口投递，此时帧中的 cx、r11 本来就是 syscall 指令占用的值，sc.cx、sc.r11 回不到用户寄存器的影响有限。]
+  evidence: ['CORE-USER-SYSCALL-STDIO-08::VT-SYSTAB', SD-48, QD-64, 'CORE-USER-BOUNDARIES-07::EB-23', 'CORE-USER-BOUNDARIES-07::VT-KFRAME', AD3-13, AD3-08, SD-50, SD-49, AD3-09, AD3-10, QD-63, SD-08, SD-09, QD-65, AD3-12, SD-47, SD-38, SD-51, AD0-11, AD3-01, QD-58, QD-61, QD-62, SD-52, 'CORE-USER-BOUNDARIES-07::SB-01', 'CORE-USER-BOUNDARIES-07::SB-02', 'CORE-USER-BOUNDARIES-07::SB-16', 'CORE-USER-BOUNDARIES-07::FP-3', 'CORE-USER-BOUNDARIES-07::VT-PTREGS', 'CORE-USER-BOUNDARIES-07::NVB-4', 'CORE-USER-RETURN-SIGNAL-09::RS-01', 'CORE-USER-RETURN-SIGNAL-09::RS-02', 'CORE-USER-RETURN-SIGNAL-09::RS-06', 'CORE-USER-RETURN-SIGNAL-09::RS-07']
+- target: CORE-USER-BOUNDARIES-07::UB-09
+  status_change: none
+  note: 只追加相交证据，原条目与状态不改，不构成修复授权。这里补越界号与返回尾部重启逻辑的交互：根因与 UB-09 第二个边角相同（入口没有把 ax 预置为 -ENOSYS，CORE-USER-SYSCALL-STDIO-08::AS2-03、CORE-USER-SYSCALL-STDIO-08::QS-18），重启判定对四个 64 位值把用户 rax 当作 ERESTART 码。07 把 arch_do_signal_or_restart 内部列为 not_covered（CORE-USER-BOUNDARIES-07::entry.syscall_frame_return），08 也把信号处理内部列为 not_covered（CORE-USER-SYSCALL-STDIO-08::entry.syscall_dispatch），所以这是两包覆盖范围之外的新交互。UB-09 中“返回的是原 rax（即系统调用号）”“用户得到原系统调用号作为返回值”的说法由 CORE-USER-RETURN-SIGNAL-09::ER-03 限定；08 中同义的正面表述按 SR08-02 处置（CORE-USER-RETURN-SIGNAL-09::ER-02）；-516 写回 219 的主述在 CORE-USER-RETURN-SIGNAL-09::RS-05。严重度低：只能由调用者自己触发；正常的 libc 不会以这四个值作系统调用号（libc 在仓库外，未核，CORE-USER-VFS-BASELINE-05::GAP-U10）；-516 一支若到达 while (1)（推断），与直接发 219 号相同，不带来新能力。回到 ip-2 处再次执行 syscall 指令、反复进出内核、以 219 停在 while (1)，都依赖 sysretq 以 rcx 返回且 ip-2 处为 2 字节 syscall 指令（ISA 外部语义，CORE-USER-BOUNDARIES-07::NVB-4、本包 NVR-3），运行时是否如此属 NOT_RUN（本包 NVR-1）；用户程序或 libc 是否以这四个值发出系统调用见 CORE-USER-VFS-BASELINE-05::GAP-U10（本包 NVR-4）。本追加不断言运行时后果，UB-09 的 kind 与 future_verification 不因本追加改变（见 CORE-USER-RETURN-SIGNAL-09::ER-03）。
+  added_facts: ['号按 (uint)(int)eax 不小于 453 时，do_syscall_64 不写 regs->ax，帧中 ax 与 orig_ax 都是入口压入的完整 64 位 rax（CORE-USER-SYSCALL-STDIO-08::AS2-02、CORE-USER-SYSCALL-STDIO-08::AS2-04、CORE-USER-SYSCALL-STDIO-08::AS2-05；PUSH_REGS 宏体中的 pushq %rax 与入口的 orig_ax 压栈见 QD-59）。随后 syscall_exit_to_user_mode → __syscall_exit_to_user_mode_work → exit_to_user_mode_loop 无条件调用 arch_do_signal_or_restart（QD-61；CORE-USER-BOUNDARIES-07::SB-14、CORE-USER-BOUNDARIES-07::SB-15），这一段没有改写 regs 字段的语句（QD-60），get_signal 也不接收 regs（AD0-08）。', 重启判定把这个 rax 当作错误码。syscall_get_nr 返回 int 化的 orig_ax（AD0-01；GCC 取低 32 位，推断），对 -512、-513、-514、-516 都不等于 -1。syscall_get_error 取 regs->ax（SD-45），IS_ERR_VALUE 为真时原样返回（AD0-03）。按 MyOS2 自己的 err.h，IS_ERR_VALUE 判断 (size_t)x >= (size_t)-MAX_ERRNO，MAX_ERRNO 为 4095（AD0-18、QD-57），四个值都满足；IA32 符号扩展块因 CONFIG_IA32_EMULATION 未定义而不编入（QD-48、QD-49）。ERESTARTSYS、ERESTARTNOINTR、ERESTARTNOHAND、ERESTART_RESTARTBLOCK 依次为 512、513、514、516（QD-57）。, '没有处理函数时（get_signal 为假）：-512、-513、-514 时 regs->ax = regs->orig_ax（写回同一个值），regs->ip -= 2（AD3-07、AD0-10）；-516 时 regs->ax = 219，regs->ip -= 2（AD1-09、AD3-05、AD0-04；219 没有表项，QD-46，主述见 CORE-USER-RETURN-SIGNAL-09::RS-05）。这些是源码层面对帧的改写。get_signal 为假包括没有可出队的信号（AD3-17、AD3-19），也包括出队的信号只有 SIG_IGN 或 SIG_DFL 动作：默认致命动作只置 PF_SIGNALED，循环继续取下一个信号（CORE-USER-RETURN-SIGNAL-09::RS-03）。', '返回段把改写后的 regs->ip、regs->ax 装入 rcx、rax：六次 xchg 把 ip 换进 RCX 槽，POP_REGS 的 popq %rcx、popq %rax 装入（CORE-USER-BOUNDARIES-07::SB-02、QD-58）。推断（ISA 语义未核，NOT_RUN）：用户态回到 ip-2 处的 syscall 指令，带着改写后的 rax 再次进入。对 -512、-513、-514，只要此后每次返回都没有投递用户处理函数，任务就停在这条指令上反复进出内核；之后若投递处理函数，-514 以及不带 SA_RESTART 的 -512 得到 -EINTR 并离开循环，-513 以及带 SA_RESTART 的 -512 经处理函数后仍回到循环。-516 一支第二次进入时按 219 分派，停在内核态 while (1)，不再经过信号处理（CORE-USER-SYSCALL-STDIO-08::AS2-08、CORE-USER-SYSCALL-STDIO-08::AS2-06）。', '有处理函数时（get_signal 为真），handle_signal 在建帧之前按重启表改写（CORE-USER-RETURN-SIGNAL-09::RS-02）：-514、-516 以及不带 SA_RESTART 的 -512 得到 regs->ax = -EINTR，ip 不变（AD0-05、AD0-06）；-513 以及带 SA_RESTART 的 -512 得到 ax = orig_ax、ip -= 2（AD3-04）。建帧成功时，改写后的 ax、ip 先存入信号帧（SD-46），随后 x64_setup_rt_frame 改写 ax、ip 等交给处理函数（SD-47）；rt_sigreturn 从帧恢复 ax、ip（AD3-09），并把 orig_ax 置 -1（AD0-11），所以它自己的出口跳过重启 switch，最后 return regs->ax（signal_64.c:272（QD-L10））。因此，若处理函数经 restorer 发出 rt_sigreturn 且没有改动帧（用户态行为，推断），-EINTR 成为这次调用在帧中的返回值；ax 为原值、ip-2 的一支经 rt_sigreturn 回到 ip-2（推断：再次进入同一循环）。建帧失败时改写不回滚，直接带回（CORE-USER-RETURN-SIGNAL-09::RS-02；CORE-USER-RETURN-SIGNAL-09::RS-01 若成立，所有处理函数投递都会失败）。', '源码层面只改写调用者自己的 pt_regs，改写内容取决于该次出口 get_signal 的真假（为假的范围见第 3 项；为真时不论建帧成败，都先按第 5 项改写，见 CORE-USER-RETURN-SIGNAL-09::RS-02）。-516 一支：第一次出口 get_signal 为假时，ax 改为 219、ip 减 2，推断以 219 再次进入后停在 __x64_sys_ni_syscall 的内核态 while (1)；为真时得到 -EINTR、ip 不变，不写 219。-512、-513、-514 一支：get_signal 为假时，ax 写回同一个值、ip 减 2，推断只要此后每次出口 get_signal 都为假，任务就反复进出内核；某次出口 get_signal 为真时，-514 与不带 SA_RESTART 的 -512 得到 -EINTR，推断离开循环，-513 与带 SA_RESTART 的 -512 仍得到 ip 减 2，推断回到循环。以上“再次进入、停住、反复进出、离开”都是按 ISA 语义的推断（NOT_RUN，NVR-3、NVR-1）。同一 CPU 上其他任务能否继续运行，取决于中断返回处的调度：excep_hwint_context 在 !in_atomic() 时调用 schedule()（AD3-14）；外部中断是否都经过这里、in_atomic() 在这些路径上的取值都未核；此外，每次出口 get_signal 放 siglock 时 raw_spin_unlock_irq 调用 preempt_enable，计数减到 0 时可能调用 preempt_schedule（D01.5，SD-26、QD-25），何时为真也未追；对其他任务的影响未分析。']
+  evidence:
+  - CORE-USER-SYSCALL-STDIO-08::AS2-02
+  - CORE-USER-SYSCALL-STDIO-08::AS2-03
+  - CORE-USER-SYSCALL-STDIO-08::AS2-04
+  - CORE-USER-SYSCALL-STDIO-08::AS2-05
+  - CORE-USER-SYSCALL-STDIO-08::AS2-06
+  - CORE-USER-SYSCALL-STDIO-08::AS2-08
+  - CORE-USER-SYSCALL-STDIO-08::QS-18
+  - CORE-USER-BOUNDARIES-07::SB-14
+  - CORE-USER-BOUNDARIES-07::SB-15
+  - CORE-USER-BOUNDARIES-07::SB-02
+  - QD-59
+  - QD-61
+  - QD-60
+  - AD0-08
+  - AD0-01
+  - SD-45
+  - AD0-03
+  - AD0-18
+  - QD-57
+  - QD-48
+  - QD-49
+  - AD3-07
+  - AD0-10
+  - AD1-09
+  - AD3-05
+  - AD0-04
+  - QD-46
+  - AD3-17
+  - AD3-19
+  - QD-58
+  - AD0-05
+  - AD0-06
+  - AD3-04
+  - SD-46
+  - SD-47
+  - AD3-09
+  - AD0-11
+  - {query: QD-L10, path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c, line: 272, expect: return regs->ax;}
+  - AD3-14
+  - CORE-USER-RETURN-SIGNAL-09::RS-01
+  - CORE-USER-RETURN-SIGNAL-09::RS-02
+  - CORE-USER-RETURN-SIGNAL-09::RS-03
+  - CORE-USER-RETURN-SIGNAL-09::RS-05
+errata:
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::ER-01
+  id: ER-01
+  title: 08 对 fdput 不配对 fput 的摘要缺条件；US-01.claim 的“返回前无条件 fdput_pos”与源码不符
+  kind: [documentation_erratum]
+  status: superseded_interpretation
+  owner_action_now: none
+  target: CORE-USER-SYSCALL-STDIO-08::US-01
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    results_commit: 8983a9235c8a（原件，未改）
+    paths: [agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/evidence.md, agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md]
+    entry_id: US-01
+  original_locations:
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §0 第 3 条（第 33 行）, text: write、writev 每次、fcntl 除成功的 F_DUPFD 外每次都让 f_count 少一（US-01）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §0 第 4 条（第 34 行）, text: write 与 writev 都在返回前多做一次 fput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.2 FL-04 行“引用计数”列（第 338 行）, text: 每次减一而不先加一；1 → 0 时释放，槽仍指着它}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.2 FL-05 行“引用计数”列（第 339 行）, text: F_GETFL、失败的 F_DUPFD 与不支持的命令只减一}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.3 第 3 段引导句（第 370 行）, text: 于是 write 不论 `vfs_write` 成败，返回前都会 fput 一次}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.3 末段（第 396 行）, text: 或第一次除成功的 F_DUPFD 之外的 fcntl(2) 之后，file 就被释放}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.6 表 write(2) 行（第 459 行）, text: 以写方式打开时返回 -EINVAL（UB-01），并多 fput 一次（US-01）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.6 表 writev(2) 行（第 460 行）, text: 直接用用户指针（UB-07）；多 fput 一次（US-01）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.6 表 fcntl(2) 行（第 463 行）, text: 除成功的 F_DUPFD 外多 fput 一次（US-01）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §5.1 图（第 484 行）, text: fdput_pos（多一次 fput）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §5.2 图（第 493 行）, text: fdget 不取引用 + fdput 必 fput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §7 表 07 UB-01 行（第 512 行）, text: write 与 writev 返回前都多做一次 fput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §9（第 529 行）, text: write、writev 与除成功 F_DUPFD 外的 fcntl 每次多 fput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.title（第 31 行）, text: write、writev 每次调用，以及除成功的 F_DUPFD 之外的每次 fcntl，都多做一次 fput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.claim（第 37 行）, text: 并在返回前无条件 fdput_pos}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.claim（第 37 行）, text: sys_fcntl 用 fdget_raw 并在返回前 fdput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.claim（第 37 行）, text: F_GETFL、失败的 F_DUPFD 与不支持的命令（default 分支，AS3-39）则只剩这次 fput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.premises（第 38 行）, text: fcntl 的情形限于成功的 F_DUPFD/F_DUPFD_CLOEXEC 以外的命令}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.impact（第 39 行）, text: 或第一次除成功的 F_DUPFD 之外的 fcntl(2) 后，file 对象被释放}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.impact（第 39 行）, text: 旧 fd 上的下一次 write、writev 或 fcntl 会把新 file 的 f_count 减一，若它原为 1 就释放它}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, locator: US-01.counter_evidence 第 2 项（第 40 行）, text: 成功的 F_DUPFD 先 get_file 再 fdput，净值不变（AS3-37）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[user.initramfs.shell_console_io].failure_path（第 151 行）', text: 内核侧每次都在 vfs_write 返回 -EINVAL，并在返回前对该 file 做一次不配对的 fput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[fs.vfs.rw_syscalls].failure_path（第 421 行）', text: write 与 writev 每次调用都以一次不配对的 fput 结束}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[fs.vfs.fd_lookup_ref].failure_path（第 479 行）', text: 每对 fdget*/fdput* 都会去掉一个从未取得的引用}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[fs.vfs.fd_dup_fcntl].normal_path（第 537 行）', text: 成功的 F_DUPFD 中 get_file 与 fdput 相抵}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[fs.vfs.fd_dup_fcntl].failure_path（第 539 行）', text: 除成功的 F_DUPFD 外，fcntl 也以一次不配对的 fput 结束（US-01）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: fd_lifecycle FL-04.refcount_effect（第 974 行）, text: 每次调用 f_count 减一而不先加一}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: fd_lifecycle FL-05.code_path（第 992 行）, text: sys_fcntl → fdget_raw → do_fcntl(F_DUPFD) → f_dupfd → fdput}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: fd_lifecycle FL-05.refcount_effect（第 994 行）, text: F_GETFL、失败的 F_DUPFD 与不支持的命令只有 fdput 的一次减一}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: anchors AS3-21.role（第 1758 行，只补注）, text: vfs_write 返回后（包括 -EINVAL）无条件 fdput_pos}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: anchors AS3-23.role（第 1780 行，只补注）, text: vfs_writev 返回后无条件 fdput_pos}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/evidence.md, locator: §5 第 5 项第 1 点（第 90 行）, text: 标题、前提、影响与正文都已收窄}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: anchors AS3-26.role（第 1813 行，只补注）, text: 'role: fcntl 返回前 fdput'}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: structure_checks SS-04.purpose（第 2446 行，只补注）, text: 'purpose: write 返回前 fdput_pos'}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: structure_checks SS-06.purpose（第 2460 行，只补注）, text: 'purpose: writev 返回前 fdput_pos'}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: structure_checks SS-10.purpose（第 2488 行，只补注）, text: 'purpose: fcntl 返回前 fdput'}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: fd_lifecycle FL-04.code_path（第 972 行，只补注）, text: 都经 fdget_pos … fdput_pos}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.2 FL-04 行“代码路径”列（第 338 行，只补注）, text: '`ksys_write`、`do_writev` → `fdget_pos` … `fdput_pos`'}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.2 FL-05 行“代码路径”列（第 339 行，只补注）, text: fcntl：`fdget_raw` → `do_fcntl` → `f_dupfd` → `fdput`}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §0 第 3 条（第 33 行）, text: 唯一能复制 fd 的是 fcntl(F_DUPFD)}
+  claim: 08 在 user-syscall-stdio.md、deferred-findings.yaml、facts-and-boundaries.yaml 与 evidence.md 的 34 处，把 write、writev、fcntl 的不配对 fput 写成“每次”“返回前”“无条件”，或只把成功的 F_DUPFD 列为例外；user-syscall-stdio.md §0 第 3 条还把 fcntl(F_DUPFD) 写成唯一能复制 fd 的命令，漏了同样经 f_dupfd 的 F_DUPFD_CLOEXEC。源码中三处调用者都先判空：空槽返回 -EBADF，不执行 fdput 或 fdput_pos；fdput_pos 位于 file 非空的分支内，在 vfs_write、vfs_writev 返回后执行；sys_fcntl 在 file 非空时经 out1 执行 fdput，空槽 goto out 跳过它。成功的 F_DUPFD 与成功的 F_DUPFD_CLOEXEC 共用 f_dupfd 的 get_file，净值为零；失败的 F_DUPFD 要分 from ≥ RLIMIT_NOFILE（净减一）与 alloc_fd 找不到空槽（不给净值）；FMODE_PATH 下被白名单拒绝的命令也经 out1 执行 fdput（推断走不到）。下标越界、槽悬空或未写入、扫描越过 256 项、fd_install 覆盖非空槽（panic 在源码层面会返回）与控制未到达清理，都不给确定净值。
+  correction: 以附注追加，08 原文件不改。(1) US-01 的结论不变：fdget、fdget_pos、fdget_raw 都是 __to_fd，不取引用却返回 flags=3，到达 fdput 时做一次不配对的 fput。(2) write、writev：fd 下标在 [0,256)、槽内是可用的非空 file，并且 vfs_write 或 vfs_writev 返回时，各净减一，早退返回 -EBADF、-EINVAL、-EFAULT 时也一样；空槽直接返回 -EBADF，不执行 fdput_pos；“无条件”只指 vfs_write、vfs_writev 返回之后。(3) fcntl：在同样条件下、控制经 out1 到达 fdput 时，成功的 F_DUPFD 与成功的 F_DUPFD_CLOEXEC（在 [from,256) 找到空槽）由 get_file 抵消，净值为零；F_GETFL、default（含 case 被注释的 F_GETFD、F_SETFD、F_SETFL）、FMODE_PATH 下白名单拒绝（推断走不到）、from ≥ RLIMIT_NOFILE 而失败的 F_DUPFD 与 F_DUPFD_CLOEXEC 净减一；空槽 goto out，跳过 fdput，返回 -EBADF。(4) f_count 为 1 时，这次 fput 进入 kmem_cache_free，槽仍指向它，此后该槽悬空。(5) 下标越界（含形参类型转换后越界）、槽悬空或未写入、alloc_fd 找不到空槽返回未赋值的 fd、扫描越过 256 项、fd_install 覆盖非空槽（BUG_ON 之后 panic 在源码层面返回，第 192 行照写，再回到 fdput）、控制没有到达清理时，不给确定净值。(6) 净变化只算 fdget/fdput 这一对与 get_file 的贡献，->write 等自己改动 f_count 的情形未追。(7) user-syscall-stdio.md §0 第 3 条的“唯一能复制 fd 的是 fcntl(F_DUPFD)”读作 F_DUPFD 与 F_DUPFD_CLOEXEC，两者都经 f_dupfd（CORE-USER-SYSCALL-STDIO-08::AS3-27）。逐处改读见 stdio-08-disposition.md §2.5，条件表见其 §2.3。
+  unchanged_parts: ['US-01 的核心事实：__to_fd 不取引用却返回 flags=3，fdput 按 FDPUT_FPUT 调用 fput（CORE-USER-SYSCALL-STDIO-08::AS3-13 至 AS3-17、SS-07、VT-FDLIMITS）', US-01 的 kind、status（deferred_owner_not_ready）、related 与 evidence 清单, '读路径 myos_fdget_pos 返回 flags=0、不受影响（CORE-USER-SYSCALL-STDIO-08::AS3-18、SS-01、SS-02）', 'CORE-USER-SYSCALL-STDIO-08::US-02、US-03、PU-01 与 CORE-USER-VFS-BASELINE-05::UV-09、UV-10、UV-11 的原条目', '08 对 CORE-USER-BOUNDARIES-07::UB-01 的证据追加第 1 项（以到达 vfs_write 为前提）', AS3-21、AS3-23、AS3-26 的 quote 与行号，SS-04、SS-06、SS-10 的正则与期望计数（只对 role、purpose 补注）]
+  premises: [无额外前提：依据是所读快照中的源码文本与原文]
+  impact: 只改读法与适用条件，不改任何条目的状态，也不构成修复授权。按源码，US-01 的影响面比 08 摘要所写的窄：空槽不 fput，成功的 F_DUPFD_CLOEXEC 净值为零；同时多出一条净减一路径（FMODE_PATH 白名单拒绝，推断走不到）。今后按 CORE-USER-SYSCALL-STDIO-08::NVS-1 观察 write、writev、fcntl 前后的 f_count 时，应按 stdio-08-disposition.md §2.3 的条件分组（NOT_RUN）。
+  counter_evidence: []
+  unknown: [净变化只算 fdget*/fdput* 与 get_file 的贡献，->write 等自己改动 f_count 的情形未追, 'fd 形参的整数转换（unsigned int、ulong 到 int 再到 ulong）按 GCC 的实现定义理解，属推断；f_count 的实际变化属 NOT_RUN（CORE-USER-SYSCALL-STDIO-08::NVS-1）']
+  evidence:
+  - {query: QD-L21, path: mykernel/fs/vfs/read_write.c, line: 325, expect: if (filp != NULL)}
+  - {query: QD-L21, path: mykernel/fs/vfs/read_write.c, line: 334, expect: fdput_pos(f);}
+  - {query: QD-L21, path: mykernel/fs/vfs/read_write.c, line: 391, expect: if (f.file)}
+  - {query: QD-L21, path: mykernel/fs/vfs/read_write.c, line: 400, expect: fdput_pos(f);}
+  - {query: QD-L18, path: mykernel/fs/syscall.c, line: 149, expect: f.file->f_mode & FMODE_PATH}
+  - {query: QD-L18, path: mykernel/fs/syscall.c, line: 161, expect: return err;}
+  - {query: QD-L19, path: mykernel/fs/vfs/fcntl.c, line: 29, expect: err = filp->f_flags;}
+  - {query: QD-L23, path: mykernel/include/linux/fs/fs.h, line: 906, expect: atomic_long_inc(&f->f_count)}
+  - {query: QD-L20, path: mykernel/fs/vfs/file.c, line: 144, expect: return fd;}
+  - {query: QD-L20, path: mykernel/fs/vfs/file.c, line: 191, expect: 'BUG_ON(fps[fd] != NULL)'}
+  - {query: QD-L24, path: mykernel/include/linux/kernel/asm-generic/bug.h, line: 58, expect: 'BUG: failure at %s:%d/%s()!'}
+  - {query: QD-L16, path: mykernel/debug/panic.c, line: 201, expect: end Kernel panic - not syncing}
+  - QD-05
+  - QD-03
+  - QD-07
+  - QD-02
+  - SD-01
+  - QD-01
+  - QD-04
+  - QD-06
+  - QD-08
+  - QD-09
+  - {query: QD-L21, path: mykernel/fs/vfs/read_write.c, line: 293, expect: file->f_mode & FMODE_CAN_WRITE}
+  - {query: QD-L24, path: mykernel/include/linux/kernel/asm-generic/bug.h, line: 66, expect: if (unlikely(condition)) BUG();}
+  - {query: QD-L41, path: mykernel/scripts/options_flags.cmake, line: 66, expect: -DCONFIG_BUG}
+  - QD-233
+  - CORE-USER-SYSCALL-STDIO-08::AS3-14
+  - CORE-USER-SYSCALL-STDIO-08::AS3-20
+  - CORE-USER-SYSCALL-STDIO-08::AS3-21
+  - CORE-USER-SYSCALL-STDIO-08::AS3-22
+  - CORE-USER-SYSCALL-STDIO-08::AS3-23
+  - CORE-USER-SYSCALL-STDIO-08::AS3-25
+  - CORE-USER-SYSCALL-STDIO-08::AS3-26
+  - CORE-USER-SYSCALL-STDIO-08::AS3-27
+  - CORE-USER-SYSCALL-STDIO-08::AS3-28
+  - CORE-USER-SYSCALL-STDIO-08::AS3-37
+  - CORE-USER-SYSCALL-STDIO-08::AS3-39
+  related: ['CORE-USER-SYSCALL-STDIO-08::US-02', 'CORE-USER-SYSCALL-STDIO-08::US-03', 'CORE-USER-SYSCALL-STDIO-08::PU-01', 'CORE-USER-VFS-BASELINE-05::UV-09', 'CORE-USER-VFS-BASELINE-05::UV-10', 'CORE-USER-VFS-BASELINE-05::UV-11', 'CORE-USER-BOUNDARIES-07::UB-01']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 勘误不需要运行验证；以后重核原文与 time 源码即可
+    authorization_needed: []
+  reopen_conditions: 原文件或 time 中对应源码改变时重核。
+  ai_suggestion: 无
+  note: 05/07/08 原文件不改；本条只在本批写区追加。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::ER-02
+  id: ER-02
+  title: 08 把分派后的 regs->ax 写成用户最终拿到的 rax
+  kind: [documentation_erratum]
+  status: superseded_interpretation
+  owner_action_now: none
+  target: CORE-USER-SYSCALL-STDIO-08::entry.syscall_dispatch
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    results_commit: 8983a9235c8a（原件，未改）
+    paths: [agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md]
+    entry_id: entry.syscall_dispatch
+  original_locations:
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §0 第 2 条（第 32 行）, text: '`do_syscall_64` 把号转为无符号'}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §0 第 2 条（第 32 行）, text: 号不小于 453 时用户拿回的就是原号}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §3.1“检查与分派”（第 177 行）, text: 号转成无符号后与 `__NR_syscalls`（453，只在 `__KERNEL__` 下定义，AS2-12、AS2-20）比较}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §3.1“返回”（第 219 行）, text: 返回段把帧中的 ax 恢复到 rax，用户态在 rax 中看到返回值}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §3.2 表头第 3 列（第 223 行）, text: 用户看到的 rax}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §3.2 第 1 行（第 225 行）, text: 处理函数的返回值；没有活动 return 的处理函数（dup、dup2、wait4；exit 在 do_exit 之后也没有 return）若返回，返回值没有定义}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §3.2 第 2 行（第 226 行）, text: 不返回（UB-09）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §3.2 第 3 行第 3 列（第 227 行）, text: -ENOSYS}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §3.2 第 4 行（第 228 行）, text: 原 rax，也就是号本身（UB-09）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §4.6 表头第 4 列（第 455 行）, text: 结果（源码层面）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §5.1 图（第 481 行）, text: 用户态 rax = 返回值}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §5.2 图（第 498 行）, text: 号 ≥ 453 ─▶ 返回原号}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md, locator: §8 GAP-U10 行（第 525 行）, text: 内核侧对每个候选系统调用的结果已列出}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[entry.syscall_dispatch].normal_path（第 226 行）', text: 'do_syscall_64 把号转为无符号，小于 __NR_syscalls（453）才 regs->ax = x64_sys_call(regs, unr)'}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[entry.syscall_dispatch].normal_path（第 227 行）', text: 之后 syscall_exit_to_user_mode，并落入 syscall_return_via_sysret}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[entry.syscall_dispatch].failure_path（第 229 行）', text: 号不小于 453（包括转成无符号后的负号）时 ax 不被写，用户拿回原 rax，也就是系统调用号}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: 'capabilities[entry.syscall_dispatch].correctness_evidence.reason（第 270 行）', text: 越界号返回原值、缺项原地循环（UB-09）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: anchors AS2-05.role（第 1358 行）, text: 号转成无符号后与 __NR_syscalls 比较，范围内才调 x64_sys_call 并把返回值写入 regs->ax}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: prior_unknowns PU-02.now（第 1073 行）, text: 内核侧对每个候选系统调用的结果已列出（VT-SYSTAB 与 user-syscall-stdio.md §4）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml, locator: gap_status 中 GAP-U10 的 coverage（第 1102 行）, text: 内核侧每个可能被调用的系统调用的结果已逐项列出}
+  claim: 08 在 user-syscall-stdio.md 的 §0、§3.1、§3.2、§4.6、§5、§8 与 facts-and-boundaries.yaml 的 entry.syscall_dispatch、AS2-05、PU-02、GAP-U10 中，把 do_syscall_64 写入（或越界时不写）的 regs->ax 写成用户看到或拿回的 rax，并把号检查写成“号转成无符号”。源码中，do_syscall_64 分派后无条件经 syscall_exit_to_user_mode 调用 arch_do_signal_or_restart：没有信号递送且 (int)orig_ax ≠ -1 时，ax 为 -512、-513、-514 会被改为 orig_ax 并令 ip 减 2，为 -516 会被改为 219 并令 ip 减 2；有信号递送时，ax、ip、sp、di、si、dx、cs、ss、flags 都可能被改写；rt_sigreturn 则在分派阶段、restore_sigcontext 成功时由用户帧恢复 15 个通用寄存器与 sp、ip（cs、ss 取用户值或上 3，flags 只取 FIX_EFLAGS 所列的位），并把 orig_ax 置为 -1。返回段装入 rax 的是这一步之后帧中的 ax。号检查只看 movslq 之后、以 int 接收的 eax。
+  correction: 以附注追加，08 原文件不改。(1) 08 中凡写“用户看到的 rax”“用户拿回”“用户态 rax = 返回值”之处，都读作“分派后 regs->ax（分派局部结果）”。(2) 号检查：入口 movslq 把 eax 符号扩展进 rsi，do_syscall_64 以 int nr 接收，再 uint unr = nr 与 453 比较；rax 高 32 位不参与（推断）。(3) 帧分四段：分派前 orig_ax 与 ax 都是入口 64 位 rax；分派只在 unr < 453 且处理函数返回时写 ax；返回尾部无条件调用 arch_do_signal_or_restart，按 stdio-08-disposition.md §3.2 改写；返回段把这之后帧中的 ax、ip、flags、sp 装入 rax、rcx、r11、rsp，再 swapgs、sti、sysretq。(4) “rax 等于分派值”的充分条件是四条同时成立：号在表内且处理函数返回；没有信号递送（get_signal 为假）；没有重启改写（(int)orig_ax 为 -1，或分派写入的 64 位值不是 -512、-513、-514、-516）；正常到达 syscall_return_via_sysret。这是充分条件，不是必要条件，有信号递送时 ax 可能不变，也可能被改为 -EINTR、orig_ax 或 0。以“返回尾部不写帧并到达返回段”为准，第 1、3、4 条必要；第 2 条不必要，可以放宽为“没有成功建立信号帧（get_signal 为假，或建帧在改写寄存器之前失败）”，放宽后四条合起来是充要条件。越界号时第 1 条换成“分派不写 ax，控制到达返回尾部”，分派值换成入口的 64 位 rax；只比数值时另有三种数值相等而帧已改写的情形，不算未改写返回。全文见 user-return-signal.md“衔接”一节 L2，简述见 stdio-08-disposition.md §3.3。(5) 越界号“ax 不被写”只是分派局部事实：64 位 rax 恰为 -512、-513、-514、-516 时，没有信号也会由重启分支改写帧：四种都令 ip 减 2，-516 另把 ax 改为 219，-512、-513、-514 的 ax 写回同值；这些改写是源码事实，“回到同一条 syscall 指令”以及由此而来的原地循环或以 219 再次进入，都是按 ISA 的推断（NOT_RUN）。sysretq 之后用户态实际看到什么属 NOT_RUN（GAP-U04 剩余部分）。逐处改读见 stdio-08-disposition.md §3.7，取代 08 §3.2 的表见其 §3.5。
+  unchanged_parts: ['08 对入口绑定、建帧、号检查、switch 分派、包装取参与写回 ax 的源码事实（CORE-USER-SYSCALL-STDIO-08::AS2-01 至 AS2-13、SS-15、VT-SYSTAB）', 表内缺项进 __x64_sys_ni_syscall 的 while (1)、452 号返回 -ENOSYS 这两项分派阶段结论（original_locations 中第 226、227 行两格只因位于“用户看到的 rax”一列而列入，见 stdio-08-disposition.md §3.7 的 L2-06、L2-07）, 'CORE-USER-SYSCALL-STDIO-08::ES-12.note 与 user-syscall-stdio.md §10 的覆盖边界说明', 'CORE-USER-VFS-BASELINE-05::GAP-U04 的状态（narrowed）与 GAP-U10 的状态（open）', 'CORE-USER-BOUNDARIES-07::FP-3、SB-14、SB-15、SB-16 的事实']
+  premises: [无额外前提：依据是所读快照中的源码文本与原文]
+  impact: 只改读法，不改条目状态。08 §3.2 第 4 行明确把负号算在“原 rax，也就是号本身（UB-09）”之内，正是 stdio-08-disposition.md §3.4 反例覆盖的情形：越界号的四个 64 位值在没有信号时也会使帧被改写：四种都令 ip 减 2，-516 另把 ax 改为 219；以 219 再次进入并停在 __x64_sys_ni_syscall 的 while (1) 是按 ISA 的推断（NOT_RUN，见 CORE-USER-RETURN-SIGNAL-09::RS-05）。读 08 中任何“用户看到的返回值”，都要再经过返回尾部这一段；信号链本身的问题见 CORE-USER-RETURN-SIGNAL-09::RS-01 至 RS-07。07 的同类表述（CORE-USER-BOUNDARIES-07::UB-09）由 CORE-USER-RETURN-SIGNAL-09::ER-03 处理。
+  counter_evidence: []
+  unknown: [号检查只看 movslq 之后以 int 接收的 eax，rax 的高 32 位不参与，属推断, sysretq 之后用户态实际看到的寄存器值属 NOT_RUN（GAP-U04 剩余部分，NVR-3 与 NVR-1）]
+  evidence:
+  - QD-10
+  - QD-11
+  - AD0-08
+  - AD0-09
+  - AD0-10
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 266, expect: regs->ax = get_nr_restart_syscall(regs)}
+  - AD0-01
+  - AD0-03
+  - {query: QD-L09, path: mykernel/arch/x86_64/lock_IPC/signal/signal.c, line: 234, expect: return __NR_restart_syscall;}
+  - AD0-04
+  - QD-14
+  - AD0-05
+  - AD0-13
+  - AD0-15
+  - AD0-11
+  - SD-02
+  - AD0-06
+  - AD0-16
+  - AD0-17
+  - SD-39
+  - CORE-USER-SYSCALL-STDIO-08::AS2-02
+  - CORE-USER-SYSCALL-STDIO-08::AS2-04
+  - CORE-USER-SYSCALL-STDIO-08::AS2-05
+  - CORE-USER-BOUNDARIES-07::SB-15
+  - CORE-USER-BOUNDARIES-07::AB2-16
+  related: ['CORE-USER-RETURN-SIGNAL-09::ER-03', 'CORE-USER-BOUNDARIES-07::UB-09', 'CORE-USER-RETURN-SIGNAL-09::entry.syscall_return_work']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 勘误不需要运行验证；以后重核原文与 time 源码即可
+    authorization_needed: []
+  reopen_conditions: 原文件或 time 中对应源码改变时重核。
+  ai_suggestion: 无
+  note: 05/07/08 原文件不改；本条只在本批写区追加。
+- qualified_id: CORE-USER-RETURN-SIGNAL-09::ER-03
+  id: ER-03
+  title: CORE-USER-BOUNDARIES-07::UB-09 中“越界号返回原值”要加限定：用户 rax 为 -512、-513、-514、-516 时，返回尾部的重启逻辑会改写帧
+  kind: [documentation_erratum]
+  status: superseded_interpretation
+  owner_action_now: none
+  target: CORE-USER-BOUNDARIES-07::UB-09
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    results_commit: 8983a9235c8a（原件，未改）
+    paths: [agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/deferred-findings.yaml]
+    entry_id: UB-09
+  original_locations:
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/deferred-findings.yaml, locator: findings 中 id 为 UB-09 的 title, text: 越界号返回原值}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/deferred-findings.yaml, locator: findings 中 id 为 UB-09 的 claim, text: 号不小于 453 时 regs->ax 不被写，返回的是原 rax（即系统调用号）}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/deferred-findings.yaml, locator: findings 中 id 为 UB-09 的 impact, text: 号不小于 453 时不进循环，用户得到原系统调用号作为返回值。}
+  claim: 07 由“号不小于 453 时 do_syscall_64 不写 regs->ax”推出“返回原 rax，用户得到原系统调用号”，没有计入返回尾部。exit_to_user_mode_loop 无条件调用 arch_do_signal_or_restart（CORE-USER-BOUNDARIES-07::SB-15），其中的重启逻辑会把帧中 ax 恰为 -512、-513、-514、-516（64 位补码）的情形当作 ERESTART 码，改写 ax 与 ip。分派阶段的事实没有错；错在把它当成返回用户态时的值。
+  correction: UB-09 中越界号一句改为：号按 (uint)(int)eax 不小于 453 时，分派不写 regs->ax，帧中 ax 仍是入口的完整 64 位 rax；返回段装入 rax 的是返回尾部之后帧中的 ax。帧中 ax（同时也是 orig_ax）恰为 -512、-513、-514、-516 时，(int)orig_ax 不是 -1，重启逻辑在源码层面改写帧：① 没有处理函数时（get_signal 为假），-512、-513、-514 得到 ax = orig_ax（写回同一个值）与 ip -= 2，-516 得到 ax = 219（__NR_restart_syscall）与 ip -= 2；② 有处理函数时，-514、-516 以及不带 SA_RESTART 的 -512 得到 ax = -EINTR、ip 不变，-513 以及带 SA_RESTART 的 -512 得到 ax = orig_ax、ip -= 2；建帧成功时这些值存入信号帧，要等处理函数经 restorer 发出 rt_sigreturn 才恢复（用户态行为，推断），建帧失败时直接保留（CORE-USER-RETURN-SIGNAL-09::RS-02）。“回到同一条 syscall 指令、反复进出内核”与“以 219 再次进入、停在 __x64_sys_ni_syscall 的 while (1)”都是按 ISA 语义的推断（NOT_RUN），前者还要求每次重入时 get_signal 仍为假。对其余 64 位值，重启 switch 不改写 ax 与 ip；没有信号投递并正常到达 syscall_return_via_sysret 时，返回段装入 rax 的就是入口 rax。这只是充分条件：有信号投递而建帧失败时 ax 同样不变，建帧成功时 ax 先被置 0 交给处理函数，要等处理函数经 rt_sigreturn 返回才恢复（推断）。sysretq 之后用户态实际看到什么属 NOT_RUN。
+  unchanged_parts: [UB-09 第一个边角不变：号小于 453 而表中没有时，经 x64_sys_call 的 default 落到 __x64_sys_ni_syscall，打印后 while (1), UB-09 第三个边角不变：SYSRET 适用性判断不被使用，没有 IRET 后备；本包另有一条证据追加补充 rt_sigreturn 一环, '分派阶段的事实不变：号不小于 453 时 do_syscall_64 不写 regs->ax（CORE-USER-SYSCALL-STDIO-08::AS2-05）。07 facts-and-boundaries.yaml 中 entry.syscall_frame_return 的 failure_path“号不小于 __NR_syscalls 时 ax 保持原值（即系统调用号）”在 do_syscall_64 这一点仍成立，只是不能当作返回用户态时的值', UB-09 的 kind、status、owner_action_now 与 future_verification 不变；本勘误不升级、不关闭 UB-09, '08 包中的同义表述不在本条范围，按 SR08-02 处置（CORE-USER-RETURN-SIGNAL-09::ER-02）']
+  premises: [无额外前提：依据是所读快照中的源码文本与原文]
+  impact: 消费 07 时，UB-09 中越界号的返回值以本条为准。对 -512、-513、-514、-516 这四个 64 位值，返回尾部在源码层面改写帧，不能再按“用户得到原系统调用号”消费：没有信号投递时四种都令 ip 减 2，-516 另把 ax 改为 219；-512、-513、-514 的 ax 写回同值，返回段装入 rax 的数值仍是原号，但 ip 已减 2，用户是否把它当作返回值拿到属 ISA 推断（NVR-3）；有信号投递时按重启表改写。后果见本包对 UB-09 的越界号证据追加与 CORE-USER-RETURN-SIGNAL-09::RS-05。对其余值，没有信号投递并正常到达返回段是 07 说法成立的充分条件，不是必要条件（有信号投递而建帧在改写寄存器之前失败时 ax 同样不变）。UB-09 的状态不因本条改变。
+  counter_evidence: []
+  unknown: [回到 ip-2 处再次执行 syscall 指令、反复进出内核、以 219 再次进入后停在 __x64_sys_ni_syscall 的 while (1)，都依赖 sysretq 以 rcx 返回、ip-2 处为 2 字节 syscall 指令，属 ISA 推断（NVR-3）, (int)orig_ax 按 GCC 取低 32 位理解，属实现定义行为（推断）, 返回用户态后寄存器的实际值属 NOT_RUN（NVR-1）, '用户程序或 libc 是否以这四个值作系统调用号发出，在仓库外（CORE-USER-VFS-BASELINE-05::GAP-U10，NVR-4）']
+  evidence: [AD0-08, AD3-07, AD0-10, AD1-09, AD3-05, AD0-04, AD0-05, AD0-06, AD3-04, AD0-01, AD0-03, AD0-18, QD-57, QD-48, QD-58, SD-46, AD3-09, AD0-11, 'CORE-USER-SYSCALL-STDIO-08::AS2-02', 'CORE-USER-SYSCALL-STDIO-08::AS2-05', 'CORE-USER-BOUNDARIES-07::SB-15', 'CORE-USER-BOUNDARIES-07::SB-02', 'CORE-USER-RETURN-SIGNAL-09::RS-02', 'CORE-USER-RETURN-SIGNAL-09::RS-05']
+  related: ['CORE-USER-RETURN-SIGNAL-09::ER-02', 'CORE-USER-RETURN-SIGNAL-09::RS-05', 'CORE-USER-BOUNDARIES-07::entry.syscall_frame_return', 'CORE-USER-SYSCALL-STDIO-08::entry.syscall_dispatch']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 勘误不需要运行验证；以后重核原文与 time 源码即可
+    authorization_needed: []
+  reopen_conditions: 原文件或 time 中对应源码改变时重核。
+  ai_suggestion: 无
+  note: 05/07/08 原文件不改；本条只在本批写区追加。

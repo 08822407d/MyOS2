@@ -1,0 +1,180 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-INIT-EXEC-HANDOFF-69",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "D00": "NOT_APPLICABLE",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "IE69-F01",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F01",
+      "kind": "conditional_binary_handler_result_shadowing",
+      "status": "needs_evidence",
+      "premises": [
+        "formats contains at least two handlers at the time of the call",
+        "an earlier handler returns nonnegative and makes some state changes",
+        "subsequent handler is invoked using still valid bprm and returns a different result"
+      ],
+      "claim": "search_binary_handler loops across all registered fmt handlers and overwrites retval at each load_binary invocation; the early-return condition based on point_of_no_return or retval is commented. If two or more handlers are actually registered, an earlier success and a later negative result may yield a negative final exec result after earlier side effects, or multiple format handlers may operate on a mutated bprm. The number and order of active handlers and lifetime behavior are NOT_RUN.",
+      "counter_evidence": "Only one handler may be registered for tested boot, or no earlier handler succeeds; no actual multi-handler execution was observed",
+      "first_stop": "format list membership and subsequent handler object validity unknown",
+      "evidence": [
+        "B23",
+        "B24",
+        "B25",
+        "B27",
+        "B39"
+      ],
+      "related": [
+        "CORE-USER-KTHREAD-ENTRY-68::KT68-U07"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-F02",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F02",
+      "kind": "conditional_exec_error_ignored_by_direct_bridge",
+      "status": "needs_evidence",
+      "premises": [
+        "the bridge successfully reached kernel_execve with valid initial task/stack",
+        "an execution stage returns a negative value without preparing valid IP/SP for SYSRET",
+        "free_bprm/putname return normally so the bridge proceeds to inline asm"
+      ],
+      "claim": "kjmp_to_doexecve modifies task flags and mm, calls kernel_execve without consuming its return, and then requests TSS-pointer assignment and RSP-changing inline asm jump if the callee/cleanup return normally. If kernel_execve returns negative before the loader prepares a valid user frame, this local bridge does not branch on that failure and can attempt to consume an invalid/incomplete saved frame. No actual failure, CPU jump, or user execution was observed.",
+      "counter_evidence": "the selected /boot/init and the actual loader may succeed, or earlier cleanup may not normally return; hardware behavior unknown",
+      "first_stop": "kernel_execve earliest failure/cleanup normal return and frame state not established",
+      "evidence": [
+        "A03",
+        "A06",
+        "A08",
+        "A09",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B07",
+        "B08",
+        "B10",
+        "B11",
+        "B12",
+        "B13"
+      ],
+      "related": [
+        "CORE-USER-KTHREAD-ENTRY-68::KT68-U07"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-F03",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F03",
+      "kind": "conditional_inline_asm_stack_and_control_interface",
+      "status": "needs_evidence",
+      "premises": [
+        "the compiler emits the asm in the selected code path",
+        "changing RSP or branching violates an actual compiler/ABI assumption for the surrounding C code",
+        "the assumed frame or return path is invalid for the actual target"
+      ],
+      "claim": "the source inline asm uses a memory input containing curr_ptregs, no outputs and no declared clobber, and embeds a jump to syscall_return_via_sysret after changing RSP. The source interface alone does not establish how the compiler models a nonreturning control transfer, the new stack's lifetime/alignment, or valid GS/CPU state. Any miscompilation or unsafe return would need actual toolchain/object/hardware evidence.",
+      "counter_evidence": "the emitted code may still work under the actual compiler/optimizer and machine context; no disassembly, compile, or CPU execution was performed",
+      "first_stop": "compiler/toolchain and physical stack validity not examined",
+      "evidence": [
+        "A08",
+        "A09",
+        "C32",
+        "C35",
+        "C36"
+      ],
+      "related": [
+        "CORE-USER-FIRST-RUN-FRAME-67::FR67-U07"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_findings_count": 3,
+  "evidence_gaps": [
+    {
+      "id": "IE69-U01",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U01",
+      "status": "needs_evidence",
+      "detail": "curr_ptregs captured before exec: whether same task/stack allocation remains valid through all exec helpers, cleanup and final ASM",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-U02",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U02",
+      "status": "needs_evidence",
+      "detail": "curr->mm=curr->active_mm pointer assignment is not a full MM ownership/CR3/GS/TSS transition; no actual identity/lifetime proof",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-U03",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U03",
+      "status": "needs_evidence",
+      "detail": "kernel_execve error path free_bprm and putname ownership, possible repeated fput sites, file/mm references and nonlocal cleanup outcomes not audited",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-U04",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U04",
+      "status": "needs_evidence",
+      "detail": "search_binary_handler actual format registrations/order and loader-bprm lifetime across multiple callback invocations unknown",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-U05",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U05",
+      "status": "needs_evidence",
+      "detail": "load_elf_binary intermediate memory mapping/stack tables/interpreter behavior and frame mutation beyond selected return windows not re-audited",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-U06",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U06",
+      "status": "needs_evidence",
+      "detail": "actual START_THREAD preprocessing, generated pt_regs offsets, compiler ABI/assembler code and inline asm operand/stack/control interaction NOT_RUN",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-U07",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U07",
+      "status": "needs_evidence",
+      "detail": "CPU SYSRET selector/STAR/GS/flags/canonical-address rules, first CPL3 transition and user instruction execution not hardware-attested",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IE69-U08",
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U08",
+      "status": "needs_evidence",
+      "detail": "source bridge bypasses the directly read ret_from_fork exit-work call; wider signal/restart consequences and previous 09 unresolved items remain bounded",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "actually_reproduced_kernel_bugs": 0,
+  "historical_finding_ids_preserved": true,
+  "prior68": "PASS_PENDING_LOCAL_WITH_R68-S01/S02/S03",
+  "prior67": "PASS_PENDING_LOCAL_WITH_R67C-S01",
+  "excluded_actions": [
+    "self-sign 69 PASS",
+    "start 70",
+    "modify kernel",
+    "run scripts/build/CPU",
+    "edit old files, comments or PR metadata"
+  ]
+}

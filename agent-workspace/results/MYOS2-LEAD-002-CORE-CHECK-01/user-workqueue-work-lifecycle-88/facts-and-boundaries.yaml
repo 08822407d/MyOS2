@@ -1,0 +1,3259 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-WORKQUEUE-WORK-LIFECYCLE-88",
+  "record_type": "workqueue_submission_queue_notify_scheduled_callback_static_facts",
+  "produced_by": "GPT-6 (visible identity; backend not independently attested)",
+  "model_per_owner": "GPT-6 + Extra (Owner specified)",
+  "date": "2026-11-15",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "mainline_release_short12": "cf2377d7c580",
+  "execution_start_short12": "bc611665b38f",
+  "status": "AUTHOR_STATIC_PENDING_FORMAL_DELIVERY_AND_PRO_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "phase": 2,
+  "D00": "NOT_REQUIRED",
+  "open_questions": [
+    "WQ88-U01",
+    "WQ88-U02",
+    "WQ88-U03",
+    "WQ88-U04",
+    "WQ88-U05",
+    "WQ88-U06",
+    "WQ88-U07",
+    "WQ88-U08",
+    "WQ88-U09"
+  ],
+  "G00": {
+    "status": "PASS",
+    "lead": "cf2377d7c580",
+    "exec": "bc611665b38f",
+    "master": "e8e60cd19540",
+    "time": "a039d9803ade",
+    "pr16": "OPEN_UNMERGED",
+    "pr17": "OPEN_DRAFT_UNMERGED",
+    "dir_preflight": "EXPECTED_404",
+    "marker_preflight": 0,
+    "prior_comment_87": 6872044008,
+    "authorized_writer": "CHAT-EXEC-11",
+    "old_EXEC10_09": "STOP_WRITING",
+    "canaries_reopened": true,
+    "conventions_exact": true
+  },
+  "prior_status": {
+    "R86_01": "CLOSED_DOCUMENTATION_ONLY_BY_C06",
+    "batch86": "PASS_PENDING_LOCAL_WITH_R86_S01_S02_S03",
+    "batch87": "PASS_PENDING_LOCAL_WITH_R87_S01_S02_S03",
+    "batch88": "AUTHOR_STATIC_ONLY_PENDING_MAINLINE",
+    "historic_84_85": "CLOSED_OR_QUALIFIED_RETAINED",
+    "old_results_or_comments_changed": false,
+    "previous_findings_counted_as_new": 0
+  },
+  "reading_account": {
+    "new_read_full_current_turn": [
+      "agent-workspace/lead/MYOS2-LEAD-002/125-user-workqueue-work-lifecycle-contract.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/124-model-routing-and-pro-message-budget.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-PERCPU-ALLOCATION-87-review.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-PERCPU-BOOTSTRAP-86-DOC-CLOSURE-review.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-15-percpu87-reviewed-workqueue88-ready.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md",
+      "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+      "original PR17 issue comment 6872044008",
+      "mykernel/scripts/options_flags.cmake at pinned time (full) and master (full)",
+      "mykernel/debug/panic.c at pinned time/master for branch canary",
+      "agent-workspace/conventions.md fixed clause, direct GitHub read"
+    ],
+    "new_read_fixed_source_current_turn": [
+      {
+        "path": "mykernel/kactive/workqueue/workqueue.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/kactive/workqueue/workqueue.c",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/kactive/workqueue/workqueue_types.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/kactive/kactive_type_declaration.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/kactive/workqueue/workqueue_const.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/include/linux/kernel/irqflags.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/lib/list/double_list.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/sched/scheduler/scheduler_core.c",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/lib/list/double_list_macro.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/include/uapi/linux/stddef.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/lock_IPC/atomic/atomic-long_macro.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/lock_IPC/atomic/atomic_api.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic64_arch.h",
+        "classification": "NEW_READ_CURRENT_88",
+        "scope": "full fixed file fetched for bounded definition selection"
+      },
+      {
+        "path": "mykernel/kactive/workqueue/workqueue_macro.h",
+        "classification": "NEW_CONTEXT_ONLY_NO_P2_ANCHOR",
+        "scope": "read for local macro/API include context; not a standalone proof of runtime behavior"
+      },
+      {
+        "path": "mykernel/kactive/workqueue/workqueue_api.h",
+        "classification": "NEW_CONTEXT_ONLY_NO_P2_ANCHOR",
+        "scope": "read for local macro/API include context; not a standalone proof of runtime behavior"
+      }
+    ],
+    "same_active_C06b_conversation_reuse": [
+      "Earlier fixed 84/85/86/87 source and result objects actually read or produced inside this same executor conversation, including prior R86-S01/S02/S03 and R85/R84 restrictions; not imported from C06 reviewer chat",
+      "R87-S01/S02/S03 now freshly read from fixed 87 review; original fixed 87 artifacts authored/read in this chat but not all independently re-downloaded this turn",
+      "Previously read 119 receipt / Mnemosyne guidance / nine MyOS2 rules only within original C06b active conversation's verified scope; this turn did not repeat full receive ritual"
+    ],
+    "not_read": [
+      "actual work->data/entry/func producer for all possible callers",
+      "all other workqueue users, deferred work/timers/cancel/flush/destroy/rescuer/unbound lifecycle",
+      "full AP/CPU hotplug, x86 hardware, memory ordering and real concurrency",
+      "complete wake_up_process->try_to_wake_up and scheduler/kthread internals",
+      "all raw lock and IRQ implementation / complete global synchronization safety",
+      "real 87 perCPU encoded WQ slot, live PWQ pointer/object from CPU0/CPU1",
+      "compiled ELF, QEMU or hardware CPU registers",
+      "complete local P9 checker; repo/test scripts and program execution"
+    ],
+    "clarifications": [
+      "Do not inherit C06 Pro author read history or old retired EXEC10/09 read claims",
+      "Only textual source and finite conditional models, no actual callback execution",
+      "Default branch code search of INIT_WORK gave comment-only result and cannot prove global absence at fixed time",
+      "R87-S01 source assignment to metadata is a write, not proof payload memory initialized",
+      "R87-S02 per_cpu_ptr numerical add and this_cpu_ptr GS read are different conditional formulas; real storage access still open",
+      "R87-S03 kzalloc and partial PWQ errors remain source-bounded; original prior IDs unchanged",
+      "R86-S01/S02/S03 compiler/link/early CPU state remain preconditions"
+    ]
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E001",
+        "WQ88-E021",
+        "WQ88-E022",
+        "WQ88-E023",
+        "WQ88-E028",
+        "WQ88-E029",
+        "WQ88-E030",
+        "WQ88-E031",
+        "WQ88-E032",
+        "WQ88-E033",
+        "WQ88-E034",
+        "WQ88-E035",
+        "WQ88-E078",
+        "WQ88-E079",
+        "WQ88-E080",
+        "WQ88-E081"
+      ]
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E002",
+        "WQ88-E003",
+        "WQ88-E004",
+        "WQ88-E005",
+        "WQ88-E006",
+        "WQ88-E007",
+        "WQ88-E008",
+        "WQ88-E009",
+        "WQ88-E020",
+        "WQ88-E024",
+        "WQ88-E025",
+        "WQ88-E026",
+        "WQ88-E027",
+        "WQ88-E042",
+        "WQ88-E043",
+        "WQ88-E044",
+        "WQ88-E053",
+        "WQ88-E054",
+        "WQ88-E055",
+        "WQ88-E056",
+        "WQ88-E057",
+        "WQ88-E058",
+        "WQ88-E059",
+        "WQ88-E060",
+        "WQ88-E061",
+        "WQ88-E062",
+        "WQ88-E063",
+        "WQ88-E064",
+        "WQ88-E065",
+        "WQ88-E066",
+        "WQ88-E067",
+        "WQ88-E068",
+        "WQ88-E069",
+        "WQ88-E070",
+        "WQ88-E071",
+        "WQ88-E072",
+        "WQ88-E073",
+        "WQ88-E074",
+        "WQ88-E075",
+        "WQ88-E076",
+        "WQ88-E077",
+        "WQ88-E094",
+        "WQ88-E095",
+        "WQ88-E096",
+        "WQ88-E101"
+      ]
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E010",
+        "WQ88-E036",
+        "WQ88-E037",
+        "WQ88-E038",
+        "WQ88-E087",
+        "WQ88-E088",
+        "WQ88-E089"
+      ]
+    },
+    {
+      "path": "mykernel/kactive/kactive_type_declaration.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E011"
+      ]
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E012",
+        "WQ88-E013",
+        "WQ88-E014",
+        "WQ88-E015",
+        "WQ88-E039",
+        "WQ88-E040",
+        "WQ88-E041",
+        "WQ88-E090"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E016",
+        "WQ88-E017"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/irqflags.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E018",
+        "WQ88-E019"
+      ]
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E045",
+        "WQ88-E046",
+        "WQ88-E047",
+        "WQ88-E085",
+        "WQ88-E086",
+        "WQ88-E097",
+        "WQ88-E098",
+        "WQ88-E099",
+        "WQ88-E100",
+        "WQ88-E102",
+        "WQ88-E103"
+      ]
+    },
+    {
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E048",
+        "WQ88-E049",
+        "WQ88-E050",
+        "WQ88-E051"
+      ]
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E052"
+      ]
+    },
+    {
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E082",
+        "WQ88-E083"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/linux/stddef.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E084"
+      ]
+    },
+    {
+      "path": "mykernel/lock_IPC/atomic/atomic-long_macro.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E091"
+      ]
+    },
+    {
+      "path": "mykernel/lock_IPC/atomic/atomic_api.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E092"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic64_arch.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_READ_CURRENT_88",
+      "source_scope": "full fixed file fetched for bounded definition selection",
+      "evidence_ids": [
+        "WQ88-E093"
+      ]
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_macro.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_CONTEXT_ONLY_NO_P2_ANCHOR",
+      "evidence_ids": [],
+      "source_scope": "read for local macro/API include context; not a standalone proof of runtime behavior"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_api.h",
+      "ref": "time",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "read_status": "NEW_CONTEXT_ONLY_NO_P2_ANCHOR",
+      "evidence_ids": [],
+      "source_scope": "read for local macro/API include context; not a standalone proof of runtime behavior"
+    }
+  ],
+  "source_statistics": {
+    "fixed_time_paths_read": 17,
+    "source_soft_limit": 24,
+    "source_soft_overage": 0,
+    "with_anchors": 15,
+    "context_only": 2,
+    "mechanical_full_tree_survey": "NOT_RUN"
+  },
+  "evidence_anchor_ledger": [
+    {
+      "id": "WQ88-E001",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "queue_work",
+      "start": 274,
+      "end": 275,
+      "claim": "queue_work wrapper invokes CPU_UNBOUND sentinel",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E002",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "queue_work_on",
+      "start": 153,
+      "end": 157,
+      "claim": "queue_work_on bool result initially false",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E003",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "queue_work_on",
+      "start": 158,
+      "end": 162,
+      "claim": "IRQ save, commented pending branch and active internal call",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E004",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "queue_work_on",
+      "start": 163,
+      "end": 167,
+      "claim": "unconditional true assignment after callee returns; IRQ restore and return",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E005",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "__simple_queue_work",
+      "start": 108,
+      "end": 110,
+      "claim": "internal function void return and object roles",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E006",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "__simple_queue_work",
+      "start": 114,
+      "end": 118,
+      "claim": "WORK_CPU_UNBOUND branch of active smp_processor_id",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E007",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "__simple_queue_work",
+      "start": 118,
+      "end": 122,
+      "claim": "selected CPU indexes perCPU PWQ and pool pointer",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E008",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "__simple_queue_work",
+      "start": 124,
+      "end": 128,
+      "claim": "pool lock and linked-entry WARN conditional skip",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E009",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "__simple_queue_work",
+      "start": 129,
+      "end": 133,
+      "claim": "list publication, kick call, unlock exit",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E010",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "work_struct",
+      "start": 7,
+      "end": 10,
+      "claim": "work has atomic_long data, entry list node, callback function",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E011",
+      "path": "mykernel/kactive/kactive_type_declaration.h",
+      "symbol": "work_func_t",
+      "start": 18,
+      "end": 20,
+      "claim": "callback type accepts work_s pointer and returns void",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E012",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "work_bits",
+      "start": 80,
+      "end": 84,
+      "claim": "work pending, inactive, PWQ and linked bit indices",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E013",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "work_flags",
+      "start": 130,
+      "end": 134,
+      "claim": "pending/related bit flag enum values",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E014",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "wq_misc_consts",
+      "start": 145,
+      "end": 146,
+      "claim": "WORK_CPU_UNBOUND equals compile-time NR_CPUS",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E015",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "wq_flags",
+      "start": 176,
+      "end": 180,
+      "claim": "WQ_UNBOUND flag separate from CPU sentinel",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E016",
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "symbol": "WARN_ON",
+      "start": 130,
+      "end": 130,
+      "claim": "WARN_ON macro evaluates condition directly",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E017",
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "symbol": "WARN_ON_ONCE",
+      "start": 113,
+      "end": 113,
+      "claim": "WARN_ON_ONCE macro evaluates condition directly",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E018",
+      "path": "mykernel/include/linux/kernel/irqflags.h",
+      "symbol": "local_irq_save",
+      "start": 247,
+      "end": 247,
+      "claim": "IRQ save wrapper requests arch save",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E019",
+      "path": "mykernel/include/linux/kernel/irqflags.h",
+      "symbol": "local_irq_restore",
+      "start": 249,
+      "end": 249,
+      "claim": "IRQ restore wrapper requests arch restore",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E020",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "__simple_queue_work",
+      "start": 115,
+      "end": 119,
+      "claim": "WQ_UNBOUND select was commented while active current CPU assignment",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E021",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "work_struct_pwq",
+      "start": 60,
+      "end": 63,
+      "claim": "PWQ data decoding masks off flag bits",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E022",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "get_work_pwq",
+      "start": 67,
+      "end": 70,
+      "claim": "get_work_pwq reads atomic data and decodes flagged PWQ",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E023",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "get_work_pwq",
+      "start": 70,
+      "end": 73,
+      "claim": "get_work_pwq returns NULL when no PWQ flag",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E024",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "kick_pool",
+      "start": 259,
+      "end": 263,
+      "claim": "kick_pool retrieves first idle worker",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E025",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "kick_pool",
+      "start": 265,
+      "end": 266,
+      "claim": "kick_pool returns false when no worker required or no idle worker",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E026",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "kick_pool",
+      "start": 268,
+      "end": 272,
+      "claim": "POOL_BH branch includes unbounded while before true return",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E027",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "kick_pool",
+      "start": 303,
+      "end": 305,
+      "claim": "wake_up_process invoked; source then returns true",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E028",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "need_more_worker",
+      "start": 92,
+      "end": 95,
+      "claim": "queue nonempty and nr_running==0 required",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E029",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "may_start_working",
+      "start": 100,
+      "end": 102,
+      "claim": "idle_list.count nonzero predicate",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E030",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "keep_working",
+      "start": 107,
+      "end": 110,
+      "claim": "worker processing loop predicate worklist and nr_running<=1",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E031",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "first_idle_worker",
+      "start": 186,
+      "end": 190,
+      "claim": "empty idle list guard before first helper",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E032",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_enter_idle",
+      "start": 213,
+      "end": 217,
+      "claim": "idle flag and list insertion",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E033",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_enter_idle",
+      "start": 217,
+      "end": 217,
+      "claim": "idle worker list insertion",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E034",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_leave_idle",
+      "start": 238,
+      "end": 242,
+      "claim": "WARN inactive test prevents cleanup",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E035",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_leave_idle",
+      "start": 243,
+      "end": 245,
+      "claim": "leaving idle clears flag and deletes from list",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E036",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 178,
+      "end": 182,
+      "claim": "pool lock/cpu/node/id fields",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E037",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 194,
+      "end": 198,
+      "claim": "nr_running, worklist and nr_workers field types",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E038",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 198,
+      "end": 202,
+      "claim": "nr_workers and idle_list fields",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E039",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "pool_flags",
+      "start": 29,
+      "end": 32,
+      "claim": "pool BH and manager/disassociated bits",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E040",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "worker_flags",
+      "start": 37,
+      "end": 41,
+      "claim": "idle, PREP, intensive, unbound worker flags",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E041",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "worker_flags",
+      "start": 42,
+      "end": 45,
+      "claim": "rebound and NOT_RUNNING combined mask",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E042",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 762,
+      "end": 766,
+      "claim": "pool lock and initial flags initialized",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E043",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 767,
+      "end": 769,
+      "claim": "pool worklist/idle_list header initialization",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E044",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "alloc_worker",
+      "start": 179,
+      "end": 183,
+      "claim": "worker alloc initializes list nodes/scheduled and PREP",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E045",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_is_empty",
+      "start": 630,
+      "end": 632,
+      "claim": "list header empty checks count, not anchor",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E046",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_add_to_tail",
+      "start": 663,
+      "end": 667,
+      "claim": "list insertion and count increment",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E047",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_delete_node",
+      "start": 683,
+      "end": 687,
+      "claim": "delete checks membership, decrements header count",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E048",
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "symbol": "spin_lock",
+      "start": 127,
+      "end": 128,
+      "claim": "spin_lock maps to raw_spin_lock",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E049",
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "symbol": "spin_unlock",
+      "start": 160,
+      "end": 161,
+      "claim": "spin_unlock maps to raw_spin_unlock",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E050",
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "symbol": "spin_lock_irq",
+      "start": 148,
+      "end": 149,
+      "claim": "spin_lock_irq maps to raw IRQ spin lock",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E051",
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "symbol": "spin_unlock_irq",
+      "start": 166,
+      "end": 167,
+      "claim": "spin_unlock_irq maps to raw IRQ unlock",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E052",
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "wake_up_process",
+      "start": 556,
+      "end": 559,
+      "claim": "wake_up_process forwards to try_to_wake_up",
+      "topic": "B"
+    },
+    {
+      "id": "WQ88-E053",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_assign_work",
+      "start": 242,
+      "end": 246,
+      "claim": "simple_assign_work deletes from pool worklist and inserts scheduled",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E054",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_assign_work",
+      "start": 245,
+      "end": 249,
+      "claim": "scheduled list insertion then literal true return",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E055",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_scheduled_works",
+      "start": 567,
+      "end": 571,
+      "claim": "scheduled top selection in while without list-empty check",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E056",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_scheduled_works",
+      "start": 573,
+      "end": 577,
+      "claim": "scheduled processing invokes process_one_work and loops",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E057",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 594,
+      "end": 598,
+      "claim": "worker thread has worker and pool pointers",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E058",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 600,
+      "end": 604,
+      "claim": "woke-up label locks pool and calls worker_leave_idle",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E059",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 606,
+      "end": 610,
+      "claim": "need_more_worker sleep gate and manage condition",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E060",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 609,
+      "end": 611,
+      "claim": "manager's true result rechecks",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E061",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 618,
+      "end": 618,
+      "claim": "scheduled nonempty WARN does not return alone",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E062",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 627,
+      "end": 631,
+      "claim": "clears PREP, keep_working and first work selection",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E063",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 630,
+      "end": 634,
+      "claim": "simple_assign_work result and scheduled processing",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E064",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 636,
+      "end": 640,
+      "claim": "sets PREP then enters sleep label",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E065",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 645,
+      "end": 649,
+      "claim": "enters idle, sets task state, unlocks, schedules, reenters",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E066",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 412,
+      "end": 416,
+      "claim": "callback processing begins by deriving PWQ",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E067",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 416,
+      "end": 420,
+      "claim": "PWQ source pointer, pool and work_data locals",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E068",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 421,
+      "end": 425,
+      "claim": "conditional CPU check then claim current_work",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E069",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 425,
+      "end": 427,
+      "claim": "sets current_work, current_func and current_pwq",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E070",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 436,
+      "end": 438,
+      "claim": "reads pwq->wq->name then removes scheduled node",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E071",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 446,
+      "end": 447,
+      "claim": "CPU-intensive branch requests worker flag",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E072",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 455,
+      "end": 455,
+      "claim": "process_one_work calls kick_pool before callback",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E073",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 463,
+      "end": 466,
+      "claim": "pending clear commented; active IRQ unlock",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E074",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 497,
+      "end": 497,
+      "claim": "worker current_func callback invoked",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E075",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 532,
+      "end": 532,
+      "claim": "reacquires pool IRQ lock after callback",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E076",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 539,
+      "end": 539,
+      "claim": "clears worker CPU-intensive flag",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E077",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "process_one_work",
+      "start": 544,
+      "end": 547,
+      "claim": "clears worker current work/function/PWQ fields",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E078",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_set_flags",
+      "start": 148,
+      "end": 151,
+      "claim": "first NOT_RUNNING transition decrements nr_running",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E079",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_set_flags",
+      "start": 153,
+      "end": 154,
+      "claim": "worker flags OR assignment",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E080",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_clr_flags",
+      "start": 165,
+      "end": 168,
+      "claim": "clearing flags preserves old flag snapshot",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E081",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_clr_flags",
+      "start": 178,
+      "end": 180,
+      "claim": "final NOT_RUNNING exit increments nr_running",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E082",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_headr_first_container",
+      "start": 334,
+      "end": 335,
+      "claim": "first-container macro uses first-entry unguarded",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E083",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_first_entry",
+      "start": 37,
+      "end": 38,
+      "claim": "first-entry macro accesses head next and container",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E084",
+      "path": "mykernel/include/uapi/linux/stddef.h",
+      "symbol": "container_of",
+      "start": 9,
+      "end": 13,
+      "claim": "container_of uses unsigned address minus member offset",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E085",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_is_empty",
+      "start": 630,
+      "end": 632,
+      "claim": "header empty requires count==0",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E086",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_delete_node",
+      "start": 683,
+      "end": 687,
+      "claim": "delete-node checks contains then decrements count",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E087",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker",
+      "start": 30,
+      "end": 32,
+      "claim": "worker current_work/current_func/current_pwq fields",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E088",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker",
+      "start": 41,
+      "end": 44,
+      "claim": "worker scheduled header, task and pool fields",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E089",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "pool_workqueue",
+      "start": 233,
+      "end": 235,
+      "claim": "PWQ owner wq is accessed during callback",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E090",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "WORK_STRUCT_PWQ_MASK",
+      "start": 162,
+      "end": 162,
+      "claim": "mask for PWQ pointer encoding",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E091",
+      "path": "mykernel/lock_IPC/atomic/atomic-long_macro.h",
+      "symbol": "atomic_long_read",
+      "start": 521,
+      "end": 521,
+      "claim": "atomic_long_read name maps to architecture long read",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E092",
+      "path": "mykernel/lock_IPC/atomic/atomic_api.h",
+      "symbol": "arch_atomic_long_read",
+      "start": 78,
+      "end": 79,
+      "claim": "atomic long maps to arch_atomic64_read",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E093",
+      "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic64_arch.h",
+      "symbol": "arch_atomic64_read",
+      "start": 91,
+      "end": 93,
+      "claim": "arch atomic read returns counter with READ_ONCE",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E094",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 723,
+      "end": 726,
+      "claim": "worker attached and thread start path announced",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E095",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 727,
+      "end": 730,
+      "claim": "worker count and initial idle registration",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E096",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 737,
+      "end": 739,
+      "claim": "conditional wake_up_process after worker creation",
+      "topic": "C"
+    },
+    {
+      "id": "WQ88-E097",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "__list_add_valid",
+      "start": 162,
+      "end": 166,
+      "claim": "list validation has a non-progressing condition loop",
+      "topic": "B_near_dependency"
+    },
+    {
+      "id": "WQ88-E098",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "__list_add_between",
+      "start": 189,
+      "end": 193,
+      "claim": "list add validates before writing neighbor pointers",
+      "topic": "B_near_dependency"
+    },
+    {
+      "id": "WQ88-E099",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "__list_add_between",
+      "start": 194,
+      "end": 196,
+      "claim": "list add writes pointers only on validation return",
+      "topic": "B_near_dependency"
+    },
+    {
+      "id": "WQ88-E100",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_add_to_prev",
+      "start": 219,
+      "end": 223,
+      "claim": "list_add_to_prev calls __list_add_between",
+      "topic": "B_near_dependency"
+    },
+    {
+      "id": "WQ88-E101",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 960,
+      "end": 964,
+      "claim": "early initialization source adds POOL_BH to BH worker pools",
+      "topic": "B_near_dependency"
+    },
+    {
+      "id": "WQ88-E102",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_empty",
+      "start": 133,
+      "end": 133,
+      "claim": "list_empty is defined as the list_is_empty_entry check",
+      "topic": "A"
+    },
+    {
+      "id": "WQ88-E103",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_is_empty_entry",
+      "start": 428,
+      "end": 432,
+      "claim": "list_is_empty_entry checks READ_ONCE(head->next)==head",
+      "topic": "A"
+    }
+  ],
+  "evidence_anchor_total": 103,
+  "evidence_tags_only_in_evidence": true,
+  "anchor_readback": {
+    "fixed_time_paths_checked": 15,
+    "definition_quotes_fully_reopened": 103,
+    "quote_text_mismatches": 0,
+    "method": "First 101/101 exact source quote matches in two independent fixed-time readback batches; two appended distinct list_empty/list_is_empty_entry quotes separately re-opened and rechecked; 103 total. Not full local P9."
+  },
+  "fact_to_evidence_ids": {
+    "submission_return": [
+      "WQ88-E001",
+      "WQ88-E002",
+      "WQ88-E003",
+      "WQ88-E004",
+      "WQ88-E016"
+    ],
+    "entry_and_cpu": [
+      "WQ88-E006",
+      "WQ88-E007",
+      "WQ88-E008",
+      "WQ88-E009",
+      "WQ88-E010",
+      "WQ88-E014",
+      "WQ88-E015",
+      "WQ88-E102",
+      "WQ88-E103"
+    ],
+    "pool_publish": [
+      "WQ88-E008",
+      "WQ88-E009",
+      "WQ88-E043",
+      "WQ88-E045",
+      "WQ88-E046",
+      "WQ88-E097",
+      "WQ88-E098",
+      "WQ88-E099",
+      "WQ88-E100"
+    ],
+    "kick_decision": [
+      "WQ88-E024",
+      "WQ88-E025",
+      "WQ88-E026",
+      "WQ88-E027",
+      "WQ88-E028",
+      "WQ88-E031",
+      "WQ88-E039",
+      "WQ88-E101"
+    ],
+    "scheduled_handoff": [
+      "WQ88-E053",
+      "WQ88-E054",
+      "WQ88-E055",
+      "WQ88-E056",
+      "WQ88-E082",
+      "WQ88-E083",
+      "WQ88-E084",
+      "WQ88-E086"
+    ],
+    "decode_pwq": [
+      "WQ88-E021",
+      "WQ88-E022",
+      "WQ88-E023",
+      "WQ88-E090",
+      "WQ88-E091",
+      "WQ88-E092",
+      "WQ88-E093"
+    ],
+    "callback_edges": [
+      "WQ88-E069",
+      "WQ88-E070",
+      "WQ88-E072",
+      "WQ88-E073",
+      "WQ88-E074",
+      "WQ88-E075",
+      "WQ88-E076",
+      "WQ88-E077"
+    ],
+    "worker_flags_and_sleep": [
+      "WQ88-E058",
+      "WQ88-E059",
+      "WQ88-E062",
+      "WQ88-E064",
+      "WQ88-E065",
+      "WQ88-E078",
+      "WQ88-E079",
+      "WQ88-E080",
+      "WQ88-E081"
+    ],
+    "list_empty_semantics": [
+      "WQ88-E102",
+      "WQ88-E103",
+      "WQ88-E008"
+    ]
+  },
+  "matrices": {
+    "submission_and_return_matrix": [
+      {
+        "id": "WQ88-A-S01",
+        "subject": "outer wrapper",
+        "precondition": "valid workqueue and work object",
+        "source_rule": "queue_work passes WORK_CPU_UNBOUND to queue_work_on",
+        "conditional_result": "caller selects current-CPU sentinel routing, not WQ_UNBOUND queue flag",
+        "first_unproved_gate": "CPU index and actual WQ state must be valid",
+        "evidence_ids": [
+          "WQ88-E001",
+          "WQ88-E014",
+          "WQ88-E015"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-S02",
+        "subject": "return initial",
+        "precondition": "queue_work_on entered",
+        "source_rule": "ret=false, local_irq_save; pending test branch commented",
+        "conditional_result": "normal path invokes internal void helper without active pending test",
+        "first_unproved_gate": "IRQ helper return and valid objects",
+        "evidence_ids": [
+          "WQ88-E002",
+          "WQ88-E003",
+          "WQ88-E018"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-S03",
+        "subject": "return true",
+        "precondition": "internal __simple_queue_work returns normally",
+        "source_rule": "ret=true; irqrestore; return ret",
+        "conditional_result": "true is source-level completion of enqueue attempt, not an insertion/wake/callback receipt",
+        "first_unproved_gate": "callee may skip insertion or never return",
+        "evidence_ids": [
+          "WQ88-E004",
+          "WQ88-E008",
+          "WQ88-E009"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-S04",
+        "subject": "return false",
+        "precondition": "no active alternative branch on normal return",
+        "source_rule": "ret initialized false but always assigned true after lower call",
+        "conditional_result": "no ordinary defined false-return branch established in this function",
+        "first_unproved_gate": "do not treat aborted/trap/nonreturn as returned false",
+        "evidence_ids": [
+          "WQ88-E002",
+          "WQ88-E003",
+          "WQ88-E004"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-S05",
+        "subject": "duplicate linked",
+        "precondition": "work->entry was already a nonempty linked node",
+        "source_rule": "WARN_ON(!list_empty) then goto out; unlock",
+        "conditional_result": "linked-entry branch skips list_add and kick; outer can return true if helper returns",
+        "first_unproved_gate": "node validity and WARN macro expansion required",
+        "evidence_ids": [
+          "WQ88-E008",
+          "WQ88-E009",
+          "WQ88-E016",
+          "WQ88-E004",
+          "WQ88-E102",
+          "WQ88-E103"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-S06",
+        "subject": "enqueue candidate",
+        "precondition": "entry self-linked and pool/worker fields legal",
+        "source_rule": "list_header_add_to_tail(pool->worklist, entry), kick_pool(pool)",
+        "conditional_result": "two distinct statements; list mutation conditional on helper returns",
+        "first_unproved_gate": "list helper may block/invalid; kick may not return",
+        "evidence_ids": [
+          "WQ88-E008",
+          "WQ88-E009",
+          "WQ88-E046"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      }
+    ],
+    "work_state_and_data_matrix": [
+      {
+        "id": "WQ88-A-D01",
+        "subject": "work fields",
+        "precondition": "actual work_s object is initialized",
+        "source_rule": "atomic_long_t data; List_s entry; work_func_t func",
+        "conditional_result": "three separate producers/consumers, not implied by workqueue name",
+        "first_unproved_gate": "this scoped read does not obtain real work initializer",
+        "evidence_ids": [
+          "WQ88-E010",
+          "WQ88-E011"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-D02",
+        "subject": "pending macro",
+        "precondition": "WORK_STRUCT_PENDING_BIT declared",
+        "source_rule": "pending bit/flag defined, test-and-set in queue_work_on commented",
+        "conditional_result": "pending value 0 or 1 does not select different active source branch",
+        "first_unproved_gate": "other writers/unseen call site not exhaustive",
+        "evidence_ids": [
+          "WQ88-E012",
+          "WQ88-E013",
+          "WQ88-E003"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-D03",
+        "subject": "PWQ encoding",
+        "precondition": "work->data contains flag and address bits",
+        "source_rule": "get_work_pwq reads data; if PWQ flag, masks and casts",
+        "conditional_result": "flag present necessary for non-null decoded PWQ, not sufficient for valid address",
+        "first_unproved_gate": "atomic long read value, pointer provenance and lifetime missing",
+        "evidence_ids": [
+          "WQ88-E021",
+          "WQ88-E022",
+          "WQ88-E023"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-D04",
+        "subject": "entry linkedness",
+        "precondition": "entry initialized as one standalone list node",
+        "source_rule": "list_empty checks next self link; WARN evaluates result",
+        "conditional_result": "linkedness test is independent from work->data pending bit",
+        "first_unproved_gate": "source has no invariant proving data and list always match",
+        "evidence_ids": [
+          "WQ88-E008",
+          "WQ88-E010",
+          "WQ88-E016",
+          "WQ88-E102",
+          "WQ88-E103"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-D05",
+        "subject": "callback source",
+        "precondition": "work->func is work_func_t",
+        "source_rule": "worker current_func later copies work->func",
+        "conditional_result": "queue_work_on does not itself invoke func or validate nonnull",
+        "first_unproved_gate": "valid function pointer producer and later thread reachability not proven",
+        "evidence_ids": [
+          "WQ88-E010",
+          "WQ88-E011",
+          "WQ88-E069",
+          "WQ88-E074"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-D06",
+        "subject": "PWQ missing",
+        "precondition": "work data without PWQ bit",
+        "source_rule": "get_work_pwq returns NULL",
+        "conditional_result": "later process_one_work cannot be certified when it dereferences pwq",
+        "first_unproved_gate": "no actual queued work data observed",
+        "evidence_ids": [
+          "WQ88-E022",
+          "WQ88-E023",
+          "WQ88-E070"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      }
+    ],
+    "cpu_selection_and_preconditions_matrix": [
+      {
+        "id": "WQ88-A-C01",
+        "subject": "CPU sentinel",
+        "precondition": "cpu equals WORK_CPU_UNBOUND",
+        "source_rule": "internal helper sets cpu=smp_processor_id()",
+        "conditional_result": "actual perCPU slot CPU index derived from current CPU, not arbitrary workqueue flag",
+        "first_unproved_gate": "smp_processor_id and real CPU topology validity not measured",
+        "evidence_ids": [
+          "WQ88-E006",
+          "WQ88-E007",
+          "WQ88-E014"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-C02",
+        "subject": "explicit CPU",
+        "precondition": "cpu not sentinel and valid",
+        "source_rule": "no source reassignment by sentinel condition",
+        "conditional_result": "input CPU is used for wq->cpu_pwq lookup",
+        "first_unproved_gate": "0<=cpu<N and 87 pointer decoding/lifetime prerequisite",
+        "evidence_ids": [
+          "WQ88-E005",
+          "WQ88-E006",
+          "WQ88-E007"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-C03",
+        "subject": "WQ_UNBOUND flag",
+        "precondition": "wq->flags & WQ_UNBOUND set",
+        "source_rule": "commented select_unbound_cpu branch is not active",
+        "conditional_result": "this scoped internal helper still selects current CPU for sentinel",
+        "first_unproved_gate": "full unbound queue setup remains outside scope",
+        "evidence_ids": [
+          "WQ88-E006",
+          "WQ88-E015",
+          "WQ88-E020"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-C04",
+        "subject": "PWQ pointer chain",
+        "precondition": "wq->cpu_pwq encoded pointer and slot memory valid",
+        "source_rule": "pwq=*per_cpu_ptr(wq->cpu_pwq,cpu), pool=pwq->pool",
+        "conditional_result": "first derefs can fail before any queue test or returned true",
+        "first_unproved_gate": "PA87-F05/U06 and initialization gates remain unresolved",
+        "evidence_ids": [
+          "WQ88-E007",
+          "WQ88-E008"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      },
+      {
+        "id": "WQ88-A-C05",
+        "subject": "invalid object",
+        "precondition": "wq or work or cpu index invalid",
+        "source_rule": "source immediately reads wq->cpu_pwq, derefs pwq->pool, checks work->entry",
+        "conditional_result": "normal path cannot be extrapolated beyond first invalid access",
+        "first_unproved_gate": "no real occurrence asserted",
+        "evidence_ids": [
+          "WQ88-E007",
+          "WQ88-E008",
+          "WQ88-E010"
+        ],
+        "execution": "SOURCE_ONLY_NOT_RUN"
+      }
+    ],
+    "pool_queue_publication_matrix": [
+      {
+        "id": "WQ88-B-Q01",
+        "subject": "pool resolution",
+        "precondition": "87 WQ cpu_pwq and decoded slot valid",
+        "source_rule": "pwq from per_cpu_ptr, then pool=pwq->pool",
+        "conditional_result": "pool object selected before acquiring lock",
+        "first_unproved_gate": "87 address/initialization and CPU identity unproved",
+        "evidence_ids": [
+          "WQ88-E007",
+          "WQ88-E008",
+          "WQ88-E036"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-Q02",
+        "subject": "entry check",
+        "precondition": "pool lock request has returned",
+        "source_rule": "WARN_ON(!list_empty(&work->entry)) then goto out on true",
+        "conditional_result": "duplicate linked work skips insertion and kick; source may unlock",
+        "first_unproved_gate": "WARN macro just evaluates, node must be live",
+        "evidence_ids": [
+          "WQ88-E008",
+          "WQ88-E016",
+          "WQ88-E048",
+          "WQ88-E049"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-Q03",
+        "subject": "valid enqueue",
+        "precondition": "entry detached, list head valid, add helper returns",
+        "source_rule": "list_header_add_to_tail increments count and links entry",
+        "conditional_result": "pool worklist count advances N→N+1 when underlying add completes",
+        "first_unproved_gate": "__list_add_valid/memory/synchronization not globally verified",
+        "evidence_ids": [
+          "WQ88-E009",
+          "WQ88-E046",
+          "WQ88-E043",
+          "WQ88-E097",
+          "WQ88-E098",
+          "WQ88-E099",
+          "WQ88-E100"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-Q04",
+        "subject": "post-add ordering",
+        "precondition": "list add normal return",
+        "source_rule": "kick_pool called before spin_unlock",
+        "conditional_result": "worker notification request can be separate and conditionally skipped",
+        "first_unproved_gate": "kick_pool can return false, nonreturn or wake callee failure",
+        "evidence_ids": [
+          "WQ88-E009",
+          "WQ88-E024",
+          "WQ88-E025",
+          "WQ88-E026",
+          "WQ88-E027"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-Q05",
+        "subject": "pool header init",
+        "precondition": "init_worker_pool reached with valid storage",
+        "source_rule": "INIT_LIST_HEADER_S(worklist, idle_list)",
+        "conditional_result": "source requests two empty headers, distinct anchors/count fields",
+        "first_unproved_gate": "real init path and perCPU backing integrity not attested",
+        "evidence_ids": [
+          "WQ88-E042",
+          "WQ88-E043",
+          "WQ88-E037",
+          "WQ88-E038"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-Q06",
+        "subject": "pool flags",
+        "precondition": "pool.flags includes POOL_BH or DISASSOCIATED",
+        "source_rule": "enum has distinct flags, may affect kick and CPU check",
+        "conditional_result": "POOL_BH branch is specifically conditional, not universal worker behavior",
+        "first_unproved_gate": "actual initialized flag values require source producer/return",
+        "evidence_ids": [
+          "WQ88-E039",
+          "WQ88-E026",
+          "WQ88-E068"
+        ],
+        "execution": "NOT_RUN"
+      }
+    ],
+    "idle_worker_and_kick_matrix": [
+      {
+        "id": "WQ88-B-K01",
+        "subject": "no queued work",
+        "precondition": "worklist.count=0, list consistent",
+        "source_rule": "need_more_worker=!list_empty&&nr_running==0",
+        "conditional_result": "need_more_worker false, kick returns false if callee returns",
+        "first_unproved_gate": "first_idle_worker called first, must return normally",
+        "evidence_ids": [
+          "WQ88-E024",
+          "WQ88-E025",
+          "WQ88-E028",
+          "WQ88-E045"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-K02",
+        "subject": "worker active",
+        "precondition": "worklist count>0 and nr_running>0",
+        "source_rule": "need_more_worker false",
+        "conditional_result": "kick returns false even when idle worker pointer nonnull",
+        "first_unproved_gate": "nr_running producers and actual current execution unverified",
+        "evidence_ids": [
+          "WQ88-E025",
+          "WQ88-E028",
+          "WQ88-E037"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-K03",
+        "subject": "no idle worker",
+        "precondition": "worklist count>0,nr_running=0,idle count=0",
+        "source_rule": "first_idle_worker returns NULL; !worker",
+        "conditional_result": "kick returns false, no wake_up_process",
+        "first_unproved_gate": "count/anchor consistent, no manage_workers implied",
+        "evidence_ids": [
+          "WQ88-E024",
+          "WQ88-E025",
+          "WQ88-E031",
+          "WQ88-E038"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-K04",
+        "subject": "idle worker ordinary pool",
+        "precondition": "worklist count>0,nr_running=0,idle count>0, !(flags&POOL_BH)",
+        "source_rule": "worker=first_idle_worker; p=worker->task; wake_up_process(p); return true",
+        "conditional_result": "return true means callee returned after wake request, not task ran or function callback",
+        "first_unproved_gate": "task pointer and nested wake implementation/CPU state unknown",
+        "evidence_ids": [
+          "WQ88-E024",
+          "WQ88-E025",
+          "WQ88-E027",
+          "WQ88-E031",
+          "WQ88-E052"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-K05",
+        "subject": "BH idle path",
+        "precondition": "need_more_worker true, worker nonnull, flags & POOL_BH",
+        "source_rule": "while(1); followed in source by unreachable return true",
+        "conditional_result": "normal return from kick_pool not established under branch",
+        "first_unproved_gate": "no actual BH run or trap measured",
+        "evidence_ids": [
+          "WQ88-E026",
+          "WQ88-E039"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-K06",
+        "subject": "idle workers existing",
+        "precondition": "valid worker on idle list",
+        "source_rule": "worker_enter_idle sets WORKER_IDLE and adds node; leave_idle clears and deletes",
+        "conditional_result": "list count & flag change under accepted helper path; no automatic notification implied",
+        "first_unproved_gate": "worker task/idle list data and lock correctness unproved",
+        "evidence_ids": [
+          "WQ88-E032",
+          "WQ88-E033",
+          "WQ88-E034",
+          "WQ88-E035",
+          "WQ88-E046",
+          "WQ88-E047"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-K07",
+        "subject": "count consistency",
+        "precondition": "header.count=0 but anchor corrupted",
+        "source_rule": "list_header_is_empty tests count only; first entry uses anchor",
+        "conditional_result": "count alone is not proof of the list links/object safety",
+        "first_unproved_gate": "source doesn't establish global invariant across all writers",
+        "evidence_ids": [
+          "WQ88-E045",
+          "WQ88-E031",
+          "WQ88-E082"
+        ],
+        "execution": "NOT_RUN"
+      }
+    ],
+    "locking_and_nonreturn_prefix_matrix": [
+      {
+        "id": "WQ88-B-L01",
+        "subject": "submit IRQ scope",
+        "precondition": "queue_work_on entered",
+        "source_rule": "local_irq_save wraps __simple_queue_work, restore after lower call",
+        "conditional_result": "save request before entry and restore request only if callee returns",
+        "first_unproved_gate": "arch IRQ helpers/actual IRQ state not proven",
+        "evidence_ids": [
+          "WQ88-E002",
+          "WQ88-E003",
+          "WQ88-E004",
+          "WQ88-E018",
+          "WQ88-E019"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-L02",
+        "subject": "pool spinlock",
+        "precondition": "valid pool and lock",
+        "source_rule": "spin_lock before linkedness/add/kick; spin_unlock at out",
+        "conditional_result": "source lock request/return bracket only, not global concurrency certification",
+        "first_unproved_gate": "raw spin implementation/real interleavings beyond scope",
+        "evidence_ids": [
+          "WQ88-E008",
+          "WQ88-E009",
+          "WQ88-E048",
+          "WQ88-E049"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-L03",
+        "subject": "list insertion nonreturn",
+        "precondition": "link validation or malformed list fails to return",
+        "source_rule": "list_header_add_to_tail calls list_add_to_prev then count++",
+        "conditional_result": "count increment and kick cannot be presumed reached",
+        "first_unproved_gate": "underlying helper may stall or accesses illegal pointers",
+        "evidence_ids": [
+          "WQ88-E046",
+          "WQ88-E047",
+          "WQ88-E097",
+          "WQ88-E098",
+          "WQ88-E099",
+          "WQ88-E100"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-L04",
+        "subject": "kick nonreturn",
+        "precondition": "POOL_BH with idle, need worker",
+        "source_rule": "infinite while inside kick_pool before caller unlock",
+        "conditional_result": "caller can remain before out unlock and outer true return",
+        "first_unproved_gate": "not a measured deadlock or actual worker execution",
+        "evidence_ids": [
+          "WQ88-E026",
+          "WQ88-E009",
+          "WQ88-E004"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-L05",
+        "subject": "wake callee return",
+        "precondition": "ordinary pool with idle and no running worker",
+        "source_rule": "wake_up_process returns try_to_wake_up(...) value, ignored by kick_pool",
+        "conditional_result": "kick_pool true independent of returned integer, provided callee returns",
+        "first_unproved_gate": "scheduler wake behavior not reaudited; no started-worker proof",
+        "evidence_ids": [
+          "WQ88-E027",
+          "WQ88-E052"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-L06",
+        "subject": "worker state counters",
+        "precondition": "worker enters/exits NOT_RUNNING masks",
+        "source_rule": "worker_set_flags decrements nr_running on transition; worker_clr_flags increments only if final bit leaves",
+        "conditional_result": "counter not solely determined by worklist.count or creation success",
+        "first_unproved_gate": "actual flags/CPU context and valid counter are separate gates",
+        "evidence_ids": [
+          "WQ88-E040",
+          "WQ88-E041",
+          "WQ88-E078",
+          "WQ88-E079",
+          "WQ88-E080",
+          "WQ88-E081"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "WQ88-B-L07",
+        "subject": "creation interface",
+        "precondition": "create_worker attaches/enters idle and may wake new task",
+        "source_rule": "nr_workers increment and idle insertion are source effects after earlier calls",
+        "conditional_result": "new worker source creation not a proof scheduled/task running",
+        "first_unproved_gate": "kthread_create_on_node, start scheduler and hardware not audited",
+        "evidence_ids": [
+          "WQ88-E094",
+          "WQ88-E095",
+          "WQ88-E096",
+          "WQ88-E032"
+        ],
+        "execution": "NOT_RUN"
+      }
+    ],
+    "scheduled_transfer_and_empty_matrix": [
+      {
+        "id": "WQ88-C-T01",
+        "subject": "worker main loop",
+        "precondition": "worker task actually enters simple_worker_thread, pool pointer valid",
+        "source_rule": "lock, leave_idle, need_more_worker recheck",
+        "conditional_result": "only if need_more and may_start/manage gates return can clear PREP and loop",
+        "first_unproved_gate": "no real kthread or scheduler execution proof",
+        "evidence_ids": [
+          "WQ88-E057",
+          "WQ88-E058",
+          "WQ88-E059",
+          "WQ88-E060",
+          "WQ88-E061",
+          "WQ88-E062"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-T02",
+        "subject": "work selection",
+        "precondition": "keep_working evaluates true and list consistent",
+        "source_rule": "list_headr_first_container(pool->worklist), simple_assign_work",
+        "conditional_result": "selected work pointer is source candidate, not proven initialized work",
+        "first_unproved_gate": "list count/anchor and memory validity required",
+        "evidence_ids": [
+          "WQ88-E030",
+          "WQ88-E062",
+          "WQ88-E063",
+          "WQ88-E082",
+          "WQ88-E083"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-T03",
+        "subject": "scheduled transfer",
+        "precondition": "selected work on worklist, helper calls return",
+        "source_rule": "list_header_delete_node(pool.worklist,entry); list_header_add_to_tail(worker.scheduled,entry)",
+        "conditional_result": "if delete succeeds and add succeeds: counts worklist N→N-1, scheduled M→M+1",
+        "first_unproved_gate": "delete return is not checked and linkedness/lifetime unproven",
+        "evidence_ids": [
+          "WQ88-E053",
+          "WQ88-E054",
+          "WQ88-E046",
+          "WQ88-E047",
+          "WQ88-E086"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-T04",
+        "subject": "assign bool",
+        "precondition": "source helper reaches end",
+        "source_rule": "return true literal after list operations",
+        "conditional_result": "true indicates source path return, not downstream callback success",
+        "first_unproved_gate": "list helper may nonreturn/invalid before value",
+        "evidence_ids": [
+          "WQ88-E053",
+          "WQ88-E054"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-T05",
+        "subject": "empty scheduled header",
+        "precondition": "scheduled count=0 and anchor.next=anchor",
+        "source_rule": "while(work=list_headr_first_container(&scheduled,work_s,entry))",
+        "conditional_result": "macro computes container from anchor, not nullable first-element API; loop is not proven to terminate on empty",
+        "first_unproved_gate": "container_of numeric/address may produce invalid pointer; stop before process_one_work",
+        "evidence_ids": [
+          "WQ88-E055",
+          "WQ88-E082",
+          "WQ88-E083",
+          "WQ88-E084",
+          "WQ88-E085"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-T06",
+        "subject": "nonempty scheduled",
+        "precondition": "count=1/2, valid work nodes and anchor",
+        "source_rule": "process_scheduled_works calls process_one_work then rereads top",
+        "conditional_result": "after removal on one item, next iteration meets empty-list hazard; cannot conclude function returns normally",
+        "first_unproved_gate": "subroutine has get_work_pwq and callback gates before removal",
+        "evidence_ids": [
+          "WQ88-E055",
+          "WQ88-E056",
+          "WQ88-E070",
+          "WQ88-E086"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      }
+    ],
+    "pwq_decode_and_callback_matrix": [
+      {
+        "id": "WQ88-C-P01",
+        "subject": "PWQ absence",
+        "precondition": "work->data read has PWQ bit clear",
+        "source_rule": "get_work_pwq returns NULL",
+        "conditional_result": "process_one_work assigns current_pwq=NULL then pwq->wq->name expression cannot be certified",
+        "first_unproved_gate": "actual data producer not read, CPU/pool conditions still required",
+        "evidence_ids": [
+          "WQ88-E022",
+          "WQ88-E023",
+          "WQ88-E066",
+          "WQ88-E069",
+          "WQ88-E070"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-P02",
+        "subject": "PWQ flagged",
+        "precondition": "work->data has PWQ flag and encoded pointer bits",
+        "source_rule": "work_struct_pwq returns masked pointer cast",
+        "conditional_result": "non-NULL valid PWQ requires object lifetime and alignment, not mere flag",
+        "first_unproved_gate": "work->data and PWQ construction not shown in submit path",
+        "evidence_ids": [
+          "WQ88-E021",
+          "WQ88-E022",
+          "WQ88-E090",
+          "WQ88-E093"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-P03",
+        "subject": "pre-callback state",
+        "precondition": "valid worker/work/PWQ and pool",
+        "source_rule": "current_work=work, current_func=work->func, current_pwq=pwq",
+        "conditional_result": "three fields get assigned before scheduled deletion and kick",
+        "first_unproved_gate": "work->func valid function pointer and PWQ->wq readable",
+        "evidence_ids": [
+          "WQ88-E069",
+          "WQ88-E070",
+          "WQ88-E087",
+          "WQ88-E089"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-P04",
+        "subject": "name dereference",
+        "precondition": "pwq not NULL but pwq->wq invalid",
+        "source_rule": "strscpy(worker->desc,pwq->wq->name,...) before list delete",
+        "conditional_result": "normal progress proof stops at first invalid PWQ/wq/name reference",
+        "first_unproved_gate": "allocation+CPU pointer assumptions inherited from 87",
+        "evidence_ids": [
+          "WQ88-E070",
+          "WQ88-E089"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-P05",
+        "subject": "scheduled dequeue",
+        "precondition": "valid PWQ, scheduled membership and list helper returns",
+        "source_rule": "list_header_delete_node(scheduled,&entry)",
+        "conditional_result": "scheduled count decremented if contains true; work->entry self-linked after delete",
+        "first_unproved_gate": "membership return ignored, list header storage validity unproven",
+        "evidence_ids": [
+          "WQ88-E070",
+          "WQ88-E086",
+          "WQ88-E047"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-P06",
+        "subject": "pre-callback lock",
+        "precondition": "all prior operations return incl. kick",
+        "source_rule": "spin_unlock_irq(pool) then worker->current_func(work)",
+        "conditional_result": "callback request occurs with pool lock unlock source prior to call",
+        "first_unproved_gate": "callee may not return; lock state in hardware not observed",
+        "evidence_ids": [
+          "WQ88-E072",
+          "WQ88-E073",
+          "WQ88-E074",
+          "WQ88-E050",
+          "WQ88-E051"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-P07",
+        "subject": "pending lifecycle",
+        "precondition": "WORK_STRUCT_PENDING symbolic flag exists; source clear at process_one_work commented",
+        "source_rule": "no active pending set/clear in selected submit and callback path",
+        "conditional_result": "C source doesn't establish self-requeue eligibility or single-run guarantee",
+        "first_unproved_gate": "other writers/all initialized work consumers not exhaustively read",
+        "evidence_ids": [
+          "WQ88-E003",
+          "WQ88-E012",
+          "WQ88-E013",
+          "WQ88-E073"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      }
+    ],
+    "completion_and_requeue_boundary_matrix": [
+      {
+        "id": "WQ88-C-F01",
+        "subject": "callback returns",
+        "precondition": "worker->current_func(work) returned normally, pool still valid",
+        "source_rule": "spin_lock_irq, worker_clr_flags, clear current fields",
+        "conditional_result": "conditional source reaches current_work/func/pwq=NULL",
+        "first_unproved_gate": "callback could mutate worker/work, memory and locks need independent proof",
+        "evidence_ids": [
+          "WQ88-E074",
+          "WQ88-E075",
+          "WQ88-E076",
+          "WQ88-E077"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-F02",
+        "subject": "callback nonreturn",
+        "precondition": "callback loops, blocks forever, faults or does not return",
+        "source_rule": "no source path to later re-lock/field clear",
+        "conditional_result": "post-callback worker state cannot be claimed updated",
+        "first_unproved_gate": "not observed; conditional scenario only",
+        "evidence_ids": [
+          "WQ88-E074",
+          "WQ88-E075",
+          "WQ88-E077"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-F03",
+        "subject": "self-requeue",
+        "precondition": "callback possibly calls queue_work",
+        "source_rule": "pending protection in this scoped source commented",
+        "conditional_result": "a callback may attempt reuse, but no outcome or global safety guarantee",
+        "first_unproved_gate": "work lifetime/list membership/irq/worker availability unknown",
+        "evidence_ids": [
+          "WQ88-E003",
+          "WQ88-E008",
+          "WQ88-E074",
+          "WQ88-E075"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-F04",
+        "subject": "flag counts",
+        "precondition": "worker.flags includes PREP/unbound or CPU-intensive",
+        "source_rule": "worker_clr_flags and set_flags update nr_running based on NOT_RUNNING combined mask",
+        "conditional_result": "clearing one of several NOT_RUNNING bits need not increment if another remains",
+        "first_unproved_gate": "valid flags, pool->nr_running, CPU conditions and helper return",
+        "evidence_ids": [
+          "WQ88-E040",
+          "WQ88-E041",
+          "WQ88-E071",
+          "WQ88-E076",
+          "WQ88-E078",
+          "WQ88-E079",
+          "WQ88-E080",
+          "WQ88-E081"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-F05",
+        "subject": "sleep continuation",
+        "precondition": "no more work under need_more_worker or keep_working stops",
+        "source_rule": "worker_enter_idle; set TASK_IDLE; spin_unlock_irq; schedule; goto woke_up",
+        "conditional_result": "sleep call requested, not proof worker slept or woke again",
+        "first_unproved_gate": "scheduler and wakeup detailed semantics out of scope",
+        "evidence_ids": [
+          "WQ88-E059",
+          "WQ88-E064",
+          "WQ88-E065",
+          "WQ88-E032",
+          "WQ88-E035"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-C-F06",
+        "subject": "outer loop may stall",
+        "precondition": "scheduled empty container may not return null",
+        "source_rule": "process_scheduled_works while attempts process_one_work",
+        "conditional_result": "even after one valid callback, next empty iteration may stop normal proof",
+        "first_unproved_gate": "do not continue through invalid object or claim actual infinite loop",
+        "evidence_ids": [
+          "WQ88-E055",
+          "WQ88-E056",
+          "WQ88-E082",
+          "WQ88-E083",
+          "WQ88-E084"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "WQ88-ABC-J01",
+        "subject": "submission-to-insert",
+        "precondition": "valid work/CPU/wq/PWQ/pool, detached entry, lock/list helpers return",
+        "source_rule": "queue_work_on -> __simple_queue_work -> list add",
+        "conditional_result": "inner linkedness false and list insertion are gates distinct from bool true",
+        "first_unproved_gate": "87 per_cpu_ptr decoded slot and producer state must hold",
+        "evidence_ids": [
+          "WQ88-E001",
+          "WQ88-E003",
+          "WQ88-E007",
+          "WQ88-E008",
+          "WQ88-E009",
+          "WQ88-E046"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-ABC-J02",
+        "subject": "insert-to-notify",
+        "precondition": "valid worklist and no worker running",
+        "source_rule": "kick_pool may return false, nonreturn BH, or call wake_up_process ordinary",
+        "conditional_result": "a queue entry can exist without proven task wake or CPU execution",
+        "first_unproved_gate": "idle worker/POOL_BH/task pointer and nested callee",
+        "evidence_ids": [
+          "WQ88-E024",
+          "WQ88-E025",
+          "WQ88-E026",
+          "WQ88-E027",
+          "WQ88-E028",
+          "WQ88-E031",
+          "WQ88-E052"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-ABC-J03",
+        "subject": "worker-to-scheduled",
+        "precondition": "worker thread entered and worklist nonempty, preconditions valid",
+        "source_rule": "keep_working -> first-container -> simple_assign_work",
+        "conditional_result": "two list headers count operations need valid object/containment",
+        "first_unproved_gate": "worker thread start and count/anchor consistency unproven",
+        "evidence_ids": [
+          "WQ88-E062",
+          "WQ88-E063",
+          "WQ88-E053",
+          "WQ88-E054",
+          "WQ88-E086"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-ABC-J04",
+        "subject": "scheduled-to-callback",
+        "precondition": "work data flagged and points valid PWQ, work.func valid, scheduled membership",
+        "source_rule": "get_work_pwq -> current fields -> desc -> delete -> unlock -> callback",
+        "conditional_result": "actual callback invocation is later than successful queue/transfer gates",
+        "first_unproved_gate": "no proven work data producer or target lvalue valid",
+        "evidence_ids": [
+          "WQ88-E022",
+          "WQ88-E023",
+          "WQ88-E066",
+          "WQ88-E069",
+          "WQ88-E070",
+          "WQ88-E073",
+          "WQ88-E074"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-ABC-J05",
+        "subject": "callback-to-clear",
+        "precondition": "callback returns and worker/pool remain legal",
+        "source_rule": "relock then clear CPU-intensive and current fields; worker loop/sleep conditional",
+        "conditional_result": "per-work callback completion ≠ queue_work true ≠ worker wake signal",
+        "first_unproved_gate": "lifetime/requeue/lock scheduler states unknown",
+        "evidence_ids": [
+          "WQ88-E075",
+          "WQ88-E076",
+          "WQ88-E077",
+          "WQ88-E065"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      },
+      {
+        "id": "WQ88-ABC-J06",
+        "subject": "historical prerequisite",
+        "precondition": "87 perCPU pointer encoding and partial PWQ initialization unresolved, 86 bootstrap qualified",
+        "source_rule": "WQ88 operates on conditional valid input objects only",
+        "conditional_result": "no new WQ88 proof closes PA87-F05/U06 or earlier entries, no runtime acceptance",
+        "first_unproved_gate": "Pro mainline independent review still pending",
+        "evidence_ids": [
+          "WQ88-E007",
+          "WQ88-E022",
+          "WQ88-E023",
+          "WQ88-E070"
+        ],
+        "execution": "SOURCE_STATIC_ONLY"
+      }
+    ]
+  },
+  "matrix_group_count": 10,
+  "matrix_rows": 62,
+  "matrix_group_sizes": {
+    "submission_and_return_matrix": 6,
+    "work_state_and_data_matrix": 6,
+    "cpu_selection_and_preconditions_matrix": 5,
+    "pool_queue_publication_matrix": 6,
+    "idle_worker_and_kick_matrix": 7,
+    "locking_and_nonreturn_prefix_matrix": 7,
+    "scheduled_transfer_and_empty_matrix": 6,
+    "pwq_decode_and_callback_matrix": 7,
+    "completion_and_requeue_boundary_matrix": 6,
+    "ABC_join_matrix": 6
+  },
+  "finite_models": [
+    {
+      "model_id": "WQ88-M01",
+      "topic": "A",
+      "inputs": {
+        "entry": "self-linked",
+        "pending": 0,
+        "queue_count": 0,
+        "work_cpu": 0
+      },
+      "preconditions": "valid WQ/PWQ/pool and node; all calls return",
+      "intermediate_steps": [
+        "list_empty(entry)=true",
+        "list add => count=1",
+        "kick returns false",
+        "outer ret=true"
+      ],
+      "conditional_output": {
+        "return": true,
+        "inserted": true,
+        "woken": false,
+        "callback": false
+      },
+      "first_unproved_gate": "all objects and CPU conditions unobserved",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E004",
+        "WQ88-E008",
+        "WQ88-E009",
+        "WQ88-E046"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M02",
+      "topic": "A",
+      "inputs": {
+        "entry": "already linked",
+        "pending": 0
+      },
+      "preconditions": "valid linked node, WARN macro and unlock return",
+      "intermediate_steps": [
+        "list_empty(entry)=false",
+        "goto out",
+        "no list add",
+        "no kick",
+        "outer ret=true"
+      ],
+      "conditional_output": {
+        "return": true,
+        "inserted": false,
+        "kick_called": false
+      },
+      "first_unproved_gate": "not an actual duplicate event",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E004",
+        "WQ88-E008",
+        "WQ88-E016"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M03",
+      "topic": "A",
+      "inputs": {
+        "entry": "already linked",
+        "pending": 1
+      },
+      "preconditions": "same conditions as M02",
+      "intermediate_steps": [
+        "active pending check absent",
+        "goto out from entry test",
+        "outer ret=true"
+      ],
+      "conditional_output": {
+        "return": true,
+        "inserted": false,
+        "kick_called": false
+      },
+      "first_unproved_gate": "bit value producer unknown",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E004",
+        "WQ88-E008",
+        "WQ88-E012"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M04",
+      "topic": "A",
+      "inputs": {
+        "entry": "self-linked",
+        "pending": 1
+      },
+      "preconditions": "valid detached work and all callees return",
+      "intermediate_steps": [
+        "pending branch commented",
+        "add node",
+        "kick returns"
+      ],
+      "conditional_output": {
+        "return": true,
+        "inserted": true,
+        "pending_still_unknown": true
+      },
+      "first_unproved_gate": "no state writer certified",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E004",
+        "WQ88-E008",
+        "WQ88-E009",
+        "WQ88-E013"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M05",
+      "topic": "A",
+      "inputs": {
+        "cpu_input": 1,
+        "nr_cpu_ids": 2
+      },
+      "preconditions": "CPU1 slot and PWQ valid",
+      "intermediate_steps": [
+        "cpu != WORK_CPU_UNBOUND",
+        "per_cpu_ptr selects index1"
+      ],
+      "conditional_output": {
+        "selected_cpu": 1,
+        "return_if_callee_returns": true
+      },
+      "first_unproved_gate": "runtime CPU count and slot validity not proven",
+      "evidence_ids": [
+        "WQ88-E005",
+        "WQ88-E006",
+        "WQ88-E007",
+        "WQ88-E014"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M06",
+      "topic": "A",
+      "inputs": {
+        "cpu_input": "WORK_CPU_UNBOUND",
+        "wq_flags": "WQ_UNBOUND",
+        "smp_processor_id_return": 1
+      },
+      "preconditions": "valid indexed slot and initialized WQ",
+      "intermediate_steps": [
+        "active cpu assignment=1",
+        "commented WQ_UNBOUND-specific selection skipped"
+      ],
+      "conditional_output": {
+        "selected_cpu": 1,
+        "queue_flag_not_cpu_sentinel": true
+      },
+      "first_unproved_gate": "real CPU identity and unbound routing unknown",
+      "evidence_ids": [
+        "WQ88-E006",
+        "WQ88-E014",
+        "WQ88-E015",
+        "WQ88-E020"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M07",
+      "topic": "A",
+      "inputs": {
+        "wq_cpu_pwq": "NULL",
+        "cpu": 0
+      },
+      "preconditions": "no valid perCPU slot established",
+      "intermediate_steps": [
+        "source attempts per_cpu_ptr",
+        "next dereference unsupported"
+      ],
+      "conditional_output": {
+        "normal_outer_return": "NOT_PROVEN"
+      },
+      "first_unproved_gate": "stop before invalid object access, do not claim false return",
+      "evidence_ids": [
+        "WQ88-E007",
+        "WQ88-E008"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M08",
+      "topic": "B",
+      "inputs": {
+        "work_count": 0,
+        "nr_running": 0,
+        "idle_count": 0
+      },
+      "preconditions": "valid lists and first_idle_worker returns NULL",
+      "intermediate_steps": [
+        "first idle NULL",
+        "need_more_worker false",
+        "kick returns false"
+      ],
+      "conditional_output": {
+        "wake_up_process_calls": 0,
+        "kick_return": false
+      },
+      "first_unproved_gate": "no worker callback proof",
+      "evidence_ids": [
+        "WQ88-E024",
+        "WQ88-E025",
+        "WQ88-E028",
+        "WQ88-E031"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M09",
+      "topic": "B",
+      "inputs": {
+        "work_count": 1,
+        "nr_running": 1,
+        "idle_count": 1
+      },
+      "preconditions": "idle pointer valid and no POOL_BH relevance",
+      "intermediate_steps": [
+        "need_more_worker false",
+        "kick returns false"
+      ],
+      "conditional_output": {
+        "kick_return": false,
+        "wake_up_process_calls": 0
+      },
+      "first_unproved_gate": "existing running worker may still consume queue",
+      "evidence_ids": [
+        "WQ88-E025",
+        "WQ88-E028"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M10",
+      "topic": "B",
+      "inputs": {
+        "work_count": 1,
+        "nr_running": 0,
+        "idle_count": 0
+      },
+      "preconditions": "valid empty idle list",
+      "intermediate_steps": [
+        "need_more_worker true",
+        "first_idle_worker NULL",
+        "kick returns false"
+      ],
+      "conditional_output": {
+        "kick_return": false,
+        "wake_up_process_calls": 0
+      },
+      "first_unproved_gate": "worker creation/reachability unknown",
+      "evidence_ids": [
+        "WQ88-E024",
+        "WQ88-E025",
+        "WQ88-E028",
+        "WQ88-E031"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M11",
+      "topic": "B",
+      "inputs": {
+        "work_count": 1,
+        "nr_running": 0,
+        "idle_count": 1,
+        "POOL_BH": false,
+        "wake_return": 0
+      },
+      "preconditions": "worker->task valid; wake_up_process callee returns0",
+      "intermediate_steps": [
+        "need_more true",
+        "worker exists",
+        "call wake_up_process",
+        "ignore its integer",
+        "kick returns true"
+      ],
+      "conditional_output": {
+        "kick_return": true,
+        "callback_executed": "NOT_PROVEN"
+      },
+      "first_unproved_gate": "wakeup result need not imply task ran",
+      "evidence_ids": [
+        "WQ88-E024",
+        "WQ88-E025",
+        "WQ88-E027",
+        "WQ88-E052"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M12",
+      "topic": "B",
+      "inputs": {
+        "work_count": 1,
+        "nr_running": 0,
+        "idle_count": 1,
+        "POOL_BH": true
+      },
+      "preconditions": "valid idle worker, all prior operations return",
+      "intermediate_steps": [
+        "need_more true",
+        "if POOL_BH",
+        "while(1) no normal exit"
+      ],
+      "conditional_output": {
+        "kick_normal_return": "NOT_ESTABLISHED",
+        "outer_true_return": "NOT_ESTABLISHED"
+      },
+      "first_unproved_gate": "no actual BH hang measured",
+      "evidence_ids": [
+        "WQ88-E025",
+        "WQ88-E026",
+        "WQ88-E039",
+        "WQ88-E101"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M13",
+      "topic": "B",
+      "inputs": {
+        "work_count_before": 0,
+        "nr_running": 1,
+        "idle_count": 1
+      },
+      "preconditions": "legal detached entry, list add and kick return",
+      "intermediate_steps": [
+        "list insertion count 0→1",
+        "need_more false",
+        "kick false",
+        "outer true"
+      ],
+      "conditional_output": {
+        "inserted": true,
+        "kick_return": false,
+        "outer_return": true
+      },
+      "first_unproved_gate": "no physical worker state observed",
+      "evidence_ids": [
+        "WQ88-E009",
+        "WQ88-E025",
+        "WQ88-E028",
+        "WQ88-E046"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M14",
+      "topic": "B",
+      "inputs": {
+        "idle_count_before": 0,
+        "flags_before": "WORKER_PREP",
+        "nr_running": 0
+      },
+      "preconditions": "idle insert and delete return; no intervening changes",
+      "intermediate_steps": [
+        "enter idle: count1, PREP|IDLE",
+        "leave idle: count0, PREP"
+      ],
+      "conditional_output": {
+        "idle_count_after": 0,
+        "flags_after": "WORKER_PREP"
+      },
+      "first_unproved_gate": "not live worker scheduling",
+      "evidence_ids": [
+        "WQ88-E032",
+        "WQ88-E033",
+        "WQ88-E034",
+        "WQ88-E035",
+        "WQ88-E040"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M15",
+      "topic": "C",
+      "inputs": {
+        "pool_work_count": 1,
+        "scheduled_count": 0
+      },
+      "preconditions": "valid work/member; delete and add return",
+      "intermediate_steps": [
+        "delete count1→0",
+        "scheduled add count0→1",
+        "simple_assign_work returns true"
+      ],
+      "conditional_output": {
+        "pool_count": 0,
+        "scheduled_count": 1,
+        "callback_called": false
+      },
+      "first_unproved_gate": "process_scheduled_works and PWQ still gated",
+      "evidence_ids": [
+        "WQ88-E053",
+        "WQ88-E054",
+        "WQ88-E063",
+        "WQ88-E086"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M16",
+      "topic": "C",
+      "inputs": {
+        "scheduled_count": 0,
+        "anchor_next": "anchor"
+      },
+      "preconditions": "valid empty circular header; numeric container_of model only",
+      "intermediate_steps": [
+        "list_first_entry uses anchor.next",
+        "container_of(anchor,work,entry)",
+        "no explicit nullable helper"
+      ],
+      "conditional_output": {
+        "returns_NULL": "NOT_GUARANTEED",
+        "normal_termination": "NOT_PROVEN"
+      },
+      "first_unproved_gate": "stop before deref a nonexistent work",
+      "evidence_ids": [
+        "WQ88-E055",
+        "WQ88-E082",
+        "WQ88-E083",
+        "WQ88-E084",
+        "WQ88-E085"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M17",
+      "topic": "C",
+      "inputs": {
+        "scheduled_count_before": 1
+      },
+      "preconditions": "PWQ/func/objects valid and callback returns; no new work inserted",
+      "intermediate_steps": [
+        "process_one_work deletes scheduled node",
+        "scheduled_count becomes0",
+        "next iteration computes first-container on empty"
+      ],
+      "conditional_output": {
+        "scheduled_count_after": 0,
+        "loop_normal_return": "NOT_PROVEN"
+      },
+      "first_unproved_gate": "conditional next empty iteration can stop proof",
+      "evidence_ids": [
+        "WQ88-E055",
+        "WQ88-E056",
+        "WQ88-E070",
+        "WQ88-E074",
+        "WQ88-E086"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M18",
+      "topic": "C",
+      "inputs": {
+        "work_data": 0,
+        "PWQ_flag": 4
+      },
+      "preconditions": "selected no-debug flags, valid work/worker/pool",
+      "intermediate_steps": [
+        "atomic_long_read=0",
+        "(data&PWQ)==0",
+        "get_work_pwq=NULL",
+        "pwq->wq->name not legal"
+      ],
+      "conditional_output": {
+        "callback_reached": "NOT_PROVEN"
+      },
+      "first_unproved_gate": "no actual work data producer",
+      "evidence_ids": [
+        "WQ88-E022",
+        "WQ88-E023",
+        "WQ88-E066",
+        "WQ88-E069",
+        "WQ88-E070"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M19",
+      "topic": "C",
+      "inputs": {
+        "work_data": 4,
+        "PWQ_flag": 4,
+        "PWQ_MASK": "~0xff"
+      },
+      "preconditions": "no-debug flag bits=4, color bits=4",
+      "intermediate_steps": [
+        "flag true",
+        "data & mask =0",
+        "PWQ pointer numeric0"
+      ],
+      "conditional_output": {
+        "PWQ_valid": false,
+        "callback_reached": "NOT_PROVEN"
+      },
+      "first_unproved_gate": "model does not assume this data occurred",
+      "evidence_ids": [
+        "WQ88-E021",
+        "WQ88-E022",
+        "WQ88-E090"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M20",
+      "topic": "C",
+      "inputs": {
+        "work_data": "0x123404",
+        "PWQ_MASK": "~0xff"
+      },
+      "preconditions": "selected four flag bits, 0x123400 hypothetically valid PWQ and WQ",
+      "intermediate_steps": [
+        "decode data & mask ->0x123400",
+        "set worker current fields",
+        "read wq name",
+        "remove scheduled",
+        "unlock",
+        "call callback"
+      ],
+      "conditional_output": {
+        "masked_pointer": "0x123400",
+        "callback_called_conditionally": true
+      },
+      "first_unproved_gate": "address is a hypothetical input, not kernel link value",
+      "evidence_ids": [
+        "WQ88-E021",
+        "WQ88-E022",
+        "WQ88-E069",
+        "WQ88-E070",
+        "WQ88-E073",
+        "WQ88-E074",
+        "WQ88-E090"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M21",
+      "topic": "C",
+      "inputs": {
+        "callback": "returns normally"
+      },
+      "preconditions": "all previous derefs, unlock, callback and re-lock return; worker survives",
+      "intermediate_steps": [
+        "callback call",
+        "spin_lock_irq",
+        "worker_clr_flags",
+        "current_work/current_func/current_pwq set NULL"
+      ],
+      "conditional_output": {
+        "current_work": null,
+        "current_func": null,
+        "current_pwq": null
+      },
+      "first_unproved_gate": "callback may mutate objects; lifetime conditional",
+      "evidence_ids": [
+        "WQ88-E074",
+        "WQ88-E075",
+        "WQ88-E076",
+        "WQ88-E077"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M22",
+      "topic": "C",
+      "inputs": {
+        "callback": "does not return"
+      },
+      "preconditions": "all operations before callback normal",
+      "intermediate_steps": [
+        "unlock",
+        "call callback",
+        "no re-lock reached"
+      ],
+      "conditional_output": {
+        "post_clear": "NOT_REACHED",
+        "worker_loop_continue": "NOT_ESTABLISHED"
+      },
+      "first_unproved_gate": "not a measured callback hang",
+      "evidence_ids": [
+        "WQ88-E073",
+        "WQ88-E074",
+        "WQ88-E075",
+        "WQ88-E077"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M23",
+      "topic": "C",
+      "inputs": {
+        "flags_before": "WORKER_PREP",
+        "nr_running_before": 0,
+        "clear": "WORKER_PREP"
+      },
+      "preconditions": "valid pool and no remaining NOT_RUNNING bits",
+      "intermediate_steps": [
+        "flags after=0",
+        "nr_running++"
+      ],
+      "conditional_output": {
+        "flags_after": 0,
+        "nr_running_after": 1
+      },
+      "first_unproved_gate": "actual worker counter not measured",
+      "evidence_ids": [
+        "WQ88-E040",
+        "WQ88-E041",
+        "WQ88-E080",
+        "WQ88-E081"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M24",
+      "topic": "C",
+      "inputs": {
+        "flags_before": "WORKER_PREP|WORKER_UNBOUND",
+        "nr_running_before": 0,
+        "clear": "WORKER_PREP"
+      },
+      "preconditions": "valid worker and remaining UNBOUND bit",
+      "intermediate_steps": [
+        "flags after=UNBOUND",
+        "NOT_RUNNING still true",
+        "no nr_running++"
+      ],
+      "conditional_output": {
+        "flags_after": "WORKER_UNBOUND",
+        "nr_running_after": 0
+      },
+      "first_unproved_gate": "no real CPU status observed",
+      "evidence_ids": [
+        "WQ88-E040",
+        "WQ88-E041",
+        "WQ88-E080",
+        "WQ88-E081"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M25",
+      "topic": "C",
+      "inputs": {
+        "worklist_count": 0,
+        "worker_scheduled_count": 0
+      },
+      "preconditions": "valid thread/pool, need_more_worker false, sleep helpers return",
+      "intermediate_steps": [
+        "goto sleep",
+        "enter idle",
+        "set TASK_IDLE",
+        "unlock",
+        "schedule"
+      ],
+      "conditional_output": {
+        "schedule_requested": true,
+        "wakeup_and_return": "UNKNOWN"
+      },
+      "first_unproved_gate": "scheduler and task-state semantics not reaudited",
+      "evidence_ids": [
+        "WQ88-E028",
+        "WQ88-E058",
+        "WQ88-E059",
+        "WQ88-E064",
+        "WQ88-E065"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "WQ88-M26",
+      "topic": "C",
+      "inputs": {
+        "callback": "attempts queue_work on itself",
+        "entry": "detached after valid scheduled delete"
+      },
+      "preconditions": "work remains live, all nested calls return and queue pointer valid",
+      "intermediate_steps": [
+        "pending test in queue_work_on commented",
+        "entry test passes",
+        "list add",
+        "outer returns true"
+      ],
+      "conditional_output": {
+        "requeue_can_be_attempted": true,
+        "exactly_once": "NOT_CERTIFIED"
+      },
+      "first_unproved_gate": "does not certify arbitrary callback/concurrent correctness",
+      "evidence_ids": [
+        "WQ88-E001",
+        "WQ88-E003",
+        "WQ88-E004",
+        "WQ88-E070",
+        "WQ88-E073",
+        "WQ88-E074"
+      ],
+      "execution": "NOT_RUN_FINITE_CONDITIONAL_MODEL"
+    }
+  ],
+  "model_count": 26,
+  "model_topics": {
+    "A": 7,
+    "B": 7,
+    "C": 12
+  },
+  "prior_findings_links": [
+    {
+      "prior": "R86-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY_BY_C06",
+      "scope": "No D00 or retry; 86 composite PASS_PENDING_LOCAL"
+    },
+    {
+      "prior": "R87-S01/S02/S03",
+      "status": "MANDATORY_SUPPLEMENT",
+      "scope": "Do not convert metadata model claims into payload writes; retain unsigned/pointer/state conditions and source/graph caveats"
+    },
+    {
+      "prior": "R86-S01/S02/S03",
+      "status": "MANDATORY_SUPPLEMENT",
+      "scope": "Template/CPU offset, GS register and source-side initialization boundaries remain"
+    },
+    {
+      "prior": "PA87-F05/U06",
+      "status": "CONDITIONAL_OR_UNRESOLVED",
+      "scope": "WQ slot address legality not proved by workqueue functions"
+    },
+    {
+      "prior": "PA87-F07/F08/U07/U08",
+      "status": "CONDITIONAL_OR_UNRESOLVED",
+      "scope": "PWQ construction/cleanup and outer constructor errors not reaudited or closed"
+    },
+    {
+      "prior": "BM80/PT81/DM82/TI83/ER84/BB85/PC86",
+      "status": "ORIGINAL_QUALIFIED_IDS_RETAINED",
+      "scope": "No historical defects duplicated; no kernel fix or new runtime evidence"
+    }
+  ],
+  "state_layers": {
+    "submission_return": "queue_work/queue_work_on returns bool, internal __simple_queue_work returns void; pending condition is commented; outer true on callee normal return",
+    "queue_mutation": "work.entry linked only after valid list add completes; duplicate linked branch can skip it",
+    "worker_kick": "kick_pool returns false or may nonreturn (BH branch) or calls wake_up_process then returns true when callee returns",
+    "work_transfer": "simple_assign_work deletes from pool worklist, appends to worker.scheduled and returns true if helpers return",
+    "PWQ_decode": "get_work_pwq reads work.data; tests WORK_STRUCT_PWQ then masks with WORK_STRUCT_PWQ_MASK, may return NULL",
+    "callback_execution": "process_one_work assigns current fields, reads pwq->wq->name, deletes scheduled entry, conditionally kicks, unlocks, calls worker.current_func(work)",
+    "callback_post": "only if callback and lock call return then clears worker flags and current fields; pending clear is commented",
+    "worker_sleep": "worker_enter_idle then TASK_IDLE/schedule request; wake and execute not certified"
+  },
+  "precondition_gates": [
+    "87 perCPU WQ pointer encoding to lawful slot and PWQ object",
+    "valid CPU count and smp_processor_id",
+    "valid list anchor/count and work.entry self-linked or known list state",
+    "work.data flagged/correctly encoded PWQ pointer",
+    "work.func valid function pointer and work lifetime",
+    "worker scheduled and pool lock consistency",
+    "nested wakeup/scheduler/task CPU runtime excluded"
+  ],
+  "self_check": {
+    "definition_anchors": 103,
+    "expected_raw_prefixes": 103,
+    "source_quote_reconfirmed": 103,
+    "downgraded_to_inferred": 0,
+    "matrix_group_count": 10,
+    "matrix_rows": 62,
+    "model_count": 26,
+    "new_findings": 7,
+    "new_gaps": 9,
+    "old_results_modified": 0,
+    "full_local_P9": "NOT_RUN",
+    "build_scripts_software_execution": "NOT_RUN",
+    "hardware_and_kernel_execution": "NOT_RUN"
+  },
+  "run_context": {
+    "actor": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "conversation": "MYOS2-A-C06b 代码分析执行",
+    "branch": "claude/dazzling-cori-q0dnyt",
+    "pr": 17,
+    "write_scope": "Only 88 target six files and one author top-level PR17 formal comment",
+    "mainline_independent_reviewer": "MYOS2-A-C06 Pro",
+    "next_batch": "89 NOT_STARTED",
+    "forbidden": [
+      "old files edits",
+      "kernel/owner scripts changes",
+      "PR metadata/merge",
+      "Graphviz/CMake/compile/QEMU/real CPU",
+      "extra models/subagents/APIs"
+    ]
+  }
+}

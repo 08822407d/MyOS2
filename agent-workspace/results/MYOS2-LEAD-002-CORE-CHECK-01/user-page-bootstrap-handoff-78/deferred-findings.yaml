@@ -1,0 +1,342 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78",
+  "record_type": "bounded_page_bootstrap_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "ea5eb636ae89",
+  "D00": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+  "R77_01": "RETURN_DOCUMENTATION_ONLY_PENDING_C06",
+  "batch77": "RETURN",
+  "new_findings": [
+    {
+      "id": "PB78-F01",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F01",
+      "kind": "conditional_global_mem_map_PFN_origin_mismatch",
+      "status": "needs_evidence",
+      "claim": "When node_start_pfn is nonzero, alloc_node_mem_map allocates (aligned_end-aligned_start)*sizeof(page_s) bytes and publishes mem_map=node_mem_map=map+offset, yet pfn_to_page(absolute_pfn)=mem_map+absolute_pfn. For node_start=1024, span=16, MAX_ORDER_NR_PAGES=1024, allocated capacity=1024 page descriptors but pfn_to_page(1024) forms map+1024 (one past). Source-local indexing and global PFN indexing disagree; does not certify real boot reached that layout.",
+      "supporting_anchors": [
+        "A27",
+        "A28",
+        "A29",
+        "A35",
+        "A36",
+        "A37",
+        "A38"
+      ],
+      "earliest_stop": "first pfn_to_page(absolute PFN) expression must be inside physically allocated descriptor extent; no runtime fault claimed",
+      "demonstrated_runtime_bug": false,
+      "author_fix_or_owner_approval_required_now": false
+    },
+    {
+      "id": "PB78-F02",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F02",
+      "kind": "conditional_physical_zero_sentinel_conversion_guard",
+      "status": "needs_evidence",
+      "claim": "alloc_node_mem_map composes phys_to_virt(memblock_alloc_range(...)) before testing if(!map). memblock_alloc_range returns physical address 0 on failure; selected __va(x)=PAGE_OFFSET+x with nonzero high PAGE_OFFSET can turn a physical zero result into nonNULL virtual address. The check may therefore fail to detect allocation failure, and memset/map publication would require unproven address validity.",
+      "supporting_anchors": [
+        "A13",
+        "A15",
+        "A30",
+        "A31",
+        "A32",
+        "A33",
+        "A34",
+        "A35"
+      ],
+      "earliest_stop": "selected C address macro and valid pointer conversion required; no observed failed memblock allocation",
+      "demonstrated_runtime_bug": false,
+      "author_fix_or_owner_approval_required_now": false
+    },
+    {
+      "id": "PB78-F03",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F03",
+      "kind": "conditional_raw_MAX_DMA_PFN_byte_lower_bound_mismatch",
+      "status": "needs_evidence",
+      "claim": "myos_memblock_alloc_normal passes MAX_DMA_PFN<<PAGE_SHIFT as its minimum physical byte address (16MiB), whereas alloc_node_mem_map passes raw MAX_DMA_PFN (4096) to memblock_alloc_range, whose lower bound is a phys_addr_t byte address. Thus the two callers apply different unit conversions, possibly placing mem_map below intended normal zone if allocation succeeds there.",
+      "supporting_anchors": [
+        "A07",
+        "A09",
+        "A12",
+        "A41"
+      ],
+      "earliest_stop": "whether actual chosen physical address is below16MiB and whether it violates a real caller requirement is unproven",
+      "demonstrated_runtime_bug": false,
+      "author_fix_or_owner_approval_required_now": false
+    },
+    {
+      "id": "PB78-F04",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F04",
+      "kind": "conditional_empty_node_out_parameters_uninitialized",
+      "status": "needs_evidence",
+      "claim": "__myos_calculate_node_pages returns immediately for node_start_pfn==0 && node_end_pfn==0 without writing nr_absent/nr_spanned, while calculate_node_totalpages uses automatic spanned and absent after the call to derive zone present/spanned statistics. An empty input can therefore hit indeterminate read under the selected C flow.",
+      "supporting_anchors": [
+        "B06",
+        "B10",
+        "B11",
+        "B12"
+      ],
+      "earliest_stop": "does not prove empty node supplied in actual boot or a particular observed count",
+      "demonstrated_runtime_bug": false,
+      "author_fix_or_owner_approval_required_now": false
+    },
+    {
+      "id": "PB78-F05",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F05",
+      "kind": "conditional_zone_present_pages_overwrite",
+      "status": "needs_evidence",
+      "claim": "calculate_node_totalpages produces nonzero zone.present_pages when span includes present memory; later memmap_init unconditionally writes zone->present_pages=0 for every zone. Under a valid nonempty memory model (e.g. present=12), stored present_pages becomes zero irrespective of earlier producer.",
+      "supporting_anchors": [
+        "B12",
+        "B18",
+        "B40"
+      ],
+      "earliest_stop": "actual downstream consumer or hardware consequence unexamined; not evidence zone total spans zero",
+      "demonstrated_runtime_bug": false,
+      "author_fix_or_owner_approval_required_now": false
+    },
+    {
+      "id": "PB78-F06",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F06",
+      "kind": "uninitialized_pages_accumulator_before_free_chunk_loop",
+      "status": "needs_evidence",
+      "claim": "memblock_free_all declares ulong pages without initializer and later executes pages += end_pfn-start_pfn for a nonempty PFN interval before the first __ffs/actual chunk request. An indeterminate automatic object is read; source does not permit certifying the later loop as normal execution. Chunk tables are isolated counterfactual integer models, not replay of this function.",
+      "supporting_anchors": [
+        "C24",
+        "C25",
+        "C26",
+        "C27",
+        "C28"
+      ],
+      "earliest_stop": "actual compiler diagnostics/build/runtime and whether positive free intervals appear are NOT_RUN; unused result does not remove preceding read from source",
+      "demonstrated_runtime_bug": false,
+      "author_fix_or_owner_approval_required_now": false
+    }
+  ],
+  "new_findings_count": 6,
+  "evidence_gaps": [
+    {
+      "id": "PB78-U01",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U01",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Node array allocation result and writability of NODE_DATA slots have no caller guard in the selected zone_sizes_init. MAX_NUMNODES compile branch and actual sizeof(pg_data_t) not probed.",
+      "anchors": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "PB78-U02",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U02",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Physical memory allocation and memblock reserve/insert/merge routines are only traced at required return/physical address gates; no whole memblock capacity, sorting, nonoverlap or direct-map page table proof.",
+      "anchors": [
+        "A12",
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "C17",
+        "C18"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "PB78-U03",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U03",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "mem_map global origin, node_mem_map local array, offsetof of page_s, integer/pointer overflows and actual allocated extent are not certified for nonzero node_start_pfns; PB78-F01 is a conditional source model.",
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36",
+        "A37"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "PB78-U04",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U04",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Hole/PFN validity and zone memory statistics depend on sorted memory inputs, valid clamp bounds, no overflow and output initialisation. pfn_valid tests only upper bound; resetting zone.present_pages and missing zone lock init have no run proof.",
+      "anchors": [
+        "B06",
+        "B09",
+        "B12",
+        "B14",
+        "B18",
+        "B28"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "PB78-U05",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U05",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "page_type and _mapcount union remains subject to historical GAP-M08/MR-02; selected mem_map zeroing, init_page_count and reserved reinit are not a global census of PageBuddy/type/mapcount writers.",
+      "anchors": [
+        "B20",
+        "B21",
+        "B23",
+        "B24",
+        "B25",
+        "B26",
+        "B28"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "PB78-U06",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U06",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "for_each_memblock_type traverses cnt+1 and __simple_next_mem_range handles reserved tail gap with pointer to regions[cnt]. Validity requires capacity, dummy/tail slot, sorted disjoint inputs and no invalid mutations; no global proof of cnt<max.",
+      "anchors": [
+        "C04",
+        "C05",
+        "C17",
+        "C18",
+        "C20",
+        "C21"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "PB78-U07",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U07",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "The free-range iterator's flags, NO_MAP/HOTPLUG skip predicates, reserved exclusion, zero starting PFN, __ffs(0), shifts/end order and uninitialized pages accumulator can stop actual execution before any isolated chunk model, even when a model's arithmetic is correct.",
+      "anchors": [
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C24",
+        "C25",
+        "C26",
+        "C27",
+        "C29"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "PB78-U08",
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-U08",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "memblock_free_pages updates per-page Reserved/refcount and managed_pages before calling __free_pages_ok; actual zone ownership, last holder, buddy identity, physical insertion, success and concurrent behavior remain unresolved. Old PA77-F01/F02 and MC-01/05 unchanged. No build/preprocess/local P9/Graphviz/runtime.",
+      "anchors": [
+        "C33",
+        "C34",
+        "C35",
+        "C47",
+        "C48",
+        "C49"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "runtime_observed_bugs": 0,
+  "prior_qualified_ids_preserved": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-01",
+      "status": "existing_static_concern_conditional",
+      "disposition": "buddy unlink and reaching branch not re-reviewed"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-02",
+      "status": "existing_static_concern",
+      "disposition": "allocation/free lock asymmetry unaffected"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-03",
+      "status": "existing_static_concern",
+      "disposition": "page ZERO overlap unchanged"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-04",
+      "status": "existing_static_concern",
+      "disposition": "preference array OOB unchanged"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-05",
+      "status": "existing_static_concern",
+      "disposition": "folio_put empty __folio_put path unaffected"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "existing_static_concern",
+      "disposition": "slab discard with live objects unaffected"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-01",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-08",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::GAP-M08",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U07",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U09",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F02",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77-REVIEW-001::R77-01",
+      "status": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+      "disposition": "not self closed"
+    }
+  ],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "review_receiver": "MYOS2-A-C06",
+  "R77_supplements": [
+    "R77-S01",
+    "R77-S02",
+    "R77-S03"
+  ],
+  "scope_only": "initialisation producer and handoff source without firmware/runtime proof",
+  "owner_decisions_requested_now": [],
+  "write_scope": "strictly new user-page-bootstrap-handoff-78 six artifacts plus one formal PR17 comment",
+  "phase": 2
+}

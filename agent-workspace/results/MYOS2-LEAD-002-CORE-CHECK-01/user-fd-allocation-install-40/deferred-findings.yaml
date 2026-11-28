@@ -1,0 +1,196 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FD-ALLOCATION-INSTALL-40",
+  "record_type": "bounded_conditional_fd_findings_and_prior_doc_return",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-05",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "result_base_short12": "4ea455865a47",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "prior_document_items": [
+    {
+      "id": "R39-01",
+      "verdict": "RETURN",
+      "kind": "DOCUMENTATION_ONLY",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "closure": "PENDING_C04_REVIEW",
+      "replaced_legacy_id": "OC39-A069",
+      "correct_replacement": "R39C-A001",
+      "old_excerpt_actual_EXDEV": "R39C-A002"
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "FD40-F01",
+      "qualified_id": "CORE-USER-FD-ALLOCATION-INSTALL-40::FD40-F01",
+      "status": "needs_evidence",
+      "kind": "empty_index_selection_is_not_shared_reservation",
+      "fact": "alloc_fd holds file_lock during fd_array scan and assigns only a local uint fd on the first NULL; it never sets an occupied slot or bitmap before unlocking. fd_install later stores a file pointer and does not acquire that lock. If two agents share the same files_struct and both select before either stores, both may select one slot; the second fd_install sees an occupied value at BUG_ON, assuming first install completed.",
+      "premises": [
+        "same valid files_struct shared by two selected callers",
+        "valid index and initially NULL slot",
+        "both selection calls finish before first install",
+        "both file pointers valid, macro bound and first install returns normally"
+      ],
+      "counterevidence": [
+        "single-threaded select/install without intervening actor may work",
+        "second scan after first install would choose another free slot",
+        "no proof actual kernel scheduling/shared files identity or collision happened",
+        "old UV-11 covers table-full uninitialized fd; not a new full-table finding"
+      ],
+      "anchors": [
+        "FD40-A012",
+        "FD40-A013",
+        "FD40-A014",
+        "FD40-A015",
+        "FD40-A016",
+        "FD40-A019",
+        "FD40-A020"
+      ],
+      "possible_impact": "bounded abstract same-slot selection window; no confirmed concurrent bug or CPU termination",
+      "resume_conditions": [
+        "trace an actual shared files_struct and interleaving when authorized",
+        "do not assume lock held across scan and install"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FD40-F02",
+      "qualified_id": "CORE-USER-FD-ALLOCATION-INSTALL-40::FD40-F02",
+      "status": "needs_evidence",
+      "kind": "fd_install_index_is_used_before_any_local_bounds_check",
+      "fact": "fd_install takes fps=files->fd_array, calls smp_rmb, then checks BUG_ON(fps[fd]!=NULL) and assigns fps[fd]=file, without a local fd<NR_OPEN_DEFAULT gate. Source array is 256 pointers. If fd>=256, the indexed read already lacks array-bound proof before BUG_ON can validate occupancy.",
+      "premises": [
+        "valid files pointer and array type, unsigned fd outside0..255",
+        "actual caller supplies such fd or helper-only direct invocation",
+        "no safe earlier rejection in fd_install"
+      ],
+      "counterevidence": [
+        "a normal get_unused_fd_flags selection with fd_count<=256 and an empty index produces a valid index",
+        "US-02 already flags f_dupfd range larger than table, and UV-11 already flags other user fd accesses; this finding concerns only fd_install's direct missing local index guard",
+        "no actual invalid-index installation observed",
+        "BUG_ON condition is occupancy, not capacity; its exact runtime variant depends configuration"
+      ],
+      "anchors": [
+        "FD40-A001",
+        "FD40-A002",
+        "FD40-A005",
+        "FD40-A019",
+        "FD40-A020",
+        "FD40-A021",
+        "FD40-A025"
+      ],
+      "possible_impact": "conditional out-of-bounds read/store prerequisite, not known memory corruption or crash",
+      "resume_conditions": [
+        "identify a concrete defined FD producer outside range without crossing earlier invalid operations",
+        "separate runtime/build audit only with approval"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FD40-F03",
+      "qualified_id": "CORE-USER-FD-ALLOCATION-INSTALL-40::FD40-F03",
+      "status": "needs_evidence",
+      "kind": "put_unused_fd_has_no_selected_reservation_reversal",
+      "fact": "Selected put_unused_fd(uint fd) locks and unlocks current->files->file_lock while its clearing/open-fd code remains commented out. Therefore it does not write fd_array, a bitmap or another reservation state. alloc_fd itself does not mark a reservation, so absence of unreserve here does not by itself prove a leaked reserved descriptor.",
+      "premises": [
+        "an actual reservation/bitmap writer outside selected alloc_fd exists, or a caller expects put_unused_fd to mutate a chosen slot",
+        "valid shared files and lock inputs"
+      ],
+      "counterevidence": [
+        "selected alloc_fd only scans; it has not reserved a slot to undo",
+        "do_sys_openat2 does not call put_unused_fd in its complete selected body",
+        "a nonNULL installed file is not an unused reservation to clear",
+        "no real descriptor leak or double allocation observed"
+      ],
+      "anchors": [
+        "FD40-A012",
+        "FD40-A013",
+        "FD40-A015",
+        "FD40-A017",
+        "FD40-A018"
+      ],
+      "possible_impact": "local API contract/provenance gap, not demonstrated resource leak",
+      "resume_conditions": [
+        "identify actual other reservation producer and caller, or keep as documented boundary",
+        "do not expand full fd lifecycle here"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-11",
+      "disposition": "RETAINED_NOT_DUPLICATED",
+      "note": "Historical alloc_fd full-table unassigned local and myos_fdget_pos index concerns were already recorded; this task supplies bounded direct source and does not refile their root cause."
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-02",
+      "disposition": "RETAINED",
+      "note": "f_dupfd may call alloc_fd over RLIMIT range larger than 256; only one direct helper layer read here, no duplication of historical finding."
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-03",
+      "disposition": "RETAINED",
+      "note": "alloc_fd does not read flags and no selected close_on_exec bitmap storage; does not re-audit exec inheritance or record new duplicate."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "disposition": "RETAINED",
+      "note": "do_sys_openat2 ignores build_open_flags return and overwrites fd; existing validation issue remains independent."
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "RETAINED",
+      "note": "missing int return in do_open/myos_do_dentry_open stops actual user file success proof before fd_install."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-COMPLETION-39::OC39-F01",
+      "disposition": "RETAINED_WITH_RETURN_OPEN",
+      "note": "mode-vs-open flag gate discrepancy not reanalyzed in batch40."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-COMPLETION-39::OC39-F02",
+      "disposition": "RETAINED_WITH_RETURN_OPEN",
+      "note": "open callback result stored but not checked, not a fd allocator property."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-COMPLETION-39::OC39-F03",
+      "disposition": "RETAINED_WITH_RETURN_OPEN",
+      "note": "FMODE_OPENED selected source gap remains separate."
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F02",
+      "disposition": "RETAINED",
+      "note": "A child inode embedding source gap blocks direct actual user-open success assumptions."
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F03",
+      "disposition": "RETAINED",
+      "note": "A root mapping provenance gap not closed by file pointer or fd slot assignment."
+    },
+    {
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F01",
+      "disposition": "RETAINED",
+      "note": "mapping page_array provenance outside fd metadata scope."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-COMPLETION-39-REVIEW-001::R39-01",
+      "disposition": "DOCUMENT_CORRECTION_SUBMITTED_ONLY",
+      "note": "ENFILE vs EXDEV old A069 corrected in F00; only C04 may close documentation RETURN."
+    }
+  ],
+  "not_confirmed_independent_vulnerabilities": true,
+  "scope_limits": [
+    "FD40-F01 does not prove real scheduling race",
+    "FD40-F02 does not prove executed OOB or panic",
+    "FD40-F03 does not prove reserved-fd leak",
+    "earlier UV-11/US-02/US-03/OF30-F01/UV-04 are NOT new findings",
+    "do not close R39-01, amend old files, fix kernel or assess complete FD lifecycle"
+  ]
+}

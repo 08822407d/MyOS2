@@ -1,0 +1,6216 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EXEC-STACK-PLACEMENT-142",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-22",
+  "conversation_display_name": "MYOS2-A-C10a 代码分析执行",
+  "produced_by": "GPT-6.2（系统模型族标识；界面实际型号不可独立核实）",
+  "model_per_owner": "次一档GPT-6.2 Sol；Extra/高档偏好",
+  "actual_backend_model": "UNATTESTED",
+  "actual_backend_effort": "UNATTESTED",
+  "date": "2026-11-24",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "open_questions": [
+    "实际配置、C指针/对象合法性、vma前置、映射和真实运行仍未证"
+  ],
+  "inputs_read": [
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ref": "a039d9803ade",
+      "blob": "6019436417ad"
+    },
+    {
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "ref": "a039d9803ade",
+      "blob": "579fb4e9fadd"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "ref": "a039d9803ade",
+      "blob": "421649d6f3bc"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "ref": "a039d9803ade",
+      "blob": "dd427f17f005"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "ref": "a039d9803ade",
+      "blob": "eff5e1ff56b8"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "ref": "a039d9803ade",
+      "blob": "166fa1066af1"
+    },
+    {
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "002c2aec4aa8"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "a60f4e7c53b0"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "ref": "a039d9803ade",
+      "blob": "ec983b79166f"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "ref": "a039d9803ade",
+      "blob": "16bba89f98f5"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "ref": "a039d9803ade",
+      "blob": "b9d93f504756"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "ref": "a039d9803ade",
+      "blob": "4431545af5fb"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "ref": "a039d9803ade",
+      "blob": "0861ebae6fc2"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "a039d9803ade",
+      "blob": "ef531baa8317"
+    }
+  ],
+  "record_type": "phase2_stack_placement_facts",
+  "model": {
+    "U": "0x70000000",
+    "scope": "new given U and entry p, not observed stack top or actual upstream mapping",
+    "selected": {
+      "ARCH_DLINFO": "NOT_SELECTED",
+      "ELF_HWCAP2": "NOT_SELECTED",
+      "CONFIG_RSEQ": "NOT_SELECTED",
+      "ELF_BASE_PLATFORM": null,
+      "ELF_PLATFORM": "x86_64",
+      "AT_VECTOR_SIZE_ARCH": 0
+    },
+    "sizes": {
+      "elf_addr_t": 8,
+      "ulong": 8,
+      "user_slot": 8,
+      "elf_phdr_s": 56,
+      "platform_bytes": 7
+    },
+    "type_boundary": "integer address projection only; pointer conversion/alignment, object extent, C pointer arithmetic not certified",
+    "gate_boundary": "pre-gate independent integer projection; post-gate separately stipulated reached/valid/writable, normal operations; vma uninitialized and assignment commented",
+    "source_config": "options_flags.cmake read first, explicit build flags do not prove actual macro injection",
+    "old_boundaries": "23/24 output page/return/relocation and object constraints; 25 R25-S02 two gaps and ET25-F01; 26/28 mapping/interpreter; 66/69 actual stack/register/CRT not proved",
+    "full_runtime": "NOT_RUN"
+  },
+  "D00": {
+    "R141-01": {
+      "id": "R141-01",
+      "status": "documentation_disposition_submitted",
+      "mainline_closure": "PENDING_C10_INDEPENDENT_REVIEW",
+      "prior141_verdict": "RETURN_DOCUMENTATION",
+      "prior141_technical": "A/B/C限定技术内容无新增技术退回",
+      "original_frozen": true,
+      "original_ref": "08f6fee103dd",
+      "review": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-EXEC-AUXV-PAYLOAD-141-review.md @ e591efa48b3d",
+      "prior_author_comment": "https://github.com/08822407d/MyOS2/pull/17#issuecomment-7124829269",
+      "base_snapshot": "time（分支名）",
+      "source_pin_short12": "a039d9803ade",
+      "read_channel": "connector",
+      "startup_selfcheck_quote": "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。",
+      "branch_canary_quotes": [
+        "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\",
+        "\tthis_cpu = smp_processor_id();"
+      ],
+      "canaries_current_check": {
+        "time": [
+          true,
+          true
+        ],
+        "direct_master": [
+          false,
+          false
+        ],
+        "master_pin": "e8e60cd19540",
+        "startup_exact_master": true
+      },
+      "old_field_mapping": [
+        {
+          "old": "MANIFEST.md root: base_snapshot=time@a039d9803ade",
+          "new": "base_snapshot=time（分支名）, source_pin_short12 separately"
+        },
+        {
+          "old": "六件无read_channel标准键",
+          "new": "read_channel=connector"
+        },
+        {
+          "old": "MANIFEST.md L281 startup_quote",
+          "new": "startup_selfcheck_quote（本批重新从直接master取得）"
+        },
+        {
+          "old": "MANIFEST.md L282–285 time_canaries",
+          "new": "branch_canary_quotes（本批固定time重取，直接master反验）"
+        },
+        {
+          "old": "MANIFEST.md L216标题及L287–289 formal_windows/source_index_count/formal_windows_generated_from_fresh_fixed_source",
+          "new": "self_check三整数，严格本次重核范围，不补造历史时序"
+        },
+        {
+          "old": "MANIFEST.md G00.prior140.stats属于140；141作者评论统计不是MANIFEST用途索引",
+          "new": "old_file_consumption_index六件用途、覆盖、后继消费"
+        }
+      ],
+      "formal_counts_by_file": [
+        {
+          "name": "MANIFEST.md",
+          "count": 0
+        },
+        {
+          "name": "exec-auxv-payload.md",
+          "count": 0
+        },
+        {
+          "name": "facts-and-boundaries.yaml",
+          "count": 0
+        },
+        {
+          "name": "exec-auxv-payload-paths.dot",
+          "count": 0
+        },
+        {
+          "name": "deferred-findings.yaml",
+          "count": 0
+        },
+        {
+          "name": "evidence.md",
+          "count": 129
+        }
+      ],
+      "self_check": {
+        "verified_claims": 129,
+        "quotes_reconfirmed": 129,
+        "downgraded_to_inferred": 0
+      },
+      "equation": "129+0=129",
+      "scope": "RECONFIRMATION_DURING_BATCH_142_ONLY",
+      "source_paths_reopened": [
+        "mykernel/fs/vfs/binfmt_elf.c",
+        "mykernel/arch/x86_64/include/asm/elf.h",
+        "mykernel/include/linux/kernel/elf.h",
+        "mykernel/include/uapi/linux/elf.h",
+        "mykernel/include/uapi/linux/auxvec.h",
+        "mykernel/include/linux/fs/binfmts.h",
+        "mykernel/include/uapi/linux/binfmts.h",
+        "mykernel/mm/misc/mm_misc_const.h",
+        "mykernel/include/linux/kernel/asm-generic/param.h",
+        "mykernel/mm/misc/mm_misc_types.h",
+        "mykernel/scripts/options_flags.cmake"
+      ],
+      "reconfirmation": [
+        {
+          "id": "E141-001",
+          "old_selector": "source_index[0]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "STACK_ADD",
+          "first_line": 110,
+          "last_line": 111,
+          "kind": "macro",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-002",
+          "old_selector": "source_index[1]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "STACK_ROUND",
+          "first_line": 112,
+          "last_line": 113,
+          "kind": "macro",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-003",
+          "old_selector": "source_index[2]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "STACK_ALLOC",
+          "first_line": 114,
+          "last_line": 114,
+          "kind": "macro",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-004",
+          "old_selector": "source_index[3]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "ELF_BASE_PLATFORM",
+          "first_line": 122,
+          "last_line": 122,
+          "kind": "macro",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-005",
+          "old_selector": "source_index[4]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "NEW_AUX_ENT",
+          "first_line": 194,
+          "last_line": 198,
+          "kind": "macro",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-006",
+          "old_selector": "source_index[5]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 126,
+          "last_line": 127,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-007",
+          "old_selector": "source_index[6]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 129,
+          "last_line": 133,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-008",
+          "old_selector": "source_index[7]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 134,
+          "last_line": 138,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-009",
+          "old_selector": "source_index[8]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 141,
+          "last_line": 143,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-010",
+          "old_selector": "source_index[9]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 145,
+          "last_line": 145,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-011",
+          "old_selector": "source_index[10]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 152,
+          "last_line": 152,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-012",
+          "old_selector": "source_index[11]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 160,
+          "last_line": 164,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-013",
+          "old_selector": "source_index[12]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 165,
+          "last_line": 167,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-014",
+          "old_selector": "source_index[13]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 173,
+          "last_line": 177,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-015",
+          "old_selector": "source_index[14]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 178,
+          "last_line": 180,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-016",
+          "old_selector": "source_index[15]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 185,
+          "last_line": 189,
+          "kind": "comment",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-017",
+          "old_selector": "source_index[16]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 192,
+          "last_line": 192,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-018",
+          "old_selector": "source_index[17]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 200,
+          "last_line": 200,
+          "kind": "conditional",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-019",
+          "old_selector": "source_index[18]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 207,
+          "last_line": 208,
+          "kind": "conditional",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-020",
+          "old_selector": "source_index[19]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 209,
+          "last_line": 209,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-021",
+          "old_selector": "source_index[20]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 210,
+          "last_line": 210,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-022",
+          "old_selector": "source_index[21]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 211,
+          "last_line": 211,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-023",
+          "old_selector": "source_index[22]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 212,
+          "last_line": 212,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-024",
+          "old_selector": "source_index[23]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 213,
+          "last_line": 213,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-025",
+          "old_selector": "source_index[24]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 214,
+          "last_line": 214,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-026",
+          "old_selector": "source_index[25]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 215,
+          "last_line": 215,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-027",
+          "old_selector": "source_index[26]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 216,
+          "last_line": 217,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-028",
+          "old_selector": "source_index[27]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 218,
+          "last_line": 218,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-029",
+          "old_selector": "source_index[28]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 219,
+          "last_line": 219,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-030",
+          "old_selector": "source_index[29]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 220,
+          "last_line": 223,
+          "kind": "comment",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-031",
+          "old_selector": "source_index[30]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 224,
+          "last_line": 224,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-032",
+          "old_selector": "source_index[31]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 225,
+          "last_line": 225,
+          "kind": "comment",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-033",
+          "old_selector": "source_index[32]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 226,
+          "last_line": 228,
+          "kind": "conditional",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-034",
+          "old_selector": "source_index[33]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 229,
+          "last_line": 229,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-035",
+          "old_selector": "source_index[34]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 230,
+          "last_line": 233,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-036",
+          "old_selector": "source_index[35]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 234,
+          "last_line": 237,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-037",
+          "old_selector": "source_index[36]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 238,
+          "last_line": 240,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-038",
+          "old_selector": "source_index[37]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 241,
+          "last_line": 244,
+          "kind": "conditional",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-039",
+          "old_selector": "source_index[38]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 246,
+          "last_line": 248,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-040",
+          "old_selector": "source_index[39]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 250,
+          "last_line": 251,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-041",
+          "old_selector": "source_index[40]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 253,
+          "last_line": 254,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-042",
+          "old_selector": "source_index[41]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 256,
+          "last_line": 260,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-043",
+          "old_selector": "source_index[42]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 266,
+          "last_line": 267,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-044",
+          "old_selector": "source_index[43]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 268,
+          "last_line": 271,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-045",
+          "old_selector": "source_index[44]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 274,
+          "last_line": 275,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-046",
+          "old_selector": "source_index[45]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 278,
+          "last_line": 282,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-047",
+          "old_selector": "source_index[46]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 288,
+          "last_line": 290,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-048",
+          "old_selector": "source_index[47]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 293,
+          "last_line": 297,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-049",
+          "old_selector": "source_index[48]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 303,
+          "last_line": 305,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-050",
+          "old_selector": "source_index[49]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "create_elf_tables",
+          "first_line": 307,
+          "last_line": 310,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-051",
+          "old_selector": "source_index[50]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 614,
+          "last_line": 614,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-052",
+          "old_selector": "source_index[51]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 615,
+          "last_line": 617,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-053",
+          "old_selector": "source_index[52]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 627,
+          "last_line": 629,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-054",
+          "old_selector": "source_index[53]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 636,
+          "last_line": 637,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-055",
+          "old_selector": "source_index[54]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 838,
+          "last_line": 839,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-056",
+          "old_selector": "source_index[55]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 977,
+          "last_line": 981,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-057",
+          "old_selector": "source_index[56]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 989,
+          "last_line": 993,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-058",
+          "old_selector": "source_index[57]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1025,
+          "last_line": 1026,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-059",
+          "old_selector": "source_index[58]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1035,
+          "last_line": 1038,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-060",
+          "old_selector": "source_index[59]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1043,
+          "last_line": 1045,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-061",
+          "old_selector": "source_index[60]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1046,
+          "last_line": 1050,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-062",
+          "old_selector": "source_index[61]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1057,
+          "last_line": 1061,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-063",
+          "old_selector": "source_index[62]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1075,
+          "last_line": 1078,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-064",
+          "old_selector": "source_index[63]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1115,
+          "last_line": 1115,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-065",
+          "old_selector": "source_index[64]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_binary",
+          "first_line": 1130,
+          "last_line": 1134,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-066",
+          "old_selector": "source_index[65]",
+          "path": "mykernel/fs/vfs/binfmt_elf.c",
+          "symbol": "load_elf_interp",
+          "first_line": 606,
+          "last_line": 608,
+          "kind": "active",
+          "source_blob": "579fb4e9fadd",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-067",
+          "old_selector": "source_index[66]",
+          "path": "mykernel/arch/x86_64/include/asm/elf.h",
+          "symbol": "ELF_PLATFORM",
+          "first_line": 151,
+          "last_line": 151,
+          "kind": "macro",
+          "source_blob": "421649d6f3bc",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-068",
+          "old_selector": "source_index[67]",
+          "path": "mykernel/arch/x86_64/include/asm/elf.h",
+          "symbol": "ELF_EXEC_PAGESIZE",
+          "first_line": 156,
+          "last_line": 156,
+          "kind": "macro",
+          "source_blob": "421649d6f3bc",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-069",
+          "old_selector": "source_index[68]",
+          "path": "mykernel/arch/x86_64/include/asm/elf.h",
+          "symbol": "ELF_HWCAP",
+          "first_line": 169,
+          "last_line": 169,
+          "kind": "macro",
+          "source_blob": "421649d6f3bc",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-070",
+          "old_selector": "source_index[69]",
+          "path": "mykernel/include/linux/kernel/elf.h",
+          "symbol": "elf_addr_t",
+          "first_line": 47,
+          "last_line": 47,
+          "kind": "alias",
+          "source_blob": "dd427f17f005",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-071",
+          "old_selector": "source_index[70]",
+          "path": "mykernel/include/linux/kernel/elf.h",
+          "symbol": "elfhdr",
+          "first_line": 43,
+          "last_line": 43,
+          "kind": "alias",
+          "source_blob": "dd427f17f005",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-072",
+          "old_selector": "source_index[71]",
+          "path": "mykernel/include/linux/kernel/elf.h",
+          "symbol": "elf_phdr",
+          "first_line": 44,
+          "last_line": 44,
+          "kind": "alias",
+          "source_blob": "dd427f17f005",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-073",
+          "old_selector": "source_index[72]",
+          "path": "mykernel/include/linux/kernel/elf.h",
+          "symbol": "elfhdr_s",
+          "first_line": 52,
+          "last_line": 52,
+          "kind": "alias",
+          "source_blob": "dd427f17f005",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-074",
+          "old_selector": "source_index[73]",
+          "path": "mykernel/include/linux/kernel/elf.h",
+          "symbol": "elf_phdr_s",
+          "first_line": 53,
+          "last_line": 53,
+          "kind": "alias",
+          "source_blob": "dd427f17f005",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-075",
+          "old_selector": "source_index[74]",
+          "path": "mykernel/include/linux/kernel/elf.h",
+          "symbol": "START_THREAD",
+          "first_line": 29,
+          "last_line": 30,
+          "kind": "macro",
+          "source_blob": "dd427f17f005",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-076",
+          "old_selector": "source_index[75]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "Elf64_Addr",
+          "first_line": 16,
+          "last_line": 16,
+          "kind": "type",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-077",
+          "old_selector": "source_index[76]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "Elf64_Half",
+          "first_line": 17,
+          "last_line": 17,
+          "kind": "type",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-078",
+          "old_selector": "source_index[77]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "Elf64_Off",
+          "first_line": 19,
+          "last_line": 19,
+          "kind": "type",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-079",
+          "old_selector": "source_index[78]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "Elf64_Word",
+          "first_line": 21,
+          "last_line": 21,
+          "kind": "type",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-080",
+          "old_selector": "source_index[79]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "Elf64_Xword",
+          "first_line": 22,
+          "last_line": 22,
+          "kind": "type",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-081",
+          "old_selector": "source_index[80]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "elf64_hdr",
+          "first_line": 238,
+          "last_line": 240,
+          "kind": "member",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-082",
+          "old_selector": "source_index[81]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "elf64_hdr",
+          "first_line": 242,
+          "last_line": 245,
+          "kind": "member",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-083",
+          "old_selector": "source_index[82]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "elf64_phdr",
+          "first_line": 270,
+          "last_line": 274,
+          "kind": "member",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-084",
+          "old_selector": "source_index[83]",
+          "path": "mykernel/include/uapi/linux/elf.h",
+          "symbol": "elf64_phdr",
+          "first_line": 275,
+          "last_line": 278,
+          "kind": "member",
+          "source_blob": "eff5e1ff56b8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-085",
+          "old_selector": "source_index[84]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_NULL",
+          "first_line": 9,
+          "last_line": 9,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-086",
+          "old_selector": "source_index[85]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_IGNORE",
+          "first_line": 10,
+          "last_line": 10,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-087",
+          "old_selector": "source_index[86]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_EXECFD",
+          "first_line": 11,
+          "last_line": 11,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-088",
+          "old_selector": "source_index[87]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_PHDR",
+          "first_line": 12,
+          "last_line": 12,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-089",
+          "old_selector": "source_index[88]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_PHENT",
+          "first_line": 13,
+          "last_line": 13,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-090",
+          "old_selector": "source_index[89]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_PHNUM",
+          "first_line": 14,
+          "last_line": 14,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-091",
+          "old_selector": "source_index[90]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_PAGESZ",
+          "first_line": 15,
+          "last_line": 15,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-092",
+          "old_selector": "source_index[91]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_BASE",
+          "first_line": 16,
+          "last_line": 16,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-093",
+          "old_selector": "source_index[92]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_FLAGS",
+          "first_line": 17,
+          "last_line": 17,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-094",
+          "old_selector": "source_index[93]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_ENTRY",
+          "first_line": 18,
+          "last_line": 18,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-095",
+          "old_selector": "source_index[94]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_NOTELF",
+          "first_line": 19,
+          "last_line": 19,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-096",
+          "old_selector": "source_index[95]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_UID",
+          "first_line": 20,
+          "last_line": 20,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-097",
+          "old_selector": "source_index[96]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_EUID",
+          "first_line": 21,
+          "last_line": 21,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-098",
+          "old_selector": "source_index[97]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_GID",
+          "first_line": 22,
+          "last_line": 22,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-099",
+          "old_selector": "source_index[98]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_EGID",
+          "first_line": 23,
+          "last_line": 23,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-100",
+          "old_selector": "source_index[99]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_PLATFORM",
+          "first_line": 24,
+          "last_line": 24,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-101",
+          "old_selector": "source_index[100]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_HWCAP",
+          "first_line": 25,
+          "last_line": 25,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-102",
+          "old_selector": "source_index[101]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_CLKTCK",
+          "first_line": 26,
+          "last_line": 26,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-103",
+          "old_selector": "source_index[102]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_SECURE",
+          "first_line": 28,
+          "last_line": 28,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-104",
+          "old_selector": "source_index[103]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_BASE_PLATFORM",
+          "first_line": 29,
+          "last_line": 30,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-105",
+          "old_selector": "source_index[104]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_RANDOM",
+          "first_line": 31,
+          "last_line": 31,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-106",
+          "old_selector": "source_index[105]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_HWCAP2",
+          "first_line": 32,
+          "last_line": 32,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-107",
+          "old_selector": "source_index[106]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_RSEQ_FEATURE_SIZE",
+          "first_line": 33,
+          "last_line": 33,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-108",
+          "old_selector": "source_index[107]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_RSEQ_ALIGN",
+          "first_line": 34,
+          "last_line": 34,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-109",
+          "old_selector": "source_index[108]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_HWCAP3",
+          "first_line": 35,
+          "last_line": 35,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-110",
+          "old_selector": "source_index[109]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_HWCAP4",
+          "first_line": 36,
+          "last_line": 36,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-111",
+          "old_selector": "source_index[110]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_EXECFN",
+          "first_line": 38,
+          "last_line": 38,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-112",
+          "old_selector": "source_index[111]",
+          "path": "mykernel/include/uapi/linux/auxvec.h",
+          "symbol": "AT_MINSIGSTKSZ",
+          "first_line": 41,
+          "last_line": 41,
+          "kind": "macro",
+          "source_blob": "166fa1066af1",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-113",
+          "old_selector": "source_index[112]",
+          "path": "mykernel/include/linux/fs/binfmts.h",
+          "symbol": "linux_binprm",
+          "first_line": 24,
+          "last_line": 25,
+          "kind": "member",
+          "source_blob": "002c2aec4aa8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-114",
+          "old_selector": "source_index[113]",
+          "path": "mykernel/include/linux/fs/binfmts.h",
+          "symbol": "linux_binprm",
+          "first_line": 30,
+          "last_line": 34,
+          "kind": "member",
+          "source_blob": "002c2aec4aa8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-115",
+          "old_selector": "source_index[114]",
+          "path": "mykernel/include/linux/fs/binfmts.h",
+          "symbol": "linux_binprm",
+          "first_line": 55,
+          "last_line": 57,
+          "kind": "member",
+          "source_blob": "002c2aec4aa8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-116",
+          "old_selector": "source_index[115]",
+          "path": "mykernel/include/linux/fs/binfmts.h",
+          "symbol": "BINPRM_FLAGS_PRESERVE_ARGV0_BIT",
+          "first_line": 72,
+          "last_line": 72,
+          "kind": "macro",
+          "source_blob": "002c2aec4aa8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-117",
+          "old_selector": "source_index[116]",
+          "path": "mykernel/include/linux/fs/binfmts.h",
+          "symbol": "BINPRM_FLAGS_PRESERVE_ARGV0",
+          "first_line": 73,
+          "last_line": 73,
+          "kind": "macro",
+          "source_blob": "002c2aec4aa8",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-118",
+          "old_selector": "source_index[117]",
+          "path": "mykernel/include/uapi/linux/binfmts.h",
+          "symbol": "AT_FLAGS_PRESERVE_ARGV0_BIT",
+          "first_line": 22,
+          "last_line": 22,
+          "kind": "macro",
+          "source_blob": "a60f4e7c53b0",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-119",
+          "old_selector": "source_index[118]",
+          "path": "mykernel/include/uapi/linux/binfmts.h",
+          "symbol": "AT_FLAGS_PRESERVE_ARGV0",
+          "first_line": 23,
+          "last_line": 23,
+          "kind": "macro",
+          "source_blob": "a60f4e7c53b0",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-120",
+          "old_selector": "source_index[119]",
+          "path": "mykernel/mm/misc/mm_misc_const.h",
+          "symbol": "AT_VECTOR_SIZE_ARCH",
+          "first_line": 6,
+          "last_line": 6,
+          "kind": "macro",
+          "source_blob": "ec983b79166f",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-121",
+          "old_selector": "source_index[120]",
+          "path": "mykernel/mm/misc/mm_misc_const.h",
+          "symbol": "AT_VECTOR_SIZE_BASE",
+          "first_line": 9,
+          "last_line": 9,
+          "kind": "macro",
+          "source_blob": "ec983b79166f",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-122",
+          "old_selector": "source_index[121]",
+          "path": "mykernel/mm/misc/mm_misc_const.h",
+          "symbol": "AT_VECTOR_SIZE",
+          "first_line": 12,
+          "last_line": 12,
+          "kind": "macro",
+          "source_blob": "ec983b79166f",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-123",
+          "old_selector": "source_index[122]",
+          "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+          "symbol": "HZ",
+          "first_line": 9,
+          "last_line": 9,
+          "kind": "macro",
+          "source_blob": "16bba89f98f5",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-124",
+          "old_selector": "source_index[123]",
+          "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+          "symbol": "USER_HZ",
+          "first_line": 10,
+          "last_line": 10,
+          "kind": "macro",
+          "source_blob": "16bba89f98f5",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-125",
+          "old_selector": "source_index[124]",
+          "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+          "symbol": "CLOCKS_PER_SEC",
+          "first_line": 11,
+          "last_line": 11,
+          "kind": "macro",
+          "source_blob": "16bba89f98f5",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-126",
+          "old_selector": "source_index[125]",
+          "path": "mykernel/mm/misc/mm_misc_types.h",
+          "symbol": "mm_struct",
+          "first_line": 103,
+          "last_line": 103,
+          "kind": "member",
+          "source_blob": "b9d93f504756",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-127",
+          "old_selector": "source_index[126]",
+          "path": "mykernel/scripts/options_flags.cmake",
+          "symbol": "ARCH",
+          "first_line": 7,
+          "last_line": 9,
+          "kind": "build_declaration",
+          "source_blob": "6019436417ad",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-128",
+          "old_selector": "source_index[127]",
+          "path": "mykernel/scripts/options_flags.cmake",
+          "symbol": "CMAKE_C_FLAGS",
+          "first_line": 39,
+          "last_line": 43,
+          "kind": "build_declaration",
+          "source_blob": "6019436417ad",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        },
+        {
+          "id": "E141-129",
+          "old_selector": "source_index[128]",
+          "path": "mykernel/scripts/options_flags.cmake",
+          "symbol": "CMAKE_C_FLAGS",
+          "first_line": 58,
+          "last_line": 62,
+          "kind": "build_declaration",
+          "source_blob": "6019436417ad",
+          "result": "EXACT_MATCH_RECONFIRMED_IN_142"
+        }
+      ],
+      "old_file_consumption_index": [
+        {
+          "file": "MANIFEST.md",
+          "purpose": "接收/G00、指导复用与原始作者记录",
+          "coverage": "原件冻结；R141-01标准字段/自检/消费索引待复判",
+          "consume": "必须合读本142 MANIFEST/facts.D00.R141-01，不把原近似字段或生成数量当标准自检",
+          "source": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-auxv-payload-141/MANIFEST.md",
+          "ref": "08f6fee103dd"
+        },
+        {
+          "file": "exec-auxv-payload.md",
+          "purpose": "A0/Afd有序载荷、B80字、C地址来源",
+          "coverage": "限定技术内容主线未新增退回；真实运行未证",
+          "consume": "按141独审消费相应A/B/C，不等于整批通过",
+          "source": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-auxv-payload-141/exec-auxv-payload.md",
+          "ref": "08f6fee103dd"
+        },
+        {
+          "file": "facts-and-boundaries.yaml",
+          "purpose": "A/B/C可解析模型、129项source_index、graph",
+          "coverage": "旧机器对象冻结；按本轮主线裁定的C1/C图限定",
+          "consume": "本142只取A0/Afd及B的tag索引；旧source_index用于D00逐项定位",
+          "source": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-auxv-payload-141/facts-and-boundaries.yaml",
+          "ref": "08f6fee103dd"
+        },
+        {
+          "file": "exec-auxv-payload-paths.dot",
+          "purpose": "104节点/103边、载荷/范围/条件图",
+          "coverage": "静态图已由主线限定核收，未运行Graphviz",
+          "consume": "同facts.graph与独审合读，不作真实执行轨迹",
+          "source": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-auxv-payload-141/exec-auxv-payload-paths.dot",
+          "ref": "08f6fee103dd"
+        },
+        {
+          "file": "deferred-findings.yaml",
+          "purpose": "旧25/26/28/66/69及140未证边界",
+          "coverage": "旧条目保持；无新旧判闭",
+          "consume": "只承接适用边界，原RETURN待C10复判",
+          "source": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-auxv-payload-141/deferred-findings.yaml",
+          "ref": "08f6fee103dd"
+        },
+        {
+          "file": "evidence.md",
+          "purpose": "129正式源码窄窗、架构非活动注释",
+          "coverage": "本142重新打开11源逐窗对照129/129；不是追认141发布前时序",
+          "consume": "按原ID与facts.source_index、142 D00.reconfirmation逐项匹配；不计142新P6",
+          "source": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-auxv-payload-141/evidence.md",
+          "ref": "08f6fee103dd"
+        }
+      ],
+      "history": "不宣称141发布前已完成标准P6；原141全部六件及评论不改，判闭权C10；140 PASS_PENDING_LOCAL，R138-03及R139-01至04 CLOSED_DOCUMENTATION_ONLY"
+    }
+  },
+  "models": [
+    {
+      "id": "R1",
+      "prior_model": {
+        "ref": "cde2d7f994b5",
+        "selector": "A.cases[0]",
+        "id": "A1",
+        "argc": 2,
+        "envc": 2,
+        "strings": [
+          {
+            "kind": "argv",
+            "i": 0,
+            "text": "display",
+            "start": "0x6fffffe2",
+            "end": "0x6fffffea",
+            "length": 8
+          },
+          {
+            "kind": "argv",
+            "i": 1,
+            "text": "-q",
+            "start": "0x6fffffea",
+            "end": "0x6fffffed",
+            "length": 3
+          },
+          {
+            "kind": "envp",
+            "i": 0,
+            "text": "E=1",
+            "start": "0x6fffffed",
+            "end": "0x6ffffff1",
+            "length": 4
+          },
+          {
+            "kind": "envp",
+            "i": 1,
+            "text": "F=xy",
+            "start": "0x6ffffff1",
+            "end": "0x6ffffff6",
+            "length": 5
+          },
+          {
+            "kind": "filename",
+            "i": null,
+            "text": "/bin/tool",
+            "start": "0x6ffffff6",
+            "end": "0x70000000",
+            "length": 10
+          }
+        ]
+      },
+      "variant": "A0",
+      "payload_binding": {
+        "prior_ref": "08f6fee103dd",
+        "selector": "A.A0",
+        "common": {
+          "H": "0x1234",
+          "PHDR": "0x400040",
+          "PHNUM": 3,
+          "PHENT": 56,
+          "BASE": 0,
+          "ENTRY": "0x401020",
+          "AT_PAGESZ": 4096,
+          "AT_CLKTCK": 250
+        },
+        "interp_flags": 0,
+        "AT_FLAGS": 0,
+        "secureexec": 0,
+        "have_execfd": false,
+        "execfd": "NOT_READ",
+        "AT_EXECFN": "0x6ffffff6",
+        "AT_PLATFORM": "0x6fffffd9",
+        "ei_index": 26,
+        "not_using_C1_C2": true
+      },
+      "items": {
+        "value": 7,
+        "unit": "8-byte words",
+        "formula": "(argc+1)+(envc+1)+1",
+        "evidence": [
+          "E142-019"
+        ]
+      },
+      "ei_index": {
+        "value": 26,
+        "unit": "8-byte words",
+        "source": "141 selected variant; macro/clear/advance",
+        "evidence": [
+          "E142-013",
+          "E142-016",
+          "E142-017",
+          "E142-018"
+        ]
+      },
+      "addresses": {
+        "U": {
+          "hex": "0x70000000",
+          "U_offset": 0,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "given integer address",
+          "unit": "byte",
+          "source": "197 common input",
+          "formula": "given",
+          "evidence": []
+        },
+        "p0": {
+          "hex": "0x6fffffe2",
+          "U_offset": -30,
+          "mod8": 2,
+          "mod16": 2,
+          "type": "ulong local p / bprm.p",
+          "unit": "byte",
+          "source": "140 string length + new given U",
+          "formula": "U-30",
+          "evidence": [
+            "E142-005",
+            "E142-056"
+          ]
+        },
+        "p1": {
+          "hex": "0x6fffffe0",
+          "U_offset": -32,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "ulong local p",
+          "unit": "byte",
+          "source": "arch_align_stack",
+          "formula": "floor16(p0)",
+          "evidence": [
+            "E142-008",
+            "E142-038",
+            "E142-037"
+          ]
+        },
+        "P": {
+          "hex": "0x6fffffd9",
+          "U_offset": -39,
+          "mod8": 1,
+          "mod16": 9,
+          "type": "ulong p / u_platform pointer numeric projection",
+          "unit": "byte",
+          "source": "strlen(x86_64)+1, STACK_ALLOC",
+          "formula": "p1-7",
+          "evidence": [
+            "E142-042",
+            "E142-009",
+            "E142-003",
+            "E142-010"
+          ]
+        },
+        "sp_aux": {
+          "hex": "0x6fffff09",
+          "U_offset": -247,
+          "mod8": 1,
+          "mod16": 9,
+          "type": "elf_addr_t user pointer numeric projection",
+          "unit": "byte (8-byte word step)",
+          "source": "ei_index and STACK_ADD",
+          "formula": "P-8*ei_index",
+          "evidence": [
+            "E142-018",
+            "E142-001",
+            "E142-045",
+            "E142-049"
+          ]
+        },
+        "raw_bottom": {
+          "hex": "0x6ffffed1",
+          "U_offset": -303,
+          "mod8": 1,
+          "mod16": 1,
+          "type": "intermediate integer projection of sp-items",
+          "unit": "byte (8-byte word step)",
+          "source": "STACK_ROUND before clearing low bits",
+          "formula": "sp_aux-8*items",
+          "evidence": [
+            "E142-019",
+            "E142-002"
+          ]
+        },
+        "S": {
+          "hex": "0x6ffffed0",
+          "U_offset": -304,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "ulong bprm.p / sp reset projection",
+          "unit": "byte",
+          "source": "STACK_ROUND",
+          "formula": "floor16(raw_bottom)",
+          "evidence": [
+            "E142-019",
+            "E142-002",
+            "E142-020"
+          ]
+        },
+        "Q": {
+          "hex": "0x6fffff08",
+          "U_offset": -248,
+          "mod8": 0,
+          "mod16": 8,
+          "type": "final table sp projection",
+          "unit": "byte",
+          "source": "items slots after prefix",
+          "formula": "S+8*items",
+          "evidence": [
+            "E142-023",
+            "E142-024",
+            "E142-026",
+            "E142-027",
+            "E142-029"
+          ]
+        },
+        "E": {
+          "hex": "0x6fffffd8",
+          "U_offset": -40,
+          "mod8": 0,
+          "mod16": 8,
+          "type": "exclusive copy end, not sp value",
+          "unit": "byte",
+          "source": "copy length",
+          "formula": "Q+8*ei_index",
+          "evidence": [
+            "E142-030"
+          ]
+        },
+        "F": {
+          "hex": "0x6ffffff6",
+          "U_offset": -10,
+          "mod8": 6,
+          "mod16": 6,
+          "type": "ulong bprm.exec value",
+          "unit": "byte",
+          "source": "140 filename + given U",
+          "formula": "U-10",
+          "evidence": [
+            "E142-058",
+            "E142-014"
+          ]
+        },
+        "arg_scan_end": {
+          "hex": "0x6fffffed",
+          "U_offset": -19,
+          "mod8": 5,
+          "mod16": 13,
+          "type": "local p at end argv scan",
+          "unit": "byte",
+          "source": "140 argv lengths",
+          "formula": "p0+sum(argv lengths)",
+          "evidence": [
+            "E142-025",
+            "E142-026"
+          ]
+        }
+      },
+      "ranges": [
+        {
+          "id": "R1_prefix",
+          "name": "prefix",
+          "start": "0x6ffffed0",
+          "end": "0x6fffff08",
+          "start_U_offset": -304,
+          "end_U_offset": -248,
+          "bytes": 56,
+          "producer": "put_user in post-vma independent fragment",
+          "new_write": true,
+          "zero_basis": "two explicit NULL pointer stores; not blanket clear",
+          "meaning": "argc argv envp pointer slots and terminators",
+          "evidence": [
+            "E142-023",
+            "E142-024",
+            "E142-026",
+            "E142-027",
+            "E142-029"
+          ]
+        },
+        {
+          "id": "R1_auxv",
+          "name": "auxv",
+          "start": "0x6fffff08",
+          "end": "0x6fffffd8",
+          "start_U_offset": -248,
+          "end_U_offset": -40,
+          "bytes": 208,
+          "producer": "copy_to_user from mm.saved_auxv",
+          "new_write": true,
+          "zero_basis": "copies initialized payload plus zero-valued words/AT_NULL pair; does not copy full cleared kernel tail",
+          "meaning": "selected variant A0",
+          "evidence": [
+            "E142-012",
+            "E142-013",
+            "E142-016",
+            "E142-017",
+            "E142-018",
+            "E142-030"
+          ]
+        },
+        {
+          "id": "R1_final_gap",
+          "name": "final_gap",
+          "start": "0x6fffffd8",
+          "end": "0x6fffffd9",
+          "start_U_offset": -40,
+          "end_U_offset": -39,
+          "bytes": 1,
+          "producer": "STACK_ROUND downward rounding",
+          "new_write": false,
+          "zero_basis": "NO_DEDICATED_ZERO_OR_WRITE_IN_READ_FRAGMENT",
+          "meaning": "gap between copy end and platform",
+          "evidence": [
+            "E142-002",
+            "E142-019",
+            "E142-030",
+            "E142-009"
+          ]
+        },
+        {
+          "id": "R1_platform",
+          "name": "platform",
+          "start": "0x6fffffd9",
+          "end": "0x6fffffe0",
+          "start_U_offset": -39,
+          "end_U_offset": -32,
+          "bytes": 7,
+          "producer": "platform copy_to_user",
+          "new_write": true,
+          "zero_basis": "string terminating NUL only; no blanket clear",
+          "meaning": "x86_64 + NUL; hex 78 38 36 5f 36 34 00",
+          "evidence": [
+            "E142-042",
+            "E142-009",
+            "E142-010"
+          ]
+        },
+        {
+          "id": "R1_initial_gap",
+          "name": "initial_gap",
+          "start": "0x6fffffe0",
+          "end": "0x6fffffe2",
+          "start_U_offset": -32,
+          "end_U_offset": -30,
+          "bytes": 2,
+          "producer": "arch_align_stack",
+          "new_write": false,
+          "zero_basis": "NO_DEDICATED_ZERO_OR_WRITE_IN_READ_FRAGMENT",
+          "meaning": "gap after platform, before original strings",
+          "evidence": [
+            "E142-008",
+            "E142-038",
+            "E142-009"
+          ]
+        },
+        {
+          "id": "R1_strings",
+          "name": "strings",
+          "start": "0x6fffffe2",
+          "end": "0x70000000",
+          "start_U_offset": -30,
+          "end_U_offset": 0,
+          "bytes": 30,
+          "producer": "given pre-existing string region; argv/envp scan reads lengths",
+          "new_write": false,
+          "zero_basis": "given original NUL bytes; no new clear",
+          "meaning": "argv,envp,filename; filename saved F is not scanned in this table fragment",
+          "evidence": [
+            "E142-025",
+            "E142-028",
+            "E142-014"
+          ]
+        }
+      ],
+      "conservation": {
+        "initial_gap": 2,
+        "final_gap": 1,
+        "prefix": 56,
+        "auxv": 208,
+        "platform": 7,
+        "strings": 30,
+        "span": 304,
+        "sum": 304,
+        "no_overlap": true,
+        "no_omission": true
+      },
+      "prefix_slots": [
+        {
+          "kind": "argc_integer",
+          "address": "0x6ffffed0",
+          "offset_from_S": 0,
+          "value": 2,
+          "prior_value": 2
+        },
+        {
+          "kind": "argv[0]",
+          "address": "0x6ffffed8",
+          "offset_from_S": 8,
+          "value": "0x6fffffe2",
+          "prior_value": "U-30"
+        },
+        {
+          "kind": "argv[1]",
+          "address": "0x6ffffee0",
+          "offset_from_S": 16,
+          "value": "0x6fffffea",
+          "prior_value": "U-22"
+        },
+        {
+          "kind": "argv_terminator",
+          "address": "0x6ffffee8",
+          "offset_from_S": 24,
+          "value": 0,
+          "prior_value": 0
+        },
+        {
+          "kind": "envp[0]",
+          "address": "0x6ffffef0",
+          "offset_from_S": 32,
+          "value": "0x6fffffed",
+          "prior_value": "U-19"
+        },
+        {
+          "kind": "envp[1]",
+          "address": "0x6ffffef8",
+          "offset_from_S": 40,
+          "value": "0x6ffffff1",
+          "prior_value": "U-15"
+        },
+        {
+          "kind": "envp_terminator",
+          "address": "0x6fffff00",
+          "offset_from_S": 48,
+          "value": 0,
+          "prior_value": 0
+        }
+      ],
+      "selected_auxv_pairs": [
+        {
+          "name": "AT_EXECFN",
+          "tag": 31,
+          "tag_word": 20,
+          "value_word": 21,
+          "tag_address": "0x6fffffa8",
+          "value_address": "0x6fffffb0",
+          "value": "0x6ffffff6",
+          "old_pair_ordinal": 11,
+          "old_source": "141 facts.A.A0.pairs"
+        },
+        {
+          "name": "AT_PLATFORM",
+          "tag": 15,
+          "tag_word": 22,
+          "value_word": 23,
+          "tag_address": "0x6fffffb8",
+          "value_address": "0x6fffffc0",
+          "value": "0x6fffffd9",
+          "old_pair_ordinal": 12,
+          "old_source": "141 facts.A.A0.pairs"
+        },
+        {
+          "name": "AT_NULL",
+          "tag": 0,
+          "tag_word": 24,
+          "value_word": 25,
+          "tag_address": "0x6fffffc8",
+          "value_address": "0x6fffffd0",
+          "value": 0,
+          "old_pair_ordinal": 13,
+          "old_source": "141 facts.A.A0.pairs"
+        }
+      ],
+      "argv0": "0x6fffffe2",
+      "F": "0x6ffffff6",
+      "P": "0x6fffffd9",
+      "phases": [
+        {
+          "id": "R1_T01",
+          "name": "entry initialized",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffe2",
+          "sp": "0x6fffffe2",
+          "bprm_p": "0x6fffffe2",
+          "u_platform": "NOT_STIPULATED",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "given bprm/mm entry objects; u_platform declared but not initialized; other fields not stipulated",
+          "evidence": [
+            "E142-005",
+            "E142-006",
+            "E142-056",
+            "E142-057",
+            "E142-060"
+          ]
+        },
+        {
+          "id": "R1_T02",
+          "name": "after arch_align_stack",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffe0",
+          "sp": "0x6fffffe2",
+          "bprm_p": "0x6fffffe2",
+          "u_platform": "NOT_STIPULATED",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability",
+          "evidence": [
+            "E142-008",
+            "E142-038"
+          ]
+        },
+        {
+          "id": "R1_T03",
+          "name": "platform successfully allocated/copied",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6fffffe2",
+          "bprm_p": "0x6fffffe2",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; copy returns 0; base platform NULL",
+          "evidence": [
+            "E142-009",
+            "E142-010",
+            "E142-011"
+          ]
+        },
+        {
+          "id": "R1_T04",
+          "name": "after STACK_ADD",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6fffff09",
+          "bprm_p": "0x6fffffe2",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; given variant constructed and cleared; ei_index=26",
+          "evidence": [
+            "E142-012",
+            "E142-016",
+            "E142-017",
+            "E142-018",
+            "E142-001"
+          ]
+        },
+        {
+          "id": "R1_T05",
+          "name": "after STACK_ROUND assignment",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6fffff09",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability",
+          "evidence": [
+            "E142-019",
+            "E142-002"
+          ]
+        },
+        {
+          "id": "R1_T06",
+          "name": "after sp reset; before vma gate",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6ffffed0",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; uninitialized vma gate remains unproved",
+          "evidence": [
+            "E142-020",
+            "E142-007",
+            "E142-021",
+            "E142-022"
+          ]
+        },
+        {
+          "id": "R1_T07",
+          "name": "after argc write",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6ffffed8",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; writing argc uses old sp=S; local p still P",
+          "evidence": [
+            "E142-023"
+          ]
+        },
+        {
+          "id": "R1_T08",
+          "name": "after arg reset",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffe2",
+          "sp": "0x6ffffed8",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "0x6fffffe2",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 2,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results",
+          "evidence": [
+            "E142-024"
+          ]
+        },
+        {
+          "id": "R1_T09",
+          "name": "after argv loop (failed final test)",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffed",
+          "sp": "0x6ffffee8",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "0x6fffffe2",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; arg_end still initial p0",
+          "evidence": [
+            "E142-024",
+            "E142-025"
+          ]
+        },
+        {
+          "id": "R1_T10",
+          "name": "after argv NULL, arg_end update and env boundary initialization",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffed",
+          "sp": "0x6ffffef0",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": 2,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; sequential observation, not atomic",
+          "evidence": [
+            "E142-026",
+            "E142-027"
+          ]
+        },
+        {
+          "id": "R1_T11",
+          "name": "after envp loop (before env NULL)",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff6",
+          "sp": "0x6fffff00",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; env_end still env_start; terminator not yet written",
+          "evidence": [
+            "E142-027",
+            "E142-028"
+          ]
+        },
+        {
+          "id": "R1_T12",
+          "name": "after env NULL and env_end update",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff6",
+          "sp": "0x6fffff08",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6ffffff6",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; first zero store succeeds, then env_end=p",
+          "evidence": [
+            "E142-029"
+          ]
+        },
+        {
+          "id": "R1_T13",
+          "name": "auxv copy returns zero and local return 0",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff6",
+          "sp": "0x6fffff08",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6ffffff6",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; copy sp by value; sp stays Q, E only exclusive end; local counts -1, bprm counts unchanged",
+          "evidence": [
+            "E142-030"
+          ]
+        },
+        {
+          "id": "R1_T14",
+          "name": "caller consumption after normal return and later gates",
+          "segment": "CALLER",
+          "local_p": "OUT_OF_SCOPE (last 0x6ffffff6)",
+          "sp": "OUT_OF_SCOPE (last 0x6fffff08)",
+          "bprm_p": "0x6ffffed0",
+          "u_platform": "OUT_OF_SCOPE (last 0x6fffffd9)",
+          "mm_arg_start": "0x6fffffe2",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6ffffff6",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": "OUT_OF_SCOPE (last -1)",
+          "local_envc": "OUT_OF_SCOPE (last -1)",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "mm_start_stack": "0x6ffffed0",
+          "condition": "given table return 0, caller reaches sequential mm.start_stack assignment and START_THREAD call; other required operations normal; no actual CPU SP",
+          "evidence": [
+            "E142-031",
+            "E142-032",
+            "E142-033",
+            "E142-034",
+            "E142-035",
+            "E142-048"
+          ]
+        }
+      ],
+      "caller": {
+        "return_from_create": "given 0",
+        "negative_retval": "goto out",
+        "mm_start_stack": "0x6ffffed0",
+        "START_THREAD_stack_arg": "0x6ffffed0",
+        "local_scan_end": "0x6ffffff6",
+        "copy_exclusive_end": "0x6fffffd8",
+        "actual_cpu_sp": "UNKNOWN",
+        "actual_CRT": "UNKNOWN",
+        "evidence": [
+          "E142-031",
+          "E142-033",
+          "E142-035",
+          "E142-048"
+        ]
+      },
+      "evidence_class": "INFERRED_CONDITIONAL_INTEGER_PROJECTION"
+    },
+    {
+      "id": "R2",
+      "prior_model": {
+        "ref": "cde2d7f994b5",
+        "selector": "A.cases[1]",
+        "id": "A2",
+        "argc": 1,
+        "envc": 2,
+        "strings": [
+          {
+            "kind": "argv",
+            "i": 0,
+            "text": "",
+            "start": "0x6fffffec",
+            "end": "0x6fffffed",
+            "length": 1
+          },
+          {
+            "kind": "envp",
+            "i": 0,
+            "text": "E=1",
+            "start": "0x6fffffed",
+            "end": "0x6ffffff1",
+            "length": 4
+          },
+          {
+            "kind": "envp",
+            "i": 1,
+            "text": "F=xy",
+            "start": "0x6ffffff1",
+            "end": "0x6ffffff6",
+            "length": 5
+          },
+          {
+            "kind": "filename",
+            "i": null,
+            "text": "/bin/tool",
+            "start": "0x6ffffff6",
+            "end": "0x70000000",
+            "length": 10
+          }
+        ]
+      },
+      "variant": "Afd",
+      "payload_binding": {
+        "prior_ref": "08f6fee103dd",
+        "selector": "A.Afd",
+        "common": {
+          "H": "0x1234",
+          "PHDR": "0x400040",
+          "PHNUM": 3,
+          "PHENT": 56,
+          "BASE": 0,
+          "ENTRY": "0x401020",
+          "AT_PAGESZ": 4096,
+          "AT_CLKTCK": 250
+        },
+        "interp_flags": 8,
+        "AT_FLAGS": 1,
+        "secureexec": 1,
+        "have_execfd": true,
+        "execfd": 7,
+        "AT_EXECFN": "0x6ffffff6",
+        "AT_PLATFORM": "0x6fffffd9",
+        "ei_index": 28,
+        "not_using_C1_C2": true
+      },
+      "items": {
+        "value": 6,
+        "unit": "8-byte words",
+        "formula": "(argc+1)+(envc+1)+1",
+        "evidence": [
+          "E142-019"
+        ]
+      },
+      "ei_index": {
+        "value": 28,
+        "unit": "8-byte words",
+        "source": "141 selected variant; macro/clear/advance",
+        "evidence": [
+          "E142-013",
+          "E142-016",
+          "E142-017",
+          "E142-018"
+        ]
+      },
+      "addresses": {
+        "U": {
+          "hex": "0x70000000",
+          "U_offset": 0,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "given integer address",
+          "unit": "byte",
+          "source": "197 common input",
+          "formula": "given",
+          "evidence": []
+        },
+        "p0": {
+          "hex": "0x6fffffec",
+          "U_offset": -20,
+          "mod8": 4,
+          "mod16": 12,
+          "type": "ulong local p / bprm.p",
+          "unit": "byte",
+          "source": "140 string length + new given U",
+          "formula": "U-20",
+          "evidence": [
+            "E142-005",
+            "E142-056"
+          ]
+        },
+        "p1": {
+          "hex": "0x6fffffe0",
+          "U_offset": -32,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "ulong local p",
+          "unit": "byte",
+          "source": "arch_align_stack",
+          "formula": "floor16(p0)",
+          "evidence": [
+            "E142-008",
+            "E142-038",
+            "E142-037"
+          ]
+        },
+        "P": {
+          "hex": "0x6fffffd9",
+          "U_offset": -39,
+          "mod8": 1,
+          "mod16": 9,
+          "type": "ulong p / u_platform pointer numeric projection",
+          "unit": "byte",
+          "source": "strlen(x86_64)+1, STACK_ALLOC",
+          "formula": "p1-7",
+          "evidence": [
+            "E142-042",
+            "E142-009",
+            "E142-003",
+            "E142-010"
+          ]
+        },
+        "sp_aux": {
+          "hex": "0x6ffffef9",
+          "U_offset": -263,
+          "mod8": 1,
+          "mod16": 9,
+          "type": "elf_addr_t user pointer numeric projection",
+          "unit": "byte (8-byte word step)",
+          "source": "ei_index and STACK_ADD",
+          "formula": "P-8*ei_index",
+          "evidence": [
+            "E142-018",
+            "E142-001",
+            "E142-045",
+            "E142-049"
+          ]
+        },
+        "raw_bottom": {
+          "hex": "0x6ffffec9",
+          "U_offset": -311,
+          "mod8": 1,
+          "mod16": 9,
+          "type": "intermediate integer projection of sp-items",
+          "unit": "byte (8-byte word step)",
+          "source": "STACK_ROUND before clearing low bits",
+          "formula": "sp_aux-8*items",
+          "evidence": [
+            "E142-019",
+            "E142-002"
+          ]
+        },
+        "S": {
+          "hex": "0x6ffffec0",
+          "U_offset": -320,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "ulong bprm.p / sp reset projection",
+          "unit": "byte",
+          "source": "STACK_ROUND",
+          "formula": "floor16(raw_bottom)",
+          "evidence": [
+            "E142-019",
+            "E142-002",
+            "E142-020"
+          ]
+        },
+        "Q": {
+          "hex": "0x6ffffef0",
+          "U_offset": -272,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "final table sp projection",
+          "unit": "byte",
+          "source": "items slots after prefix",
+          "formula": "S+8*items",
+          "evidence": [
+            "E142-023",
+            "E142-024",
+            "E142-026",
+            "E142-027",
+            "E142-029"
+          ]
+        },
+        "E": {
+          "hex": "0x6fffffd0",
+          "U_offset": -48,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "exclusive copy end, not sp value",
+          "unit": "byte",
+          "source": "copy length",
+          "formula": "Q+8*ei_index",
+          "evidence": [
+            "E142-030"
+          ]
+        },
+        "F": {
+          "hex": "0x6ffffff6",
+          "U_offset": -10,
+          "mod8": 6,
+          "mod16": 6,
+          "type": "ulong bprm.exec value",
+          "unit": "byte",
+          "source": "140 filename + given U",
+          "formula": "U-10",
+          "evidence": [
+            "E142-058",
+            "E142-014"
+          ]
+        },
+        "arg_scan_end": {
+          "hex": "0x6fffffed",
+          "U_offset": -19,
+          "mod8": 5,
+          "mod16": 13,
+          "type": "local p at end argv scan",
+          "unit": "byte",
+          "source": "140 argv lengths",
+          "formula": "p0+sum(argv lengths)",
+          "evidence": [
+            "E142-025",
+            "E142-026"
+          ]
+        }
+      },
+      "ranges": [
+        {
+          "id": "R2_prefix",
+          "name": "prefix",
+          "start": "0x6ffffec0",
+          "end": "0x6ffffef0",
+          "start_U_offset": -320,
+          "end_U_offset": -272,
+          "bytes": 48,
+          "producer": "put_user in post-vma independent fragment",
+          "new_write": true,
+          "zero_basis": "two explicit NULL pointer stores; not blanket clear",
+          "meaning": "argc argv envp pointer slots and terminators",
+          "evidence": [
+            "E142-023",
+            "E142-024",
+            "E142-026",
+            "E142-027",
+            "E142-029"
+          ]
+        },
+        {
+          "id": "R2_auxv",
+          "name": "auxv",
+          "start": "0x6ffffef0",
+          "end": "0x6fffffd0",
+          "start_U_offset": -272,
+          "end_U_offset": -48,
+          "bytes": 224,
+          "producer": "copy_to_user from mm.saved_auxv",
+          "new_write": true,
+          "zero_basis": "copies initialized payload plus zero-valued words/AT_NULL pair; does not copy full cleared kernel tail",
+          "meaning": "selected variant Afd",
+          "evidence": [
+            "E142-012",
+            "E142-013",
+            "E142-016",
+            "E142-017",
+            "E142-018",
+            "E142-030"
+          ]
+        },
+        {
+          "id": "R2_final_gap",
+          "name": "final_gap",
+          "start": "0x6fffffd0",
+          "end": "0x6fffffd9",
+          "start_U_offset": -48,
+          "end_U_offset": -39,
+          "bytes": 9,
+          "producer": "STACK_ROUND downward rounding",
+          "new_write": false,
+          "zero_basis": "NO_DEDICATED_ZERO_OR_WRITE_IN_READ_FRAGMENT",
+          "meaning": "gap between copy end and platform",
+          "evidence": [
+            "E142-002",
+            "E142-019",
+            "E142-030",
+            "E142-009"
+          ]
+        },
+        {
+          "id": "R2_platform",
+          "name": "platform",
+          "start": "0x6fffffd9",
+          "end": "0x6fffffe0",
+          "start_U_offset": -39,
+          "end_U_offset": -32,
+          "bytes": 7,
+          "producer": "platform copy_to_user",
+          "new_write": true,
+          "zero_basis": "string terminating NUL only; no blanket clear",
+          "meaning": "x86_64 + NUL; hex 78 38 36 5f 36 34 00",
+          "evidence": [
+            "E142-042",
+            "E142-009",
+            "E142-010"
+          ]
+        },
+        {
+          "id": "R2_initial_gap",
+          "name": "initial_gap",
+          "start": "0x6fffffe0",
+          "end": "0x6fffffec",
+          "start_U_offset": -32,
+          "end_U_offset": -20,
+          "bytes": 12,
+          "producer": "arch_align_stack",
+          "new_write": false,
+          "zero_basis": "NO_DEDICATED_ZERO_OR_WRITE_IN_READ_FRAGMENT",
+          "meaning": "gap after platform, before original strings",
+          "evidence": [
+            "E142-008",
+            "E142-038",
+            "E142-009"
+          ]
+        },
+        {
+          "id": "R2_strings",
+          "name": "strings",
+          "start": "0x6fffffec",
+          "end": "0x70000000",
+          "start_U_offset": -20,
+          "end_U_offset": 0,
+          "bytes": 20,
+          "producer": "given pre-existing string region; argv/envp scan reads lengths",
+          "new_write": false,
+          "zero_basis": "given original NUL bytes; no new clear",
+          "meaning": "argv,envp,filename; filename saved F is not scanned in this table fragment",
+          "evidence": [
+            "E142-025",
+            "E142-028",
+            "E142-014"
+          ]
+        }
+      ],
+      "conservation": {
+        "initial_gap": 12,
+        "final_gap": 9,
+        "prefix": 48,
+        "auxv": 224,
+        "platform": 7,
+        "strings": 20,
+        "span": 320,
+        "sum": 320,
+        "no_overlap": true,
+        "no_omission": true
+      },
+      "prefix_slots": [
+        {
+          "kind": "argc_integer",
+          "address": "0x6ffffec0",
+          "offset_from_S": 0,
+          "value": 1,
+          "prior_value": 1
+        },
+        {
+          "kind": "argv[0]",
+          "address": "0x6ffffec8",
+          "offset_from_S": 8,
+          "value": "0x6fffffec",
+          "prior_value": "U-20"
+        },
+        {
+          "kind": "argv_terminator",
+          "address": "0x6ffffed0",
+          "offset_from_S": 16,
+          "value": 0,
+          "prior_value": 0
+        },
+        {
+          "kind": "envp[0]",
+          "address": "0x6ffffed8",
+          "offset_from_S": 24,
+          "value": "0x6fffffed",
+          "prior_value": "U-19"
+        },
+        {
+          "kind": "envp[1]",
+          "address": "0x6ffffee0",
+          "offset_from_S": 32,
+          "value": "0x6ffffff1",
+          "prior_value": "U-15"
+        },
+        {
+          "kind": "envp_terminator",
+          "address": "0x6ffffee8",
+          "offset_from_S": 40,
+          "value": 0,
+          "prior_value": 0
+        }
+      ],
+      "selected_auxv_pairs": [
+        {
+          "name": "AT_EXECFN",
+          "tag": 31,
+          "tag_word": 20,
+          "value_word": 21,
+          "tag_address": "0x6fffff90",
+          "value_address": "0x6fffff98",
+          "value": "0x6ffffff6",
+          "old_pair_ordinal": 11,
+          "old_source": "141 facts.A.Afd.pairs"
+        },
+        {
+          "name": "AT_PLATFORM",
+          "tag": 15,
+          "tag_word": 22,
+          "value_word": 23,
+          "tag_address": "0x6fffffa0",
+          "value_address": "0x6fffffa8",
+          "value": "0x6fffffd9",
+          "old_pair_ordinal": 12,
+          "old_source": "141 facts.A.Afd.pairs"
+        },
+        {
+          "name": "AT_NULL",
+          "tag": 0,
+          "tag_word": 26,
+          "value_word": 27,
+          "tag_address": "0x6fffffc0",
+          "value_address": "0x6fffffc8",
+          "value": 0,
+          "old_pair_ordinal": 14,
+          "old_source": "141 facts.A.Afd.pairs"
+        }
+      ],
+      "argv0": "0x6fffffec",
+      "F": "0x6ffffff6",
+      "P": "0x6fffffd9",
+      "phases": [
+        {
+          "id": "R2_T01",
+          "name": "entry initialized",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffec",
+          "sp": "0x6fffffec",
+          "bprm_p": "0x6fffffec",
+          "u_platform": "NOT_STIPULATED",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "given bprm/mm entry objects; u_platform declared but not initialized; other fields not stipulated",
+          "evidence": [
+            "E142-005",
+            "E142-006",
+            "E142-056",
+            "E142-057",
+            "E142-060"
+          ]
+        },
+        {
+          "id": "R2_T02",
+          "name": "after arch_align_stack",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffe0",
+          "sp": "0x6fffffec",
+          "bprm_p": "0x6fffffec",
+          "u_platform": "NOT_STIPULATED",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability",
+          "evidence": [
+            "E142-008",
+            "E142-038"
+          ]
+        },
+        {
+          "id": "R2_T03",
+          "name": "platform successfully allocated/copied",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6fffffec",
+          "bprm_p": "0x6fffffec",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; copy returns 0; base platform NULL",
+          "evidence": [
+            "E142-009",
+            "E142-010",
+            "E142-011"
+          ]
+        },
+        {
+          "id": "R2_T04",
+          "name": "after STACK_ADD",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6ffffef9",
+          "bprm_p": "0x6fffffec",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; given variant constructed and cleared; ei_index=28",
+          "evidence": [
+            "E142-012",
+            "E142-016",
+            "E142-017",
+            "E142-018",
+            "E142-001"
+          ]
+        },
+        {
+          "id": "R2_T05",
+          "name": "after STACK_ROUND assignment",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6ffffef9",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability",
+          "evidence": [
+            "E142-019",
+            "E142-002"
+          ]
+        },
+        {
+          "id": "R2_T06",
+          "name": "after sp reset; before vma gate",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6ffffec0",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; uninitialized vma gate remains unproved",
+          "evidence": [
+            "E142-020",
+            "E142-007",
+            "E142-021",
+            "E142-022"
+          ]
+        },
+        {
+          "id": "R2_T07",
+          "name": "after argc write",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffd9",
+          "sp": "0x6ffffec8",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; writing argc uses old sp=S; local p still P",
+          "evidence": [
+            "E142-023"
+          ]
+        },
+        {
+          "id": "R2_T08",
+          "name": "after arg reset",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffec",
+          "sp": "0x6ffffec8",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "0x6fffffec",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": 1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results",
+          "evidence": [
+            "E142-024"
+          ]
+        },
+        {
+          "id": "R2_T09",
+          "name": "after argv loop (failed final test)",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffed",
+          "sp": "0x6ffffed0",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "0x6fffffec",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; arg_end still initial p0",
+          "evidence": [
+            "E142-024",
+            "E142-025"
+          ]
+        },
+        {
+          "id": "R2_T10",
+          "name": "after argv NULL, arg_end update and env boundary initialization",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffed",
+          "sp": "0x6ffffed8",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": 2,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; sequential observation, not atomic",
+          "evidence": [
+            "E142-026",
+            "E142-027"
+          ]
+        },
+        {
+          "id": "R2_T11",
+          "name": "after envp loop (before env NULL)",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff6",
+          "sp": "0x6ffffee8",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; env_end still env_start; terminator not yet written",
+          "evidence": [
+            "E142-027",
+            "E142-028"
+          ]
+        },
+        {
+          "id": "R2_T12",
+          "name": "after env NULL and env_end update",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff6",
+          "sp": "0x6ffffef0",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6ffffff6",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; first zero store succeeds, then env_end=p",
+          "evidence": [
+            "E142-029"
+          ]
+        },
+        {
+          "id": "R2_T13",
+          "name": "auxv copy returns zero and local return 0",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff6",
+          "sp": "0x6ffffef0",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "0x6fffffd9",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6ffffff6",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; copy sp by value; sp stays Q, E only exclusive end; local counts -1, bprm counts unchanged",
+          "evidence": [
+            "E142-030"
+          ]
+        },
+        {
+          "id": "R2_T14",
+          "name": "caller consumption after normal return and later gates",
+          "segment": "CALLER",
+          "local_p": "OUT_OF_SCOPE (last 0x6ffffff6)",
+          "sp": "OUT_OF_SCOPE (last 0x6ffffef0)",
+          "bprm_p": "0x6ffffec0",
+          "u_platform": "OUT_OF_SCOPE (last 0x6fffffd9)",
+          "mm_arg_start": "0x6fffffec",
+          "mm_arg_end": "0x6fffffed",
+          "mm_env_start": "0x6fffffed",
+          "mm_env_end": "0x6ffffff6",
+          "bprm_exec": "0x6ffffff6",
+          "local_argc": "OUT_OF_SCOPE (last -1)",
+          "local_envc": "OUT_OF_SCOPE (last -1)",
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "mm_start_stack": "0x6ffffec0",
+          "condition": "given table return 0, caller reaches sequential mm.start_stack assignment and START_THREAD call; other required operations normal; no actual CPU SP",
+          "evidence": [
+            "E142-031",
+            "E142-032",
+            "E142-033",
+            "E142-034",
+            "E142-035",
+            "E142-048"
+          ]
+        }
+      ],
+      "caller": {
+        "return_from_create": "given 0",
+        "negative_retval": "goto out",
+        "mm_start_stack": "0x6ffffec0",
+        "START_THREAD_stack_arg": "0x6ffffec0",
+        "local_scan_end": "0x6ffffff6",
+        "copy_exclusive_end": "0x6fffffd0",
+        "actual_cpu_sp": "UNKNOWN",
+        "actual_CRT": "UNKNOWN",
+        "evidence": [
+          "E142-031",
+          "E142-033",
+          "E142-035",
+          "E142-048"
+        ]
+      },
+      "evidence_class": "INFERRED_CONDITIONAL_INTEGER_PROJECTION"
+    },
+    {
+      "id": "R3",
+      "prior_model": {
+        "ref": "cde2d7f994b5",
+        "selector": "C.table",
+        "id": "C_ENTRY",
+        "argc": 3,
+        "envc": 3,
+        "strings": [
+          {
+            "kind": "argv",
+            "i": 0,
+            "text": "/boot/sh",
+            "start": "0x6fffffa3",
+            "end": "0x6fffffac",
+            "length": 9
+          },
+          {
+            "kind": "argv",
+            "i": 1,
+            "text": "userarg_test_1",
+            "start": "0x6fffffac",
+            "end": "0x6fffffbb",
+            "length": 15
+          },
+          {
+            "kind": "argv",
+            "i": 2,
+            "text": "userarg_test_2",
+            "start": "0x6fffffbb",
+            "end": "0x6fffffca",
+            "length": 15
+          },
+          {
+            "kind": "envp",
+            "i": 0,
+            "text": "userenv_test_1",
+            "start": "0x6fffffca",
+            "end": "0x6fffffd9",
+            "length": 15
+          },
+          {
+            "kind": "envp",
+            "i": 1,
+            "text": "userenv_test_2",
+            "start": "0x6fffffd9",
+            "end": "0x6fffffe8",
+            "length": 15
+          },
+          {
+            "kind": "envp",
+            "i": 2,
+            "text": "userenv_test_3",
+            "start": "0x6fffffe8",
+            "end": "0x6ffffff7",
+            "length": 15
+          },
+          {
+            "kind": "filename",
+            "i": null,
+            "text": "/boot/sh",
+            "start": "0x6ffffff7",
+            "end": "0x70000000",
+            "length": 9
+          }
+        ]
+      },
+      "variant": "A0",
+      "payload_binding": {
+        "prior_ref": "08f6fee103dd",
+        "selector": "A.A0",
+        "common": {
+          "H": "0x1234",
+          "PHDR": "0x400040",
+          "PHNUM": 3,
+          "PHENT": 56,
+          "BASE": 0,
+          "ENTRY": "0x401020",
+          "AT_PAGESZ": 4096,
+          "AT_CLKTCK": 250
+        },
+        "interp_flags": 0,
+        "AT_FLAGS": 0,
+        "secureexec": 0,
+        "have_execfd": false,
+        "execfd": "NOT_READ",
+        "AT_EXECFN": "0x6ffffff7",
+        "AT_PLATFORM": "0x6fffff99",
+        "ei_index": 26,
+        "not_using_C1_C2": true
+      },
+      "items": {
+        "value": 9,
+        "unit": "8-byte words",
+        "formula": "(argc+1)+(envc+1)+1",
+        "evidence": [
+          "E142-019"
+        ]
+      },
+      "ei_index": {
+        "value": 26,
+        "unit": "8-byte words",
+        "source": "141 selected variant; macro/clear/advance",
+        "evidence": [
+          "E142-013",
+          "E142-016",
+          "E142-017",
+          "E142-018"
+        ]
+      },
+      "addresses": {
+        "U": {
+          "hex": "0x70000000",
+          "U_offset": 0,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "given integer address",
+          "unit": "byte",
+          "source": "197 common input",
+          "formula": "given",
+          "evidence": []
+        },
+        "p0": {
+          "hex": "0x6fffffa3",
+          "U_offset": -93,
+          "mod8": 3,
+          "mod16": 3,
+          "type": "ulong local p / bprm.p",
+          "unit": "byte",
+          "source": "140 string length + new given U",
+          "formula": "U-93",
+          "evidence": [
+            "E142-005",
+            "E142-056"
+          ]
+        },
+        "p1": {
+          "hex": "0x6fffffa0",
+          "U_offset": -96,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "ulong local p",
+          "unit": "byte",
+          "source": "arch_align_stack",
+          "formula": "floor16(p0)",
+          "evidence": [
+            "E142-008",
+            "E142-038",
+            "E142-037"
+          ]
+        },
+        "P": {
+          "hex": "0x6fffff99",
+          "U_offset": -103,
+          "mod8": 1,
+          "mod16": 9,
+          "type": "ulong p / u_platform pointer numeric projection",
+          "unit": "byte",
+          "source": "strlen(x86_64)+1, STACK_ALLOC",
+          "formula": "p1-7",
+          "evidence": [
+            "E142-042",
+            "E142-009",
+            "E142-003",
+            "E142-010"
+          ]
+        },
+        "sp_aux": {
+          "hex": "0x6ffffec9",
+          "U_offset": -311,
+          "mod8": 1,
+          "mod16": 9,
+          "type": "elf_addr_t user pointer numeric projection",
+          "unit": "byte (8-byte word step)",
+          "source": "ei_index and STACK_ADD",
+          "formula": "P-8*ei_index",
+          "evidence": [
+            "E142-018",
+            "E142-001",
+            "E142-045",
+            "E142-049"
+          ]
+        },
+        "raw_bottom": {
+          "hex": "0x6ffffe81",
+          "U_offset": -383,
+          "mod8": 1,
+          "mod16": 1,
+          "type": "intermediate integer projection of sp-items",
+          "unit": "byte (8-byte word step)",
+          "source": "STACK_ROUND before clearing low bits",
+          "formula": "sp_aux-8*items",
+          "evidence": [
+            "E142-019",
+            "E142-002"
+          ]
+        },
+        "S": {
+          "hex": "0x6ffffe80",
+          "U_offset": -384,
+          "mod8": 0,
+          "mod16": 0,
+          "type": "ulong bprm.p / sp reset projection",
+          "unit": "byte",
+          "source": "STACK_ROUND",
+          "formula": "floor16(raw_bottom)",
+          "evidence": [
+            "E142-019",
+            "E142-002",
+            "E142-020"
+          ]
+        },
+        "Q": {
+          "hex": "0x6ffffec8",
+          "U_offset": -312,
+          "mod8": 0,
+          "mod16": 8,
+          "type": "final table sp projection",
+          "unit": "byte",
+          "source": "items slots after prefix",
+          "formula": "S+8*items",
+          "evidence": [
+            "E142-023",
+            "E142-024",
+            "E142-026",
+            "E142-027",
+            "E142-029"
+          ]
+        },
+        "E": {
+          "hex": "0x6fffff98",
+          "U_offset": -104,
+          "mod8": 0,
+          "mod16": 8,
+          "type": "exclusive copy end, not sp value",
+          "unit": "byte",
+          "source": "copy length",
+          "formula": "Q+8*ei_index",
+          "evidence": [
+            "E142-030"
+          ]
+        },
+        "F": {
+          "hex": "0x6ffffff7",
+          "U_offset": -9,
+          "mod8": 7,
+          "mod16": 7,
+          "type": "ulong bprm.exec value",
+          "unit": "byte",
+          "source": "140 filename + given U",
+          "formula": "U-9",
+          "evidence": [
+            "E142-058",
+            "E142-014"
+          ]
+        },
+        "arg_scan_end": {
+          "hex": "0x6fffffca",
+          "U_offset": -54,
+          "mod8": 2,
+          "mod16": 10,
+          "type": "local p at end argv scan",
+          "unit": "byte",
+          "source": "140 argv lengths",
+          "formula": "p0+sum(argv lengths)",
+          "evidence": [
+            "E142-025",
+            "E142-026"
+          ]
+        }
+      },
+      "ranges": [
+        {
+          "id": "R3_prefix",
+          "name": "prefix",
+          "start": "0x6ffffe80",
+          "end": "0x6ffffec8",
+          "start_U_offset": -384,
+          "end_U_offset": -312,
+          "bytes": 72,
+          "producer": "put_user in post-vma independent fragment",
+          "new_write": true,
+          "zero_basis": "two explicit NULL pointer stores; not blanket clear",
+          "meaning": "argc argv envp pointer slots and terminators",
+          "evidence": [
+            "E142-023",
+            "E142-024",
+            "E142-026",
+            "E142-027",
+            "E142-029"
+          ]
+        },
+        {
+          "id": "R3_auxv",
+          "name": "auxv",
+          "start": "0x6ffffec8",
+          "end": "0x6fffff98",
+          "start_U_offset": -312,
+          "end_U_offset": -104,
+          "bytes": 208,
+          "producer": "copy_to_user from mm.saved_auxv",
+          "new_write": true,
+          "zero_basis": "copies initialized payload plus zero-valued words/AT_NULL pair; does not copy full cleared kernel tail",
+          "meaning": "selected variant A0",
+          "evidence": [
+            "E142-012",
+            "E142-013",
+            "E142-016",
+            "E142-017",
+            "E142-018",
+            "E142-030"
+          ]
+        },
+        {
+          "id": "R3_final_gap",
+          "name": "final_gap",
+          "start": "0x6fffff98",
+          "end": "0x6fffff99",
+          "start_U_offset": -104,
+          "end_U_offset": -103,
+          "bytes": 1,
+          "producer": "STACK_ROUND downward rounding",
+          "new_write": false,
+          "zero_basis": "NO_DEDICATED_ZERO_OR_WRITE_IN_READ_FRAGMENT",
+          "meaning": "gap between copy end and platform",
+          "evidence": [
+            "E142-002",
+            "E142-019",
+            "E142-030",
+            "E142-009"
+          ]
+        },
+        {
+          "id": "R3_platform",
+          "name": "platform",
+          "start": "0x6fffff99",
+          "end": "0x6fffffa0",
+          "start_U_offset": -103,
+          "end_U_offset": -96,
+          "bytes": 7,
+          "producer": "platform copy_to_user",
+          "new_write": true,
+          "zero_basis": "string terminating NUL only; no blanket clear",
+          "meaning": "x86_64 + NUL; hex 78 38 36 5f 36 34 00",
+          "evidence": [
+            "E142-042",
+            "E142-009",
+            "E142-010"
+          ]
+        },
+        {
+          "id": "R3_initial_gap",
+          "name": "initial_gap",
+          "start": "0x6fffffa0",
+          "end": "0x6fffffa3",
+          "start_U_offset": -96,
+          "end_U_offset": -93,
+          "bytes": 3,
+          "producer": "arch_align_stack",
+          "new_write": false,
+          "zero_basis": "NO_DEDICATED_ZERO_OR_WRITE_IN_READ_FRAGMENT",
+          "meaning": "gap after platform, before original strings",
+          "evidence": [
+            "E142-008",
+            "E142-038",
+            "E142-009"
+          ]
+        },
+        {
+          "id": "R3_strings",
+          "name": "strings",
+          "start": "0x6fffffa3",
+          "end": "0x70000000",
+          "start_U_offset": -93,
+          "end_U_offset": 0,
+          "bytes": 93,
+          "producer": "given pre-existing string region; argv/envp scan reads lengths",
+          "new_write": false,
+          "zero_basis": "given original NUL bytes; no new clear",
+          "meaning": "argv,envp,filename; filename saved F is not scanned in this table fragment",
+          "evidence": [
+            "E142-025",
+            "E142-028",
+            "E142-014"
+          ]
+        }
+      ],
+      "conservation": {
+        "initial_gap": 3,
+        "final_gap": 1,
+        "prefix": 72,
+        "auxv": 208,
+        "platform": 7,
+        "strings": 93,
+        "span": 384,
+        "sum": 384,
+        "no_overlap": true,
+        "no_omission": true
+      },
+      "prefix_slots": [
+        {
+          "kind": "argc_integer",
+          "address": "0x6ffffe80",
+          "offset_from_S": 0,
+          "value": 3,
+          "prior_value": 3
+        },
+        {
+          "kind": "argv[0]",
+          "address": "0x6ffffe88",
+          "offset_from_S": 8,
+          "value": "0x6fffffa3",
+          "prior_value": "U-93"
+        },
+        {
+          "kind": "argv[1]",
+          "address": "0x6ffffe90",
+          "offset_from_S": 16,
+          "value": "0x6fffffac",
+          "prior_value": "U-84"
+        },
+        {
+          "kind": "argv[2]",
+          "address": "0x6ffffe98",
+          "offset_from_S": 24,
+          "value": "0x6fffffbb",
+          "prior_value": "U-69"
+        },
+        {
+          "kind": "argv_terminator",
+          "address": "0x6ffffea0",
+          "offset_from_S": 32,
+          "value": 0,
+          "prior_value": 0
+        },
+        {
+          "kind": "envp[0]",
+          "address": "0x6ffffea8",
+          "offset_from_S": 40,
+          "value": "0x6fffffca",
+          "prior_value": "U-54"
+        },
+        {
+          "kind": "envp[1]",
+          "address": "0x6ffffeb0",
+          "offset_from_S": 48,
+          "value": "0x6fffffd9",
+          "prior_value": "U-39"
+        },
+        {
+          "kind": "envp[2]",
+          "address": "0x6ffffeb8",
+          "offset_from_S": 56,
+          "value": "0x6fffffe8",
+          "prior_value": "U-24"
+        },
+        {
+          "kind": "envp_terminator",
+          "address": "0x6ffffec0",
+          "offset_from_S": 64,
+          "value": 0,
+          "prior_value": 0
+        }
+      ],
+      "selected_auxv_pairs": [
+        {
+          "name": "AT_EXECFN",
+          "tag": 31,
+          "tag_word": 20,
+          "value_word": 21,
+          "tag_address": "0x6fffff68",
+          "value_address": "0x6fffff70",
+          "value": "0x6ffffff7",
+          "old_pair_ordinal": 11,
+          "old_source": "141 facts.A.A0.pairs"
+        },
+        {
+          "name": "AT_PLATFORM",
+          "tag": 15,
+          "tag_word": 22,
+          "value_word": 23,
+          "tag_address": "0x6fffff78",
+          "value_address": "0x6fffff80",
+          "value": "0x6fffff99",
+          "old_pair_ordinal": 12,
+          "old_source": "141 facts.A.A0.pairs"
+        },
+        {
+          "name": "AT_NULL",
+          "tag": 0,
+          "tag_word": 24,
+          "value_word": 25,
+          "tag_address": "0x6fffff88",
+          "value_address": "0x6fffff90",
+          "value": 0,
+          "old_pair_ordinal": 13,
+          "old_source": "141 facts.A.A0.pairs"
+        }
+      ],
+      "argv0": "0x6fffffa3",
+      "F": "0x6ffffff7",
+      "P": "0x6fffff99",
+      "phases": [
+        {
+          "id": "R3_T01",
+          "name": "entry initialized",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffa3",
+          "sp": "0x6fffffa3",
+          "bprm_p": "0x6fffffa3",
+          "u_platform": "NOT_STIPULATED",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "given bprm/mm entry objects; u_platform declared but not initialized; other fields not stipulated",
+          "evidence": [
+            "E142-005",
+            "E142-006",
+            "E142-056",
+            "E142-057",
+            "E142-060"
+          ]
+        },
+        {
+          "id": "R3_T02",
+          "name": "after arch_align_stack",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffffa0",
+          "sp": "0x6fffffa3",
+          "bprm_p": "0x6fffffa3",
+          "u_platform": "NOT_STIPULATED",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability",
+          "evidence": [
+            "E142-008",
+            "E142-038"
+          ]
+        },
+        {
+          "id": "R3_T03",
+          "name": "platform successfully allocated/copied",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffff99",
+          "sp": "0x6fffffa3",
+          "bprm_p": "0x6fffffa3",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; copy returns 0; base platform NULL",
+          "evidence": [
+            "E142-009",
+            "E142-010",
+            "E142-011"
+          ]
+        },
+        {
+          "id": "R3_T04",
+          "name": "after STACK_ADD",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffff99",
+          "sp": "0x6ffffec9",
+          "bprm_p": "0x6fffffa3",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; given variant constructed and cleared; ei_index=26",
+          "evidence": [
+            "E142-012",
+            "E142-016",
+            "E142-017",
+            "E142-018",
+            "E142-001"
+          ]
+        },
+        {
+          "id": "R3_T05",
+          "name": "after STACK_ROUND assignment",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffff99",
+          "sp": "0x6ffffec9",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability",
+          "evidence": [
+            "E142-019",
+            "E142-002"
+          ]
+        },
+        {
+          "id": "R3_T06",
+          "name": "after sp reset; before vma gate",
+          "segment": "PRE_GATE",
+          "local_p": "0x6fffff99",
+          "sp": "0x6ffffe80",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent pre-vma integer projection; valid objects, representable arithmetic; no complete production reachability; uninitialized vma gate remains unproved",
+          "evidence": [
+            "E142-020",
+            "E142-007",
+            "E142-021",
+            "E142-022"
+          ]
+        },
+        {
+          "id": "R3_T07",
+          "name": "after argc write",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffff99",
+          "sp": "0x6ffffe88",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "NOT_STIPULATED",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; writing argc uses old sp=S; local p still P",
+          "evidence": [
+            "E142-023"
+          ]
+        },
+        {
+          "id": "R3_T08",
+          "name": "after arg reset",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffa3",
+          "sp": "0x6ffffe88",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "0x6fffffa3",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": 3,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results",
+          "evidence": [
+            "E142-024"
+          ]
+        },
+        {
+          "id": "R3_T09",
+          "name": "after argv loop (failed final test)",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffca",
+          "sp": "0x6ffffea0",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "0x6fffffa3",
+          "mm_env_start": "NOT_STIPULATED",
+          "mm_env_end": "NOT_STIPULATED",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": -1,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; arg_end still initial p0",
+          "evidence": [
+            "E142-024",
+            "E142-025"
+          ]
+        },
+        {
+          "id": "R3_T10",
+          "name": "after argv NULL, arg_end update and env boundary initialization",
+          "segment": "POST_GATE",
+          "local_p": "0x6fffffca",
+          "sp": "0x6ffffea8",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "0x6fffffca",
+          "mm_env_start": "0x6fffffca",
+          "mm_env_end": "0x6fffffca",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": -1,
+          "local_envc": 3,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; sequential observation, not atomic",
+          "evidence": [
+            "E142-026",
+            "E142-027"
+          ]
+        },
+        {
+          "id": "R3_T11",
+          "name": "after envp loop (before env NULL)",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff7",
+          "sp": "0x6ffffec0",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "0x6fffffca",
+          "mm_env_start": "0x6fffffca",
+          "mm_env_end": "0x6fffffca",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; env_end still env_start; terminator not yet written",
+          "evidence": [
+            "E142-027",
+            "E142-028"
+          ]
+        },
+        {
+          "id": "R3_T12",
+          "name": "after env NULL and env_end update",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff7",
+          "sp": "0x6ffffec8",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "0x6fffffca",
+          "mm_env_start": "0x6fffffca",
+          "mm_env_end": "0x6ffffff7",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; first zero store succeeds, then env_end=p",
+          "evidence": [
+            "E142-029"
+          ]
+        },
+        {
+          "id": "R3_T13",
+          "name": "auxv copy returns zero and local return 0",
+          "segment": "POST_GATE",
+          "local_p": "0x6ffffff7",
+          "sp": "0x6ffffec8",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "0x6fffff99",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "0x6fffffca",
+          "mm_env_start": "0x6fffffca",
+          "mm_env_end": "0x6ffffff7",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": -1,
+          "local_envc": -1,
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "NOT_STIPULATED",
+          "condition": "independent post-vma fragment given reached, valid writable/readable user objects, normal writes and length results; copy sp by value; sp stays Q, E only exclusive end; local counts -1, bprm counts unchanged",
+          "evidence": [
+            "E142-030"
+          ]
+        },
+        {
+          "id": "R3_T14",
+          "name": "caller consumption after normal return and later gates",
+          "segment": "CALLER",
+          "local_p": "OUT_OF_SCOPE (last 0x6ffffff7)",
+          "sp": "OUT_OF_SCOPE (last 0x6ffffec8)",
+          "bprm_p": "0x6ffffe80",
+          "u_platform": "OUT_OF_SCOPE (last 0x6fffff99)",
+          "mm_arg_start": "0x6fffffa3",
+          "mm_arg_end": "0x6fffffca",
+          "mm_env_start": "0x6fffffca",
+          "mm_env_end": "0x6ffffff7",
+          "bprm_exec": "0x6ffffff7",
+          "local_argc": "OUT_OF_SCOPE (last -1)",
+          "local_envc": "OUT_OF_SCOPE (last -1)",
+          "bprm_argc": 3,
+          "bprm_envc": 3,
+          "mm_start_stack": "0x6ffffe80",
+          "condition": "given table return 0, caller reaches sequential mm.start_stack assignment and START_THREAD call; other required operations normal; no actual CPU SP",
+          "evidence": [
+            "E142-031",
+            "E142-032",
+            "E142-033",
+            "E142-034",
+            "E142-035",
+            "E142-048"
+          ]
+        }
+      ],
+      "caller": {
+        "return_from_create": "given 0",
+        "negative_retval": "goto out",
+        "mm_start_stack": "0x6ffffe80",
+        "START_THREAD_stack_arg": "0x6ffffe80",
+        "local_scan_end": "0x6ffffff7",
+        "copy_exclusive_end": "0x6fffff98",
+        "actual_cpu_sp": "UNKNOWN",
+        "actual_CRT": "UNKNOWN",
+        "evidence": [
+          "E142-031",
+          "E142-033",
+          "E142-035",
+          "E142-048"
+        ]
+      },
+      "evidence_class": "INFERRED_CONDITIONAL_INTEGER_PROJECTION"
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "source_upstream",
+        "kind": "source",
+        "label": "setup_arg_pages fields, return not proved",
+        "scenario": "source"
+      },
+      {
+        "id": "source_entry",
+        "kind": "source",
+        "label": "create_elf_tables given entry",
+        "scenario": "source"
+      },
+      {
+        "id": "source_align",
+        "kind": "source",
+        "label": "arch_align_stack and platform alloc",
+        "scenario": "source"
+      },
+      {
+        "id": "source_tablebase",
+        "kind": "source",
+        "label": "STACK_ADD, STACK_ROUND, sp reset",
+        "scenario": "source"
+      },
+      {
+        "id": "source_gate",
+        "kind": "boundary",
+        "label": "uninitialized vma: no proven crossing",
+        "scenario": "source"
+      },
+      {
+        "id": "source_prefix",
+        "kind": "source",
+        "label": "independent post-gate prefix and loops",
+        "scenario": "source"
+      },
+      {
+        "id": "source_copy",
+        "kind": "source",
+        "label": "copy_to_user(sp, saved_auxv, ei_index * word)",
+        "scenario": "source"
+      },
+      {
+        "id": "source_caller",
+        "kind": "source",
+        "label": "normal return gate; mm.start_stack; START_THREAD",
+        "scenario": "source"
+      },
+      {
+        "id": "R1",
+        "kind": "independent_model",
+        "label": "R1 U=0x70000000",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_p0",
+        "kind": "address",
+        "label": "p0=0x6fffffe2",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_p1",
+        "kind": "address",
+        "label": "p1=0x6fffffe0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_P",
+        "kind": "address",
+        "label": "P=0x6fffffd9",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_sp_aux",
+        "kind": "address",
+        "label": "sp_aux=0x6fffff09",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_raw_bottom",
+        "kind": "address",
+        "label": "raw_bottom=0x6ffffed1",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_S",
+        "kind": "address",
+        "label": "S=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_Q",
+        "kind": "address",
+        "label": "Q=0x6fffff08",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_A_E",
+        "kind": "address",
+        "label": "E=0x6fffffd8",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_prefix",
+        "kind": "range",
+        "label": "prefix [0x6ffffed0,0x6fffff08) 56 bytes",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_auxv",
+        "kind": "range",
+        "label": "auxv [0x6fffff08,0x6fffffd8) 208 bytes",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_final_gap",
+        "kind": "range",
+        "label": "final_gap [0x6fffffd8,0x6fffffd9) 1 bytes",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_platform",
+        "kind": "range",
+        "label": "platform [0x6fffffd9,0x6fffffe0) 7 bytes",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_initial_gap",
+        "kind": "range",
+        "label": "initial_gap [0x6fffffe0,0x6fffffe2) 2 bytes",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_strings",
+        "kind": "range",
+        "label": "strings [0x6fffffe2,0x70000000) 30 bytes",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T01",
+        "kind": "stage",
+        "label": "entry initialized p=0x6fffffe2 sp=0x6fffffe2 bprm.p=0x6fffffe2",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T02",
+        "kind": "stage",
+        "label": "after arch_align_stack p=0x6fffffe0 sp=0x6fffffe2 bprm.p=0x6fffffe2",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T03",
+        "kind": "stage",
+        "label": "platform successfully allocated/copied p=0x6fffffd9 sp=0x6fffffe2 bprm.p=0x6fffffe2",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T04",
+        "kind": "stage",
+        "label": "after STACK_ADD p=0x6fffffd9 sp=0x6fffff09 bprm.p=0x6fffffe2",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T05",
+        "kind": "stage",
+        "label": "after STACK_ROUND assignment p=0x6fffffd9 sp=0x6fffff09 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T06",
+        "kind": "stage",
+        "label": "after sp reset; before vma gate p=0x6fffffd9 sp=0x6ffffed0 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T07",
+        "kind": "stage",
+        "label": "after argc write p=0x6fffffd9 sp=0x6ffffed8 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T08",
+        "kind": "stage",
+        "label": "after arg reset p=0x6fffffe2 sp=0x6ffffed8 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T09",
+        "kind": "stage",
+        "label": "after argv loop (failed final test) p=0x6fffffed sp=0x6ffffee8 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T10",
+        "kind": "stage",
+        "label": "after argv NULL, arg_end update and env boundary initialization p=0x6fffffed sp=0x6ffffef0 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T11",
+        "kind": "stage",
+        "label": "after envp loop (before env NULL) p=0x6ffffff6 sp=0x6fffff00 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T12",
+        "kind": "stage",
+        "label": "after env NULL and env_end update p=0x6ffffff6 sp=0x6fffff08 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T13",
+        "kind": "stage",
+        "label": "auxv copy returns zero and local return 0 p=0x6ffffff6 sp=0x6fffff08 bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R1_T14",
+        "kind": "stage",
+        "label": "caller consumption after normal return and later gates p=OUT_OF_SCOPE (last 0x6ffffff6) sp=OUT_OF_SCOPE (last 0x6fffff08) bprm.p=0x6ffffed0",
+        "scenario": "R1"
+      },
+      {
+        "id": "R2",
+        "kind": "independent_model",
+        "label": "R2 U=0x70000000",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_p0",
+        "kind": "address",
+        "label": "p0=0x6fffffec",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_p1",
+        "kind": "address",
+        "label": "p1=0x6fffffe0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_P",
+        "kind": "address",
+        "label": "P=0x6fffffd9",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_sp_aux",
+        "kind": "address",
+        "label": "sp_aux=0x6ffffef9",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_raw_bottom",
+        "kind": "address",
+        "label": "raw_bottom=0x6ffffec9",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_S",
+        "kind": "address",
+        "label": "S=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_Q",
+        "kind": "address",
+        "label": "Q=0x6ffffef0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_A_E",
+        "kind": "address",
+        "label": "E=0x6fffffd0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_prefix",
+        "kind": "range",
+        "label": "prefix [0x6ffffec0,0x6ffffef0) 48 bytes",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_auxv",
+        "kind": "range",
+        "label": "auxv [0x6ffffef0,0x6fffffd0) 224 bytes",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_final_gap",
+        "kind": "range",
+        "label": "final_gap [0x6fffffd0,0x6fffffd9) 9 bytes",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_platform",
+        "kind": "range",
+        "label": "platform [0x6fffffd9,0x6fffffe0) 7 bytes",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_initial_gap",
+        "kind": "range",
+        "label": "initial_gap [0x6fffffe0,0x6fffffec) 12 bytes",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_strings",
+        "kind": "range",
+        "label": "strings [0x6fffffec,0x70000000) 20 bytes",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T01",
+        "kind": "stage",
+        "label": "entry initialized p=0x6fffffec sp=0x6fffffec bprm.p=0x6fffffec",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T02",
+        "kind": "stage",
+        "label": "after arch_align_stack p=0x6fffffe0 sp=0x6fffffec bprm.p=0x6fffffec",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T03",
+        "kind": "stage",
+        "label": "platform successfully allocated/copied p=0x6fffffd9 sp=0x6fffffec bprm.p=0x6fffffec",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T04",
+        "kind": "stage",
+        "label": "after STACK_ADD p=0x6fffffd9 sp=0x6ffffef9 bprm.p=0x6fffffec",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T05",
+        "kind": "stage",
+        "label": "after STACK_ROUND assignment p=0x6fffffd9 sp=0x6ffffef9 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T06",
+        "kind": "stage",
+        "label": "after sp reset; before vma gate p=0x6fffffd9 sp=0x6ffffec0 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T07",
+        "kind": "stage",
+        "label": "after argc write p=0x6fffffd9 sp=0x6ffffec8 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T08",
+        "kind": "stage",
+        "label": "after arg reset p=0x6fffffec sp=0x6ffffec8 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T09",
+        "kind": "stage",
+        "label": "after argv loop (failed final test) p=0x6fffffed sp=0x6ffffed0 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T10",
+        "kind": "stage",
+        "label": "after argv NULL, arg_end update and env boundary initialization p=0x6fffffed sp=0x6ffffed8 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T11",
+        "kind": "stage",
+        "label": "after envp loop (before env NULL) p=0x6ffffff6 sp=0x6ffffee8 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T12",
+        "kind": "stage",
+        "label": "after env NULL and env_end update p=0x6ffffff6 sp=0x6ffffef0 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T13",
+        "kind": "stage",
+        "label": "auxv copy returns zero and local return 0 p=0x6ffffff6 sp=0x6ffffef0 bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R2_T14",
+        "kind": "stage",
+        "label": "caller consumption after normal return and later gates p=OUT_OF_SCOPE (last 0x6ffffff6) sp=OUT_OF_SCOPE (last 0x6ffffef0) bprm.p=0x6ffffec0",
+        "scenario": "R2"
+      },
+      {
+        "id": "R3",
+        "kind": "independent_model",
+        "label": "R3 U=0x70000000",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_p0",
+        "kind": "address",
+        "label": "p0=0x6fffffa3",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_p1",
+        "kind": "address",
+        "label": "p1=0x6fffffa0",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_P",
+        "kind": "address",
+        "label": "P=0x6fffff99",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_sp_aux",
+        "kind": "address",
+        "label": "sp_aux=0x6ffffec9",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_raw_bottom",
+        "kind": "address",
+        "label": "raw_bottom=0x6ffffe81",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_S",
+        "kind": "address",
+        "label": "S=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_Q",
+        "kind": "address",
+        "label": "Q=0x6ffffec8",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_A_E",
+        "kind": "address",
+        "label": "E=0x6fffff98",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_prefix",
+        "kind": "range",
+        "label": "prefix [0x6ffffe80,0x6ffffec8) 72 bytes",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_auxv",
+        "kind": "range",
+        "label": "auxv [0x6ffffec8,0x6fffff98) 208 bytes",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_final_gap",
+        "kind": "range",
+        "label": "final_gap [0x6fffff98,0x6fffff99) 1 bytes",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_platform",
+        "kind": "range",
+        "label": "platform [0x6fffff99,0x6fffffa0) 7 bytes",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_initial_gap",
+        "kind": "range",
+        "label": "initial_gap [0x6fffffa0,0x6fffffa3) 3 bytes",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_strings",
+        "kind": "range",
+        "label": "strings [0x6fffffa3,0x70000000) 93 bytes",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T01",
+        "kind": "stage",
+        "label": "entry initialized p=0x6fffffa3 sp=0x6fffffa3 bprm.p=0x6fffffa3",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T02",
+        "kind": "stage",
+        "label": "after arch_align_stack p=0x6fffffa0 sp=0x6fffffa3 bprm.p=0x6fffffa3",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T03",
+        "kind": "stage",
+        "label": "platform successfully allocated/copied p=0x6fffff99 sp=0x6fffffa3 bprm.p=0x6fffffa3",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T04",
+        "kind": "stage",
+        "label": "after STACK_ADD p=0x6fffff99 sp=0x6ffffec9 bprm.p=0x6fffffa3",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T05",
+        "kind": "stage",
+        "label": "after STACK_ROUND assignment p=0x6fffff99 sp=0x6ffffec9 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T06",
+        "kind": "stage",
+        "label": "after sp reset; before vma gate p=0x6fffff99 sp=0x6ffffe80 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T07",
+        "kind": "stage",
+        "label": "after argc write p=0x6fffff99 sp=0x6ffffe88 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T08",
+        "kind": "stage",
+        "label": "after arg reset p=0x6fffffa3 sp=0x6ffffe88 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T09",
+        "kind": "stage",
+        "label": "after argv loop (failed final test) p=0x6fffffca sp=0x6ffffea0 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T10",
+        "kind": "stage",
+        "label": "after argv NULL, arg_end update and env boundary initialization p=0x6fffffca sp=0x6ffffea8 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T11",
+        "kind": "stage",
+        "label": "after envp loop (before env NULL) p=0x6ffffff7 sp=0x6ffffec0 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T12",
+        "kind": "stage",
+        "label": "after env NULL and env_end update p=0x6ffffff7 sp=0x6ffffec8 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T13",
+        "kind": "stage",
+        "label": "auxv copy returns zero and local return 0 p=0x6ffffff7 sp=0x6ffffec8 bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      },
+      {
+        "id": "R3_T14",
+        "kind": "stage",
+        "label": "caller consumption after normal return and later gates p=OUT_OF_SCOPE (last 0x6ffffff7) sp=OUT_OF_SCOPE (last 0x6ffffec8) bprm.p=0x6ffffe80",
+        "scenario": "R3"
+      }
+    ],
+    "edges": [
+      {
+        "from": "source_upstream",
+        "to": "source_entry",
+        "kind": "field_origin_only",
+        "label": "given entry does not establish successful prior relocation"
+      },
+      {
+        "from": "source_entry",
+        "to": "source_align",
+        "kind": "source_order_only",
+        "label": "not runtime"
+      },
+      {
+        "from": "source_align",
+        "to": "source_tablebase",
+        "kind": "source_order_only",
+        "label": "not runtime"
+      },
+      {
+        "from": "source_tablebase",
+        "to": "source_gate",
+        "kind": "source_order_only",
+        "label": "not runtime"
+      },
+      {
+        "from": "source_gate",
+        "to": "source_prefix",
+        "kind": "INDEPENDENT_POST_GATE_MODEL",
+        "label": "no production reachability claim"
+      },
+      {
+        "from": "source_prefix",
+        "to": "source_copy",
+        "kind": "source_order_conditional",
+        "label": "given normal prefix writes"
+      },
+      {
+        "from": "source_copy",
+        "to": "source_caller",
+        "kind": "conditional_consumer",
+        "label": "given normal return and later reachability"
+      },
+      {
+        "from": "source_entry",
+        "to": "R1",
+        "kind": "MODEL_PROJECTION",
+        "label": "new given input"
+      },
+      {
+        "from": "R1",
+        "to": "R1_A_p0",
+        "kind": "given_input",
+        "label": "p0"
+      },
+      {
+        "from": "R1_A_p0",
+        "to": "R1_A_p1",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R1_A_p1",
+        "to": "R1_A_P",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R1_A_P",
+        "to": "R1_A_sp_aux",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R1_A_sp_aux",
+        "to": "R1_A_raw_bottom",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R1_A_raw_bottom",
+        "to": "R1_A_S",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R1_A_S",
+        "to": "R1_A_Q",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R1_A_Q",
+        "to": "R1_A_E",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R1_prefix",
+        "to": "R1_auxv",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R1_auxv",
+        "to": "R1_final_gap",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R1_final_gap",
+        "to": "R1_platform",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R1_platform",
+        "to": "R1_initial_gap",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R1_initial_gap",
+        "to": "R1_strings",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R1_A_S",
+        "to": "R1_prefix",
+        "kind": "data_origin",
+        "label": "partition start"
+      },
+      {
+        "from": "R1",
+        "to": "R1_T01",
+        "kind": "MODEL_PROJECTION",
+        "label": "given entry"
+      },
+      {
+        "from": "R1_T01",
+        "to": "R1_T02",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T02",
+        "to": "R1_T03",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T03",
+        "to": "R1_T04",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T04",
+        "to": "R1_T05",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T05",
+        "to": "R1_T06",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T06",
+        "to": "R1_T07",
+        "kind": "INDEPENDENT_POST_GATE_FRAGMENT",
+        "label": "not real crossing"
+      },
+      {
+        "from": "R1_T07",
+        "to": "R1_T08",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T08",
+        "to": "R1_T09",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T09",
+        "to": "R1_T10",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T10",
+        "to": "R1_T11",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T11",
+        "to": "R1_T12",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T12",
+        "to": "R1_T13",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R1_T13",
+        "to": "R1_T14",
+        "kind": "CONDITIONAL_CALLER_MODEL",
+        "label": "normal return and later gates"
+      },
+      {
+        "from": "source_copy",
+        "to": "R1_T13",
+        "kind": "MODEL_PROJECTION",
+        "label": "sp=Q; E exclusive end"
+      },
+      {
+        "from": "source_caller",
+        "to": "R1_T14",
+        "kind": "MODEL_PROJECTION",
+        "label": "stack arg S only"
+      },
+      {
+        "from": "source_entry",
+        "to": "R2",
+        "kind": "MODEL_PROJECTION",
+        "label": "new given input"
+      },
+      {
+        "from": "R2",
+        "to": "R2_A_p0",
+        "kind": "given_input",
+        "label": "p0"
+      },
+      {
+        "from": "R2_A_p0",
+        "to": "R2_A_p1",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R2_A_p1",
+        "to": "R2_A_P",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R2_A_P",
+        "to": "R2_A_sp_aux",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R2_A_sp_aux",
+        "to": "R2_A_raw_bottom",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R2_A_raw_bottom",
+        "to": "R2_A_S",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R2_A_S",
+        "to": "R2_A_Q",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R2_A_Q",
+        "to": "R2_A_E",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R2_prefix",
+        "to": "R2_auxv",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R2_auxv",
+        "to": "R2_final_gap",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R2_final_gap",
+        "to": "R2_platform",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R2_platform",
+        "to": "R2_initial_gap",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R2_initial_gap",
+        "to": "R2_strings",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R2_A_S",
+        "to": "R2_prefix",
+        "kind": "data_origin",
+        "label": "partition start"
+      },
+      {
+        "from": "R2",
+        "to": "R2_T01",
+        "kind": "MODEL_PROJECTION",
+        "label": "given entry"
+      },
+      {
+        "from": "R2_T01",
+        "to": "R2_T02",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T02",
+        "to": "R2_T03",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T03",
+        "to": "R2_T04",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T04",
+        "to": "R2_T05",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T05",
+        "to": "R2_T06",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T06",
+        "to": "R2_T07",
+        "kind": "INDEPENDENT_POST_GATE_FRAGMENT",
+        "label": "not real crossing"
+      },
+      {
+        "from": "R2_T07",
+        "to": "R2_T08",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T08",
+        "to": "R2_T09",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T09",
+        "to": "R2_T10",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T10",
+        "to": "R2_T11",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T11",
+        "to": "R2_T12",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T12",
+        "to": "R2_T13",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R2_T13",
+        "to": "R2_T14",
+        "kind": "CONDITIONAL_CALLER_MODEL",
+        "label": "normal return and later gates"
+      },
+      {
+        "from": "source_copy",
+        "to": "R2_T13",
+        "kind": "MODEL_PROJECTION",
+        "label": "sp=Q; E exclusive end"
+      },
+      {
+        "from": "source_caller",
+        "to": "R2_T14",
+        "kind": "MODEL_PROJECTION",
+        "label": "stack arg S only"
+      },
+      {
+        "from": "source_entry",
+        "to": "R3",
+        "kind": "MODEL_PROJECTION",
+        "label": "new given input"
+      },
+      {
+        "from": "R3",
+        "to": "R3_A_p0",
+        "kind": "given_input",
+        "label": "p0"
+      },
+      {
+        "from": "R3_A_p0",
+        "to": "R3_A_p1",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R3_A_p1",
+        "to": "R3_A_P",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R3_A_P",
+        "to": "R3_A_sp_aux",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R3_A_sp_aux",
+        "to": "R3_A_raw_bottom",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R3_A_raw_bottom",
+        "to": "R3_A_S",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R3_A_S",
+        "to": "R3_A_Q",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R3_A_Q",
+        "to": "R3_A_E",
+        "kind": "arithmetic_projection",
+        "label": "integer formula; not typed pointer proof"
+      },
+      {
+        "from": "R3_prefix",
+        "to": "R3_auxv",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R3_auxv",
+        "to": "R3_final_gap",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R3_final_gap",
+        "to": "R3_platform",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R3_platform",
+        "to": "R3_initial_gap",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R3_initial_gap",
+        "to": "R3_strings",
+        "kind": "address_order",
+        "label": "adjacent half-open ranges"
+      },
+      {
+        "from": "R3_A_S",
+        "to": "R3_prefix",
+        "kind": "data_origin",
+        "label": "partition start"
+      },
+      {
+        "from": "R3",
+        "to": "R3_T01",
+        "kind": "MODEL_PROJECTION",
+        "label": "given entry"
+      },
+      {
+        "from": "R3_T01",
+        "to": "R3_T02",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T02",
+        "to": "R3_T03",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T03",
+        "to": "R3_T04",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T04",
+        "to": "R3_T05",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T05",
+        "to": "R3_T06",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T06",
+        "to": "R3_T07",
+        "kind": "INDEPENDENT_POST_GATE_FRAGMENT",
+        "label": "not real crossing"
+      },
+      {
+        "from": "R3_T07",
+        "to": "R3_T08",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T08",
+        "to": "R3_T09",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T09",
+        "to": "R3_T10",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T10",
+        "to": "R3_T11",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T11",
+        "to": "R3_T12",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T12",
+        "to": "R3_T13",
+        "kind": "MODEL_OBSERVATION_ORDER",
+        "label": "non-atomic observation"
+      },
+      {
+        "from": "R3_T13",
+        "to": "R3_T14",
+        "kind": "CONDITIONAL_CALLER_MODEL",
+        "label": "normal return and later gates"
+      },
+      {
+        "from": "source_copy",
+        "to": "R3_T13",
+        "kind": "MODEL_PROJECTION",
+        "label": "sp=Q; E exclusive end"
+      },
+      {
+        "from": "source_caller",
+        "to": "R3_T14",
+        "kind": "MODEL_PROJECTION",
+        "label": "stack arg S only"
+      }
+    ]
+  },
+  "source_index": [
+    {
+      "id": "E142-001",
+      "key": "stack_add",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "STACK_ADD",
+      "first_line": 110,
+      "last_line": 111,
+      "kind": "macro_definition",
+      "support": "将sp转换elf_addr_t用户指针后减items；只取整数投影",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-002",
+      "key": "stack_round",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "STACK_ROUND",
+      "first_line": 112,
+      "last_line": 113,
+      "kind": "macro_definition",
+      "support": "指针差投影再转unsigned long清低4位",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-003",
+      "key": "stack_alloc",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "STACK_ALLOC",
+      "first_line": 114,
+      "last_line": 114,
+      "kind": "macro_definition",
+      "support": "局部sp参数减len",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-004",
+      "key": "base_platform_default",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "ELF_BASE_PLATFORM",
+      "first_line": 122,
+      "last_line": 122,
+      "kind": "macro_definition",
+      "support": "ifndef默认NULL；按题设选",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-005",
+      "key": "entry",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 129,
+      "last_line": 133,
+      "kind": "active_function_fragment",
+      "support": "mm、p、局部argc/envc及sp从bprm取值",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-006",
+      "key": "platform_decl",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 134,
+      "last_line": 138,
+      "kind": "local_declaration",
+      "support": "局部平台指针声明及内核平台串来源",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-007",
+      "key": "vma_decl",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 145,
+      "last_line": 145,
+      "kind": "local_declaration",
+      "support": "vma局部声明无初始化",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-008",
+      "key": "align_call",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 152,
+      "last_line": 152,
+      "kind": "active_function_fragment",
+      "support": "仅local p赋对齐返回值",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-009",
+      "key": "platform_alloc",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 160,
+      "last_line": 164,
+      "kind": "active_function_fragment",
+      "support": "u_platform置NULL、平台门、strlen+1、分配并转换",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-010",
+      "key": "platform_copy",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 165,
+      "last_line": 167,
+      "kind": "active_function_fragment",
+      "support": "非零copy返回-EFAULT；所选成功前提",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-011",
+      "key": "base_platform_gate",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 173,
+      "last_line": 177,
+      "kind": "conditional",
+      "support": "基平台用户地址置NULL及条件分配；模型不进入",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-012",
+      "key": "saved_start",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 192,
+      "last_line": 192,
+      "kind": "active_function_fragment",
+      "support": "elf_info从内核saved_auxv起",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-013",
+      "key": "aux_macro",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "NEW_AUX_ENT",
+      "first_line": 194,
+      "last_line": 198,
+      "kind": "macro_definition",
+      "support": "连续写tag/value两字",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-014",
+      "key": "execfn_platform",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 229,
+      "last_line": 233,
+      "kind": "active_function_fragment",
+      "support": "保存文件名及平台用户地址的两个加入点",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-015",
+      "key": "optional_fd",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 238,
+      "last_line": 240,
+      "kind": "active_function_fragment",
+      "support": "have_execfd条件下加入fd",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-016",
+      "key": "clear",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 246,
+      "last_line": 248,
+      "kind": "active_function_fragment",
+      "support": "memset只清内核缓冲从当前elf_info至末尾",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-017",
+      "key": "advance",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 250,
+      "last_line": 251,
+      "kind": "active_function_fragment",
+      "support": "跨过终止对两字",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-018",
+      "key": "ei",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 253,
+      "last_line": 254,
+      "kind": "active_function_fragment",
+      "support": "ei_index为指针差的字数；sp取STACK_ADD",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-019",
+      "key": "items_round",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 256,
+      "last_line": 257,
+      "kind": "active_function_fragment",
+      "support": "items整数式及bprm.p赋STACK_ROUND",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-020",
+      "key": "sp_reset",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 260,
+      "last_line": 260,
+      "kind": "active_function_fragment",
+      "support": "sp重置到bprm.p",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-021",
+      "key": "vma_lock",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 266,
+      "last_line": 267,
+      "kind": "active_function_fragment",
+      "support": "锁失败门",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-022",
+      "key": "vma_gate",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 268,
+      "last_line": 271,
+      "kind": "mixed_comment_and_active_gate",
+      "support": "vma赋值是注释；解锁后测试未初始化vma",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-023",
+      "key": "argc_write",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 274,
+      "last_line": 275,
+      "kind": "active_function_fragment",
+      "support": "put_user argc至旧sp且sp++，非零失败",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-024",
+      "key": "argv_reset_loop",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 278,
+      "last_line": 282,
+      "kind": "active_function_fragment",
+      "support": "p与arg_end复位；后缀计数测试；写参数指针",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-025",
+      "key": "argv_len",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 283,
+      "last_line": 287,
+      "kind": "active_function_fragment",
+      "support": "读取字符串长度并测试，再推进local p",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-026",
+      "key": "argv_term",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 288,
+      "last_line": 290,
+      "kind": "active_function_fragment",
+      "support": "写零终止槽；arg_end更新",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-027",
+      "key": "env_start_loop",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 293,
+      "last_line": 297,
+      "kind": "active_function_fragment",
+      "support": "env_end=env_start=p；后缀计数与写环境指针",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-028",
+      "key": "env_len",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 298,
+      "last_line": 302,
+      "kind": "active_function_fragment",
+      "support": "环境长度和p推进",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-029",
+      "key": "env_term",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 303,
+      "last_line": 305,
+      "kind": "active_function_fragment",
+      "support": "env终止槽写及env_end最终更新",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-030",
+      "key": "aux_copy",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "create_elf_tables",
+      "first_line": 307,
+      "last_line": 310,
+      "kind": "active_function_fragment",
+      "support": "sp直接传copy，ei_index乘sizeof；非零失败，局部return0",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-031",
+      "key": "caller_table",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1075,
+      "last_line": 1078,
+      "kind": "active_function_fragment",
+      "support": "表调用与负返回退出",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-032",
+      "key": "caller_mm",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1080,
+      "last_line": 1080,
+      "kind": "active_function_fragment",
+      "support": "caller再取current->mm",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-033",
+      "key": "caller_stack",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1085,
+      "last_line": 1085,
+      "kind": "active_function_fragment",
+      "support": "mm.start_stack=bprm.p",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-034",
+      "key": "caller_regs",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1115,
+      "last_line": 1115,
+      "kind": "active_function_fragment",
+      "support": "regs取current_pt_regs",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-035",
+      "key": "caller_start",
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "symbol": "load_elf_binary",
+      "first_line": 1130,
+      "last_line": 1134,
+      "kind": "active_function_fragment",
+      "support": "finalize_exec、START_THREAD栈实参bprm.p、返回",
+      "source_blob": "579fb4e9fadd"
+    },
+    {
+      "id": "E142-036",
+      "key": "align_body",
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "symbol": "arch_align_stack",
+      "first_line": 168,
+      "last_line": 169,
+      "kind": "definition_head",
+      "support": "ulong形参与函数体",
+      "source_blob": "4431545af5fb"
+    },
+    {
+      "id": "E142-037",
+      "key": "align_comment",
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "symbol": "arch_align_stack",
+      "first_line": 170,
+      "last_line": 172,
+      "kind": "comment_only",
+      "support": "随机化条件及减随机数均注释",
+      "source_blob": "4431545af5fb"
+    },
+    {
+      "id": "E142-038",
+      "key": "align_return",
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "symbol": "arch_align_stack",
+      "first_line": 173,
+      "last_line": 174,
+      "kind": "active_function_fragment",
+      "support": "活动返回sp & ~0xf",
+      "source_blob": "4431545af5fb"
+    },
+    {
+      "id": "E142-039",
+      "key": "upstream_shift",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "setup_arg_pages",
+      "first_line": 478,
+      "last_line": 481,
+      "kind": "active_function_fragment",
+      "support": "stack_shift、bprm.p下移、mm.arg_start赋值",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E142-040",
+      "key": "upstream_exec",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "setup_arg_pages",
+      "first_line": 483,
+      "last_line": 485,
+      "kind": "active_function_fragment",
+      "support": "loader条件平移与exec无条件减shift",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E142-041",
+      "key": "upstream_lock",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "setup_arg_pages",
+      "first_line": 487,
+      "last_line": 488,
+      "kind": "active_function_fragment",
+      "support": "平移后还有锁失败早退",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E142-042",
+      "key": "platform",
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "symbol": "ELF_PLATFORM",
+      "first_line": 151,
+      "last_line": 151,
+      "kind": "macro_definition",
+      "support": "x86_64平台串",
+      "source_blob": "421649d6f3bc"
+    },
+    {
+      "id": "E142-043",
+      "key": "pagesz",
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "symbol": "ELF_EXEC_PAGESIZE",
+      "first_line": 156,
+      "last_line": 156,
+      "kind": "macro_definition",
+      "support": "ELF页载荷4096",
+      "source_blob": "421649d6f3bc"
+    },
+    {
+      "id": "E142-044",
+      "key": "hwcap",
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "symbol": "ELF_HWCAP",
+      "first_line": 169,
+      "last_line": 169,
+      "kind": "macro_definition",
+      "support": "能力表达式；H仍题设",
+      "source_blob": "421649d6f3bc"
+    },
+    {
+      "id": "E142-045",
+      "key": "elf_addr",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elf_addr_t",
+      "first_line": 47,
+      "last_line": 47,
+      "kind": "macro_definition",
+      "support": "Elf64_Off别名，非Elf64_Addr",
+      "source_blob": "dd427f17f005"
+    },
+    {
+      "id": "E142-046",
+      "key": "phdr_alias",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elf_phdr",
+      "first_line": 44,
+      "last_line": 44,
+      "kind": "macro_definition",
+      "support": "elf64_phdr标签宏",
+      "source_blob": "dd427f17f005"
+    },
+    {
+      "id": "E142-047",
+      "key": "phdr_s",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "elf_phdr_s",
+      "first_line": 53,
+      "last_line": 53,
+      "kind": "type_alias",
+      "support": "结构类型别名",
+      "source_blob": "dd427f17f005"
+    },
+    {
+      "id": "E142-048",
+      "key": "start_macro",
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "symbol": "START_THREAD",
+      "first_line": 29,
+      "last_line": 30,
+      "kind": "macro_definition",
+      "support": "默认条件宏，未认证实际预处理绑定",
+      "source_blob": "dd427f17f005"
+    },
+    {
+      "id": "E142-049",
+      "key": "Elf64_Off",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Off",
+      "first_line": 19,
+      "last_line": 19,
+      "kind": "type_definition",
+      "support": "ELF底层类型别名",
+      "source_blob": "eff5e1ff56b8"
+    },
+    {
+      "id": "E142-050",
+      "key": "Elf64_Addr",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Addr",
+      "first_line": 16,
+      "last_line": 16,
+      "kind": "type_definition",
+      "support": "ELF底层类型别名",
+      "source_blob": "eff5e1ff56b8"
+    },
+    {
+      "id": "E142-051",
+      "key": "Elf64_Word",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Word",
+      "first_line": 21,
+      "last_line": 21,
+      "kind": "type_definition",
+      "support": "ELF底层类型别名",
+      "source_blob": "eff5e1ff56b8"
+    },
+    {
+      "id": "E142-052",
+      "key": "Elf64_Xword",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "Elf64_Xword",
+      "first_line": 22,
+      "last_line": 22,
+      "kind": "type_definition",
+      "support": "ELF底层类型别名",
+      "source_blob": "eff5e1ff56b8"
+    },
+    {
+      "id": "E142-053",
+      "key": "phdr_fields1",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "elf64_phdr",
+      "first_line": 270,
+      "last_line": 274,
+      "kind": "struct_member",
+      "support": "两个Word，offset/vaddr/paddr",
+      "source_blob": "eff5e1ff56b8"
+    },
+    {
+      "id": "E142-054",
+      "key": "phdr_fields2",
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "symbol": "elf64_phdr",
+      "first_line": 275,
+      "last_line": 278,
+      "kind": "struct_member",
+      "support": "filesz/memsz/align",
+      "source_blob": "eff5e1ff56b8"
+    },
+    {
+      "id": "E142-055",
+      "key": "ulong_type",
+      "path": "mykernel/include/linux/kernel/types.h",
+      "symbol": "ulong",
+      "first_line": 105,
+      "last_line": 105,
+      "kind": "type_definition",
+      "support": "unsigned long别名；8字节仍题设",
+      "source_blob": "ef531baa8317"
+    },
+    {
+      "id": "E142-056",
+      "key": "bprm_p",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 21,
+      "last_line": 21,
+      "kind": "struct_member",
+      "support": "bprm.p ulong成员",
+      "source_blob": "002c2aec4aa8"
+    },
+    {
+      "id": "E142-057",
+      "key": "bprm_counts",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 49,
+      "last_line": 49,
+      "kind": "struct_member",
+      "support": "argc/envc int成员",
+      "source_blob": "002c2aec4aa8"
+    },
+    {
+      "id": "E142-058",
+      "key": "bprm_exec",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 55,
+      "last_line": 57,
+      "kind": "struct_member",
+      "support": "interp_flags、execfd及exec ulong成员",
+      "source_blob": "002c2aec4aa8"
+    },
+    {
+      "id": "E142-059",
+      "key": "mm_stack",
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "symbol": "mm_struct",
+      "first_line": 100,
+      "last_line": 100,
+      "kind": "struct_member",
+      "support": "start_stack字段",
+      "source_blob": "b9d93f504756"
+    },
+    {
+      "id": "E142-060",
+      "key": "mm_bounds",
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "symbol": "mm_struct",
+      "first_line": 101,
+      "last_line": 101,
+      "kind": "struct_member",
+      "support": "arg/env四字段",
+      "source_blob": "b9d93f504756"
+    },
+    {
+      "id": "E142-061",
+      "key": "mm_aux",
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "symbol": "mm_struct",
+      "first_line": 103,
+      "last_line": 103,
+      "kind": "struct_member",
+      "support": "saved_auxv数组",
+      "source_blob": "b9d93f504756"
+    },
+    {
+      "id": "E142-062",
+      "key": "size_arch",
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "symbol": "AT_VECTOR_SIZE_ARCH",
+      "first_line": 6,
+      "last_line": 6,
+      "kind": "macro_definition",
+      "support": "所选默认0",
+      "source_blob": "ec983b79166f"
+    },
+    {
+      "id": "E142-063",
+      "key": "size_base",
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "symbol": "AT_VECTOR_SIZE_BASE",
+      "first_line": 9,
+      "last_line": 9,
+      "kind": "macro_definition",
+      "support": "容量基础22",
+      "source_blob": "ec983b79166f"
+    },
+    {
+      "id": "E142-064",
+      "key": "size_vec",
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "symbol": "AT_VECTOR_SIZE",
+      "first_line": 12,
+      "last_line": 12,
+      "kind": "macro_definition",
+      "support": "2*(arch+base+1)",
+      "source_blob": "ec983b79166f"
+    },
+    {
+      "id": "E142-065",
+      "key": "AT_NULL",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_NULL",
+      "first_line": 9,
+      "last_line": 9,
+      "kind": "macro_definition",
+      "support": "tag定义",
+      "source_blob": "166fa1066af1"
+    },
+    {
+      "id": "E142-066",
+      "key": "AT_PLATFORM",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_PLATFORM",
+      "first_line": 24,
+      "last_line": 24,
+      "kind": "macro_definition",
+      "support": "tag定义",
+      "source_blob": "166fa1066af1"
+    },
+    {
+      "id": "E142-067",
+      "key": "AT_EXECFN",
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "symbol": "AT_EXECFN",
+      "first_line": 38,
+      "last_line": 38,
+      "kind": "macro_definition",
+      "support": "tag定义",
+      "source_blob": "166fa1066af1"
+    },
+    {
+      "id": "E142-068",
+      "key": "CLK",
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "symbol": "CLOCKS_PER_SEC",
+      "first_line": 11,
+      "last_line": 11,
+      "kind": "macro_definition",
+      "support": "USER_HZ",
+      "source_blob": "16bba89f98f5"
+    },
+    {
+      "id": "E142-069",
+      "key": "USER_HZ",
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "symbol": "USER_HZ",
+      "first_line": 10,
+      "last_line": 10,
+      "kind": "macro_definition",
+      "support": "250",
+      "source_blob": "16bba89f98f5"
+    },
+    {
+      "id": "E142-070",
+      "key": "HZ",
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "symbol": "HZ",
+      "first_line": 9,
+      "last_line": 9,
+      "kind": "macro_definition",
+      "support": "1000非auxv时钟载荷",
+      "source_blob": "16bba89f98f5"
+    },
+    {
+      "id": "E142-071",
+      "key": "build_arch",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "ARCH",
+      "first_line": 7,
+      "last_line": 9,
+      "kind": "build_declaration",
+      "support": "默认架构声明",
+      "source_blob": "6019436417ad"
+    },
+    {
+      "id": "E142-072",
+      "key": "build_64",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "first_line": 39,
+      "last_line": 43,
+      "kind": "build_declaration",
+      "support": "-m64等明确C选项",
+      "source_blob": "6019436417ad"
+    },
+    {
+      "id": "E142-073",
+      "key": "build_config",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "first_line": 58,
+      "last_line": 62,
+      "kind": "build_declaration",
+      "support": "显式CONFIG_64BIT；非全部实际配置",
+      "source_blob": "6019436417ad"
+    }
+  ],
+  "not_run": [
+    "完整本地P9",
+    "预处理",
+    "编译链接",
+    "MyOS2程序／脚本",
+    "Graphviz",
+    "QEMU",
+    "实机",
+    "真实操作"
+  ],
+  "owner_decisions_requested_now": []
+}

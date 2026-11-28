@@ -1,0 +1,358 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-HPET-ENABLE-CLOCKSOURCE-102",
+  "record_type": "bounded_static_deferred_findings_and_evidence_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-15",
+  "mainline_owner": "MYOS2-A-C07",
+  "date": "2026-11-18",
+  "source_pin_short12": "a039d9803ade",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "R101_01": "OPEN_CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "R100_01": "CLOSED_DOCUMENTATION_ONLY",
+  "owner_decisions_requested_now": [],
+  "full_local_P9": "NOT_RUN",
+  "runtime_evidence": "NOT_RUN",
+  "candidate_classification": "STATIC_CONDITIONAL_ONLY_NOT_RUNNING_DEFECT_REPORT",
+  "new_candidates": [
+    {
+      "id": "HC102-F01",
+      "name": "HPET飞秒周期转Hz的(u32)窄化",
+      "origin": "NEW_102_FREQUENCY_CONVERSION",
+      "source_evidence": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E087"
+      ],
+      "observed_static": "允许的period端点100000fs得整数10GHz，经(u32)变为1410065408Hz；接注册并传给mult/shift的为后者",
+      "necessary_conditions": "映射合法、readl返回该允许period、正常到达clocksource_register_hz且采用该编译类型",
+      "impact_if_conditions_hold": "注册频率与完整计数频率数值不同，后续时间换算输入失真",
+      "first_stop": "实际芯片period、时基选用及硬件现象未证",
+      "disposition": "DEFER_FOR_SEPARATE_C07_STATIC_REVIEW_NO_CODE_CHANGE",
+      "history_not_reopened": [
+        "MYOS2-LEAD-002::CA-05"
+      ]
+    },
+    {
+      "id": "HC102-F02",
+      "name": "周期delta乘法使用了cycles→ns转换系数",
+      "origin": "NEW_102_PERIODIC_ARITHMETIC",
+      "source_evidence": [
+        "HC102-E068",
+        "HC102-E069",
+        "HC102-E070",
+        "HC102-E071",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E093",
+        "HC102-E094"
+      ],
+      "observed_static": "clocksource的mult≈NSEC_PER_SEC·2^shift/freq；periodic却按NSEC_PER_SEC/HZ·mult>>(shift+7)构造delta，方向及附加七位需独立合理性证明",
+      "necessary_conditions": "freq32非0，mult/shift已合法计算，shift+7及整数乘积均可表示，进入legacy分支",
+      "impact_if_conditions_hold": "写给比较器的delta未必等于理想tick间隔cycles",
+      "first_stop": "periodic器件格式、运行时中断频率和硬件接受状态不由源码证明",
+      "disposition": "DEFER_ARITHMETIC_VALIDATION_AND_ARCH_DESIGN_NO_FIX_AUTH"
+    },
+    {
+      "id": "HC102-F03",
+      "name": "无legacy时返回0但已完成clocksource登记请求",
+      "origin": "NEW_102_RETURN_STATE_SEMANTICS",
+      "source_evidence": [
+        "HC102-E057",
+        "HC102-E058",
+        "HC102-E059",
+        "HC102-E051",
+        "HC102-E060",
+        "HC102-E075",
+        "HC102-E096"
+      ],
+      "observed_static": "clocksource_register_hz在LEGSUP分支判断之前；无LEGSUP直return0，不走out_nohpet",
+      "necessary_conditions": "此前合法完成映射/配置/分配/计数与register_scale入队且ID无LEGSUP",
+      "impact_if_conditions_hold": "调用者的成功布尔与保留的clocksource列表/通道/mapping全局不一致",
+      "first_stop": "真实硬件能力、重复调用与资源泄漏未证",
+      "disposition": "DEFER_RETURN_CONTRACT_CLARIFICATION"
+    },
+    {
+      "id": "HC102-F04",
+      "name": "clocksource已入队却无已证timekeeper换源闭环",
+      "origin": "NEW_102_SELECTION_INTEGRATION",
+      "source_evidence": [
+        "HC102-E057",
+        "HC102-E095",
+        "HC102-E096",
+        "HC102-E099",
+        "HC102-E100",
+        "HC102-E101",
+        "HC102-E102",
+        "HC102-E103",
+        "HC102-E104",
+        "HC102-E107",
+        "HC102-E108",
+        "HC102-E109",
+        "HC102-E117"
+      ],
+      "observed_static": "register侧选择请求注释，selector的curr_clocksource/timekeeping_notify提交注释；timekeeping_init早于HPET并保存默认源",
+      "necessary_conditions": "分析对象为所读源码函数且不存在有证的其它强链接覆盖或后续专用换源路径",
+      "impact_if_conditions_hold": "HPET列为注册候选而timekeeper仍读默认对象",
+      "first_stop": "不能否定全树其它未审消费者或真实链接配置",
+      "disposition": "DEFER_MAINLINE_INTEGRATION_REVIEW"
+    },
+    {
+      "id": "HC102-F05",
+      "name": "HPET重复初始化时channels全局所有权风险",
+      "origin": "NEW_102_REENTRY_MODEL",
+      "source_evidence": [
+        "HC102-E033",
+        "HC102-E034",
+        "HC102-E049",
+        "HC102-E050",
+        "HC102-E051",
+        "HC102-E060",
+        "HC102-E061",
+        "HC102-E121",
+        "HC102-E122"
+      ],
+      "observed_static": "每次成功分配直接覆盖hpet_base.channels，无先行释放旧对象；早期失败路径会kfree当前global；iounmap体为空",
+      "necessary_conditions": "真实二次调用、第一次指针仍有活动所有权、各调用正常到达条件分支",
+      "impact_if_conditions_hold": "可能丢失旧引用、错误清理当前global或留下未撤销映射",
+      "first_stop": "无实际重复调用/内存释放观察，旧FM96映射根不重报",
+      "disposition": "DEFER_OWNERSHIP_PROOF_REQUIRE_CALLERS_AND_ALLOCATOR_CONTEXT",
+      "history_not_reopened": [
+        "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+        "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08"
+      ]
+    },
+    {
+      "id": "HC102-F06",
+      "name": "hpet_enable失败后仍独立申请HPET IRQ登记",
+      "origin": "NEW_102_STARTUP_RETURN_CONSUMER",
+      "source_evidence": [
+        "HC102-E045",
+        "HC102-E046",
+        "HC102-E056",
+        "HC102-E059",
+        "HC102-E114",
+        "HC102-E115",
+        "HC102-E017",
+        "HC102-E021"
+      ],
+      "observed_static": "hpet_time_init丢弃hpet_enable(NULL)返回，接着调用myos_HPET_init/注册IRQ",
+      "necessary_conditions": "late_time_init可达且callee控制流合法返回，执行到myos_HPET_init",
+      "impact_if_conditions_hold": "允许源启用返回0却发起独立IRQ注册请求；并不证明IRQ真实装载/触发",
+      "first_stop": "继承R101-S01/S02/S03、R65以及IOAPIC有效性，未证硬件送达",
+      "disposition": "DEFER_101_F08/U05_CONSUMER_LINK",
+      "related_prior": [
+        "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F08",
+        "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U05"
+      ]
+    },
+    {
+      "id": "HC102-F07",
+      "name": "通道偏移超过HPET_MMAP_SIZE名义请求但实际页粒度未定",
+      "origin": "NEW_102_BOUNDED_ADDRESS_RANGE",
+      "source_evidence": [
+        "HC102-E049",
+        "HC102-E076",
+        "HC102-E080",
+        "HC102-E124",
+        "HC102-E125",
+        "HC102-E126",
+        "HC102-E030"
+      ],
+      "observed_static": "channels可达32，CFG(n=24)=1024、CFG(n=31)=1248，名义请求大小1024；下级mapping可能4KiB按页覆盖",
+      "necessary_conditions": "id读值支持至少25通道且循环实际到达对应通道，寄存器真实存在且指针有效",
+      "impact_if_conditions_hold": "请求尺寸与最高可能offset不匹配，后续需明确映射覆盖契约",
+      "first_stop": "绝不直接判定真实越界、页表失效或硬件寄存器非法",
+      "disposition": "DEFER_MAP_SIZE_CONTRACT_CHECK",
+      "history_not_reopened": [
+        "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03"
+      ]
+    },
+    {
+      "id": "HC102-F08",
+      "name": "counter重新启动后某失败清理没有对称停止请求",
+      "origin": "NEW_102_FAILURE_EXIT_STATE",
+      "source_evidence": [
+        "HC102-E062",
+        "HC102-E063",
+        "HC102-E064",
+        "HC102-E065",
+        "HC102-E066",
+        "HC102-E067",
+        "HC102-E056",
+        "HC102-E060"
+      ],
+      "observed_static": "hpet_counting首先请求restart；若counter check失败进入out_nohpet，未出现新的hpet_stop_counter调用",
+      "necessary_conditions": "启动请求已完成且counter校验false且硬件未自行停",
+      "impact_if_conditions_hold": "退出处理程序没有对称停计数请求",
+      "first_stop": "不能证明硬件仍在计数或后续操作有害",
+      "disposition": "DEFER_EXIT_RECONCILIATION"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "HC102-U01",
+      "topic": "MMIO返回指针真实性与缓存属性",
+      "source_evidence": [
+        "HC102-E030",
+        "HC102-E031",
+        "HC102-E042",
+        "HC102-E043",
+        "HC102-E122"
+      ],
+      "reason": "FM96-F03/U08已确认myos_ioremap语义问题；没有真实可用HPET虚址证明",
+      "needed": "专门映射/页表审查及运行授权，保留旧根不重开",
+      "history_scope": "CORE-USER-FRAMEBUFFER-MAPPING-96"
+    },
+    {
+      "id": "HC102-U02",
+      "topic": "HPET硬件寄存器/写入接受/period与timer能力",
+      "source_evidence": [
+        "HC102-E044",
+        "HC102-E047",
+        "HC102-E069",
+        "HC102-E070",
+        "HC102-E077",
+        "HC102-E129",
+        "HC102-E130"
+      ],
+      "reason": "未取得有修订编号的Intel/HPET一手规范；不认证设备时间电路",
+      "needed": "未来有授权时查一手规范并取实机数据"
+    },
+    {
+      "id": "HC102-U03",
+      "topic": "真实clocksource弱符号覆盖和initcall可达",
+      "source_evidence": [
+        "HC102-E103",
+        "HC102-E104",
+        "HC102-E107",
+        "HC102-E108",
+        "HC102-E117",
+        "HC102-E118"
+      ],
+      "reason": "所读weak default可能被强链接定义覆盖，fs_initcall登记不等于可执行路径",
+      "needed": "独立链接/初始化链静态核验；不得越界做构建"
+    },
+    {
+      "id": "HC102-U04",
+      "topic": "缺少runtime clocksource→timekeeper rebind已证路径",
+      "source_evidence": [
+        "HC102-E096",
+        "HC102-E101",
+        "HC102-E102",
+        "HC102-E109",
+        "HC102-E110",
+        "HC102-E111"
+      ],
+      "reason": "当前候选选择函数实际commit被注释，局部静态证据无法证明全树完全无其他换源",
+      "needed": "后续限定clocksource通知与timekeeper更新完整读边界"
+    },
+    {
+      "id": "HC102-U05",
+      "topic": "周期shift参数/ABI及真实中断频率",
+      "source_evidence": [
+        "HC102-E068",
+        "HC102-E069",
+        "HC102-E070",
+        "HC102-E071",
+        "HC102-E093",
+        "HC102-E094"
+      ],
+      "reason": "有限算例仅对独立合法shift/uint/64bit乘积有效，未验证HPET硬件compare语义",
+      "needed": "以后如有授权分别做静态类型证明和硬件周期观测"
+    },
+    {
+      "id": "HC102-U06",
+      "topic": "IOAPIC配置/RTE/中断入口与handler执行",
+      "source_evidence": [
+        "HC102-E017",
+        "HC102-E114",
+        "HC102-E115",
+        "HC102-E021",
+        "HC102-E028"
+      ],
+      "reason": "101及65历史限定继续有效；register_irq调用和真实送达之间有门",
+      "needed": "沿用101/65，不在102重做中断总链"
+    },
+    {
+      "id": "HC102-U07",
+      "topic": "旧HPET/jiffies双增的真实符号别名及ELF消费",
+      "source_evidence": [
+        "HC102-E016",
+        "HC102-E113"
+      ],
+      "reason": "旧CA-05/V14有条件模型，未证链接别名和真实handler到达",
+      "needed": "旧根原证据及独立ELF观察，不能把IR-01当其身份",
+      "history_scope": "MYOS2-LEAD-002::CA-05 / MYOS2-LEAD-002-CORE-CHECK-01::V14"
+    },
+    {
+      "id": "HC102-U08",
+      "topic": "HPET重复启用/旧channel清理与有界callee",
+      "source_evidence": [
+        "HC102-E050",
+        "HC102-E051",
+        "HC102-E060",
+        "HC102-E121",
+        "HC102-E122"
+      ],
+      "reason": "无真实重复调用证据，kcalloc/kfree/flush_tlb_local/readl/writel/udelay等部分直接callee仅按正常返回门消费",
+      "needed": "先取得真实调用者和分配器状态，再审资源所有权"
+    }
+  ],
+  "history": {
+    "batch100": {
+      "R100_01": "CLOSED_DOCUMENTATION_ONLY",
+      "composite": "PASS_PENDING_LOCAL"
+    },
+    "batch101": {
+      "R101_01": "OPEN",
+      "author_status": "RETURN",
+      "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "old_selfcheck": "105/105/0_UNCHANGED",
+      "old_six_unchanged": true
+    },
+    "reused": [
+      {
+        "ref": "MYOS2-LEAD-002::CA-05",
+        "kind": "ROOT_HPET_JIFFIES",
+        "not_new": true
+      },
+      {
+        "ref": "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+        "kind": "LIMITED_ORIGINAL_MODEL",
+        "not_new": true
+      },
+      {
+        "ref": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+        "kind": "PRIOR_MAPPING_FINDING",
+        "not_new": true
+      },
+      {
+        "ref": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08",
+        "kind": "PRIOR_MAPPING_GAP",
+        "not_new": true
+      },
+      {
+        "ref": "CORE-SCHED-INTEGRATION-03::IR-01",
+        "kind": "UNRELATED_OLDER_SCHED_DOC_ID_DO_NOT_MERGE",
+        "not_new": true
+      }
+    ]
+  },
+  "counts": {
+    "candidate_count": 8,
+    "gap_count": 8,
+    "old_root_new_findings": 0,
+    "all_candidates_static_conditional": true
+  },
+  "write_policy": "THIS_FILE_ONLY_NEW_102_BATCH_ON_PR17_NO_SOURCE_MODIFICATION"
+}

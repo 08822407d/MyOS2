@@ -1,0 +1,793 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FILES-COPY-SHARE-43",
+  "record_type": "bounded_files_provenance_and_copy_share_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "source_pin_short12": "a039d9803ade",
+  "date": "2026-11-05",
+  "read_channel": "connector",
+  "content_format": "JSON syntax (YAML 1.2 compatible)",
+  "evidence_count": 49,
+  "evidence_ids": [
+    "FT43-A001",
+    "FT43-A002",
+    "FT43-A003",
+    "FT43-A004",
+    "FT43-A005",
+    "FT43-A006",
+    "FT43-A007",
+    "FT43-A008",
+    "FT43-A009",
+    "FT43-A010",
+    "FT43-A011",
+    "FT43-A012",
+    "FT43-A013",
+    "FT43-A014",
+    "FT43-A015",
+    "FT43-A016",
+    "FT43-A017",
+    "FT43-A018",
+    "FT43-A019",
+    "FT43-A020",
+    "FT43-A021",
+    "FT43-A022",
+    "FT43-A023",
+    "FT43-A024",
+    "FT43-A025",
+    "FT43-A026",
+    "FT43-A027",
+    "FT43-A028",
+    "FT43-A029",
+    "FT43-A030",
+    "FT43-A031",
+    "FT43-A032",
+    "FT43-A033",
+    "FT43-A034",
+    "FT43-A035",
+    "FT43-A036",
+    "FT43-A037",
+    "FT43-A038",
+    "FT43-A039",
+    "FT43-A040",
+    "FT43-A041",
+    "FT43-A042",
+    "FT43-A043",
+    "FT43-A044",
+    "FT43-A045",
+    "FT43-A046",
+    "FT43-A047",
+    "FT43-A048",
+    "FT43-A049"
+  ],
+  "source_constants": [
+    {
+      "name": "NR_OPEN_DEFAULT",
+      "value": 256,
+      "evidence": "FT43-A016"
+    },
+    {
+      "name": "NR_OPEN_MAX",
+      "value": 256,
+      "evidence": "FT43-A017"
+    },
+    {
+      "name": "CLONE_FILES",
+      "value": "0x00000400",
+      "evidence": "FT43-A015"
+    }
+  ],
+  "types": [
+    {
+      "name": "files_struct_s.refcount",
+      "type": "atomic_t",
+      "role": "table shared owners",
+      "evidence": "FT43-A018"
+    },
+    {
+      "name": "files_struct_s.fd_count",
+      "type": "unsigned long",
+      "role": "logical extent, not physical capacity",
+      "evidence": "FT43-A019"
+    },
+    {
+      "name": "files_struct_s.fd_array",
+      "type": "file_s*[NR_OPEN_DEFAULT]",
+      "physical_capacity": 256,
+      "evidence": "FT43-A019"
+    },
+    {
+      "name": "file_s.f_count",
+      "type": "atomic_long_t",
+      "role": "per file object reference",
+      "evidence": "FT43-A032"
+    },
+    {
+      "name": "file_s.f_pos",
+      "type": "loff_t",
+      "role": "independent copied scalar",
+      "evidence": "FT43-A032"
+    },
+    {
+      "name": "uint",
+      "type": "unsigned int",
+      "evidence": "FT43-A048"
+    },
+    {
+      "name": "ulong",
+      "type": "unsigned long",
+      "evidence": "FT43-A049"
+    }
+  ],
+  "identity_relations": [
+    {
+      "id": "I01",
+      "object": "init_task",
+      "origin": "static global initializer",
+      "member": "files=&init_files",
+      "effect": "binds pointer value only; refcount initial1",
+      "evidence": [
+        "FT43-A001",
+        "FT43-A002",
+        "FT43-A003"
+      ]
+    },
+    {
+      "id": "I02",
+      "object": "child task_s",
+      "origin": "dup_task_struct",
+      "member": "*tsk=*orig",
+      "effect": "copies initial files pointer, not table object",
+      "premise": "valid allocation, source orig current and no intervening modification",
+      "evidence": [
+        "FT43-A007",
+        "FT43-A008"
+      ]
+    },
+    {
+      "id": "I03",
+      "object": "shared files_struct_s",
+      "origin": "copy_files CLONE_FILES",
+      "effect": "same table pointer inherited; table.refcount +1",
+      "file_ref_delta": 0,
+      "evidence": [
+        "FT43-A012"
+      ]
+    },
+    {
+      "id": "I04",
+      "object": "duplicated files_struct_s",
+      "origin": "dup_fd",
+      "effect": "new cache-allocated table; table.refcount=1 and fd_count=256",
+      "evidence": [
+        "FT43-A021",
+        "FT43-A022",
+        "FT43-A031"
+      ]
+    },
+    {
+      "id": "I05",
+      "object": "new file_s per nonNULL old slot",
+      "origin": "dup_fd kzalloc",
+      "effect": "distinct file_s address, copy f_count/f_pos numerically, pointer fields alias pointees",
+      "get_file_on_original": false,
+      "evidence": [
+        "FT43-A026",
+        "FT43-A032",
+        "FT43-A033",
+        "FT43-A034"
+      ]
+    },
+    {
+      "id": "I06",
+      "object": "copy pointer from unshare_fd",
+      "origin": "*new_fdp=dup_fd if test",
+      "effect": "out-param set but current task pointer unchanged until unshare_files assignment",
+      "evidence": [
+        "FT43-A040",
+        "FT43-A044"
+      ]
+    },
+    {
+      "id": "I07",
+      "object": "old table",
+      "origin": "unshare_files old=task->files",
+      "effect": "put_files_struct(old) after publish new table",
+      "evidence": [
+        "FT43-A044",
+        "FT43-A045"
+      ]
+    }
+  ],
+  "functional_contracts": [
+    {
+      "name": "copy_files",
+      "signature": "static int copy_files(unsigned long clone_flags,task_s*tsk)",
+      "read_old": "current->files",
+      "source_check": [
+        "!oldf goto out",
+        "clone_flags & CLONE_FILES"
+      ],
+      "branches": [
+        {
+          "name": "no_old",
+          "table_ref_delta": 0,
+          "return": 0,
+          "tsk_files_write": false
+        },
+        {
+          "name": "share",
+          "table_ref_delta": 1,
+          "return": 0,
+          "tsk_files_write": false,
+          "requires_preseed": true
+        },
+        {
+          "name": "copy",
+          "table_ref_delta": 0,
+          "call": "dup_fd(oldf,NR_OPEN_MAX,&error)",
+          "tsk_files_write_if_success": true,
+          "normal_return": 0,
+          "error_return": "error if newf NULL"
+        }
+      ],
+      "evidence": [
+        "FT43-A010",
+        "FT43-A011",
+        "FT43-A012",
+        "FT43-A013",
+        "FT43-A014"
+      ]
+    },
+    {
+      "name": "dup_fd",
+      "signature": "files_struct_s* dup_fd(files_struct_s*oldf,unsigned int max_fds,int*errorp)",
+      "initial_error": "-ENOMEM",
+      "outer_allocation": "kmem_cache_alloc(files_cachep,GFP_KERNEL)",
+      "outer_failure": "goto out -> NULL",
+      "table_init": [
+        "refcount=1",
+        "fd_count=NR_OPEN_DEFAULT",
+        "spin_lock_init"
+      ],
+      "loop_bound": "i<max_fds",
+      "physical_bound_check": false,
+      "old_null_slot": "no new slot write",
+      "old_nonnull_slot": "kzalloc file_s, *new_fp=*old_fp, new_fds[i]=new_fp",
+      "inner_null_check": false,
+      "return_valid_newf": true,
+      "out_release_label_has_active_goto": false,
+      "evidence": [
+        "FT43-A020",
+        "FT43-A021",
+        "FT43-A022",
+        "FT43-A023",
+        "FT43-A024",
+        "FT43-A025",
+        "FT43-A026",
+        "FT43-A027",
+        "FT43-A028",
+        "FT43-A029"
+      ]
+    },
+    {
+      "name": "unshare_fd",
+      "signature": "int unshare_fd(unsigned long flags,unsigned int max_fds,files_struct_s**new_fdp)",
+      "read_current_files": true,
+      "source_check": "(flags & CLONE_FILES) && fd && atomic_read(fd.refcount)>1",
+      "write_out_only_if_true": true,
+      "else_out_untouched": true,
+      "return_value": "0 unless dup_fd returns NULL, then error",
+      "evidence": [
+        "FT43-A039",
+        "FT43-A040",
+        "FT43-A041"
+      ]
+    },
+    {
+      "name": "unshare_files",
+      "initial_output": "copy=NULL",
+      "call": "unshare_fd(CLONE_FILES,NR_OPEN_MAX,&copy)",
+      "early_return": "if(error||!copy) return error",
+      "publish_sequence": [
+        "old=task->files",
+        "task_lock",
+        "task->files=copy",
+        "task_unlock",
+        "put_files_struct(old)",
+        "return0"
+      ],
+      "opaque_put_requires_normal_completion": true,
+      "evidence": [
+        "FT43-A042",
+        "FT43-A043",
+        "FT43-A044",
+        "FT43-A045"
+      ]
+    },
+    {
+      "name": "begin_new_exec",
+      "scope": "single call site only",
+      "call": "retval=unshare_files(); if(retval) goto out",
+      "predecessors_and_deep_exec": "OPAQUE",
+      "evidence": [
+        "FT43-A046"
+      ]
+    }
+  ],
+  "file_fields_copy": {
+    "value_copied": [
+      "f_count",
+      "f_pos",
+      "f_mode",
+      "f_flags",
+      "f_path structure value",
+      "f_op pointer",
+      "f_mapping pointer",
+      "f_inode pointer"
+    ],
+    "pointer_target_deep_copied": false,
+    "original_file_count_incremented": false,
+    "separate_new_file_object_per_old_nonnull_slot": true,
+    "distinct_original_aliases_may_split": true,
+    "history": "CORE-USER-VFS-BASELINE-05::UV-09",
+    "evidence": [
+      "FT43-A026",
+      "FT43-A032",
+      "FT43-A033",
+      "FT43-A034",
+      "FT43-A035"
+    ]
+  },
+  "boundaries": [
+    "Actual caller max_fds=NR_OPEN_MAX=256; helper does not guard arbitrary larger max_fds",
+    "oldf.fd_count not used as dup_fd loop bound",
+    "new files slots corresponding to NULL old slots have no local assignment; actual bits unknown",
+    "inner kzalloc return not checked before deref",
+    "no global clone/exec/exit or allocator lifecycle certification",
+    "copy_files relies on prior task_s copying for shared branch",
+    "unshare_fd does not initialize arbitrary caller output",
+    "unshare_files release old table happens after publish under valid object/no writer premises"
+  ],
+  "finite_models": [
+    {
+      "id": "M01",
+      "group": "init",
+      "input": "static init_task binding",
+      "actual_source_sequence": "init_task.files=&init_files; init_files.refcount=1,fd_count=0",
+      "last_certified": "static initial identity only",
+      "first_stop": "actual last put unproven",
+      "evidence": [
+        "FT43-A002",
+        "FT43-A003",
+        "FT43-A004"
+      ]
+    },
+    {
+      "id": "M02",
+      "group": "copy_files",
+      "input": "valid p from dup_task_struct, current.files=NULL",
+      "actual_source_sequence": "p.files initially NULL under *p=*current; copy_files goto out",
+      "last_certified": "returns0; copy_files writes no slot and no refcount",
+      "first_stop": "if precursor invalid, no conclusion",
+      "evidence": [
+        "FT43-A007",
+        "FT43-A011",
+        "FT43-A014"
+      ]
+    },
+    {
+      "id": "M03",
+      "group": "copy_files",
+      "input": "oldf valid refcount=1; CLONE_FILES bit set",
+      "actual_source_sequence": "p.files inherited oldf; atomic_inc 1->2; goto out",
+      "last_certified": "returns0; p.files same table address; no per-file increment",
+      "first_stop": "if p not valid prior copy",
+      "evidence": [
+        "FT43-A007",
+        "FT43-A012"
+      ]
+    },
+    {
+      "id": "M04",
+      "group": "copy_files",
+      "input": "oldf valid refcount=2; CLONE_FILES bit set",
+      "actual_source_sequence": "p.files inherited oldf; atomic_inc 2->3",
+      "last_certified": "returns0 under no other writers",
+      "first_stop": "no thread safety proved",
+      "evidence": [
+        "FT43-A012"
+      ]
+    },
+    {
+      "id": "M05",
+      "group": "copy_files",
+      "input": "oldf valid, no CLONE_FILES, dup_fd succeeds",
+      "actual_source_sequence": "new files obj built, p.files=newf, error=0",
+      "last_certified": "two distinct files_struct addresses; oldf table count unchanged in copy_files",
+      "first_stop": "unknown deep file pointer lifetime",
+      "evidence": [
+        "FT43-A013",
+        "FT43-A014"
+      ]
+    },
+    {
+      "id": "M06",
+      "group": "copy_files",
+      "input": "oldf valid, no CLONE_FILES, outer kmem_cache_alloc returns NULL",
+      "actual_source_sequence": "dup_fd errorp=-ENOMEM, returnsNULL; copy_files goto out",
+      "last_certified": "returns -ENOMEM; p.files remains pre-copied oldf under precursor",
+      "first_stop": "cleanup after failure opaque",
+      "evidence": [
+        "FT43-A021",
+        "FT43-A013",
+        "FT43-A007"
+      ]
+    },
+    {
+      "id": "M07",
+      "group": "copy_files",
+      "input": "valid p, shared branch, oldf changed by unknown writer",
+      "actual_source_sequence": "atomic_inc(oldf.refcount) observed in source",
+      "last_certified": "p.files eventual identity NOT_CERTIFIED",
+      "first_stop": "first opaque mutation invalidates stable-object premise",
+      "evidence": [
+        "FT43-A007",
+        "FT43-A012"
+      ]
+    },
+    {
+      "id": "M08",
+      "group": "dup_fd",
+      "input": "oldf valid, new table alloc NULL",
+      "actual_source_sequence": "*errorp=-ENOMEM; goto out",
+      "last_certified": "NULL result, errorp=-ENOMEM",
+      "first_stop": "none",
+      "evidence": [
+        "FT43-A021",
+        "FT43-A029"
+      ]
+    },
+    {
+      "id": "M09",
+      "group": "dup_fd",
+      "input": "oldf valid, successful outer alloc, max_fds=0",
+      "actual_source_sequence": "newf.refcount=1,newf.fd_count=256; zero loop iterations",
+      "last_certified": "returns newf; no explicit slot initialization",
+      "first_stop": "actual new slot bytes unknown",
+      "evidence": [
+        "FT43-A022",
+        "FT43-A025",
+        "FT43-A028"
+      ]
+    },
+    {
+      "id": "M10",
+      "group": "dup_fd",
+      "input": "max_fds=1; old slot0=NULL",
+      "actual_source_sequence": "read old_fds[0], if false; no new_fds[0] assignment",
+      "last_certified": "returns newf if rest normal",
+      "first_stop": "cannot assert new slot0==NULL",
+      "evidence": [
+        "FT43-A025",
+        "FT43-A026",
+        "FT43-A028"
+      ]
+    },
+    {
+      "id": "M11",
+      "group": "dup_fd",
+      "input": "max_fds=1; old slot0 valid file count1; kzalloc valid",
+      "actual_source_sequence": "allocate new file_s, copy *old_fp",
+      "last_certified": "new slot0 points new file_s, copied f_count value1",
+      "first_stop": "other pointers inside file not deep copied",
+      "evidence": [
+        "FT43-A026",
+        "FT43-A032",
+        "FT43-A033"
+      ]
+    },
+    {
+      "id": "M12",
+      "group": "dup_fd",
+      "input": "max_fds=1; old slot0 valid file count2; kzalloc valid",
+      "actual_source_sequence": "new file receives copied f_count value2",
+      "last_certified": "independent new counter value2; no get_file(old) in selected body",
+      "first_stop": "cannot claim reference balanced",
+      "evidence": [
+        "FT43-A026",
+        "FT43-A032"
+      ]
+    },
+    {
+      "id": "M13",
+      "group": "dup_fd",
+      "input": "max_fds=2; old slots0/1 alias same live file count2; allocations distinct",
+      "actual_source_sequence": "loop twice: kzalloc + *new_fp=*old_fp for each nonNULL",
+      "last_certified": "new slots point distinct new file objects each with copied count2",
+      "first_stop": "original pointer alias topology not preserved",
+      "evidence": [
+        "FT43-A025",
+        "FT43-A026"
+      ]
+    },
+    {
+      "id": "M14",
+      "group": "dup_fd",
+      "input": "max_fds=2; old slots0/1 both NULL",
+      "actual_source_sequence": "both if false, no new slot stores",
+      "last_certified": "new slots not certified NULL",
+      "first_stop": "unknown allocation bytes",
+      "evidence": [
+        "FT43-A025",
+        "FT43-A026"
+      ]
+    },
+    {
+      "id": "M15",
+      "group": "dup_fd",
+      "input": "max_fds=256, old table 256 valid physical entries",
+      "actual_source_sequence": "i iterates 0..255",
+      "last_certified": "no index256 from this loop",
+      "first_stop": "individual source objects/inner alloc may fail earlier",
+      "evidence": [
+        "FT43-A016",
+        "FT43-A025"
+      ]
+    },
+    {
+      "id": "M16",
+      "group": "dup_fd",
+      "input": "max_fds=257, old 0..255 iterations normal",
+      "actual_source_sequence": "next i=256, old_fds[i] access outside 256",
+      "last_certified": "no valid continuation",
+      "first_stop": "OOB read at old_fds[256]",
+      "evidence": [
+        "FT43-A016",
+        "FT43-A019",
+        "FT43-A025"
+      ]
+    },
+    {
+      "id": "M17",
+      "group": "dup_fd",
+      "input": "oldf.fd_count=1,max_fds=256, physical slot5 has valid pointer",
+      "actual_source_sequence": "loop reads physical slot5 notwithstanding fd_count=1",
+      "last_certified": "copies slot5 if nonNULL; source independent of fd_count",
+      "first_stop": "not proof of actual logical fd openness",
+      "evidence": [
+        "FT43-A019",
+        "FT43-A025",
+        "FT43-A026"
+      ]
+    },
+    {
+      "id": "M18",
+      "group": "dup_fd",
+      "input": "old slot valid, kzalloc returns NULL",
+      "actual_source_sequence": "new_fp=NULL; *new_fp=*old_fp immediately",
+      "last_certified": "normal return/error not certified",
+      "first_stop": "invalid new_fp dereference",
+      "evidence": [
+        "FT43-A027"
+      ]
+    },
+    {
+      "id": "M19",
+      "group": "dup_fd",
+      "input": "old slot nonNULL but not valid file_s",
+      "actual_source_sequence": "new_fp allocated, *new_fp=*old_fp",
+      "last_certified": "new file contents not certified",
+      "first_stop": "invalid old_fp dereference",
+      "evidence": [
+        "FT43-A026"
+      ]
+    },
+    {
+      "id": "M20",
+      "group": "dup_fd",
+      "input": "outer alloc success and per-slot alloc success, errorp initial -ENOMEM",
+      "actual_source_sequence": "success return newf without resetting errorp",
+      "last_certified": "errorp not valid for nonNULL result per function contract comment",
+      "first_stop": "do not report success errorp as bug",
+      "evidence": [
+        "FT43-A021",
+        "FT43-A028"
+      ]
+    },
+    {
+      "id": "M21",
+      "group": "unshare_fd",
+      "input": "unshare_flags has no CLONE_FILES, output initially sentinel",
+      "actual_source_sequence": "outer if false; return0",
+      "last_certified": "output remains sentinel, NOT auto-NULL",
+      "first_stop": "helper does not initialize output",
+      "evidence": [
+        "FT43-A039",
+        "FT43-A040",
+        "FT43-A041"
+      ]
+    },
+    {
+      "id": "M22",
+      "group": "unshare_fd",
+      "input": "CLONE_FILES bit, current.files=NULL, output init NULL",
+      "actual_source_sequence": "fd short circuit false",
+      "last_certified": "return0; output unchanged NULL",
+      "first_stop": "no deref fd",
+      "evidence": [
+        "FT43-A040",
+        "FT43-A041"
+      ]
+    },
+    {
+      "id": "M23",
+      "group": "unshare_fd",
+      "input": "CLONE_FILES bit, valid files.refcount=1, output init NULL",
+      "actual_source_sequence": "atomic_read returns1, copy condition false",
+      "last_certified": "return0; output remains NULL",
+      "first_stop": "no copy created",
+      "evidence": [
+        "FT43-A040",
+        "FT43-A041"
+      ]
+    },
+    {
+      "id": "M24",
+      "group": "unshare_fd",
+      "input": "CLONE_FILES bit, valid files.refcount=2, dup_fd returns newf",
+      "actual_source_sequence": "*new_fdp=newf; success path",
+      "last_certified": "return0; output points copy; current task not switched by helper",
+      "first_stop": "must call unshare_files for publication",
+      "evidence": [
+        "FT43-A040",
+        "FT43-A041"
+      ]
+    },
+    {
+      "id": "M25",
+      "group": "unshare_fd",
+      "input": "refcount>1, outer allocation failure",
+      "actual_source_sequence": "dup_fd returnsNULL, *new_fdp=NULL, returnerror",
+      "last_certified": "returns -ENOMEM with correctly initialized errorp",
+      "first_stop": "inner error body not assumed",
+      "evidence": [
+        "FT43-A021",
+        "FT43-A040"
+      ]
+    },
+    {
+      "id": "M26",
+      "group": "unshare_files",
+      "input": "current.files=NULL or refcount1; copy initialized NULL",
+      "actual_source_sequence": "unshare_fd returns0 without output write; if(error||!copy)",
+      "last_certified": "returns0 with no table publication and no put",
+      "first_stop": "requires valid current task",
+      "evidence": [
+        "FT43-A042",
+        "FT43-A043"
+      ]
+    },
+    {
+      "id": "M27",
+      "group": "unshare_files",
+      "input": "current.files valid refcount2; duplication succeeds, stable old identity",
+      "actual_source_sequence": "copy populated; task.files=copy; put old 2->1",
+      "last_certified": "returns0 if put returns normally; old table not last freed by this put",
+      "first_stop": "not global concurrency proof",
+      "evidence": [
+        "FT43-A043",
+        "FT43-A044",
+        "FT43-A045",
+        "FT43-A036"
+      ]
+    },
+    {
+      "id": "M28",
+      "group": "unshare_files",
+      "input": "current.files valid refcount3, duplication succeeds, stable old",
+      "actual_source_sequence": "publish copy then put old 3->2",
+      "last_certified": "returns0 if normal; old table remains under local count model",
+      "first_stop": "opaque other references remain",
+      "evidence": [
+        "FT43-A044",
+        "FT43-A045"
+      ]
+    },
+    {
+      "id": "M29",
+      "group": "unshare_files",
+      "input": "dup_fd outer alloc NULL; copy initialized NULL",
+      "actual_source_sequence": "error=-ENOMEM,copy=NULL; if(error||!copy)",
+      "last_certified": "returns -ENOMEM; no publication or put",
+      "first_stop": "downstream exec does not continue past error gate",
+      "evidence": [
+        "FT43-A021",
+        "FT43-A043",
+        "FT43-A046"
+      ]
+    },
+    {
+      "id": "M30",
+      "group": "unshare_files",
+      "input": "dup_fd returns valid copy but put_files_struct(old) does not return",
+      "actual_source_sequence": "publish new table; call put old",
+      "last_certified": "task.files already set to copy; no return0 guarantee",
+      "first_stop": "stops at opaque put failure/nonreturn",
+      "evidence": [
+        "FT43-A044",
+        "FT43-A045"
+      ]
+    },
+    {
+      "id": "M31",
+      "group": "init_copy_share",
+      "input": "init_task.files points static init_files; valid copy_process with CLONE_FILES",
+      "actual_source_sequence": "valid p inherits static pointer, increments static table count 1->2",
+      "last_certified": "proves conditional sharing path only",
+      "first_stop": "actual later last put/release CL42-F01 not established",
+      "evidence": [
+        "FT43-A002",
+        "FT43-A003",
+        "FT43-A007",
+        "FT43-A012"
+      ]
+    },
+    {
+      "id": "M32",
+      "group": "init_copy_nonshare",
+      "input": "init_task.files static, no CLONE_FILES and dup_fd success",
+      "actual_source_sequence": "p.files replaced by dynamic newf; init_files local count unchanged",
+      "last_certified": "new task owns separate files_struct identity",
+      "first_stop": "no full process execution or final release proof",
+      "evidence": [
+        "FT43-A002",
+        "FT43-A013",
+        "FT43-A014"
+      ]
+    },
+    {
+      "id": "M33",
+      "group": "prelude",
+      "input": "dup_task_struct alloc returns NULL",
+      "actual_source_sequence": "return NULL to copy_process; its if(!p) goto fork_out",
+      "last_certified": "no copy_files for this path",
+      "first_stop": "task allocation details opaque",
+      "evidence": [
+        "FT43-A006",
+        "FT43-A008"
+      ]
+    },
+    {
+      "id": "M34",
+      "group": "unshare_output",
+      "input": "arbitrary direct unshare_fd caller passes uninitialized pointer, condition false",
+      "actual_source_sequence": "no write to *new_fdp",
+      "last_certified": "caller output indeterminate; not modelled as NULL",
+      "first_stop": "unshare_files is safe only due local copy=NULL",
+      "evidence": [
+        "FT43-A040",
+        "FT43-A041",
+        "FT43-A042"
+      ]
+    }
+  ],
+  "finite_model_count": 34,
+  "new_finding_ids": [
+    "FT43-F01"
+  ],
+  "history_not_renumbered": [
+    "CORE-USER-FD-CLOSE-42::CL42-F01",
+    "CORE-USER-VFS-BASELINE-05::UV-09",
+    "CORE-USER-VFS-BASELINE-05::UV-10",
+    "CORE-USER-VFS-BASELINE-05::UV-11",
+    "CORE-USER-SYSCALL-STDIO-08::US-01",
+    "CORE-USER-SYSCALL-STDIO-08::US-03",
+    "R42-S01",
+    "R42-S02"
+  ],
+  "runtime": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "external_YAML_parser": "NOT_RUN",
+  "graph_renderer": "NOT_RUN"
+}

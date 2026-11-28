@@ -1,0 +1,2247 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOTINFO-TAG-BUILD-97",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "record_type": "batch97_conditional_source_facts_D00_consumers_and_finite_models",
+  "produced_by": "GPT-6（visible family; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-17",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "b878cc3784da",
+  "execution_parent_short12": "6a1fa78d0356",
+  "master_direct_short12": "e8e60cd19540",
+  "runtime_evidence": "NOT_RUN",
+  "mainline_acceptance": "PENDING",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "G00": {
+    "status": "PASS_READ_ONLY",
+    "PR16": "OPEN_UNMERGED",
+    "PR17": "OPEN_DRAFT_UNMERGED",
+    "refs": {
+      "lead": "b878cc3784da",
+      "exec": "6a1fa78d0356",
+      "master": "e8e60cd19540",
+      "time": "a039d9803ade"
+    },
+    "new_97_dir": "ABSENT",
+    "old_137_dir": "ABSENT",
+    "formal_markers_at_start": {
+      "old": 0,
+      "new": 0
+    },
+    "time_master_canaries": "MATCHED_AND_DIFFERENT"
+  },
+  "source_files_with_short_anchors": [
+    "myloader/uefi/multiboot2.h",
+    "myloader/uefi/bootloader.c",
+    "myloader/uefi/multiboot2_utils.c",
+    "myloader/uefi/utils.h",
+    "mykernel/arch/x86_64/myos/pre_init.c",
+    "mykernel/include/obsolete/ktypes.h",
+    "mykernel/arch/x86_64/mm/early/e820.c",
+    "mykernel/arch/x86_64/mm/early/e820_types.h",
+    "mykernel/arch/x86_64/mm/early/e820_const.h"
+  ],
+  "read_extra_direct_helpers": [
+    "myloader/uefi/bootloader.h",
+    "mykernel/arch/x86_64/mm/early/e820.h",
+    "mykernel/arch/x86_64/mm/mm_const_arch.h"
+  ],
+  "evidence_label_count": 85,
+  "source_quote_recheck": {
+    "fresh_fixed_source_reads": "each of 9 source files opened full at fixed time, anchored ranges re-fetched on second pass",
+    "raw_label_count": 85,
+    "confirmed_one_definition_literal_1_to_5_lines": 85,
+    "known_prior96_E036_boundary_failures_not_retroactively_corrected": 1,
+    "full_local_mechanical_P9": "NOT_RUN",
+    "integrity_after_blob_readback": "85/85 quote byte-text equals independent fixed GitHub source line ranges; each 1–5 contiguous lines",
+    "verified_source_definition_category_counts": {
+      "STRUCT": 14,
+      "TYPEDEF": 6,
+      "STRUCT_FIELD": 1,
+      "KERNEL_FUNCTION": 9,
+      "LOADER_FUNCTION": 46,
+      "MACRO": 9
+    },
+    "topic_counts": {
+      "D00": 7,
+      "A": 16,
+      "B": 34,
+      "C": 25,
+      "ABC": 3
+    },
+    "source_quote_index_count": 85
+  },
+  "D00_R96_01_02": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "old96_six_files_unchanged": true,
+    "old96_raw_selfcheck": {
+      "verified_claims": 110,
+      "quotes_reconfirmed": 110,
+      "downgraded_to_inferred": 0
+    },
+    "old_semantic_universal_claim": "WITHDRAWN_NOT_RETROACTIVELY_REPAIRED",
+    "R96_01": {
+      "original_anchor": "FM96-E036",
+      "error": "one quote includes structure close plus separate following typedef",
+      "repaired_struct_evidence_ids": [
+        "BT97-E001"
+      ],
+      "repaired_typedef_evidence_ids": [
+        "BT97-E002"
+      ],
+      "field_evidence_ids": [
+        "BT97-E001",
+        "BT97-E003"
+      ],
+      "old_consumers": [
+        "framebuffer_producer_type_and_unit_matrix",
+        "producer source_quote_index",
+        "A-P06",
+        "FM96-M11",
+        "FM96-F04",
+        "framebuffer-mapping.md A",
+        "evidence.md definition qualifier",
+        "MANIFEST.md all_110_single_definition overstatement"
+      ],
+      "consumer_action": "replace provenance per fact: struct type and framebuffer_type E001; distinct alias E002; loader expression E006; framebuffer constant E007; do not alter old identity or historical 110/110/0"
+    },
+    "R96_02": {
+      "original_qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F05",
+      "original_invalid_distinct_root": [
+        35,
+        41,
+        44
+      ],
+      "original_invalid_evidence_ids": [
+        "FM96-ECORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05"
+      ],
+      "original_missing_prior_links": true,
+      "repaired_distinct_root": "独立kernel PixperScanline中(bpp/8)的零除数输入域，和旧CN95行距/像素跨度不是同一根因",
+      "repaired_old_evidence_ids": [
+        "FM96-E035",
+        "FM96-E041",
+        "FM96-E044"
+      ],
+      "repaired_new_evidence_ids": [
+        "BT97-E003",
+        "BT97-E004",
+        "BT97-E005"
+      ],
+      "repaired_prior_related_qualified_ids": [
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05"
+      ],
+      "correction_scope": "only metadata/evidence dependency; no runtime or implementation fix",
+      "verified_other96_candidates": [
+        "FM96-F01",
+        "FM96-F02",
+        "FM96-F03",
+        "FM96-F04"
+      ],
+      "verified_other96_gaps": [
+        "FM96-U01",
+        "FM96-U02",
+        "FM96-U03",
+        "FM96-U04",
+        "FM96-U05",
+        "FM96-U06",
+        "FM96-U07",
+        "FM96-U08",
+        "FM96-U09"
+      ],
+      "references_examined": "96/deferred-findings.yaml prior_qualified_id_links, five candidate records, nine gaps and 96/facts source indices; only F05 malformed fields repaired"
+    },
+    "reviewer_supplements_retained": {
+      "R96_S01": "valid input and arithmetic stages isolated; loader FrameBufferSize model must not be silently replaced",
+      "R96_S02": "4K-only mask excludes old big-page reuse shortcut; NOENC/NOCACHE different source encodings; HPET runtime not inferred",
+      "R96_S03": "different CR3 operation times do not prove root identities differ; graph edges discriminate call/data/time",
+      "R95_01_02": "CLOSED_BY_C06",
+      "batch95": "PASS_PENDING_LOCAL"
+    }
+  },
+  "fact_to_evidence_id_index": {
+    "D00_R96_01_02_correction_matrix": [
+      "BT97-E001",
+      "BT97-E002",
+      "BT97-E006",
+      "BT97-E007",
+      "BT97-E003",
+      "BT97-E004",
+      "BT97-E005"
+    ],
+    "arena_and_tag_cursor_matrix": [
+      "BT97-E008",
+      "BT97-E009",
+      "BT97-E010",
+      "BT97-E011",
+      "BT97-E014",
+      "BT97-E018",
+      "BT97-E083",
+      "BT97-E015",
+      "BT97-E019",
+      "BT97-E020",
+      "BT97-E012",
+      "BT97-E022",
+      "BT97-E044",
+      "BT97-E060",
+      "BT97-E067",
+      "BT97-E017",
+      "BT97-E013"
+    ],
+    "header_end_publication_matrix": [
+      "BT97-E016",
+      "BT97-E019",
+      "BT97-E021",
+      "BT97-E013",
+      "BT97-E017",
+      "BT97-E012",
+      "BT97-E015",
+      "BT97-E079"
+    ],
+    "descriptor_conversion_and_coalescing_matrix": [
+      "BT97-E023",
+      "BT97-E026",
+      "BT97-E027",
+      "BT97-E028",
+      "BT97-E029",
+      "BT97-E035",
+      "BT97-E030",
+      "BT97-E031",
+      "BT97-E032",
+      "BT97-E033",
+      "BT97-E034",
+      "BT97-E036",
+      "BT97-E037",
+      "BT97-E038",
+      "BT97-E039",
+      "BT97-E040",
+      "BT97-E041",
+      "BT97-E042"
+    ],
+    "mmap_record_publication_matrix": [
+      "BT97-E043",
+      "BT97-E044",
+      "BT97-E075",
+      "BT97-E010",
+      "BT97-E039",
+      "BT97-E045",
+      "BT97-E046",
+      "BT97-E049",
+      "BT97-E050",
+      "BT97-E081",
+      "BT97-E051",
+      "BT97-E053",
+      "BT97-E054",
+      "BT97-E047",
+      "BT97-E048",
+      "BT97-E038",
+      "BT97-E052"
+    ],
+    "auxiliary_tag_extent_matrix": [
+      "BT97-E056",
+      "BT97-E057",
+      "BT97-E058",
+      "BT97-E059",
+      "BT97-E060",
+      "BT97-E061",
+      "BT97-E062",
+      "BT97-E080",
+      "BT97-E063",
+      "BT97-E064",
+      "BT97-E070",
+      "BT97-E065",
+      "BT97-E066",
+      "BT97-E068",
+      "BT97-E069",
+      "BT97-E067",
+      "BT97-E071",
+      "BT97-E085"
+    ],
+    "service_stage_and_handoff_matrix": [
+      "BT97-E012",
+      "BT97-E043",
+      "BT97-E075",
+      "BT97-E056",
+      "BT97-E064",
+      "BT97-E076",
+      "BT97-E077",
+      "BT97-E078",
+      "BT97-E074",
+      "BT97-E061",
+      "BT97-E060",
+      "BT97-E072",
+      "BT97-E073",
+      "BT97-E070",
+      "BT97-E071",
+      "BT97-E013",
+      "BT97-E016",
+      "BT97-E017",
+      "BT97-E079"
+    ],
+    "ABC_join_matrix": [
+      "BT97-E010",
+      "BT97-E012",
+      "BT97-E013",
+      "BT97-E015",
+      "BT97-E016",
+      "BT97-E017",
+      "BT97-E036",
+      "BT97-E039",
+      "BT97-E040",
+      "BT97-E044",
+      "BT97-E049",
+      "BT97-E050",
+      "BT97-E053",
+      "BT97-E054",
+      "BT97-E060",
+      "BT97-E064",
+      "BT97-E067",
+      "BT97-E072",
+      "BT97-E073",
+      "BT97-E074",
+      "BT97-E001",
+      "BT97-E002",
+      "BT97-E003",
+      "BT97-E004",
+      "BT97-E005",
+      "BT97-E006"
+    ]
+  },
+  "matrices": {
+    "D00_R96_01_02_correction_matrix": [
+      {
+        "id": "D96-R01-STRUCT",
+        "scenario": "FM96-E036跨struct/typedef",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "旧E036第320–323行，320–322属multiboot_tag_framebuffer_common，323独立typedef",
+        "conditional_result": "本批E001缩到struct，E002另取typedef；原字面标签计数不改",
+        "first_stop_gate": "撤回旧96“110条全部单定义通过”的全称结论",
+        "evidence_ids": [
+          "BT97-E001",
+          "BT97-E002"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D96-R01-CONSUMERS",
+        "scenario": "E036消费者修正",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "旧96 producer/type索引、A-P06、FM96-M11、FM96-F04与历史文本里的framebuffer_type字段及结构别名",
+        "conditional_result": "E001供字段和结构结论；E002只供mbi_framebuffer_common_s别名；E006供实际Loader赋值；E007供RGB常量",
+        "first_stop_gate": "Mode->Mode≠Info->PixelFormat的外部语义仍needs_evidence",
+        "evidence_ids": [
+          "BT97-E001",
+          "BT97-E002",
+          "BT97-E006",
+          "BT97-E007"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D96-R02-F05",
+        "scenario": "FM96-F05三字段错位",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "旧distinct_root=[35,41,44]、evidence_ids拼接无效、prior_related_qualified_ids=[]",
+        "conditional_result": "根因改为kernel bpp<8时bpp/8=0的输入域；正确证据旧FM96-E035/E041/E044；新E003/E004/E005复核；CN95-U05移入历史关系",
+        "first_stop_gate": "不认证真实firmware会产生0..7 bpp；不称运行除零故障",
+        "evidence_ids": [
+          "BT97-E003",
+          "BT97-E004",
+          "BT97-E005"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D96-R02-SCOPE",
+        "scenario": "五候选九缺口有界消费核验",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "逐旧deferred中的F01–F05、U01–U09、prior_qualified_id_links，识别只F05错位；其它记录保持旧身份",
+        "conditional_result": "新97补证不在原96旧件修改，也不重复签历史旧条目已通过",
+        "first_stop_gate": "原C06对R96-01/02复审前仍为RETURN",
+        "evidence_ids": [
+          "BT97-E003",
+          "BT97-E004",
+          "BT97-E005",
+          "BT97-E006"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D96-S01-03",
+        "scenario": "保留R96-S01/02/03与95闭合",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "数值模型分阶段且不以loader任一bpp假设推导不同FrameBufferSize；4K掩码禁旧大页直接reuse；两个CR3操作时间不同不证明根不同",
+        "conditional_result": "96主体保留，95按正式PASS_PENDING_LOCAL，不新审95/96主体",
+        "first_stop_gate": "所有ABI、PAT/MTRR、活动CR3、物理extent仍由旧review停止门限定",
+        "evidence_ids": [
+          "BT97-E003",
+          "BT97-E004",
+          "BT97-E005",
+          "BT97-E006"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "arena_and_tag_cursor_matrix": [
+      {
+        "id": "A-ARENA-01",
+        "scenario": "固定共享MBI内存申请",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "UefiMain page_count=32、PAGE_SIZE=1<<12=4096、AllocatePages后SetMem清零，再取头/第一个tag指针",
+        "conditional_result": "隔离数学容量32*4096=131072B；固定调用无所读EFI_STATUS检查，不能证明真申请成功",
+        "first_stop_gate": "服务返回、页物理地址、映射和整块可访问在前",
+        "evidence_ids": [
+          "BT97-E008",
+          "BT97-E009",
+          "BT97-E010",
+          "BT97-E011"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-ARENA-02",
+        "scenario": "头/游标对象分离",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "init_info_tag_addr(start)返回start+sizeof(mbi_tags_header_s)；header有两u32字段",
+        "conditional_result": "在sizeof(header)=8等合法ABI条件下首tag从base+8开始",
+        "first_stop_gate": "结构布局和指针形成先门；不以成员名证明真实协议符合",
+        "evidence_ids": [
+          "BT97-E014",
+          "BT97-E018",
+          "BT97-E083"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-ARENA-03",
+        "scenario": "tag推进算法",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "next_info_tag_addr以(prev->size+7)&~7得到对齐步长并加当前UINT8*",
+        "conditional_result": "有效32位size/指针域下逐tag上推8字节对齐游标；无容量/单调性检验",
+        "first_stop_gate": "size+7可能回绕、size=0不推进、溢出/超界指针均先停",
+        "evidence_ids": [
+          "BT97-E015",
+          "BT97-E019",
+          "BT97-E020",
+          "BT97-E083"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-ARENA-04",
+        "scenario": "同一MBI连续生产顺序",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "UefiMain FRAMEBUFFER→MMAP→ACPI_NEW→CPU_TOPO各返回下一游标",
+        "conditional_result": "这是共享区域上的顺序追加，不是彼此独立buffer；后两阶段调用在ExitBootServices源码之后",
+        "first_stop_gate": "一个早期阶段失败后不能推导后续Tag可达",
+        "evidence_ids": [
+          "BT97-E012",
+          "BT97-E022",
+          "BT97-E044",
+          "BT97-E060",
+          "BT97-E067"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-ARENA-05",
+        "scenario": "FrameBuffer实际公布",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "fill_framebuffer_info最后设type与sizeof(mbi_framebuffer_s)，按共同next推进",
+        "conditional_result": "该tag的长度决定下一MMAP标签起点；不能从第96批帧缓冲类型字段推断内存总占用正确",
+        "first_stop_gate": "原FM96和BM80输入对象、尺寸、内存范围先门",
+        "evidence_ids": [
+          "BT97-E022",
+          "BT97-E015",
+          "BT97-E019"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-ARENA-06",
+        "scenario": "头total_size 32位窄化",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "fill_info_tag_header计算(物理地址)END之后游标-base，然后写u32 total_size、reserved=0",
+        "conditional_result": "只可说源代码赋了差值，实际32位目的可能截断；没有显式容量上界断言",
+        "first_stop_gate": "end>=start且差值可表示、对象存在、tag本身有效前提",
+        "evidence_ids": [
+          "BT97-E017",
+          "BT97-E018",
+          "BT97-E083"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-ARENA-07",
+        "scenario": "阶段职责和退化边界",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "UefiMain直接调用各fill，未检查返回空值/容量、没有tag级上界参数",
+        "conditional_result": "在约定对象完整且各服务成功的模型中按顺序完成；否则只能停于最早非法访问",
+        "first_stop_gate": "不从32页数字推断所有mmap/CPU条目都能容纳",
+        "evidence_ids": [
+          "BT97-E010",
+          "BT97-E012",
+          "BT97-E013",
+          "BT97-E015"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "header_end_publication_matrix": [
+      {
+        "id": "A-END-01",
+        "scenario": "END字段发布",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "fill_info_tag_end在当前cursor写END type=0和size=sizeof(mbi_tag_s)后调用next",
+        "conditional_result": "在u32 type/size为4字节、普通布局下END大小8且向前推进8",
+        "first_stop_gate": "前置cursor在共享32页内且有8字节可写",
+        "evidence_ids": [
+          "BT97-E016",
+          "BT97-E019",
+          "BT97-E021"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-END-02",
+        "scenario": "total_size发布先后",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "UefiMain先fill_info_tag_end再fill_info_tag_header",
+        "conditional_result": "头的total_size覆盖头至END尾后下一游标；不是END标记起点距离",
+        "first_stop_gate": "算术溢出/指针合法性/容量门独立",
+        "evidence_ids": [
+          "BT97-E013",
+          "BT97-E016",
+          "BT97-E017"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-END-03",
+        "scenario": "tag对齐长度与头长度",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "每个生产函数返回next_info_tag_addr并由UefiMain依次接力",
+        "conditional_result": "tag.size记录各自结构宣称大小；游标可比size多padding，最终total_size含各padding",
+        "first_stop_gate": "padding不代表内容已初始化为合法标准协议值",
+        "evidence_ids": [
+          "BT97-E012",
+          "BT97-E015",
+          "BT97-E017",
+          "BT97-E019"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-END-04",
+        "scenario": "对照kernel解析入口",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "parse_tag校验magic及8字节addr对齐，读total_size却不以它界定for，遇END才停",
+        "conditional_result": "loader发布total_size不等于kernel按它保护边界，沿BM80-F01/U02/U03",
+        "first_stop_gate": "未确立实际传入MBI、复制范围与END前合法对象，不继续消费",
+        "evidence_ids": [
+          "BT97-E017",
+          "BT97-E079",
+          "BT97-E021"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-END-05",
+        "scenario": "无默许提交后续成功",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "头部/END真实发布还须前面全部producer已走到其返回",
+        "conditional_result": "不因函数源码存在便承认所有tag/UEFI服务成功，且实际手递地址不等于有效内核视图",
+        "first_stop_gate": "旧BM80-F02复制/搬运和内核parse条件另行限定",
+        "evidence_ids": [
+          "BT97-E012",
+          "BT97-E013",
+          "BT97-E016",
+          "BT97-E017",
+          "BT97-E079"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "descriptor_conversion_and_coalescing_matrix": [
+      {
+        "id": "B-MAP-01",
+        "scenario": "内存描述符获取前提",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "GetMemoryMap先以空指针探大小，给容量额外DescriptorSize*5，AllocatePool、SetMem，再第二次GetMemoryMap检查EFI_ERROR",
+        "conditional_result": "只有第二次GetMemoryMap的错误分支在所读函数中显式检查；早期调用/分配清零无确认",
+        "first_stop_gate": "DescriptorSize或MemMapSize为0/溢出/真实服务错误先停止",
+        "evidence_ids": [
+          "BT97-E023",
+          "BT97-E026",
+          "BT97-E027"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-02",
+        "scenario": "描述符步长和个数",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "for i<MemMapSize/DescriptorSize，以CHAR8*MemMap+i*DescriptorSize访问EFI_MEMORY_DESCRIPTOR",
+        "conditional_result": "源码明确使用EFI提供的字节步长而非sizeof；前提DescriptorSize非0、buffer足量",
+        "first_stop_gate": "指针/内存实际extent和EFI结构尺寸外部未证",
+        "evidence_ids": [
+          "BT97-E027",
+          "BT97-E028"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-03",
+        "scenario": "零页/未知类型筛除",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "NumberOfPages==0直接continue；未识别Type在default打印并continue",
+        "conditional_result": "相应描述符不产生本次MMAP记录，不能当作有记录的终止哨兵",
+        "first_stop_gate": "跳过不证明这些物理范围实际可被安全使用",
+        "evidence_ids": [
+          "BT97-E029",
+          "BT97-E035"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-04",
+        "scenario": "Reserved集合映射",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "EfiReservedMemoryType/EfiMemoryMappedIO/EfiMemoryMappedIOPortSpace/EfiPalCode映成MemType=2",
+        "conditional_result": "只说明源码分类，不认证对外UEFI枚举值语义",
+        "first_stop_gate": "外部EFI枚举定义和Desc有效前提",
+        "evidence_ids": [
+          "BT97-E030"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-05",
+        "scenario": "Unusable/ACPI reclaim分类",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "EfiUnusableMemory→5；EfiACPIReclaimMemory→3",
+        "conditional_result": "类别数值与本地mbi_mmap类型定义文字吻合，但未运行固件/BIOS",
+        "first_stop_gate": "读入DescriptorSize/Type有效前提",
+        "evidence_ids": [
+          "BT97-E031",
+          "BT97-E032"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-06",
+        "scenario": "RAM集合分类",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "Loader/BootService/Runtime代码和数据、Conventional、Persistent类型→1",
+        "conditional_result": "这属于当前固定loader政策；外部阶段性可用性或退出后实际保留不能由1推出",
+        "first_stop_gate": "ExitBootServices状态、内存真实重用不在本包认证",
+        "evidence_ids": [
+          "BT97-E033"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-07",
+        "scenario": "ACPI NVS分类",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "EfiACPIMemoryNVS→4",
+        "conditional_result": "仅描述本分支填的类型值",
+        "first_stop_gate": "本地无EFI外部真实描述符保证",
+        "evidence_ids": [
+          "BT97-E034"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-08",
+        "scenario": "相邻同类并入",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "仅当last_mb_mmap存在且type同且PhysicalStart==last_end，追加NumberOfPages<<PAGE_SHIFT到last.len并推进last_end",
+        "conditional_result": "合并取决于描述符枚举顺序，并非按排序后重新合并",
+        "first_stop_gate": "NumberOfPages左移和last_end/len宽度不溢出、input order已知",
+        "evidence_ids": [
+          "BT97-E036",
+          "BT97-E037"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-09",
+        "scenario": "新记录和计数",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "非合并分支向mb_mmap写addr,len,type，移动指针和e820_nr，再算last_end",
+        "conditional_result": "没有每条记录的共享MBI buffer剩余容量检查",
+        "first_stop_gate": "指针先行，不能对越界写后宣称e820_nr或最终header有效",
+        "evidence_ids": [
+          "BT97-E038",
+          "BT97-E039"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-MAP-10",
+        "scenario": "单次原地排序",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "合并/构造完毕后双层循环按addr交换完整mbi_mmap_ent_s",
+        "conditional_result": "排序只改变条目次序，不再调用相邻合并；可使排序后的邻接同类仍是多条",
+        "first_stop_gate": "e820_nr为有效非负有限int、所有交换对象合法",
+        "evidence_ids": [
+          "BT97-E040",
+          "BT97-E041",
+          "BT97-E042"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "mmap_record_publication_matrix": [
+      {
+        "id": "B-PUB-01",
+        "scenario": "MMAP发布位点",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "排序后FreePool、ExitBootServices，最后设置MMAP type/size/entry_size并next",
+        "conditional_result": "服务退出发生在MMAP tag字段正式写入前；不认证成功或还能合法调用后续gBS",
+        "first_stop_gate": "MapKey及ExitBootServices返回未检查，外部EFI阶段合约未知",
+        "evidence_ids": [
+          "BT97-E043",
+          "BT97-E044",
+          "BT97-E075"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB-02",
+        "scenario": "MMAP总长度多一条",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "size=sizeof(mbi_mmap_s)+sizeof(mbi_mmap_ent_s)*(e820_nr+1)；实际只对新纪录e820_nr次推进",
+        "conditional_result": "额外1条看作预留的终止槽，源码未明确把额外slot.type/len写0",
+        "first_stop_gate": "仅依赖UefiMain早期SetMem且无覆盖才有条件全零；不能签真实哨兵",
+        "evidence_ids": [
+          "BT97-E010",
+          "BT97-E039",
+          "BT97-E044",
+          "BT97-E045",
+          "BT97-E046"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB-03",
+        "scenario": "entry_size与entry_version",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "entry_size赋sizeof(mbi_mmap_ent_s)，本函数未显式赋entry_version",
+        "conditional_result": "entry_version是否仍0依赖有效清零和布局，kernel消费者也不读取此字段",
+        "first_stop_gate": "声明和实际EFI规范版本均不能互证",
+        "evidence_ids": [
+          "BT97-E044",
+          "BT97-E045",
+          "BT97-E046"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB-04",
+        "scenario": "内核ram_map来源",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "parse_tag遇MMAP设置ram_map=tag.entries；e820__memory_setup用sizeof(mbi_mmap_ent_s)递增，直到len或type为0",
+        "conditional_result": "内核没有用MMAP.size/entry_size/entry_version限制遍历",
+        "first_stop_gate": "源对象、额外哨兵及与E820表容量先证；历史BM80-F04/U05保留",
+        "evidence_ids": [
+          "BT97-E045",
+          "BT97-E046",
+          "BT97-E049",
+          "BT97-E050",
+          "BT97-E081"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB-05",
+        "scenario": "128条目标容量",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "e820_table.entries[E820_MAX_ENTRIES]，宏128；e820__memory_setup未在entries[i]形成前查上限",
+        "conditional_result": "假设第129条有效且连续，目标第129项构造前已超界；这是BM80-F03旧根因，不重复立新",
+        "first_stop_gate": "真实有效条目数、源哨兵、先前读取先门",
+        "evidence_ids": [
+          "BT97-E050",
+          "BT97-E051",
+          "BT97-E053",
+          "BT97-E054"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB-06",
+        "scenario": "物理类型/零字段",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "mbi_mmap_ent_s具有addr/len/type/zero字段，loader每条只显式写前三者",
+        "conditional_result": "zero字段只可由初始清零作条件推断；排序交换完整记录会连同zero移位",
+        "first_stop_gate": "写入前共享区域范围、ABI/packing没有实测",
+        "evidence_ids": [
+          "BT97-E047",
+          "BT97-E048",
+          "BT97-E038",
+          "BT97-E010"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PUB-07",
+        "scenario": "生产者与消费者终止契约",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "producer预留e820_nr+1个entry空间，consumer以len!=0&&type!=0哨兵遍历",
+        "conditional_result": "可控有效缓存清零能构成有限N条的隔离模型，不能证明实际END或E820合法",
+        "first_stop_gate": "capacity/status/stride/源存储/128上界为逐层stop",
+        "evidence_ids": [
+          "BT97-E044",
+          "BT97-E050",
+          "BT97-E051",
+          "BT97-E052",
+          "BT97-E053"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "auxiliary_tag_extent_matrix": [
+      {
+        "id": "C-AUX-01",
+        "scenario": "ACPI tag查找入口",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "fill_acpi_RSDT_info接SystemTable参数，但使用gST->ConfigurationTable和gST->NumberOfTableEntries",
+        "conditional_result": "源码依GUID检查、Root签名及Revision条件才ZeroMem/CopyMem",
+        "first_stop_gate": "gST有效、CompareGuid==0语义、Root可读与EFI状态未认证",
+        "evidence_ids": [
+          "BT97-E056",
+          "BT97-E057",
+          "BT97-E058"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-AUX-02",
+        "scenario": "ACPI固定RSDP拷贝和声明",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "满足签名/Revision时CopyMem固定EFI_ACPI_6_5_RSDP大小；不管是否找到都写type ACPI_NEW和固定size",
+        "conditional_result": "没有命中时也可发布ACPI_NEW tag；若共享清零成功则payload可能全零，但非真实有效RSDP",
+        "first_stop_gate": "签名、源结构长度、可读性及stage先门",
+        "evidence_ids": [
+          "BT97-E059",
+          "BT97-E060",
+          "BT97-E061",
+          "BT97-E062",
+          "BT97-E080"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-AUX-03",
+        "scenario": "ACPI柔性数组",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "mbi_acpi_new_s含type,size和rsdp[0]；size用两个sizeof相加并next",
+        "conditional_result": "C结构存储本身不保证RSDP有效或合标准",
+        "first_stop_gate": "实际ABI/对齐/容量和外部EFI GUID语义未知",
+        "evidence_ids": [
+          "BT97-E060",
+          "BT97-E061",
+          "BT97-E062"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-AUX-04",
+        "scenario": "CPU服务信息",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "先LocateProtocol MP Services，再GetNumberOfProcessors输出nCores/nRunning，写到u32 core_num/core_available",
+        "conditional_result": "在UINTN大于32位的模型会存在截断域；没有检查两项返回值",
+        "first_stop_gate": "服务指针及运行时阶段前提未知",
+        "evidence_ids": [
+          "BT97-E063",
+          "BT97-E064",
+          "BT97-E070"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-AUX-05",
+        "scenario": "CPU每项描述符",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "以i<nCores调用GetProcessorInfo并复制ProcessorId/StatusFlag/Package/Core/Thread",
+        "conditional_result": "源码没有每核心服务返回值检查；cpus[i]写入须shared MBI存储足够，nCores可能远大于空间",
+        "first_stop_gate": "临时mcpuInfo初始化、协议返回、目标指针越界最早stop",
+        "evidence_ids": [
+          "BT97-E065",
+          "BT97-E066",
+          "BT97-E068",
+          "BT97-E069"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-AUX-06",
+        "scenario": "CPU tag总长",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "type=MYOS2_TAG_TYPE_CPU_TOPO, size=sizeof(myos2_tag_smpinfo_s)+nCores*sizeof(myos2_cpudesc_s)",
+        "conditional_result": "size字段u32；需要对nCores、sizeof、乘积及对齐游标分别验域，未见容量检查",
+        "first_stop_gate": "历史BM80标签输入范围和源级ABI/计算宽度先门",
+        "evidence_ids": [
+          "BT97-E067",
+          "BT97-E070",
+          "BT97-E071",
+          "BT97-E085"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-AUX-07",
+        "scenario": "零核心/无效指针",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "nCores0循环不进入，但仍发布CPU_TOPO头；若mpp为空则更早解引用失败",
+        "conditional_result": "不能把初始零值或调用存在视为成功获取0核",
+        "first_stop_gate": "第一真实mpp调用/状态是最早门",
+        "evidence_ids": [
+          "BT97-E063",
+          "BT97-E064",
+          "BT97-E067"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "service_stage_and_handoff_matrix": [
+      {
+        "id": "C-STAGE-01",
+        "scenario": "源码顺序ExitBootServices早于ACPI/CPU",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "fill_mmap_info内部ExitBootServices位于UefiMain fill_acpi_RSDT_info/fill_cputopo_info之前",
+        "conditional_result": "只是源码服务调用相位次序；是否允许后续LocateProtocol/MP Services须外部EFI规范/实测",
+        "first_stop_gate": "ExitBootServices返回状态未检查，不能认证boot services真正退出成功",
+        "evidence_ids": [
+          "BT97-E012",
+          "BT97-E043",
+          "BT97-E075",
+          "BT97-E056",
+          "BT97-E064"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-STAGE-02",
+        "scenario": "ExitBootServices后仍有gBS与Print/Close",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "UefiMain在各fill结束后Print、gBS->CloseProtocol，再发跳转调用",
+        "conditional_result": "这说明固定源缺少本轮所见后续调用的状态防护，不是确证服务不可用",
+        "first_stop_gate": "EFI服务有效期/返回与跳转实际执行均未运行",
+        "evidence_ids": [
+          "BT97-E076",
+          "BT97-E077",
+          "BT97-E078"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-STAGE-03",
+        "scenario": "ACPI在内核parse_tag的消费上限",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "kernel ACPI_NEW case仅局部mbi_acpi_new_s*赋值并break",
+        "conditional_result": "所读parse_tag中未见进一步读取RSDP payload或调用ACPI init；不据此全仓库不存在其它消费者",
+        "first_stop_gate": "只断言本解析函数，并保留外部ACPI消费者未查范围",
+        "evidence_ids": [
+          "BT97-E074",
+          "BT97-E061",
+          "BT97-E060"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-STAGE-04",
+        "scenario": "CPU在内核parse_tag的消费上限",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "CPU_TOPO case调用get_smpinfo，它只赋nr_cpu_ids=core_num",
+        "conditional_result": "当前已读直接消费者没有消费core_available和per-cpu desc，也不证明启动CPU枚举可用",
+        "first_stop_gate": "nr_cpu_ids后续路径和真实SMP行为不在本批审计范围",
+        "evidence_ids": [
+          "BT97-E072",
+          "BT97-E073",
+          "BT97-E070",
+          "BT97-E071"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-STAGE-05",
+        "scenario": "tag优先级与END",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "UefiMain先framebuffer，再mmap，再ACPI，再CPU，最后END+header",
+        "conditional_result": "任何上游调用停住会阻断后续；后两标签的服务阶段不能当已满足",
+        "first_stop_gate": "真实固件服务与共享MBI总size/对齐先门",
+        "evidence_ids": [
+          "BT97-E012",
+          "BT97-E013",
+          "BT97-E016",
+          "BT97-E017",
+          "BT97-E075"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-STAGE-06",
+        "scenario": "对外手递语义停止",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "UefiMain最后装配调用目标，kernel parse_tag读取固定结构和magic",
+        "conditional_result": "不以源码call形式证明MBI跨运行状态/地址空间得到有效读取；BM80-U02/U03保留",
+        "first_stop_gate": "寄存器、BSS及旧137的替代专题明确不在本合同范围",
+        "evidence_ids": [
+          "BT97-E078",
+          "BT97-E079",
+          "BT97-E017"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "scenario": "单arena中四tag长度接合",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "四函数均取共享游标、按各自type/size计算下一地址，END+header最后发",
+        "conditional_result": "数学上总长度由各已对齐标签占用之和加头及END组成",
+        "first_stop_gate": "类型、长度、运行状态、页容量与全体指针边界各独立审核",
+        "evidence_ids": [
+          "BT97-E010",
+          "BT97-E012",
+          "BT97-E013",
+          "BT97-E015",
+          "BT97-E016",
+          "BT97-E017"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-02",
+        "scenario": "producer→MMAP→ram_map→e820",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "loader按输入顺序merge并sort+预留终止槽；kernel只认MMAP的entries，直到零哨兵",
+        "conditional_result": "不能把producer记录数与e820最终成功nr_entries等同",
+        "first_stop_gate": "实际可读对象、源哨兵、128目标限制及BM80-F01..F04先门",
+        "evidence_ids": [
+          "BT97-E036",
+          "BT97-E039",
+          "BT97-E040",
+          "BT97-E044",
+          "BT97-E049",
+          "BT97-E050",
+          "BT97-E053",
+          "BT97-E054"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-03",
+        "scenario": "ACPI与CPU分开消费",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "loader各造ACPI_NEW和CPU_TOPO，kernel在parse_tag仅前者局部变量、后者读core_num",
+        "conditional_result": "不能把被造标签当全功能ACPI/SMP初始化；真实EFI后阶段未证",
+        "first_stop_gate": "service return/CopyMem/结构对象与BM80范围分别停止",
+        "evidence_ids": [
+          "BT97-E060",
+          "BT97-E064",
+          "BT97-E067",
+          "BT97-E072",
+          "BT97-E073",
+          "BT97-E074"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-04",
+        "scenario": "旧review身份不混合",
+        "preconditions": "固定time源对象有效、指针/整数运算有定义且到达该分支",
+        "source_trace": "96 E036/F05文档修正映射独立于本批A/B/C；95正式PASS_PENDING_LOCAL",
+        "conditional_result": "R96-01/02仅提交待主线，不由97执行者关闭",
+        "first_stop_gate": "95关闭不等于96或97通过",
+        "evidence_ids": [
+          "BT97-E001",
+          "BT97-E002",
+          "BT97-E003",
+          "BT97-E004",
+          "BT97-E005",
+          "BT97-E006"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_ISOLATED_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 8,
+  "matrix_rows": 51,
+  "finite_models": [
+    {
+      "id": "BT97-M01",
+      "topic": "A",
+      "inputs": "page_count32,PAGE_SIZE4096",
+      "operations": "32*4096=131072",
+      "conditional_result": "名义arena长度=131072B；AllocatePages/SetMem是否成功未证",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E008",
+        "BT97-E009",
+        "BT97-E010"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M02",
+      "topic": "A",
+      "inputs": "base=0x1000,size(tag)=9",
+      "operations": "(9+7)&~7=16; next=0x1010",
+      "conditional_result": "按8对齐前进16，需真实区间足量",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E015",
+        "BT97-E020"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M03",
+      "topic": "A",
+      "inputs": "size(tag)=0",
+      "operations": "(0+7)&~7=0",
+      "conditional_result": "next==current，非END时无法保证前进；合法builder未必产这种值",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E015"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M04",
+      "topic": "A",
+      "inputs": "uint32 size=0xfffffffe",
+      "operations": "(size+7)按u32=5; 5&~7=0",
+      "conditional_result": "内部回绕导致零步长；不是实机发生",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E015",
+        "BT97-E083"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M05",
+      "topic": "A",
+      "inputs": "header8; 四tag size占用分别48,100,60,88; END8",
+      "operations": "8+48+104+64+88+8=320",
+      "conditional_result": "条件总长度320B；这里的四值是隔离假设、非真实sizeof",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E012",
+        "BT97-E013",
+        "BT97-E015",
+        "BT97-E016",
+        "BT97-E017",
+        "BT97-E018"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M06",
+      "topic": "B",
+      "inputs": "同类page P=4096; A[0x1000,2页], B[0x3000,1页] 且描述符相继",
+      "operations": "endA=0x3000==B; len总3*4096",
+      "conditional_result": "可合成一记录；无EFI返回与capacity认证",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E036",
+        "BT97-E037"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M07",
+      "topic": "B",
+      "inputs": "同类1页描述符顺序0x1000,0x3000,0x2000",
+      "operations": "输入序均不邻接；三个新记录；排序后地址变0x1000,0x2000,0x3000",
+      "conditional_result": "排序后仍三条，没有二次merge",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E038",
+        "BT97-E039",
+        "BT97-E040",
+        "BT97-E041",
+        "BT97-E042"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M08",
+      "topic": "B",
+      "inputs": "前条type=1,后条type=2，即使地址邻接",
+      "operations": "last.type!=MemType",
+      "conditional_result": "不合并且新增记录",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E036",
+        "BT97-E038"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M09",
+      "topic": "B",
+      "inputs": "描述符NumberOfPages=0",
+      "operations": "在switch前continue",
+      "conditional_result": "不产生MMAP条目",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E028",
+        "BT97-E029"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M10",
+      "topic": "B",
+      "inputs": "DescriptorSize=0,MemMapSize>0",
+      "operations": "MemMapSize/0",
+      "conditional_result": "最早在循环条件除零停止；不据此认证真实服务可返回零",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E023",
+        "BT97-E027",
+        "BT97-E028"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M11",
+      "topic": "B",
+      "inputs": "e820_nr=N=128; 128源有效条目+零哨兵",
+      "operations": "kernel读取N=128、nr_entries=128",
+      "conditional_result": "需零终止槽确实可读；129条仍属于旧BM80-F03容量门",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E044",
+        "BT97-E050",
+        "BT97-E051",
+        "BT97-E052",
+        "BT97-E053",
+        "BT97-E054"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M12",
+      "topic": "B",
+      "inputs": "e820_nr=N=129,存在有效129条源记录",
+      "operations": "进入i=128时形成entries[128]",
+      "conditional_result": "目标固定128已越界，停止；不宣称真实硬件复现",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E050",
+        "BT97-E051",
+        "BT97-E053",
+        "BT97-E054"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M13",
+      "topic": "B",
+      "inputs": "假设N=3,MBI tag头sizeof=16,entry sizeof=24",
+      "operations": "size=16+24*(3+1)=112",
+      "conditional_result": "实际写3项但声明4项空间；若清零且范围可用，额外项可充零哨兵",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E043",
+        "BT97-E044",
+        "BT97-E045",
+        "BT97-E046",
+        "BT97-E047"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M14",
+      "topic": "C",
+      "inputs": "无ACPI GUID/signature命中",
+      "operations": "仍执行type=ACPI_NEW并赋固定size",
+      "conditional_result": "payload有效性未认证，初始清零只能条件推出字节零",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E057",
+        "BT97-E058",
+        "BT97-E059",
+        "BT97-E060",
+        "BT97-E061"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M15",
+      "topic": "C",
+      "inputs": "nCores=0且服务合法",
+      "operations": "CPU循环0次，size=sizeof(header)",
+      "conditional_result": "可宣布空CPU tag，但不证明获取0是实际硬件状态",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E063",
+        "BT97-E064",
+        "BT97-E067",
+        "BT97-E070"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M16",
+      "topic": "C",
+      "inputs": "nCores=3; 假设sizeof(cpuTag)=16,sizeof(cpudesc)=24",
+      "operations": "size=16+3*24=88",
+      "conditional_result": "满足88字节只是模型；3项写入必须先有真实可写extent",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E065",
+        "BT97-E066",
+        "BT97-E067",
+        "BT97-E070",
+        "BT97-E071"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M17",
+      "topic": "C",
+      "inputs": "EFI UINTN为64位且nCores=2^32",
+      "operations": "u32 core_num=0",
+      "conditional_result": "目标窄化；巨量描述符先违反32页容量，不能构造为真实完整标签",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E064",
+        "BT97-E067",
+        "BT97-E070"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M18",
+      "topic": "C",
+      "inputs": "源码服务阶段按UefiMain顺序",
+      "operations": "fill_mmap内ExitBootServices在fill_acpi/CPU前",
+      "conditional_result": "可证明顺序，不能由此推出EFI运行结果或规范违规已经发生",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E012",
+        "BT97-E075",
+        "BT97-E056",
+        "BT97-E064"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M19",
+      "topic": "ABC",
+      "inputs": "parse_tag遇ACPI_NEW/CPU_TOPO且对象合法",
+      "operations": "ACPI只设局部指针；CPU调用get_smpinfo写nr_cpu_ids=core_num",
+      "conditional_result": "内核本解析函数中两者消费量不同；不宣称全项目无其他消费者",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E072",
+        "BT97-E073",
+        "BT97-E074"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    },
+    {
+      "id": "BT97-M20",
+      "topic": "D00",
+      "inputs": "bpp=7,已读有效FRAMEBUFFER tag",
+      "operations": "bpp/8整数零; PixperScanline分母0",
+      "conditional_result": "与FM96-F05同身份修正证据映射，不重复报新缺陷",
+      "first_stop_gate": "此模型只在声明的有效对象/类型/计算阶段成立；未运行固定程序或实机",
+      "evidence_ids": [
+        "BT97-E003",
+        "BT97-E004",
+        "BT97-E005"
+      ],
+      "execution": "ISOLATED_ARITHMETIC_OR_STATIC_TRACE_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 20,
+  "claim_policy": "CONDITIONAL_SOURCE_ONLY_NOT_OBSERVED_BOOT",
+  "model_first_proof_policy": "stop at first unverified EFI/ABI/object extent/32-page buffer/uint32 field/entry count; numerical case never claims actual execution",
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F01",
+      "disposition": "retain_kernel_total_size_ignored_and_unbounded_tag_walk"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F02",
+      "disposition": "retain_copy_and_ram_map_provenance_no_BSS_or_register_reaudit"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F03",
+      "disposition": "retain_fixed_e820_128_capacity_root"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F04",
+      "disposition": "retain_kernel_entry_stride_and_sentinel_mismatch"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02",
+      "disposition": "retain_actual_MBI_source_extent_and_storage_lifetime"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U03",
+      "disposition": "retain_valid_total_size_END_and_each_tag_read"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U05",
+      "disposition": "retain_entry_stride_version_and_valid_sentinel"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U06",
+      "disposition": "retain_real_record_count_no_more_than_128"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U07",
+      "disposition": "retain_real_mmap_order_overlap_and_type"
+    },
+    {
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F04",
+      "disposition": "retain_framebuffer_type_semantics_with_R96_01_anchor_boundary_fix"
+    },
+    {
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F05",
+      "disposition": "retain_bpp_zero_divisor_identity_with_R96_02_mapping_fix"
+    },
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05",
+      "disposition": "only_prior_related_to_FM96_F05_not_evidence"
+    }
+  ],
+  "full_local_P9": "NOT_RUN",
+  "compiler_preprocess_link": "NOT_RUN",
+  "repository_programs_scripts": "NOT_RUN",
+  "QEMU_Graphviz_hardware": "NOT_RUN",
+  "patch_authorized": false,
+  "owner_decisions_requested_now": [],
+  "mainline_closure_by_executor": false,
+  "source_quote_index": [
+    {
+      "id": "BT97-E001",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer_common",
+      "line_start": 320,
+      "line_end": 322,
+      "claim_class": "STRUCT",
+      "topic": "D00"
+    },
+    {
+      "id": "BT97-E002",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "mbi_framebuffer_common_s",
+      "line_start": 323,
+      "line_end": 323,
+      "claim_class": "TYPEDEF",
+      "topic": "D00"
+    },
+    {
+      "id": "BT97-E003",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer_common",
+      "line_start": 316,
+      "line_end": 316,
+      "claim_class": "STRUCT_FIELD",
+      "topic": "D00"
+    },
+    {
+      "id": "BT97-E004",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "get_framebuffer_info",
+      "line_start": 34,
+      "line_end": 37,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "D00"
+    },
+    {
+      "id": "BT97-E005",
+      "source_path": "mykernel/include/obsolete/ktypes.h",
+      "definition": "framebuffer_s",
+      "line_start": 28,
+      "line_end": 31,
+      "claim_class": "STRUCT",
+      "topic": "D00"
+    },
+    {
+      "id": "BT97-E006",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_framebuffer_info",
+      "line_start": 152,
+      "line_end": 155,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "D00"
+    },
+    {
+      "id": "BT97-E007",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "MULTIBOOT_FRAMEBUFFER_TYPE_RGB",
+      "line_start": 318,
+      "line_end": 318,
+      "claim_class": "MACRO",
+      "topic": "D00"
+    },
+    {
+      "id": "BT97-E008",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "PAGE_SHIFT",
+      "line_start": 14,
+      "line_end": 14,
+      "claim_class": "MACRO",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E009",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "PAGE_SIZE",
+      "line_start": 15,
+      "line_end": 15,
+      "claim_class": "MACRO",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E010",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 43,
+      "line_end": 47,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E011",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 48,
+      "line_end": 48,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E012",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 51,
+      "line_end": 54,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E013",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 57,
+      "line_end": 58,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E014",
+      "source_path": "myloader/uefi/multiboot2_utils.c",
+      "definition": "init_info_tag_addr",
+      "line_start": 57,
+      "line_end": 60,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E015",
+      "source_path": "myloader/uefi/multiboot2_utils.c",
+      "definition": "next_info_tag_addr",
+      "line_start": 62,
+      "line_end": 66,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E016",
+      "source_path": "myloader/uefi/multiboot2_utils.c",
+      "definition": "fill_info_tag_end",
+      "line_start": 68,
+      "line_end": 72,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E017",
+      "source_path": "myloader/uefi/multiboot2_utils.c",
+      "definition": "fill_info_tag_header",
+      "line_start": 77,
+      "line_end": 80,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E018",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tags_header",
+      "line_start": 219,
+      "line_end": 223,
+      "claim_class": "STRUCT",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E019",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag",
+      "line_start": 226,
+      "line_end": 230,
+      "claim_class": "STRUCT",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E020",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "MULTIBOOT_TAG_ALIGN",
+      "line_start": 43,
+      "line_end": 43,
+      "claim_class": "MACRO",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E021",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "MULTIBOOT_TAG_TYPE_END",
+      "line_start": 44,
+      "line_end": 44,
+      "claim_class": "MACRO",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E022",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_framebuffer_info",
+      "line_start": 160,
+      "line_end": 162,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E023",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 169,
+      "line_end": 173,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E024",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 175,
+      "line_end": 178,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E025",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 179,
+      "line_end": 180,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E026",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 183,
+      "line_end": 187,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E027",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 189,
+      "line_end": 193,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E028",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 196,
+      "line_end": 200,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E029",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 201,
+      "line_end": 203,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E030",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 205,
+      "line_end": 209,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E031",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 212,
+      "line_end": 214,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E032",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 216,
+      "line_end": 218,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E033",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 225,
+      "line_end": 229,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E034",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 231,
+      "line_end": 233,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E035",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 235,
+      "line_end": 238,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E036",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 241,
+      "line_end": 245,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E037",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 245,
+      "line_end": 246,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E038",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 248,
+      "line_end": 252,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E039",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 254,
+      "line_end": 258,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E040",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 263,
+      "line_end": 267,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E041",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 269,
+      "line_end": 273,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E042",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 274,
+      "line_end": 277,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E043",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 281,
+      "line_end": 285,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E044",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 284,
+      "line_end": 287,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E045",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_mmap",
+      "line_start": 271,
+      "line_end": 275,
+      "claim_class": "STRUCT",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E046",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_mmap",
+      "line_start": 276,
+      "line_end": 277,
+      "claim_class": "STRUCT",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E047",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_mmap_entry",
+      "line_start": 205,
+      "line_end": 208,
+      "claim_class": "STRUCT",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E048",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_mmap_entry",
+      "line_start": 214,
+      "line_end": 216,
+      "claim_class": "STRUCT",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E049",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "parse_tag",
+      "line_start": 89,
+      "line_end": 92,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E050",
+      "source_path": "mykernel/arch/x86_64/mm/early/e820.c",
+      "definition": "e820__memory_setup",
+      "line_start": 103,
+      "line_end": 107,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E051",
+      "source_path": "mykernel/arch/x86_64/mm/early/e820.c",
+      "definition": "e820__memory_setup",
+      "line_start": 107,
+      "line_end": 110,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E052",
+      "source_path": "mykernel/arch/x86_64/mm/early/e820.c",
+      "definition": "e820__memory_setup",
+      "line_start": 112,
+      "line_end": 112,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E053",
+      "source_path": "mykernel/arch/x86_64/mm/early/e820_types.h",
+      "definition": "e820_table",
+      "line_start": 29,
+      "line_end": 32,
+      "claim_class": "STRUCT",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E054",
+      "source_path": "mykernel/arch/x86_64/mm/early/e820_const.h",
+      "definition": "E820_MAX_ENTRIES",
+      "line_start": 83,
+      "line_end": 83,
+      "claim_class": "MACRO",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E055",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "MULTIBOOT_TAG_TYPE_MMAP",
+      "line_start": 50,
+      "line_end": 50,
+      "claim_class": "MACRO",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E056",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_acpi_RSDT_info",
+      "line_start": 290,
+      "line_end": 294,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E057",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_acpi_RSDT_info",
+      "line_start": 303,
+      "line_end": 307,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E058",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_acpi_RSDT_info",
+      "line_start": 307,
+      "line_end": 310,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E059",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_acpi_RSDT_info",
+      "line_start": 314,
+      "line_end": 318,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E060",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_acpi_RSDT_info",
+      "line_start": 326,
+      "line_end": 329,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E061",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_new_acpi",
+      "line_start": 407,
+      "line_end": 411,
+      "claim_class": "STRUCT",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E062",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "mbi_acpi_new_s",
+      "line_start": 412,
+      "line_end": 412,
+      "claim_class": "TYPEDEF",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E063",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_cputopo_info",
+      "line_start": 374,
+      "line_end": 378,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E064",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_cputopo_info",
+      "line_start": 380,
+      "line_end": 383,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E065",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_cputopo_info",
+      "line_start": 385,
+      "line_end": 389,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E066",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_cputopo_info",
+      "line_start": 389,
+      "line_end": 393,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E067",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_cputopo_info",
+      "line_start": 395,
+      "line_end": 397,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E068",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "CPU_DESCRIPTOR",
+      "line_start": 457,
+      "line_end": 461,
+      "claim_class": "STRUCT",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E069",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "CPU_DESCRIPTOR",
+      "line_start": 462,
+      "line_end": 464,
+      "claim_class": "STRUCT",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E070",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "myos2_tag_smpinfo",
+      "line_start": 466,
+      "line_end": 470,
+      "claim_class": "STRUCT",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E071",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "myos2_tag_smpinfo",
+      "line_start": 470,
+      "line_end": 473,
+      "claim_class": "STRUCT",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E072",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "get_smpinfo",
+      "line_start": 24,
+      "line_end": 27,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E073",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "parse_tag",
+      "line_start": 112,
+      "line_end": 115,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E074",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "parse_tag",
+      "line_start": 103,
+      "line_end": 105,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E075",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_mmap_info",
+      "line_start": 281,
+      "line_end": 282,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E076",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 62,
+      "line_end": 65,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E077",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 67,
+      "line_end": 68,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E078",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 75,
+      "line_end": 79,
+      "claim_class": "LOADER_FUNCTION",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E079",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "parse_tag",
+      "line_start": 67,
+      "line_end": 70,
+      "claim_class": "KERNEL_FUNCTION",
+      "topic": "ABC"
+    },
+    {
+      "id": "BT97-E080",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "MULTIBOOT_TAG_TYPE_ACPI_NEW",
+      "line_start": 59,
+      "line_end": 59,
+      "claim_class": "MACRO",
+      "topic": "C"
+    },
+    {
+      "id": "BT97-E081",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "mbi_mmap_ent_s",
+      "line_start": 217,
+      "line_end": 217,
+      "claim_class": "TYPEDEF",
+      "topic": "B"
+    },
+    {
+      "id": "BT97-E082",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "mbi_tag_s",
+      "line_start": 231,
+      "line_end": 231,
+      "claim_class": "TYPEDEF",
+      "topic": "A"
+    },
+    {
+      "id": "BT97-E083",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_uint32_t",
+      "line_start": 99,
+      "line_end": 99,
+      "claim_class": "TYPEDEF",
+      "topic": "ABC"
+    },
+    {
+      "id": "BT97-E084",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_uint64_t",
+      "line_start": 100,
+      "line_end": 100,
+      "claim_class": "TYPEDEF",
+      "topic": "ABC"
+    },
+    {
+      "id": "BT97-E085",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "MYOS2_TAG_TYPE_CPU_TOPO",
+      "line_start": 67,
+      "line_end": 67,
+      "claim_class": "MACRO",
+      "topic": "C"
+    }
+  ]
+}

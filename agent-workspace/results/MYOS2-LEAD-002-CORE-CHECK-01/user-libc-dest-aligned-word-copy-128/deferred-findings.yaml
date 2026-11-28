@@ -1,0 +1,136 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128",
+  "record_type": "deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 self-reported; backend/effort UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra per 179",
+  "date": "2026-11-22",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "77a1e903d9af",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "R127_01": "OPEN awaiting C08 Pro",
+    "R127_02": "OPEN awaiting C08 Pro",
+    "R126_01": "CLOSED_DOCUMENTATION_ONLY by C08"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "items": [
+    {
+      "id": "R127-01",
+      "qualified_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128::R127-01",
+      "kind": "author_documentation_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_ref": {
+        "old_commit_short12": "77a1e903d9af",
+        "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-aligned-word-copy-127/libc-aligned-word-copy.md",
+        "lines": [
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          95,
+          96,
+          97
+        ]
+      },
+      "fix": "10 exactly-selected old rows re-rendered; 17 literal undefined fields corrected and 6 initial prefetches restored, endian verified against old machine facts",
+      "consumer": "128 main report D00 plus facts D00.R127_01.replaced_lines",
+      "earliest_unknown": "C08 independent accuracy adjudication and closure decision",
+      "restore": "C08 Pro compare old frozen rows and new replacements with fixed source"
+    },
+    {
+      "id": "R127-02",
+      "qualified_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128::R127-02",
+      "kind": "author_graph_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_ref": {
+        "old_commit_short12": "77a1e903d9af",
+        "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-aligned-word-copy-127/libc-aligned-word-copy-paths.dot",
+        "selectors": "all 13 A127/B127/C127 clusters only"
+      },
+      "fix": "source switch before preload, integer cursor adjust before case goto, 43 original source-to-dest word provenance edges, one do/while true loopback in A16, false guard fallthrough do0, B/C summary entry interpretation",
+      "consumer": "128 facts D00.R127_02 and DOT typed source graph",
+      "earliest_unknown": "C08 independent graph semantics and source-by-source closure decision",
+      "restore": "C08 Pro check 1,2,16-word edges and all case sources"
+    },
+    {
+      "id": "WC128-REAL-SH-LIBC",
+      "qualified_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128::REAL-SH-LIBC",
+      "kind": "binary_provenance",
+      "status": "NEEDS_EVIDENCE",
+      "source_ref": {
+        "source": "myinitramfs/mylib/myglibc/string/wordcopy.c, memcpy.c and myglibc/initramfs CMake sources on fixed time"
+      },
+      "earliest_unknown": "actual libc linked by sh and effective WORDCOPY_FWD_DEST_ALIGNED function body",
+      "limitation": "source exists and default macro name do not show actual compiled output, image, symbol table, link or runtime",
+      "restore": "separate authorization to inspect actual build/link provenance or binary evidence"
+    },
+    {
+      "id": "WC128-COMPILER-AND-PAGE",
+      "qualified_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128::COMPILER-AND-PAGE",
+      "kind": "preprocessor_choice",
+      "status": "NEEDS_EVIDENCE",
+      "source_ref": {
+        "source": "memcopy.h:63-74,121-131,192-199; memcpy.c:20-59"
+      },
+      "earliest_unknown": "effective header, endian macro, op_t width, PAGE_COPY_THRESHOLD and optimizer behavior",
+      "limitation": "selected generic little-endian 64-bit header model with empty page branch only; no preprocessing",
+      "restore": "later read-only effective translation unit and target-build provenance under new scope"
+    },
+    {
+      "id": "WC128-SOURCE-WORD-FOOTPRINT",
+      "qualified_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128::SOURCE-OBJECTS",
+      "kind": "object_validity",
+      "status": "CONDITIONAL_MODEL",
+      "source_ref": {
+        "source": "wordcopy.c:139-214; 128 A/B/C normal cases"
+      },
+      "earliest_unknown": "runtime pointer alignment/extent/type provenance",
+      "limitation": "every model uses distinct valid 384-byte S and D, S[i]=i mod 251, D initialized CC, enough padding and word-aligned typed storage; full aligned load may include bytes before/after requested source substring yet remain inside valid object",
+      "restore": "separate memory safety/target ABI review if directed"
+    },
+    {
+      "id": "WC128-OTHER-WORDCOPY",
+      "qualified_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128::OTHER-WORDCOPY",
+      "kind": "scope_exclusion",
+      "status": "DEFERRED",
+      "source_ref": {
+        "source": "wordcopy.c after line214; memcopy.h other variants"
+      },
+      "earliest_unknown": "behavior of backward helpers, overlap and non-generic implementations",
+      "limitation": "179 only authorizes forward destination-aligned helper and given requests, no backward or overlapping copy interpretation",
+      "restore": "later explicitly scoped independent contract"
+    },
+    {
+      "id": "WC128-EXECUTION-VALIDATION",
+      "qualified_id": "CORE-USER-LIBC-DEST-ALIGNED-WORD-COPY-128::EXECUTION",
+      "kind": "not_executed",
+      "status": "NOT_RUN",
+      "source_ref": {
+        "source": "179 fixed contract and 00-gpt-task-protocol-v2 P9"
+      },
+      "earliest_unknown": "full local P9, actual C functions/ASM execution, compiler optimizations, Graphviz render, QEMU and physical results",
+      "limitation": "only GitHub repository reads, finite local JavaScript reasoning/checks and Git blob object readbacks",
+      "restore": "separate explicit authorization for any runtime build or external validation"
+    }
+  ],
+  "full_local_P9": "NOT_RUN",
+  "C_preprocessing": "NOT_RUN",
+  "compile_link": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "hardware": "NOT_RUN",
+  "real_file_operations": "NOT_RUN"
+}

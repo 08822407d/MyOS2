@@ -1,0 +1,126 @@
+// task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+// track_id: "MYOS2-LEAD-002"
+// batch_id: "CORE-USER-UPAGE-LIFECYCLE-150"
+// conversation_display_name: "MYOS2-A-C10c 代码分析执行"
+// execution_identity: "MYOS2-LEAD-002-CHAT-EXEC-24"
+// produced_by: "GPT-6.2"
+// model_per_owner: "GPT-6.2 Sol；Extra／高推理强度（Owner指定）"
+// actual_model_identifier_basis: "系统标识GPT-6.2；客户端具体选择不可见"
+// actual_backend_model: "UNATTESTED"
+// actual_reasoning_effort: "UNATTESTED"
+// date: "2026-11-26"
+// date_timezone: "Asia/Shanghai"
+// phase: 2
+// base_snapshot: "time（分支名）"
+// source_pin_short12: "a039d9803ade"
+// direct_master_short12: "e8e60cd19540"
+// lead_pin_short12: "dc12f97a7a91"
+// execution_parent_short12: "9aa7de497eb0"
+// read_channel: "connector"
+// status: "AUTHOR_PENDING_MAINLINE_REVIEW"
+// full_local_P9: "NOT_RUN"
+// evidence_class: "SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / CONDITIONAL_FRAGMENT / OBSERVATION / UNKNOWN"
+// open_questions: ["R149-01作者补正待主线判闭；真实NULL brk可达性、ABI/标准/编译器/DEBUG、实际对象/映射/生命周期、链接及完整递归未知；N1547独立外证UNKNOWN继承。"]
+// record_type: "batch150_path_graph"
+// generated from facts.graph; no Graphviz execution
+digraph upage_lifecycle_150 {
+  rankdir=LR;
+  A_META_NULL_NONNULL_S0 [kind="given_entry", label="111–115 entry", scenario="A_META_NULL_NONNULL"];
+  A_META_NULL_NONNULL_S1 [kind="given_call_response", label="124 metadata_response malloc32 → NULL", scenario="A_META_NULL_NONNULL"];
+  A_META_NULL_NONNULL_S2 [kind="given_call_response", label="125 brk_response brk(0x70200000) → 0x70200000", scenario="A_META_NULL_NONNULL"];
+  A_META_NULL_NONNULL_S3 [kind="source_step", label="126 nonnull_gate true", scenario="A_META_NULL_NONNULL"];
+  A_META_NULL_NONNULL_S4 [kind="source_step", label="128 brk_end_update brk_end=0x70200000", scenario="A_META_NULL_NONNULL"];
+  A_META_NULL_NONNULL_S5 [kind="analysis_stop", label="129 before upgp->vaddr store analysis_stop missing metadata object; not source branch", scenario="A_META_NULL_NONNULL"];
+  A_META_NULL_NULL_S0 [kind="given_entry", label="111–115 entry", scenario="A_META_NULL_NULL"];
+  A_META_NULL_NULL_S1 [kind="given_call_response", label="124 metadata_response malloc32 → NULL", scenario="A_META_NULL_NULL"];
+  A_META_NULL_NULL_S2 [kind="given_call_response", label="125 brk_response brk(0x70200000) → NULL", scenario="A_META_NULL_NULL"];
+  A_META_NULL_NULL_S3 [kind="source_step", label="126 nonnull_gate false", scenario="A_META_NULL_NULL"];
+  A_META_NULL_NULL_S4 [kind="source_call", label="136 cleanup_call free(NULL) DEBUG wait false / NULL early return normal", scenario="A_META_NULL_NULL"];
+  A_META_NULL_NULL_S5 [kind="source_step", label="137 explicit_null_assignment", scenario="A_META_NULL_NULL"];
+  A_META_NULL_NULL_S6 [kind="modeled_return", label="140 return NULL after 137", scenario="A_META_NULL_NULL"];
+  A_META_VALID_NULL_S0 [kind="given_entry", label="111–115 entry", scenario="A_META_VALID_NULL"];
+  A_META_VALID_NULL_S1 [kind="given_call_response", label="124 metadata_response malloc32 → M", scenario="A_META_VALID_NULL"];
+  A_META_VALID_NULL_S2 [kind="given_call_response", label="125 brk_response brk(0x70200000) → NULL", scenario="A_META_VALID_NULL"];
+  A_META_VALID_NULL_S3 [kind="source_step", label="126 nonnull_gate false", scenario="A_META_VALID_NULL"];
+  A_META_VALID_NULL_S4 [kind="source_call", label="136 cleanup_call_boundary free(M) entered, return unknown; 137/140 not reached", scenario="A_META_VALID_NULL"];
+  B_LOOKUP_MISS_IN [kind="given_entry", label="independent free(M) entry, brk NULL GIVEN, 137 not reached", scenario="B_LOOKUP_MISS"];
+  B_LOOKUP_MISS_S0 [kind="source_step", label="332–335 DEBUG conditional; if compiled, initiated=true so wait false; actual preprocessing UNKNOWN", scenario="B_LOOKUP_MISS"];
+  B_LOOKUP_MISS_S1 [kind="source_step", label="337–338 M nonNULL; no early return", scenario="B_LOOKUP_MISS"];
+  B_LOOKUP_MISS_S2 [kind="source_call", label="341→151–169 upage_search(M) key=0x62000000 visits=Q → NULL", scenario="B_LOOKUP_MISS"];
+  B_LOOKUP_MISS_S3 [kind="analysis_stop", label="342 ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE before upgp->uslab_p read missing page object, not runtime branch", scenario="B_LOOKUP_MISS"];
+  B_LOW_BIT_RETURN_IN [kind="given_entry", label="independent free(M) entry, brk NULL GIVEN, 137 not reached", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S0 [kind="source_step", label="332–335 DEBUG conditional; if compiled, initiated=true so wait false; actual preprocessing UNKNOWN", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S1 [kind="source_step", label="337–338 M nonNULL; no early return", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S2 [kind="source_call", label="341→151–169 upage_search(M) key=0x62000000 visits=Q → Q", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S3 [kind="source_step", label="342–343 Q.uslab_p=S; S.uslabcache_p=C", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S4 [kind="source_step", label="345–349 S.free==total? condition=false", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S5 [kind="source_step", label="351 integer address projection idx=3", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S6 [kind="source_step", label="352→bitmap.c4–12 assigned low bit assigned returns 8 (unsigned)", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S7 [kind="source_step", label="358→bitmap.c19–22 clear low bit word0 0x88→0x80", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S8 [kind="source_step", label="359–361 three counters S.free/C.free 65534→65535; C.used 2→1", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S9 [kind="source_step", label="364,370 free==1 then free==0 false,false", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S10 [kind="source_step", label="381 normal_slab_free.count>2 condition=false", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S11 [kind="modeled_return", label="391 free normal fallthrough function end", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S12 [kind="source_step", label="137 caller explicit ret_val=NULL", scenario="B_LOW_BIT_RETURN"];
+  B_LOW_BIT_RETURN_S13 [kind="modeled_return", label="140 upage_alloc returns NULL", scenario="B_LOW_BIT_RETURN"];
+  C_IN [kind="given_entry", label="used[P,Q]2/free[R]1; P.owner D_old; D_old reverse P/W", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S0 [kind="snapshot", label="upage_free145–149 release P → C_RELEASED; used=[Q] count=1; free=[P,R] count=2; P.vaddr=0x64000000 owner=NULL; D_old.upage_p=P/virt=0x64000000; D_new.upage_p=NOT_YET_GIVEN virt=NOT_YET_GIVEN", scenario="C_RELEASE_REUSE_REBIND"];
+  C_RELEASED_PROBE [kind="observation", label="independent search(W+0x80) key W; visits Q → NULL; owner at snapshot=NOT_APPLICABLE", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S1 [kind="given_call_response", label="uslab_alloc225 malloc64 → D_new", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S2 [kind="source_step", label="226 INIT_LIST_S(D_new.list)", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S3 [kind="given_call_response", label="228 read T.total=128 then malloc24 → Mmap", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S4 [kind="source_step", label="229–230 second T.total=128; D_new.free=128 then D_new.total=128", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S5 [kind="source_call", label="231→upage_alloc111–121,140 one internal upage_alloc; free.count2>0, remove P, nonNULL wait false, container_of offset0, insert used head, return P", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S6 [kind="snapshot", label="231 D_new.upage_p=P → C_REUSED; used=[P,Q] count=2; free=[R] count=1; P.vaddr=0x64000000 owner=NULL; D_old.upage_p=P/virt=0x64000000; D_new.upage_p=P virt=UNKNOWN_NOT_YET_SET", scenario="C_RELEASE_REUSE_REBIND"];
+  C_REUSED_PROBE [kind="observation", label="independent search(W+0x80) key W; visits P → P; owner at snapshot=null", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S7 [kind="source_step", label="232 read D_new.upage_p and P.vaddr, write D_new.virt_addr=W", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S8 [kind="source_step", label="233 write P.uslab_p=D_new", scenario="C_RELEASE_REUSE_REBIND"];
+  C_S9 [kind="snapshot", label="235 normal return D_new → C_REBOUND; used=[P,Q] count=2; free=[R] count=1; P.vaddr=0x64000000 owner=D_new; D_old.upage_p=P/virt=0x64000000; D_new.upage_p=P virt=0x64000000", scenario="C_RELEASE_REUSE_REBIND"];
+  C_REBOUND_PROBE [kind="observation", label="independent search(W+0x80) key W; visits P → P; owner at snapshot=D_new", scenario="C_RELEASE_REUSE_REBIND"];
+  A_META_NULL_NONNULL_S0 -> A_META_NULL_NONNULL_S1 [kind="given_call_response", label="independent GIVEN + per-call frame"];
+  A_META_NULL_NONNULL_S1 -> A_META_NULL_NONNULL_S2 [kind="given_call_response", label="independent GIVEN + per-call frame"];
+  A_META_NULL_NONNULL_S2 -> A_META_NULL_NONNULL_S3 [kind="source_step", label="source order"];
+  A_META_NULL_NONNULL_S3 -> A_META_NULL_NONNULL_S4 [kind="source_step", label="source order"];
+  A_META_NULL_NONNULL_S4 -> A_META_NULL_NONNULL_S5 [kind="analysis_stop", label="missing object premise, not runtime branch"];
+  A_META_NULL_NULL_S0 -> A_META_NULL_NULL_S1 [kind="given_call_response", label="independent GIVEN + per-call frame"];
+  A_META_NULL_NULL_S1 -> A_META_NULL_NULL_S2 [kind="given_call_response", label="independent GIVEN + per-call frame"];
+  A_META_NULL_NULL_S2 -> A_META_NULL_NULL_S3 [kind="source_step", label="source order"];
+  A_META_NULL_NULL_S3 -> A_META_NULL_NULL_S4 [kind="source_call", label="cleanup call"];
+  A_META_NULL_NULL_S4 -> A_META_NULL_NULL_S5 [kind="source_step", label="source order"];
+  A_META_NULL_NULL_S5 -> A_META_NULL_NULL_S6 [kind="modeled_return", label="conditional return"];
+  A_META_VALID_NULL_S0 -> A_META_VALID_NULL_S1 [kind="given_call_response", label="independent GIVEN + per-call frame"];
+  A_META_VALID_NULL_S1 -> A_META_VALID_NULL_S2 [kind="given_call_response", label="independent GIVEN + per-call frame"];
+  A_META_VALID_NULL_S2 -> A_META_VALID_NULL_S3 [kind="source_step", label="source order"];
+  A_META_VALID_NULL_S3 -> A_META_VALID_NULL_S4 [kind="source_call", label="cleanup call"];
+  B_LOOKUP_MISS_IN -> B_LOOKUP_MISS_S0 [kind="source_step", label="source order"];
+  B_LOOKUP_MISS_S0 -> B_LOOKUP_MISS_S1 [kind="source_step", label="source order"];
+  B_LOOKUP_MISS_S1 -> B_LOOKUP_MISS_S2 [kind="source_call", label="source order"];
+  B_LOOKUP_MISS_S2 -> B_LOOKUP_MISS_S3 [kind="analysis_stop", label="missing object premise"];
+  B_LOW_BIT_RETURN_IN -> B_LOW_BIT_RETURN_S0 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S0 -> B_LOW_BIT_RETURN_S1 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S1 -> B_LOW_BIT_RETURN_S2 [kind="source_call", label="source order"];
+  B_LOW_BIT_RETURN_S2 -> B_LOW_BIT_RETURN_S3 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S3 -> B_LOW_BIT_RETURN_S4 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S4 -> B_LOW_BIT_RETURN_S5 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S5 -> B_LOW_BIT_RETURN_S6 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S6 -> B_LOW_BIT_RETURN_S7 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S7 -> B_LOW_BIT_RETURN_S8 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S8 -> B_LOW_BIT_RETURN_S9 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S9 -> B_LOW_BIT_RETURN_S10 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S10 -> B_LOW_BIT_RETURN_S11 [kind="modeled_return", label="bounded normal return"];
+  B_LOW_BIT_RETURN_S11 -> B_LOW_BIT_RETURN_S12 [kind="source_step", label="source order"];
+  B_LOW_BIT_RETURN_S12 -> B_LOW_BIT_RETURN_S13 [kind="modeled_return", label="bounded normal return"];
+  C_IN -> C_S0 [kind="snapshot", label="controlled sequence snapshot"];
+  C_S0 -> C_RELEASED_PROBE [kind="observation_only", label="not source call, no sequence continuation"];
+  C_S0 -> C_S1 [kind="given_call_response", label="GIVEN frame"];
+  C_S1 -> C_S2 [kind="source_step", label="source order"];
+  C_S2 -> C_S3 [kind="given_call_response", label="GIVEN frame"];
+  C_S3 -> C_S4 [kind="source_step", label="source order"];
+  C_S4 -> C_S5 [kind="source_call", label="source order"];
+  C_S5 -> C_S6 [kind="snapshot", label="controlled sequence snapshot"];
+  C_S6 -> C_REUSED_PROBE [kind="observation_only", label="not source call, no sequence continuation"];
+  C_S6 -> C_S7 [kind="source_step", label="source order"];
+  C_S7 -> C_S8 [kind="source_step", label="source order"];
+  C_S8 -> C_S9 [kind="snapshot", label="controlled sequence snapshot"];
+  C_S9 -> C_REBOUND_PROBE [kind="observation_only", label="not source call, no sequence continuation"];
+}

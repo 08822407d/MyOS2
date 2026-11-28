@@ -1,0 +1,866 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-KTHREAD-ENTRY-68",
+  "record_type": "bounded_kernel_thread_producer_wrapper_and_return_analysis",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported, backend unknown)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-10",
+  "read_channel": "connector",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "09aa0ff5dc48",
+  "execution_parent_short12": "157bf5604754",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "phase": 2,
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_disposition": {
+    "R66_01": "CLOSED_DOCUMENTATION_ONLY by mainline, batch66 PASS_PENDING_LOCAL_WITH_R66C-S01",
+    "R67_01": {
+      "batch": "CORE-USER-FIRST-RUN-FRAME-67",
+      "source_commit_short12": "157bf5604754",
+      "status": "RETURN_DOCUMENTATION",
+      "return_item": "R67-01",
+      "disposition": "documentation_disposition_submitted_pending_C05",
+      "author_claim": {
+        "verified_claims": 82,
+        "quotes_reconfirmed": 82,
+        "downgraded_to_inferred": 0
+      },
+      "independent_six_file_text_inspection": {
+        "method": "for each of six directly fetched UTF-8 GitHub file bodies, match the literal substring whose first character is U+005B LEFT SQUARE BRACKET followed immediately by uppercase VERIFIED, without requiring trailing space or a symbol",
+        "source_evidence_anchor_labels": 82,
+        "non_source_prefix_matches": 1,
+        "total_raw_prefix_matches_exact_in_retrieved_six_files": 83,
+        "per_file_hits": {
+          "MANIFEST.md": 0,
+          "first-run-frame.md": 0,
+          "facts-and-boundaries.yaml": 1,
+          "first-run-frame-paths.dot": 0,
+          "deferred-findings.yaml": 0,
+          "evidence.md": 82
+        },
+        "non_source_location": "facts-and-boundaries.yaml::P9_text_subchecks[5], explanatory sentence saying MANIFEST count equals all new evidence-prefix occurrence 82",
+        "confidence": "exact for the six original GitHub file bodies fetched in this run; in-chat text calculation, not original local P9 or program rerun"
+      },
+      "affected_locations": [
+        {
+          "artifact": "user-first-run-frame-67/facts-and-boundaries.yaml",
+          "field": "P9_text_subchecks.5",
+          "correction": "do not embed the reserved matching prefix as explanatory prose; the extra literal hit was not a source anchor"
+        },
+        {
+          "artifact": "user-first-run-frame-67/MANIFEST.md",
+          "field": "self_check.verified_claims and P9 item5 claim",
+          "correction": "82 is original source-label count, not six-file raw substring total; actual raw count is 83"
+        },
+        {
+          "artifact": "user-first-run-frame-67/facts-and-boundaries.yaml",
+          "field": "actual_methods / source-label accounting",
+          "correction": "keep source quotations separate from every raw prefix occurrence; old 82 individual quote validity not automatically recertified"
+        },
+        {
+          "artifact": "https://github.com/08822407d/MyOS2/pull/17#issuecomment-6757793690",
+          "field": "P6/P9 82/82 statement",
+          "correction": "historical author's source-label and self-check claim; no post-hoc edit or retroactive local P9 pass"
+        }
+      ],
+      "numerical_consequence": "If original n is required to be raw total, n=83 while original m=82 and k=0; m+k is not 83. A non-source explanatory token cannot be counted as a reconfirmed quote or downgraded quote.",
+      "not_authorized": "rewrite old 67 files/comment or self-close R67-01",
+      "other_returns": "R66-01 CLOSED_DOCUMENTATION_ONLY; batch66 PASS_PENDING_LOCAL_WITH_R66C-S01; R67-S01/S02 technical constraints retained; 65/64 doc closed; 63/58 blank-line allegations retracted"
+    },
+    "other": "R67-S01 active RBX/R12 and wrapper/business distinctions retained; R67-S02 graph sequence limits retained; R66-S01/S02 and R65C-S01 remain; 63/58 withdrawn blank-line reviews not reopened",
+    "D00_status": "documentation_disposition_submitted_pending_C05; existing files and comments unchanged"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "2b705f35ced8",
+      "read_channel": "connector",
+      "role": "kernel_thread/kernel_clone/copy_process; real args and error/wake gates"
+    },
+    {
+      "path": "mykernel/sched/misc/sched_misc_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "d37cc3bb7045",
+      "read_channel": "connector",
+      "role": "struct kernel_clone_args members"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "4431545af5fb",
+      "read_channel": "connector",
+      "role": "copy_thread new frame and ret_from_fork prior conditional call"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "131d92a6d7a4",
+      "read_channel": "connector",
+      "role": "kthread_frame_init bx/r12 producer"
+    },
+    {
+      "path": "mykernel/sched/task/task_const.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "47597e0beb47",
+      "read_channel": "connector",
+      "role": "PF_KTHREAD direct macro"
+    },
+    {
+      "path": "mykernel/sched/sched_type_declaration.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0db68faa0fcf",
+      "read_channel": "connector",
+      "role": "kclone_args_s typedef"
+    },
+    {
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "4782afc6b3f2",
+      "read_channel": "connector",
+      "role": "kthread request, wrappers, daemon and exit"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "06a900f8d509",
+      "read_channel": "connector",
+      "role": "rest_init direct producers and kernel_init body"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/arch_task.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "e4c5c5336a0c",
+      "read_channel": "connector",
+      "role": "kernel_init continuation via kjmp_to_doexecve"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exit.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ceede39ca88a",
+      "read_channel": "connector",
+      "role": "do_exit direct terminate callee"
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "a210c885bc4f",
+      "read_channel": "connector",
+      "role": "do_task_dead, schedule_preempt_disabled direct bodies"
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "80fa8f8734b3",
+      "read_channel": "connector",
+      "role": "ret_from_fork_asm second callsite"
+    }
+  ],
+  "source_context": [
+    {
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "kthread",
+      "constraint": "threadfn/data copied to local variables and also self->threadfn/data; actual call is local threadfn(data), not self->threadfn dereference",
+      "ids": [
+        "B15",
+        "B18",
+        "B21"
+      ]
+    },
+    {
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "__kthread_create_on_node",
+      "constraint": "cancellation wait_for_completion_killable block is commented; active wait_for_completion used in selected path",
+      "ids": [
+        "B30",
+        "B31"
+      ]
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "symbol": "kernel_thread",
+      "constraint": "source function doesn't itself contain a fn NULL check; only examined direct selected callsites show nonnull named symbols",
+      "ids": [
+        "A01",
+        "A03",
+        "C02",
+        "C04",
+        "C25"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/arch_task.c",
+      "symbol": "kjmp_to_doexecve",
+      "constraint": "kernel_execve return and inline asm user transition not executed; source jump target and kernel_init while(true) are separate controls",
+      "ids": [
+        "C13",
+        "C16",
+        "C17"
+      ]
+    }
+  ],
+  "entry_argument_matrix": [
+    {
+      "stage": "kernel_thread parameters",
+      "producer": "kernel_thread(fn,arg,name,flags)",
+      "source_ids": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05"
+      ],
+      "assignments": {
+        "flags": "((lower_32_bits(flags)|CLONE_VM|CLONE_UNTRACED)&~CSIGNAL)",
+        "exit_signal": "lower_32_bits(flags)&CSIGNAL",
+        "fn": "fn",
+        "fn_arg": "arg",
+        "name": "name",
+        "kthread": 1,
+        "stack": "(unsigned long)fn",
+        "stack_size": "(unsigned long)arg"
+      },
+      "boundaries": [
+        "stack and stack_size are numeric copies of fn/arg; they are not proof of an actual user stack",
+        "no explicit null-fn gate appears in this examined kernel_thread body; not a global caller check"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "stage": "real type and kthread flag",
+      "source_ids": [
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A28",
+        "A29"
+      ],
+      "facts": [
+        "kclone_args_s is typedef of kernel_clone_args",
+        "PF_KTHREAD is a concrete task flag macro",
+        "fn, fn_arg, name, stack and stack_size are distinct fields"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "stage": "kernel_clone",
+      "source_ids": [
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16"
+      ],
+      "flow": "selected PIDFD argument conflict returns -EINVAL; copy_process pointer error returns PTR_ERR; otherwise obtains PID and calls wake_up_new_task(p) before returning nr",
+      "limit": "PID return and wake-up request do not establish execution of child first instruction, first wrapper, or business callback"
+    },
+    {
+      "stage": "copy_process flag and wrapper allocation",
+      "source_ids": [
+        "A17",
+        "A18",
+        "A19",
+        "A20",
+        "A21"
+      ],
+      "flow": "dup_task_struct then reset PF_KTHREAD, set if args.kthread; conditionally set_kthread_struct with failure cleanup; later copy_thread(p,args) and its own error gate",
+      "limit": "other resource producers, PID/scheduler states remain opaque"
+    },
+    {
+      "stage": "copy_thread kthread frame",
+      "source_ids": [
+        "A22",
+        "A23",
+        "A24",
+        "A25",
+        "A26",
+        "A27"
+      ],
+      "flow": "args.stack read into local sp but PF_KTHREAD branch zeroes childregs and returns after kthread_frame_init, before ordinary if(sp) childregs.sp override; bx=fn, r12=arg, ret_addr and thread.sp set earlier",
+      "limit": "actual frame validity/ABI and any producer of fn=NULL outside examined callers unknown"
+    }
+  ],
+  "wrapper_callback_matrix": [
+    {
+      "stage": "request origin",
+      "ids": [
+        "B01",
+        "B02",
+        "B26",
+        "B27",
+        "B28",
+        "B29"
+      ],
+      "object": "kthd_create_info_s",
+      "writes": [
+        "threadfn=caller supplied business callback",
+        "data=caller supplied context",
+        "done=&stack completion",
+        "name allocated",
+        "list initialized"
+      ],
+      "guards": [
+        "request and name allocation success",
+        "lifetime of stack done and request not independently audited"
+      ]
+    },
+    {
+      "stage": "publish and await",
+      "ids": [
+        "B30",
+        "B31",
+        "B32"
+      ],
+      "from": "__kthread_create_on_node",
+      "action": "enqueue create, wake kthreadd_task, wait_for_completion(done), then read create.result and free request",
+      "guard": "notification and result production actually occur; not a business-callback-start proof"
+    },
+    {
+      "stage": "daemon consumes request",
+      "ids": [
+        "B35",
+        "B36",
+        "B37",
+        "B38",
+        "C19",
+        "C20",
+        "C21",
+        "C22"
+      ],
+      "from": "kthreadd",
+      "action": "indefinite loop dequeues under create_lock, invokes create_kthread outside lock",
+      "guard": "daemon executes and list operations valid"
+    },
+    {
+      "stage": "wrapper entry production",
+      "ids": [
+        "B23",
+        "B24",
+        "B25",
+        "C25",
+        "A03",
+        "A25",
+        "A26"
+      ],
+      "from": "create_kthread",
+      "action": "kernel_thread(kthread, create, create.full_name, flags); first-run frame holds wrapper kthread in bx, create in r12; failure reports ERR_PTR(pid) and complete(done)",
+      "guard": "no claim business threadfn is directly loaded into first frame"
+    },
+    {
+      "stage": "persistent wrapper allocation",
+      "ids": [
+        "A18",
+        "A19",
+        "B09",
+        "B10",
+        "B11",
+        "B07"
+      ],
+      "action": "PF_KTHREAD task's set_kthread_struct allocates kthread_s via kzalloc, sets worker_private and vfork_done; kthread obtains self from to_kthread(current)",
+      "guard": "allocation and all preceding task setup succeed"
+    },
+    {
+      "stage": "wrapper checks done",
+      "ids": [
+        "B14",
+        "B15",
+        "B16",
+        "B17",
+        "B18"
+      ],
+      "action": "kthread copies create.threadfn/create.data into locals; xchg create.done with NULL; if NULL frees request and exits; otherwise stores business fn/data in self",
+      "guard": "self and create remain valid; no actual cancellation or signals inferred"
+    },
+    {
+      "stage": "creation complete versus work begin",
+      "ids": [
+        "B19",
+        "B20",
+        "C34"
+      ],
+      "action": "set TASK_UNINTERRUPTIBLE; create.result=current; preempt_disable; complete(done); schedule_preempt_disabled; preempt_enable",
+      "guard": "completion notification precedes selected business callback, but does not itself imply callback executed or scheduling returned"
+    },
+    {
+      "stage": "business stop and callback",
+      "ids": [
+        "B06",
+        "B21",
+        "B22",
+        "C26",
+        "C27"
+      ],
+      "action": "ret=-EINTR; if !KTHREAD_SHOULD_STOP then ret=threadfn(data); afterward kthread_exit(ret)",
+      "guard": "if callback never returns, no later kthread_exit through this local path; if NULL callback reaches indirect call, effect requires caller guard proof"
+    },
+    {
+      "stage": "termination",
+      "ids": [
+        "B12",
+        "C28",
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "C33"
+      ],
+      "action": "kthread_exit saves result and calls do_exit(0); do_exit ends with do_task_dead; task-dead path issues __schedule, BUG and fallback for(;;)",
+      "guard": "direct no-normal-return source chain, not a CPU/cleanup/liveness runtime certification"
+    }
+  ],
+  "return_condition_matrix": [
+    {
+      "origin": "rest_init -> kernel_init",
+      "ids": [
+        "C01",
+        "C02",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "first_frame_fn": "kernel_init (non-null symbol)",
+      "inside_business": "initialization and kjmp_to_doexecve, not generic threadfn wrapper",
+      "source_normal_return": "not supported by selected function body: after kjmp call lies while(true) before textual return 1; if jump succeeds it leaves via asm label",
+      "second_FR67_asm_fn_call": "not source-reachable on this selected normal path; unresolved actual CPU jump and user mode",
+      "stop": "earliest blocked init callee / asm jump / while(true)",
+      "requires": "earlier init calls and valid frame"
+    },
+    {
+      "origin": "rest_init -> kthreadd",
+      "ids": [
+        "C04",
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24"
+      ],
+      "first_frame_fn": "kthreadd (non-null symbol)",
+      "inside_business": "daemon dequeue and create_kthread",
+      "source_normal_return": "unconditional for(;;) body; return 0 outside loop not normally reachable",
+      "second_FR67_asm_fn_call": "not source-reachable on the shown normal daemon loop",
+      "stop": "nonreturning scheduler/queue call or indefinite daemon loop",
+      "requires": "daemon's task and queue valid"
+    },
+    {
+      "origin": "__kthread_create_on_node -> kthreadd -> create_kthread -> kernel_thread",
+      "ids": [
+        "B26",
+        "B30",
+        "B35",
+        "B37",
+        "B23",
+        "C25",
+        "A03",
+        "A25",
+        "A26"
+      ],
+      "first_frame_fn": "kthread wrapper (non-null symbol)",
+      "inside_business": "local threadfn/data from kthd_create_info_s, not the first-frame fn",
+      "source_normal_return": "selected wrapper ends in kthread_exit on both cancel and business-return paths",
+      "second_FR67_asm_fn_call": "not source-reachable if kthread_exit/do_exit/do_task_dead follow shown terminal source",
+      "stop": "done NULL -> exit; done nonNULL -> completion/schedule/stop-or-threadfn -> exit",
+      "requires": "valid object, successful setup; target pointer and ABI valid"
+    },
+    {
+      "origin": "kthread done NULL",
+      "ids": [
+        "B16",
+        "B17",
+        "B12",
+        "C30",
+        "C33"
+      ],
+      "first_frame_fn": "kthread wrapper",
+      "inside_business": "no business threadfn called in this path",
+      "source_normal_return": "no: kthread_exit(-EINTR) followed by terminal chain",
+      "second_FR67_asm_fn_call": "not reached on stated normal terminal behavior"
+    },
+    {
+      "origin": "kthread done nonnull and SHOULD_STOP true",
+      "ids": [
+        "B19",
+        "B20",
+        "B21",
+        "B22",
+        "B12"
+      ],
+      "inside_business": "skip threadfn(data)",
+      "source_normal_return": "no: exit(-EINTR) path",
+      "second_FR67_asm_fn_call": "not reached if termination chain behaves as source"
+    },
+    {
+      "origin": "kthread done nonnull, SHOULD_STOP false, business returns",
+      "ids": [
+        "B20",
+        "B21",
+        "B22",
+        "B12",
+        "C30"
+      ],
+      "inside_business": "threadfn(data) exactly one direct local business callsite",
+      "source_normal_return": "wrapper calls kthread_exit(ret), not ret_from_fork normal return",
+      "second_FR67_asm_fn_call": "not reached on normal termination chain"
+    },
+    {
+      "origin": "kthread done nonnull, business does not return",
+      "ids": [
+        "B20",
+        "B21"
+      ],
+      "inside_business": "threadfn(data) entered but no subsequent wrapper statements reached",
+      "source_normal_return": "no, earliest nonreturning callback",
+      "second_FR67_asm_fn_call": "not reached"
+    },
+    {
+      "origin": "hypothetical kernel_thread(fn=NULL)",
+      "ids": [
+        "A01",
+        "A03",
+        "A25",
+        "C02",
+        "C04",
+        "C25"
+      ],
+      "first_frame_fn": "NULL hypothetical; direct named callers examined are nonnull",
+      "source_normal_return": "cannot infer; no specific actual constructor established",
+      "second_FR67_asm_fn_call": "FR67-F03 remains conditional, no universal NULL prohibition or runtime occurrence"
+    },
+    {
+      "origin": "create_kthread kernel_thread PID return",
+      "ids": [
+        "B23",
+        "B24",
+        "B25",
+        "A12",
+        "A15",
+        "A16",
+        "B31"
+      ],
+      "source_normal_return": "parent can return PID, then success depends on wrapper setting result and completing done",
+      "second_FR67_asm_fn_call": "PID alone cannot prove child reached first fn or later ASM call"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "case_id": "ORIGIN-kernel_init",
+      "source_fn_nonnull": true,
+      "source_kthread_flag": 1,
+      "first_frame_fn": "kernel_init",
+      "normal_source_fn_return": "not_shown_in_selected_local_path",
+      "second_call_reached_under_local_normal_return": "NO_IF_SOURCE_PRECONDITIONS_HOLD",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "case_id": "ORIGIN-kthreadd",
+      "source_fn_nonnull": true,
+      "source_kthread_flag": 1,
+      "first_frame_fn": "kthreadd",
+      "normal_source_fn_return": "not_shown_in_selected_local_path",
+      "second_call_reached_under_local_normal_return": "NO_IF_SOURCE_PRECONDITIONS_HOLD",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "case_id": "ORIGIN-kthread_wrapper",
+      "source_fn_nonnull": true,
+      "source_kthread_flag": 1,
+      "first_frame_fn": "kthread_wrapper",
+      "normal_source_fn_return": "false_if_terminal_chain_returns_nothing",
+      "second_call_reached_under_local_normal_return": "NO_IF_SOURCE_PRECONDITIONS_HOLD",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "case_id": "WRAP-D0-S0-R0",
+      "done_present": false,
+      "should_stop": false,
+      "business_returns_if_invoked": false,
+      "business_called": false,
+      "creation_complete_called": false,
+      "exit_called_after_normal_local_progress": true,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "done=NULL exits before completion"
+    },
+    {
+      "case_id": "WRAP-D0-S0-R1",
+      "done_present": false,
+      "should_stop": false,
+      "business_returns_if_invoked": true,
+      "business_called": false,
+      "creation_complete_called": false,
+      "exit_called_after_normal_local_progress": true,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "done=NULL exits before completion"
+    },
+    {
+      "case_id": "WRAP-D0-S1-R0",
+      "done_present": false,
+      "should_stop": true,
+      "business_returns_if_invoked": false,
+      "business_called": false,
+      "creation_complete_called": false,
+      "exit_called_after_normal_local_progress": true,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "done=NULL exits before completion"
+    },
+    {
+      "case_id": "WRAP-D0-S1-R1",
+      "done_present": false,
+      "should_stop": true,
+      "business_returns_if_invoked": true,
+      "business_called": false,
+      "creation_complete_called": false,
+      "exit_called_after_normal_local_progress": true,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "done=NULL exits before completion"
+    },
+    {
+      "case_id": "WRAP-D1-S0-R0",
+      "done_present": true,
+      "should_stop": false,
+      "business_returns_if_invoked": false,
+      "business_called": true,
+      "creation_complete_called": true,
+      "exit_called_after_normal_local_progress": false,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "stops at nonreturning business"
+    },
+    {
+      "case_id": "WRAP-D1-S0-R1",
+      "done_present": true,
+      "should_stop": false,
+      "business_returns_if_invoked": true,
+      "business_called": true,
+      "creation_complete_called": true,
+      "exit_called_after_normal_local_progress": true,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "business returns -> exit"
+    },
+    {
+      "case_id": "WRAP-D1-S1-R0",
+      "done_present": true,
+      "should_stop": true,
+      "business_returns_if_invoked": false,
+      "business_called": false,
+      "creation_complete_called": true,
+      "exit_called_after_normal_local_progress": true,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "skip business callback"
+    },
+    {
+      "case_id": "WRAP-D1-S1-R1",
+      "done_present": true,
+      "should_stop": true,
+      "business_returns_if_invoked": true,
+      "business_called": false,
+      "creation_complete_called": true,
+      "exit_called_after_normal_local_progress": true,
+      "normal_wrapper_return_under_terminal_do_exit": false,
+      "notes": "skip business callback"
+    },
+    {
+      "case_id": "CLONE-C0-W0",
+      "copy_process_succeeds": false,
+      "wake_up_new_task_source_reached": false,
+      "actual_child_fn_executed": "not_inferable_from_pid_or_wake_call",
+      "scheduler_runs": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "case_id": "CLONE-C0-W1",
+      "copy_process_succeeds": false,
+      "wake_up_new_task_source_reached": false,
+      "actual_child_fn_executed": "not_inferable_from_pid_or_wake_call",
+      "scheduler_runs": true,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "case_id": "CLONE-C1-W0",
+      "copy_process_succeeds": true,
+      "wake_up_new_task_source_reached": true,
+      "actual_child_fn_executed": "not_inferable_from_pid_or_wake_call",
+      "scheduler_runs": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "case_id": "CLONE-C1-W1",
+      "copy_process_succeeds": true,
+      "wake_up_new_task_source_reached": true,
+      "actual_child_fn_executed": "not_inferable_from_pid_or_wake_call",
+      "scheduler_runs": true,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "case_id": "NULL_FN_HYPOTHETICAL",
+      "source_kernel_thread_function_explicit_null_check": false,
+      "examined_real_direct_callers": [
+        "kernel_init",
+        "kthreadd",
+        "kthread"
+      ],
+      "all_nonnull": true,
+      "global_callers_checked": false,
+      "conclusion": "no universal NULL guarantee, no observed NULL creation"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "narrow to selected no-normal-return entry paths; do not self-close"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-F02",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "retain original condition and first failure boundary"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-F03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "retain original condition and first failure boundary"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "bounded additional source for caller/wrapper; CPU and wider caller completeness still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "bounded additional source for caller/wrapper; CPU and wider caller completeness still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U05",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "bounded additional source for caller/wrapper; CPU and wider caller completeness still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "bounded additional source for caller/wrapper; CPU and wider caller completeness still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U07",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "bounded additional source for caller/wrapper; CPU and wider caller completeness still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "R66C-S01 doc closed, runtime and first-entry conditions not retroactively closed"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "R66C-S01 doc closed, runtime and first-entry conditions not retroactively closed"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "R66C-S01 doc closed, runtime and first-entry conditions not retroactively closed"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U08",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "R66C-S01 doc closed, runtime and first-entry conditions not retroactively closed"
+    },
+    {
+      "review_id": "CORE-USER-RETURN-SIGNAL-09-DOC-FIX-01-REVIEW-001",
+      "source_field": "effective_signal09_disposition",
+      "source_value": "PASS_PENDING_LOCAL_WITH_PRIOR_REVIEW_LIMITS",
+      "consumption": "do not equate return-work source with actual user mode or omit signal/restart conditions"
+    }
+  ],
+  "uncertainty_register": [
+    {
+      "scope": "G00",
+      "missing": "any real child/task runtime and produced PID or actual scheduler run"
+    },
+    {
+      "scope": "A",
+      "missing": "all external kernel_thread callsites, argument validity and exact error-liveness behavior"
+    },
+    {
+      "scope": "B",
+      "missing": "completion memory order, wakeup timing, actual context switch, canceled create lifetime and full stop protocol"
+    },
+    {
+      "scope": "C",
+      "missing": "do_exit cleanup callees and true task termination; kernel_execve/SYSRET ABI, first CPL3 entry and CPU effects"
+    }
+  ],
+  "source_budget": {
+    "source_files": 12,
+    "soft_limit": 12,
+    "search_batches": "bounded targeted navigation; no whole repository-wide source audit"
+  },
+  "run_context": {
+    "record_version": "v0.2",
+    "actor": "MYOS2-A-C05b / CHAT-EXEC-08",
+    "surface": "ChatGPT ordinary conversation + GitHub connector",
+    "operator_selection": "Owner reports GPT-6+Extra next tier",
+    "backend": "unknown_or_not_attestable",
+    "authorization_ref": "Owner forwarded fixed99 at 09aa0ff5dc48",
+    "reviewer": "MYOS2-A-C05 separate Pro review pending",
+    "external_paid_models_started": false,
+    "source_execution": false
+  },
+  "P9_text_subchecks": {
+    "1": "new six-file raw text regex 40 hex count must equal 0",
+    "2": "104 directly re-fetched original source quotations, single definition, nonempty and 1-5 physical lines; local complete P9 NOT_RUN",
+    "3": "exact fixed-time source path, result six paths to be remote verified after publication",
+    "4": "attached line ranges checked against source",
+    "5": "new six-file literal-prefix count MUST equal manifest verified_claims and genuine anchors, without prose matches; m+k=n",
+    "6": "no external architecture/calling-convention rules asserted without primary reference; conditional models only",
+    "7": "fresh time/master two canary exact physical lines required",
+    "8": "read_channel and exact conventions item2 text required",
+    "9": "N/A no proposed code symbols",
+    "10": "N/A no kernel source patch or diff",
+    "11": "NOT_RUN preprocess/compile/link/offsets/Graphviz/QEMU/real hardware",
+    "12": "N/A no fallback chat file outputs",
+    "13": "all source-critical A/B/C anchors cited and checked; mainline independent adjudication pending"
+  },
+  "actual_checks": {
+    "source_anchor_count": 104,
+    "source_quotes_reconfirmed": 104,
+    "non_source_prefix_hits_in_new_facts_expected": 0,
+    "full_local_P9": "NOT_RUN",
+    "repository_code_executed": false,
+    "source_preprocessor": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN"
+  }
+}

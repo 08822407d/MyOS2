@@ -1,0 +1,2233 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-MEMORY-COPY-FILL-126",
+  "record_type": "bounded_static_memory_copy_fill_and_D00",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 (self-descriptive), backend and effort UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra (177 fixed contract)",
+  "date": "2026-11-22",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "bd1372961eaa",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "source_125_verdict": "RETURN",
+    "R125_01": {
+      "id": "R125-01",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_commit_short12": "bd1372961eaa",
+      "source_dir": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/",
+      "original": {
+        "file_literal_prefix_counts": {
+          "MANIFEST.md": 1,
+          "libc-string-copy-append.md": 0,
+          "facts-and-boundaries.yaml": 0,
+          "libc-string-copy-append-paths.dot": 0,
+          "deferred-findings.yaml": 0,
+          "evidence.md": 34
+        },
+        "total_literal_prefix_count": 35,
+        "structurally_complete_source_quotes": 34,
+        "formal_tags_wrongly_reported_as": 34,
+        "build_source_windows_to_reclassify": 11,
+        "correct_function_windows": 21,
+        "correct_kernel_configuration_windows": 2
+      },
+      "reconstruction": {
+        "mode": "READ_VIEW_ONLY_NO_SOURCE_MUTATION",
+        "virtual_counts": {
+          "MANIFEST.md": 0,
+          "libc-string-copy-append.md": 0,
+          "facts-and-boundaries.yaml": 0,
+          "libc-string-copy-append-paths.dot": 0,
+          "deferred-findings.yaml": 0,
+          "evidence.md": 23
+        },
+        "virtual_total_literal_prefix_count": 23,
+        "virtual_formal_window_count": 23,
+        "virtual_self_check": {
+          "verified_claims": 23,
+          "quotes_reconfirmed": 23,
+          "downgraded_to_inferred": 0
+        },
+        "manifest_line_replacements": [
+          {
+            "file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/MANIFEST.md",
+            "line": 35,
+            "operation": "REPLACE_WHOLE_ORIGINAL_LINE",
+            "original_line_at_fixed_blob": "self_check: {verified_claims: 34, quotes_reconfirmed: 34, downgraded_to_inferred: 0}",
+            "new_line": "self_check: {verified_claims: 23, quotes_reconfirmed: 23, downgraded_to_inferred: 0}",
+            "selector": "fixed-commit path and physical line 35"
+          },
+          {
+            "file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/MANIFEST.md",
+            "line": 36,
+            "operation": "REPLACE_WHOLE_ORIGINAL_LINE",
+            "original_line_at_fixed_blob": "per_file_literal_prefix: {MANIFEST.md: 0, libc-string-copy-append.md: 0, facts-and-boundaries.yaml: 0, libc-string-copy-append-paths.dot: 0, deferred-findings.yaml: 0, evidence.md: 34}",
+            "new_line": "per_file_literal_prefix: {MANIFEST.md: 0, libc-string-copy-append.md: 0, facts-and-boundaries.yaml: 0, libc-string-copy-append-paths.dot: 0, deferred-findings.yaml: 0, evidence.md: 23}",
+            "selector": "fixed-commit path and physical line 36"
+          },
+          {
+            "file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/MANIFEST.md",
+            "line": 37,
+            "operation": "REPLACE_WHOLE_ORIGINAL_LINE",
+            "original_line_at_fixed_blob": "new_source_definition_windows: 34",
+            "new_line": "new_source_definition_windows: 23",
+            "selector": "fixed-commit path and physical line 37"
+          },
+          {
+            "file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/MANIFEST.md",
+            "line": 100,
+            "operation": "REPLACE_WHOLE_ORIGINAL_LINE",
+            "original_line_at_fixed_blob": "| `evidence.md` | 34个新定义体或单个活动CMake命令的1–5物理行短窗；公共声明/宏别名和来源普通定位另列 |",
+            "new_line": "| `evidence.md` | 23条正式短窗（21个C函数体、2个time内核活动配置）；另11条用户侧CMake窗口降为普通定位，原源码行和ID保留 |",
+            "selector": "fixed-commit path and physical line 100"
+          },
+          {
+            "file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/MANIFEST.md",
+            "line": 105,
+            "operation": "REPLACE_WHOLE_ORIGINAL_LINE",
+            "original_line_at_fixed_blob": null,
+            "new_line": "- 正式P2短窗：SC125-E001–E021、SC125-E030–E031，共23处；SC125-E022–E029及E032–E034为保留原文的构建普通定位；其余五件不含正式短窗标签。P6三数 `23/23/0`。",
+            "selector": "fixed-commit path and physical line 105"
+          }
+        ],
+        "evidence_downgrade": [
+          {
+            "evidence_id": "SC125-E022",
+            "relative_path": "myinitramfs/mylib/myglibc/string/CMakeLists.txt",
+            "lines": [
+              3,
+              3
+            ],
+            "source_symbol": "target_sources",
+            "original_source_quote": "target_sources(mylibc PUBLIC ${LIBC_STRING_C_SRCS} ${LIBC_STRING_ASM_SRCS})",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/mylib/myglibc/string/CMakeLists.txt:3-3。",
+            "replacement_heading": "## SC125-E022 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E023",
+            "relative_path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+            "lines": [
+              1,
+              1
+            ],
+            "source_symbol": "add_library",
+            "original_source_quote": "add_library(mylibc STATIC)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/mylib/myglibc/CMakeLists.txt:1-1。",
+            "replacement_heading": "## SC125-E023 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E024",
+            "relative_path": "myinitramfs/mylib/myglibc/CMakeLists.txt",
+            "lines": [
+              20,
+              20
+            ],
+            "source_symbol": "add_subdirectory",
+            "original_source_quote": "add_subdirectory(string)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/mylib/myglibc/CMakeLists.txt:20-20。",
+            "replacement_heading": "## SC125-E024 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E025",
+            "relative_path": "myinitramfs/CMakeLists.txt",
+            "lines": [
+              40,
+              40
+            ],
+            "source_symbol": "set",
+            "original_source_quote": "set(MUSL_PATH /home/cheyh/projs/musl/build)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/CMakeLists.txt:40-40。",
+            "replacement_heading": "## SC125-E025 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "设置MUSL_PATH根目录变量，并非设置C编译器"
+          },
+          {
+            "evidence_id": "SC125-E026",
+            "relative_path": "myinitramfs/CMakeLists.txt",
+            "lines": [
+              46,
+              46
+            ],
+            "source_symbol": "include_directories",
+            "original_source_quote": "include_directories(\"${MUSL_INC_PATH}\")",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/CMakeLists.txt:46-46。",
+            "replacement_heading": "## SC125-E026 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E027",
+            "relative_path": "myinitramfs/CMakeLists.txt",
+            "lines": [
+              47,
+              47
+            ],
+            "source_symbol": "add_subdirectory",
+            "original_source_quote": "add_subdirectory(myinit)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/CMakeLists.txt:47-47。",
+            "replacement_heading": "## SC125-E027 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E028",
+            "relative_path": "myinitramfs/CMakeLists.txt",
+            "lines": [
+              48,
+              48
+            ],
+            "source_symbol": "add_subdirectory",
+            "original_source_quote": "add_subdirectory(myshell)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/CMakeLists.txt:48-48。",
+            "replacement_heading": "## SC125-E028 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E029",
+            "relative_path": "myinitramfs/myshell/CMakeLists.txt",
+            "lines": [
+              4,
+              4
+            ],
+            "source_symbol": "add_executable",
+            "original_source_quote": "add_executable(sh ${SHELL_C_SRCS} ${SHELL_ASM_SRCS})",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/myshell/CMakeLists.txt:4-4。",
+            "replacement_heading": "## SC125-E029 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E032",
+            "relative_path": "myinitramfs/mylib/myglibc/string/CMakeLists.txt",
+            "lines": [
+              1,
+              1
+            ],
+            "source_symbol": "file",
+            "original_source_quote": "file(GLOB LIBC_STRING_C_SRCS *.c)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/mylib/myglibc/string/CMakeLists.txt:1-1。",
+            "replacement_heading": "## SC125-E032 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E033",
+            "relative_path": "myinitramfs/mylib/myglibc/string/CMakeLists.txt",
+            "lines": [
+              2,
+              2
+            ],
+            "source_symbol": "file",
+            "original_source_quote": "file(GLOB LIBC_STRING_ASM_SRCS *.S)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/mylib/myglibc/string/CMakeLists.txt:2-2。",
+            "replacement_heading": "## SC125-E033 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "仅此CMake命令的文本级构建来源；不证明sh实际链接仓内libc"
+          },
+          {
+            "evidence_id": "SC125-E034",
+            "relative_path": "myinitramfs/CMakeLists.txt",
+            "lines": [
+              41,
+              41
+            ],
+            "source_symbol": "set",
+            "original_source_quote": "set(CMAKE_C_COMPILER ${MUSL_PATH}/exec/bin/musl-gcc)",
+            "replacement_locator_line": "普通定位（非正式P2短窗）：myinitramfs/CMakeLists.txt:41-41。",
+            "replacement_heading": "## SC125-E034 · 用户侧构建普通定位",
+            "reason": "CMake用户侧构建只证明文本设置/源码收集/目标声明，不作为C函数或time内核活动配置的正式短锚",
+            "scope": "设置CMAKE_C_COMPILER为所列musl-gcc路径，仅源码文本；不是实际编译器或链接输出凭据"
+          }
+        ],
+        "evidence_rewrite_rule": {
+          "file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/evidence.md",
+          "target_evidence_ids": [
+            "SC125-E022",
+            "SC125-E023",
+            "SC125-E024",
+            "SC125-E025",
+            "SC125-E026",
+            "SC125-E027",
+            "SC125-E028",
+            "SC125-E029",
+            "SC125-E032",
+            "SC125-E033",
+            "SC125-E034"
+          ],
+          "operation": "retain code block and fixed source locator, drop the bracketed formal claim line and give a plain source locator plus constrained CMake-only semantics",
+          "non_downgraded_windows": "SC125-E001..E021 and SC125-E030..E031 unchanged",
+          "original_evidence_bytes_untouched": true
+        },
+        "manifest_line105_original_has_unwanted_literal_token": true
+      },
+      "affected_prior_claims": [
+        "MANIFEST.md:35 self_check=34/34/0 replaced with 23/23/0 in virtual view",
+        "MANIFEST.md:36 per_file_literal_prefix original MANIFEST=0 and evidence=34 replaced 0 and23",
+        "MANIFEST.md:37 new_source_definition_windows=34 replaced 23",
+        "MANIFEST.md:100 evidence description replaced",
+        "MANIFEST.md:105 remove accidental P6 marker and update ID selection, counts",
+        "evidence.md:E022-029 E032-034 formal classification replaced with ordinary source locator",
+        "125 author delivery comment reports 34 P2 windows; read with mainline RETURN and this appended R125-01 correction (old comment frozen)"
+      ],
+      "unchanged": [
+        "125 code consumer cases and paths",
+        "125 source quotes bytes for all 34 original windows",
+        "125 Git tree, six files, existing comment remain immutable"
+      ],
+      "final_125_verdict": "RETURN until C08 independent adjudication",
+      "case_id": "D126-R125-01"
+    },
+    "R125_02": {
+      "id": "R125-02",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_commit_short12": "bd1372961eaa",
+      "source_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/facts-and-boundaries.yaml",
+      "source_companion_report": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/libc-string-copy-append.md",
+      "patch_rule": "replace one original root case field, retain other two field values; append per-case provenance fields from this array in the virtual reading view; never alter original bytes",
+      "cases": [
+        {
+          "case_id": "C125-01",
+          "source_125_field_path": "/C_cat_command/cases/0/stages/2/new_NUL_from_prior_memset_offset",
+          "source_125_stage_id": "after_optional_separator",
+          "source_125_entry_at_fixed_blob": "C125-01",
+          "old_value": 1,
+          "replacement_value": null,
+          "prior_stage": "after_initial_strcpy",
+          "initial_zero_writer": "cat_command -> memset @ 263, applies to all F[0..cap)",
+          "after_initial_strcpy_NUL_index": 1,
+          "conditional_guard": "len > 1",
+          "guard_value": false,
+          "conditional_write_set": [],
+          "byte_values_changed_at_conditional_stage": [],
+          "first_NUL_index_after_stage": 1,
+          "first_NUL_last_writer": "STRCPY#1->MEMCPY(F,current_dir,len+1) @ strcpy:31",
+          "prior_NUL_at_index": 1,
+          "new_first_NUL_exposed_at_this_step": null,
+          "zero_physically_written_in_conditional_step": false,
+          "precondition_source_return": 1,
+          "after_conditional_bytes": "2f 00 00 00 00 00 00 00 00",
+          "final_path": "/readme",
+          "final_bytes": "2f 72 65 61 64 6d 65 00 00",
+          "inner_strcpy_return": "F+1",
+          "outer_strcat_return": "F",
+          "open_call": {
+            "owner": "cat_command",
+            "line": 270,
+            "args": [
+              "F",
+              "O_RDONLY",
+              0
+            ],
+            "first_argument_filename_path": "/readme",
+            "actual_result": "UNKNOWN"
+          },
+          "interpretation": "guard false, no write; existing F[1] first zero was most recently overwritten with zero by first strcpy's memcpy"
+        },
+        {
+          "case_id": "C125-02",
+          "source_125_field_path": "/C_cat_command/cases/1/stages/2/new_NUL_from_prior_memset_offset",
+          "source_125_stage_id": "after_optional_separator",
+          "source_125_entry_at_fixed_blob": "C125-02",
+          "old_value": 5,
+          "replacement_value": 5,
+          "prior_stage": "after_initial_strcpy",
+          "initial_zero_writer": "cat_command -> memset @ 263, applies to all F[0..cap)",
+          "after_initial_strcpy_NUL_index": 4,
+          "conditional_guard": "len > 1",
+          "guard_value": true,
+          "conditional_write_set": [
+            [
+              4,
+              5
+            ]
+          ],
+          "byte_values_changed_at_conditional_stage": [
+            4
+          ],
+          "first_NUL_index_after_stage": 5,
+          "first_NUL_last_writer": "memset(F,0,cap) @ cat_command:263",
+          "prior_NUL_at_index": 4,
+          "new_first_NUL_exposed_at_this_step": 5,
+          "zero_physically_written_in_conditional_step": false,
+          "precondition_source_return": 4,
+          "after_conditional_bytes": "2f 62 69 6e 2f 00 00 00",
+          "final_path": "/bin/hi",
+          "final_bytes": "2f 62 69 6e 2f 68 69 00",
+          "inner_strcpy_return": "F+5",
+          "outer_strcat_return": "F",
+          "open_call": {
+            "owner": "cat_command",
+            "line": 270,
+            "args": [
+              "F",
+              "O_RDONLY",
+              0
+            ],
+            "first_argument_filename_path": "/bin/hi",
+            "actual_result": "UNKNOWN"
+          },
+          "interpretation": "separator overwritten old NUL; previously cleared next byte is first NUL; no new zero written in this step"
+        },
+        {
+          "case_id": "C125-03",
+          "source_125_field_path": "/C_cat_command/cases/2/stages/2/new_NUL_from_prior_memset_offset",
+          "source_125_stage_id": "after_optional_separator",
+          "source_125_entry_at_fixed_blob": "C125-03",
+          "old_value": 5,
+          "replacement_value": 5,
+          "prior_stage": "after_initial_strcpy",
+          "initial_zero_writer": "cat_command -> memset @ 263, applies to all F[0..cap)",
+          "after_initial_strcpy_NUL_index": 4,
+          "conditional_guard": "len > 1",
+          "guard_value": true,
+          "conditional_write_set": [
+            [
+              4,
+              5
+            ]
+          ],
+          "byte_values_changed_at_conditional_stage": [
+            4
+          ],
+          "first_NUL_index_after_stage": 5,
+          "first_NUL_last_writer": "memset(F,0,cap) @ cat_command:263",
+          "prior_NUL_at_index": 4,
+          "new_first_NUL_exposed_at_this_step": 5,
+          "zero_physically_written_in_conditional_step": false,
+          "precondition_source_return": 4,
+          "after_conditional_bytes": "2f 62 69 6e 2f 00 00 00 00",
+          "final_path": "/bin//hi",
+          "final_bytes": "2f 62 69 6e 2f 2f 68 69 00",
+          "inner_strcpy_return": "F+5",
+          "outer_strcat_return": "F",
+          "open_call": {
+            "owner": "cat_command",
+            "line": 270,
+            "args": [
+              "F",
+              "O_RDONLY",
+              0
+            ],
+            "first_argument_filename_path": "/bin//hi",
+            "actual_result": "UNKNOWN"
+          },
+          "interpretation": "separator overwritten old NUL; previously cleared next byte is first NUL; no new zero written in this step"
+        }
+      ],
+      "conclusions": {
+        "C125_01_root_last_writer": "STRCPY#1 -> MEMCPY F[1]=0; not previous memset",
+        "C125_02_and_03_pre_append_F5_last_writer": "memset; first strcpy wrote only [0,5), separator writes only F[4]",
+        "case_paths": [
+          "/readme",
+          "/bin/hi",
+          "/bin//hi"
+        ],
+        "returns_unchanged": true,
+        "open_requests_unchanged": true
+      },
+      "mainline_closure": "C08 independent only",
+      "case_id": "D126-R125-02"
+    },
+    "closure_authority": "C08_Pro_independent"
+  },
+  "A_memcpy": {
+    "selected_model": {
+      "C_definition": "MEMCPY from memcpy.c",
+      "generic_header": "sysdeps/generic/memcopy.h",
+      "op_t": "unsigned long int",
+      "OPSIZ_bytes": 8,
+      "OP_T_THRES": 16,
+      "PAGE_COPY_THRESHOLD": "assumed 0 from selected empty branch; effective preprocessed value UNATTESTED",
+      "PAGE_COPY_FWD_MAYBE": "empty",
+      "helper": "_wordcopy_fwd_aligned on aligned 16-byte case under normal-return assumption",
+      "overlap": "no overlap; distinct source/dest arrays",
+      "actual_machine_execution": "NOT_RUN"
+    },
+    "cases": [
+      {
+        "case_id": "A126-M00",
+        "word_bytes": 8,
+        "threshold": 16,
+        "source_base": "S (40-byte ordinary valid array, base mod8=0)",
+        "destination_base": "D (40-byte array filled with 0x23, base mod8=0)",
+        "source_offset": 1,
+        "dest_offset": 2,
+        "len": 0,
+        "source_bytes_before": "41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68",
+        "destination_bytes_before": "23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "destination_bytes_after": "23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "read_half_open": [
+          1,
+          1
+        ],
+        "write_half_open": [
+          2,
+          2
+        ],
+        "source_pointer_argument": "S+1",
+        "destination_pointer_argument": "D+2",
+        "return_pointer": "D+2",
+        "return_identity": "original dstpp",
+        "threshold_branch": "BYTE_ONLY",
+        "leading_bytes": 0,
+        "page_branch": "PAGE_COPY_FWD_MAYBE empty when selected PAGE_COPY_THRESHOLD=0",
+        "word_copy": null,
+        "byte_tail_count": 0,
+        "byte_macro_iterations": [],
+        "srcp_after_macro": 1,
+        "dstp_after_macro": 2,
+        "len_after_word_stage": 0,
+        "source_and_destination_do_not_overlap": true,
+        "unchanged_dest_outside_range": true,
+        "source": "memcpy.c:28-60; sysdeps/generic/memcopy.h:63-64,78-90,121-131,194,199"
+      },
+      {
+        "case_id": "A126-M03",
+        "word_bytes": 8,
+        "threshold": 16,
+        "source_base": "S (40-byte ordinary valid array, base mod8=0)",
+        "destination_base": "D (40-byte array filled with 0x23, base mod8=0)",
+        "source_offset": 4,
+        "dest_offset": 3,
+        "len": 3,
+        "source_bytes_before": "41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68",
+        "destination_bytes_before": "23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "destination_bytes_after": "23 23 23 45 46 47 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "read_half_open": [
+          4,
+          7
+        ],
+        "write_half_open": [
+          3,
+          6
+        ],
+        "source_pointer_argument": "S+4",
+        "destination_pointer_argument": "D+3",
+        "return_pointer": "D+3",
+        "return_identity": "original dstpp",
+        "threshold_branch": "BYTE_ONLY",
+        "leading_bytes": 0,
+        "page_branch": "PAGE_COPY_FWD_MAYBE empty when selected PAGE_COPY_THRESHOLD=0",
+        "word_copy": null,
+        "byte_tail_count": 3,
+        "byte_macro_iterations": [
+          {
+            "step": 0,
+            "src_index": 4,
+            "read_byte_hex": "45",
+            "src_cursor_after_read": 5,
+            "dst_index": 3,
+            "write_byte_hex": "45",
+            "dst_cursor_after_write": 4
+          },
+          {
+            "step": 1,
+            "src_index": 5,
+            "read_byte_hex": "46",
+            "src_cursor_after_read": 6,
+            "dst_index": 4,
+            "write_byte_hex": "46",
+            "dst_cursor_after_write": 5
+          },
+          {
+            "step": 2,
+            "src_index": 6,
+            "read_byte_hex": "47",
+            "src_cursor_after_read": 7,
+            "dst_index": 5,
+            "write_byte_hex": "47",
+            "dst_cursor_after_write": 6
+          }
+        ],
+        "srcp_after_macro": 7,
+        "dstp_after_macro": 6,
+        "len_after_word_stage": 3,
+        "source_and_destination_do_not_overlap": true,
+        "unchanged_dest_outside_range": true,
+        "source": "memcpy.c:28-60; sysdeps/generic/memcopy.h:63-64,78-90,121-131,194,199"
+      },
+      {
+        "case_id": "A126-M15",
+        "word_bytes": 8,
+        "threshold": 16,
+        "source_base": "S (40-byte ordinary valid array, base mod8=0)",
+        "destination_base": "D (40-byte array filled with 0x23, base mod8=0)",
+        "source_offset": 2,
+        "dest_offset": 5,
+        "len": 15,
+        "source_bytes_before": "41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68",
+        "destination_bytes_before": "23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "destination_bytes_after": "23 23 23 23 23 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "read_half_open": [
+          2,
+          17
+        ],
+        "write_half_open": [
+          5,
+          20
+        ],
+        "source_pointer_argument": "S+2",
+        "destination_pointer_argument": "D+5",
+        "return_pointer": "D+5",
+        "return_identity": "original dstpp",
+        "threshold_branch": "BYTE_ONLY",
+        "leading_bytes": 0,
+        "page_branch": "PAGE_COPY_FWD_MAYBE empty when selected PAGE_COPY_THRESHOLD=0",
+        "word_copy": null,
+        "byte_tail_count": 15,
+        "byte_macro_iterations": [
+          {
+            "step": 0,
+            "src_index": 2,
+            "read_byte_hex": "43",
+            "src_cursor_after_read": 3,
+            "dst_index": 5,
+            "write_byte_hex": "43",
+            "dst_cursor_after_write": 6
+          },
+          {
+            "step": 1,
+            "src_index": 3,
+            "read_byte_hex": "44",
+            "src_cursor_after_read": 4,
+            "dst_index": 6,
+            "write_byte_hex": "44",
+            "dst_cursor_after_write": 7
+          },
+          {
+            "step": 2,
+            "src_index": 4,
+            "read_byte_hex": "45",
+            "src_cursor_after_read": 5,
+            "dst_index": 7,
+            "write_byte_hex": "45",
+            "dst_cursor_after_write": 8
+          },
+          {
+            "step": 3,
+            "src_index": 5,
+            "read_byte_hex": "46",
+            "src_cursor_after_read": 6,
+            "dst_index": 8,
+            "write_byte_hex": "46",
+            "dst_cursor_after_write": 9
+          },
+          {
+            "step": 4,
+            "src_index": 6,
+            "read_byte_hex": "47",
+            "src_cursor_after_read": 7,
+            "dst_index": 9,
+            "write_byte_hex": "47",
+            "dst_cursor_after_write": 10
+          },
+          {
+            "step": 5,
+            "src_index": 7,
+            "read_byte_hex": "48",
+            "src_cursor_after_read": 8,
+            "dst_index": 10,
+            "write_byte_hex": "48",
+            "dst_cursor_after_write": 11
+          },
+          {
+            "step": 6,
+            "src_index": 8,
+            "read_byte_hex": "49",
+            "src_cursor_after_read": 9,
+            "dst_index": 11,
+            "write_byte_hex": "49",
+            "dst_cursor_after_write": 12
+          },
+          {
+            "step": 7,
+            "src_index": 9,
+            "read_byte_hex": "4a",
+            "src_cursor_after_read": 10,
+            "dst_index": 12,
+            "write_byte_hex": "4a",
+            "dst_cursor_after_write": 13
+          },
+          {
+            "step": 8,
+            "src_index": 10,
+            "read_byte_hex": "4b",
+            "src_cursor_after_read": 11,
+            "dst_index": 13,
+            "write_byte_hex": "4b",
+            "dst_cursor_after_write": 14
+          },
+          {
+            "step": 9,
+            "src_index": 11,
+            "read_byte_hex": "4c",
+            "src_cursor_after_read": 12,
+            "dst_index": 14,
+            "write_byte_hex": "4c",
+            "dst_cursor_after_write": 15
+          },
+          {
+            "step": 10,
+            "src_index": 12,
+            "read_byte_hex": "4d",
+            "src_cursor_after_read": 13,
+            "dst_index": 15,
+            "write_byte_hex": "4d",
+            "dst_cursor_after_write": 16
+          },
+          {
+            "step": 11,
+            "src_index": 13,
+            "read_byte_hex": "4e",
+            "src_cursor_after_read": 14,
+            "dst_index": 16,
+            "write_byte_hex": "4e",
+            "dst_cursor_after_write": 17
+          },
+          {
+            "step": 12,
+            "src_index": 14,
+            "read_byte_hex": "4f",
+            "src_cursor_after_read": 15,
+            "dst_index": 17,
+            "write_byte_hex": "4f",
+            "dst_cursor_after_write": 18
+          },
+          {
+            "step": 13,
+            "src_index": 15,
+            "read_byte_hex": "50",
+            "src_cursor_after_read": 16,
+            "dst_index": 18,
+            "write_byte_hex": "50",
+            "dst_cursor_after_write": 19
+          },
+          {
+            "step": 14,
+            "src_index": 16,
+            "read_byte_hex": "51",
+            "src_cursor_after_read": 17,
+            "dst_index": 19,
+            "write_byte_hex": "51",
+            "dst_cursor_after_write": 20
+          }
+        ],
+        "srcp_after_macro": 17,
+        "dstp_after_macro": 20,
+        "len_after_word_stage": 15,
+        "source_and_destination_do_not_overlap": true,
+        "unchanged_dest_outside_range": true,
+        "source": "memcpy.c:28-60; sysdeps/generic/memcopy.h:63-64,78-90,121-131,194,199"
+      },
+      {
+        "case_id": "A126-M16",
+        "word_bytes": 8,
+        "threshold": 16,
+        "source_base": "S (40-byte ordinary valid array, base mod8=0)",
+        "destination_base": "D (40-byte array filled with 0x23, base mod8=0)",
+        "source_offset": 8,
+        "dest_offset": 8,
+        "len": 16,
+        "source_bytes_before": "41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68",
+        "destination_bytes_before": "23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "destination_bytes_after": "23 23 23 23 23 23 23 23 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23",
+        "read_half_open": [
+          8,
+          24
+        ],
+        "write_half_open": [
+          8,
+          24
+        ],
+        "source_pointer_argument": "S+8",
+        "destination_pointer_argument": "D+8",
+        "return_pointer": "D+8",
+        "return_identity": "original dstpp",
+        "threshold_branch": "WORD_BRANCH",
+        "leading_bytes": 0,
+        "page_branch": "PAGE_COPY_FWD_MAYBE empty when selected PAGE_COPY_THRESHOLD=0",
+        "word_copy": {
+          "selected_helper": "_wordcopy_fwd_aligned",
+          "helper_call_owner": "MEMCPY",
+          "helper_word_count": 2,
+          "helper_expected_bytes": 16,
+          "helper_body_not_executed": true,
+          "helper_normal_return_assumed": true,
+          "argument_dst_offset": 8,
+          "argument_src_offset": 8,
+          "word_copy_macro_updates": {
+            "src_increment": 16,
+            "dst_increment": 16,
+            "len_remainder": 0
+          }
+        },
+        "byte_tail_count": 0,
+        "byte_macro_iterations": [],
+        "srcp_after_macro": 24,
+        "dstp_after_macro": 24,
+        "len_after_word_stage": 0,
+        "source_and_destination_do_not_overlap": true,
+        "unchanged_dest_outside_range": true,
+        "source": "memcpy.c:28-60; sysdeps/generic/memcopy.h:63-64,78-90,121-131,194,199"
+      }
+    ]
+  },
+  "B_memset": {
+    "selected_model": {
+      "C_definition": "memset.c",
+      "OPSIZ_bytes": 8,
+      "fill_int": "0x123",
+      "low_unsigned_byte": "0x23",
+      "repeat_word": "0x2323232323232323",
+      "host_big_endian_irrelevant_for_repeated_same_byte": true,
+      "source_type": "none (writes only)",
+      "return": "original dstpp",
+      "out_of_range": "not addressed"
+    },
+    "cases": [
+      {
+        "case_id": "B126-S00",
+        "c_int": 291,
+        "c_byte_unsigned": 35,
+        "c_byte_hex": "0x23",
+        "repeated_op_t_hex": "0x2323232323232323",
+        "pattern_constructed_at_runtime": false,
+        "OPSIZ_bytes": 8,
+        "destination_base": "D (88 bytes, base mod8=0, initial fill 0xaa)",
+        "dst_start_offset": 0,
+        "dst_start_mod8": 0,
+        "requested_len": 0,
+        "threshold_guard_len_ge_8": false,
+        "prealign_writes": [],
+        "word_group_iterations": 0,
+        "word_group_writes": [],
+        "singleword_iterations": 0,
+        "singleword_writes": [],
+        "tail_bytes": 0,
+        "tail_writes": [],
+        "bytes_written_total": 0,
+        "write_half_open": [
+          0,
+          0
+        ],
+        "last_dst_cursor": 0,
+        "return_pointer": "D+0",
+        "return_is_original_dstpp": true,
+        "destination_bytes_before": "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "destination_bytes_after": "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "outside_requested_region_preserved": true,
+        "source": "memset.c:22-83; memcopy.h:63-67"
+      },
+      {
+        "case_id": "B126-S07",
+        "c_int": 291,
+        "c_byte_unsigned": 35,
+        "c_byte_hex": "0x23",
+        "repeated_op_t_hex": "0x2323232323232323",
+        "pattern_constructed_at_runtime": false,
+        "OPSIZ_bytes": 8,
+        "destination_base": "D (88 bytes, base mod8=0, initial fill 0xaa)",
+        "dst_start_offset": 0,
+        "dst_start_mod8": 0,
+        "requested_len": 7,
+        "threshold_guard_len_ge_8": false,
+        "prealign_writes": [],
+        "word_group_iterations": 0,
+        "word_group_writes": [],
+        "singleword_iterations": 0,
+        "singleword_writes": [],
+        "tail_bytes": 7,
+        "tail_writes": [
+          {
+            "start": 0,
+            "end": 1,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 1,
+            "end": 2,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 2,
+            "end": 3,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 3,
+            "end": 4,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 4,
+            "end": 5,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 5,
+            "end": 6,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 6,
+            "end": 7,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          }
+        ],
+        "bytes_written_total": 7,
+        "write_half_open": [
+          0,
+          7
+        ],
+        "last_dst_cursor": 7,
+        "return_pointer": "D+0",
+        "return_is_original_dstpp": true,
+        "destination_bytes_before": "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "destination_bytes_after": "23 23 23 23 23 23 23 aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "outside_requested_region_preserved": true,
+        "source": "memset.c:22-83; memcopy.h:63-67"
+      },
+      {
+        "case_id": "B126-S08",
+        "c_int": 291,
+        "c_byte_unsigned": 35,
+        "c_byte_hex": "0x23",
+        "repeated_op_t_hex": "0x2323232323232323",
+        "pattern_constructed_at_runtime": true,
+        "OPSIZ_bytes": 8,
+        "destination_base": "D (88 bytes, base mod8=0, initial fill 0xaa)",
+        "dst_start_offset": 0,
+        "dst_start_mod8": 0,
+        "requested_len": 8,
+        "threshold_guard_len_ge_8": true,
+        "prealign_writes": [],
+        "word_group_iterations": 0,
+        "word_group_writes": [],
+        "singleword_iterations": 1,
+        "singleword_writes": [
+          {
+            "start": 0,
+            "end": 8,
+            "width": 8,
+            "kind": "single_op_t",
+            "byte_hex": "23"
+          }
+        ],
+        "tail_bytes": 0,
+        "tail_writes": [],
+        "bytes_written_total": 8,
+        "write_half_open": [
+          0,
+          8
+        ],
+        "last_dst_cursor": 8,
+        "return_pointer": "D+0",
+        "return_is_original_dstpp": true,
+        "destination_bytes_before": "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "destination_bytes_after": "23 23 23 23 23 23 23 23 aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "outside_requested_region_preserved": true,
+        "source": "memset.c:22-83; memcopy.h:63-67"
+      },
+      {
+        "case_id": "B126-S09",
+        "c_int": 291,
+        "c_byte_unsigned": 35,
+        "c_byte_hex": "0x23",
+        "repeated_op_t_hex": "0x2323232323232323",
+        "pattern_constructed_at_runtime": true,
+        "OPSIZ_bytes": 8,
+        "destination_base": "D (88 bytes, base mod8=0, initial fill 0xaa)",
+        "dst_start_offset": 0,
+        "dst_start_mod8": 0,
+        "requested_len": 9,
+        "threshold_guard_len_ge_8": true,
+        "prealign_writes": [],
+        "word_group_iterations": 0,
+        "word_group_writes": [],
+        "singleword_iterations": 1,
+        "singleword_writes": [
+          {
+            "start": 0,
+            "end": 8,
+            "width": 8,
+            "kind": "single_op_t",
+            "byte_hex": "23"
+          }
+        ],
+        "tail_bytes": 1,
+        "tail_writes": [
+          {
+            "start": 8,
+            "end": 9,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          }
+        ],
+        "bytes_written_total": 9,
+        "write_half_open": [
+          0,
+          9
+        ],
+        "last_dst_cursor": 9,
+        "return_pointer": "D+0",
+        "return_is_original_dstpp": true,
+        "destination_bytes_before": "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "destination_bytes_after": "23 23 23 23 23 23 23 23 23 aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "outside_requested_region_preserved": true,
+        "source": "memset.c:22-83; memcopy.h:63-67"
+      },
+      {
+        "case_id": "B126-S64",
+        "c_int": 291,
+        "c_byte_unsigned": 35,
+        "c_byte_hex": "0x23",
+        "repeated_op_t_hex": "0x2323232323232323",
+        "pattern_constructed_at_runtime": true,
+        "OPSIZ_bytes": 8,
+        "destination_base": "D (88 bytes, base mod8=0, initial fill 0xaa)",
+        "dst_start_offset": 0,
+        "dst_start_mod8": 0,
+        "requested_len": 64,
+        "threshold_guard_len_ge_8": true,
+        "prealign_writes": [],
+        "word_group_iterations": 1,
+        "word_group_writes": [
+          {
+            "start": 0,
+            "end": 64,
+            "width": 64,
+            "kind": "eight_op_t_group",
+            "byte_hex": "23",
+            "words": [
+              [
+                0,
+                8
+              ],
+              [
+                8,
+                16
+              ],
+              [
+                16,
+                24
+              ],
+              [
+                24,
+                32
+              ],
+              [
+                32,
+                40
+              ],
+              [
+                40,
+                48
+              ],
+              [
+                48,
+                56
+              ],
+              [
+                56,
+                64
+              ]
+            ]
+          }
+        ],
+        "singleword_iterations": 0,
+        "singleword_writes": [],
+        "tail_bytes": 0,
+        "tail_writes": [],
+        "bytes_written_total": 64,
+        "write_half_open": [
+          0,
+          64
+        ],
+        "last_dst_cursor": 64,
+        "return_pointer": "D+0",
+        "return_is_original_dstpp": true,
+        "destination_bytes_before": "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "destination_bytes_after": "23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "outside_requested_region_preserved": true,
+        "source": "memset.c:22-83; memcopy.h:63-67"
+      },
+      {
+        "case_id": "B126-S09-U3",
+        "c_int": 291,
+        "c_byte_unsigned": 35,
+        "c_byte_hex": "0x23",
+        "repeated_op_t_hex": "0x2323232323232323",
+        "pattern_constructed_at_runtime": true,
+        "OPSIZ_bytes": 8,
+        "destination_base": "D (88 bytes, base mod8=0, initial fill 0xaa)",
+        "dst_start_offset": 3,
+        "dst_start_mod8": 3,
+        "requested_len": 9,
+        "threshold_guard_len_ge_8": true,
+        "prealign_writes": [
+          {
+            "start": 3,
+            "end": 4,
+            "width": 1,
+            "kind": "alignment_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 4,
+            "end": 5,
+            "width": 1,
+            "kind": "alignment_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 5,
+            "end": 6,
+            "width": 1,
+            "kind": "alignment_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 6,
+            "end": 7,
+            "width": 1,
+            "kind": "alignment_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 7,
+            "end": 8,
+            "width": 1,
+            "kind": "alignment_byte",
+            "byte_hex": "23"
+          }
+        ],
+        "word_group_iterations": 0,
+        "word_group_writes": [],
+        "singleword_iterations": 0,
+        "singleword_writes": [],
+        "tail_bytes": 4,
+        "tail_writes": [
+          {
+            "start": 8,
+            "end": 9,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 9,
+            "end": 10,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 10,
+            "end": 11,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          },
+          {
+            "start": 11,
+            "end": 12,
+            "width": 1,
+            "kind": "tail_byte",
+            "byte_hex": "23"
+          }
+        ],
+        "bytes_written_total": 9,
+        "write_half_open": [
+          3,
+          12
+        ],
+        "last_dst_cursor": 12,
+        "return_pointer": "D+3",
+        "return_is_original_dstpp": true,
+        "destination_bytes_before": "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "destination_bytes_after": "aa aa aa 23 23 23 23 23 23 23 23 23 aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "outside_requested_region_preserved": true,
+        "source": "memset.c:22-83; memcopy.h:63-67"
+      }
+    ]
+  },
+  "C_cat": {
+    "source_125_case_ids": [
+      "C125-01",
+      "C125-02",
+      "C125-03"
+    ],
+    "cases": [
+      {
+        "case_id": "C125-01",
+        "inputs": {
+          "cwd": "/",
+          "argv1": "readme",
+          "argc": 2,
+          "cwd_src_bytes_hex": "2f 00",
+          "argv_src_bytes_hex": "72 65 61 64 6d 65 00",
+          "independent_source_readable_objects": "8-byte aligned and sufficiently large for selected STRLEN full-word accesses",
+          "F_aligned": true,
+          "F_capacity": 9,
+          "malloc_success_given": true
+        },
+        "operation_ledger": [
+          {
+            "step": "shell_memset",
+            "caller": "cat_command -> memset(F,0,cap)",
+            "request_line": "myshell.c:263",
+            "write_half_open": [
+              0,
+              9
+            ],
+            "written_bytes_hex": "00 00 00 00 00 00 00 00 00",
+            "length_bytes": 9,
+            "write_widths": {
+              "unaligned_byte_pre": 0,
+              "eight_words_groups": 0,
+              "single_op_t_writes": 1,
+              "tail_byte_writes": 1,
+              "op_t_size": 8,
+              "word_op_first": [
+                0,
+                8
+              ],
+              "tail_range": [
+                8,
+                9
+              ]
+            },
+            "buffer_hex": "00 00 00 00 00 00 00 00 00",
+            "first_NUL_offset": 0,
+            "byte_writers": [
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": []
+          },
+          {
+            "step": "first_strcpy_memcpy",
+            "caller": "STRCPY#1 -> MEMCPY(F,current_dir,cwdlen+1)",
+            "request_line": "strcpy.c:31",
+            "write_half_open": [
+              0,
+              2
+            ],
+            "written_bytes_hex": "2f 00",
+            "length_bytes": 2,
+            "write_widths": {
+              "branch": "BYTE_ONLY",
+              "threshold": 16,
+              "per_byte_writes": 2,
+              "loop_range": [
+                0,
+                2
+              ],
+              "source_range": [
+                0,
+                2
+              ],
+              "source_cur_after": 2,
+              "dest_cur_after": 2
+            },
+            "buffer_hex": "2f 00 00 00 00 00 00 00 00",
+            "first_NUL_offset": 1,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": [
+              {
+                "step": "first_strcpy_memcpy",
+                "offset": 1,
+                "value_hex": "00",
+                "previous_writer": "shell_memset"
+              }
+            ]
+          },
+          {
+            "step": "separator_guard_skip",
+            "caller": "cat_command",
+            "request_line": "myshell.c:265-266",
+            "guard_value": false,
+            "write_half_open": null,
+            "length_bytes": 0,
+            "buffer_hex": "2f 00 00 00 00 00 00 00 00",
+            "first_NUL_offset": 1,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "write_widths": {
+              "none": 0
+            }
+          },
+          {
+            "step": "second_strcpy_memcpy",
+            "caller": "STRCAT -> STRCPY#2 -> MEMCPY(F+d,argv1,arglen+1)",
+            "request_line": "strcpy.c:31",
+            "write_half_open": [
+              1,
+              8
+            ],
+            "written_bytes_hex": "72 65 61 64 6d 65 00",
+            "length_bytes": 7,
+            "write_widths": {
+              "branch": "BYTE_ONLY",
+              "threshold": 16,
+              "per_byte_writes": 7,
+              "source_range": [
+                0,
+                7
+              ],
+              "dest_range": [
+                1,
+                8
+              ],
+              "src_cur_after": 7,
+              "dst_cur_after": 8
+            },
+            "buffer_hex": "2f 72 65 61 64 6d 65 00 00",
+            "first_NUL_offset": 7,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": [
+              {
+                "step": "second_strcpy_memcpy",
+                "offset": 7,
+                "value_hex": "00",
+                "previous_writer": "shell_memset"
+              }
+            ]
+          }
+        ],
+        "separator": {
+          "executed": false,
+          "index": null,
+          "value_hex": null,
+          "before_offset_first_NUL": 1,
+          "first_NUL_after": 1,
+          "new_first_NUL_exposed_offset": null,
+          "previous_writer_of_that_zero": "first_strcpy_memcpy"
+        },
+        "first_NUL_after_separator": 1,
+        "first_NUL_writer_after_separator": "first_strcpy_memcpy",
+        "first_NUL_after_final": 7,
+        "final_bytes_hex": "2f 72 65 61 64 6d 65 00 00",
+        "final_open_request_path": "/readme",
+        "open_call": {
+          "owner": "cat_command",
+          "args": [
+            "F",
+            "O_RDONLY",
+            0
+          ],
+          "line": 270,
+          "return": "UNKNOWN"
+        },
+        "memset_write_classification": {
+          "unaligned_byte_pre": 0,
+          "eight_words_groups": 0,
+          "single_op_t_writes": 1,
+          "tail_byte_writes": 1,
+          "op_t_size": 8,
+          "word_op_first": [
+            0,
+            8
+          ],
+          "tail_range": [
+            8,
+            9
+          ]
+        },
+        "copy_one_write_classification": {
+          "branch": "BYTE_ONLY",
+          "threshold": 16,
+          "per_byte_writes": 2,
+          "loop_range": [
+            0,
+            2
+          ],
+          "source_range": [
+            0,
+            2
+          ],
+          "source_cur_after": 2,
+          "dest_cur_after": 2
+        },
+        "copy_two_write_classification": {
+          "branch": "BYTE_ONLY",
+          "threshold": 16,
+          "per_byte_writes": 7,
+          "source_range": [
+            0,
+            7
+          ],
+          "dest_range": [
+            1,
+            8
+          ],
+          "src_cur_after": 7,
+          "dst_cur_after": 8
+        },
+        "total_write_width_bytes": 18,
+        "distinct_dest_bytes_touched": 9,
+        "repeated_writes_count": 9,
+        "write_count_by_F_index": [
+          2,
+          3,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          1
+        ],
+        "final_last_writer_by_F_index": [
+          "first_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "shell_memset"
+        ],
+        "same_value_rewrites": [
+          {
+            "step": "first_strcpy_memcpy",
+            "offset": 1,
+            "value_hex": "00",
+            "previous_writer": "shell_memset"
+          },
+          {
+            "step": "second_strcpy_memcpy",
+            "offset": 7,
+            "value_hex": "00",
+            "previous_writer": "shell_memset"
+          }
+        ],
+        "helper_call_owners": [
+          "cat_command -> memset",
+          "STRCPY#1 -> MEMCPY",
+          "STRCPY#2 -> MEMCPY"
+        ],
+        "notes": "write count includes byte stores that rewrite the same value and initialization over the entire buffer; unique bytes count each F location once; no runtime calls made"
+      },
+      {
+        "case_id": "C125-02",
+        "inputs": {
+          "cwd": "/bin",
+          "argv1": "hi",
+          "argc": 2,
+          "cwd_src_bytes_hex": "2f 62 69 6e 00",
+          "argv_src_bytes_hex": "68 69 00",
+          "independent_source_readable_objects": "8-byte aligned and sufficiently large for selected STRLEN full-word accesses",
+          "F_aligned": true,
+          "F_capacity": 8,
+          "malloc_success_given": true
+        },
+        "operation_ledger": [
+          {
+            "step": "shell_memset",
+            "caller": "cat_command -> memset(F,0,cap)",
+            "request_line": "myshell.c:263",
+            "write_half_open": [
+              0,
+              8
+            ],
+            "written_bytes_hex": "00 00 00 00 00 00 00 00",
+            "length_bytes": 8,
+            "write_widths": {
+              "unaligned_byte_pre": 0,
+              "eight_words_groups": 0,
+              "single_op_t_writes": 1,
+              "tail_byte_writes": 0,
+              "op_t_size": 8,
+              "word_op_first": [
+                0,
+                8
+              ],
+              "tail_range": null
+            },
+            "buffer_hex": "00 00 00 00 00 00 00 00",
+            "first_NUL_offset": 0,
+            "byte_writers": [
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": []
+          },
+          {
+            "step": "first_strcpy_memcpy",
+            "caller": "STRCPY#1 -> MEMCPY(F,current_dir,cwdlen+1)",
+            "request_line": "strcpy.c:31",
+            "write_half_open": [
+              0,
+              5
+            ],
+            "written_bytes_hex": "2f 62 69 6e 00",
+            "length_bytes": 5,
+            "write_widths": {
+              "branch": "BYTE_ONLY",
+              "threshold": 16,
+              "per_byte_writes": 5,
+              "loop_range": [
+                0,
+                5
+              ],
+              "source_range": [
+                0,
+                5
+              ],
+              "source_cur_after": 5,
+              "dest_cur_after": 5
+            },
+            "buffer_hex": "2f 62 69 6e 00 00 00 00",
+            "first_NUL_offset": 4,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": [
+              {
+                "step": "first_strcpy_memcpy",
+                "offset": 4,
+                "value_hex": "00",
+                "previous_writer": "shell_memset"
+              }
+            ]
+          },
+          {
+            "step": "separator_store",
+            "caller": "cat_command direct assignment F[len]='/'",
+            "request_line": "myshell.c:266",
+            "write_half_open": [
+              4,
+              5
+            ],
+            "written_bytes_hex": "2f",
+            "length_bytes": 1,
+            "write_widths": {
+              "single_byte_store": 1
+            },
+            "buffer_hex": "2f 62 69 6e 2f 00 00 00",
+            "first_NUL_offset": 5,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "separator_store",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": []
+          },
+          {
+            "step": "second_strcpy_memcpy",
+            "caller": "STRCAT -> STRCPY#2 -> MEMCPY(F+d,argv1,arglen+1)",
+            "request_line": "strcpy.c:31",
+            "write_half_open": [
+              5,
+              8
+            ],
+            "written_bytes_hex": "68 69 00",
+            "length_bytes": 3,
+            "write_widths": {
+              "branch": "BYTE_ONLY",
+              "threshold": 16,
+              "per_byte_writes": 3,
+              "source_range": [
+                0,
+                3
+              ],
+              "dest_range": [
+                5,
+                8
+              ],
+              "src_cur_after": 3,
+              "dst_cur_after": 8
+            },
+            "buffer_hex": "2f 62 69 6e 2f 68 69 00",
+            "first_NUL_offset": 7,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "separator_store",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy"
+            ],
+            "bytes_identical_to_prewrite": [
+              {
+                "step": "second_strcpy_memcpy",
+                "offset": 7,
+                "value_hex": "00",
+                "previous_writer": "shell_memset"
+              }
+            ]
+          }
+        ],
+        "separator": {
+          "executed": true,
+          "index": 4,
+          "value_hex": "2f",
+          "before_offset_first_NUL": 4,
+          "first_NUL_after": 5,
+          "new_first_NUL_exposed_offset": 5,
+          "previous_writer_of_that_zero": "shell_memset"
+        },
+        "first_NUL_after_separator": 5,
+        "first_NUL_writer_after_separator": "shell_memset",
+        "first_NUL_after_final": 7,
+        "final_bytes_hex": "2f 62 69 6e 2f 68 69 00",
+        "final_open_request_path": "/bin/hi",
+        "open_call": {
+          "owner": "cat_command",
+          "args": [
+            "F",
+            "O_RDONLY",
+            0
+          ],
+          "line": 270,
+          "return": "UNKNOWN"
+        },
+        "memset_write_classification": {
+          "unaligned_byte_pre": 0,
+          "eight_words_groups": 0,
+          "single_op_t_writes": 1,
+          "tail_byte_writes": 0,
+          "op_t_size": 8,
+          "word_op_first": [
+            0,
+            8
+          ],
+          "tail_range": null
+        },
+        "copy_one_write_classification": {
+          "branch": "BYTE_ONLY",
+          "threshold": 16,
+          "per_byte_writes": 5,
+          "loop_range": [
+            0,
+            5
+          ],
+          "source_range": [
+            0,
+            5
+          ],
+          "source_cur_after": 5,
+          "dest_cur_after": 5
+        },
+        "copy_two_write_classification": {
+          "branch": "BYTE_ONLY",
+          "threshold": 16,
+          "per_byte_writes": 3,
+          "source_range": [
+            0,
+            3
+          ],
+          "dest_range": [
+            5,
+            8
+          ],
+          "src_cur_after": 3,
+          "dst_cur_after": 8
+        },
+        "total_write_width_bytes": 17,
+        "distinct_dest_bytes_touched": 8,
+        "repeated_writes_count": 9,
+        "write_count_by_F_index": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          2,
+          2,
+          2
+        ],
+        "final_last_writer_by_F_index": [
+          "first_strcpy_memcpy",
+          "first_strcpy_memcpy",
+          "first_strcpy_memcpy",
+          "first_strcpy_memcpy",
+          "separator_store",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy"
+        ],
+        "same_value_rewrites": [
+          {
+            "step": "first_strcpy_memcpy",
+            "offset": 4,
+            "value_hex": "00",
+            "previous_writer": "shell_memset"
+          },
+          {
+            "step": "second_strcpy_memcpy",
+            "offset": 7,
+            "value_hex": "00",
+            "previous_writer": "shell_memset"
+          }
+        ],
+        "helper_call_owners": [
+          "cat_command -> memset",
+          "STRCPY#1 -> MEMCPY",
+          "STRCPY#2 -> MEMCPY"
+        ],
+        "notes": "write count includes byte stores that rewrite the same value and initialization over the entire buffer; unique bytes count each F location once; no runtime calls made"
+      },
+      {
+        "case_id": "C125-03",
+        "inputs": {
+          "cwd": "/bin",
+          "argv1": "/hi",
+          "argc": 2,
+          "cwd_src_bytes_hex": "2f 62 69 6e 00",
+          "argv_src_bytes_hex": "2f 68 69 00",
+          "independent_source_readable_objects": "8-byte aligned and sufficiently large for selected STRLEN full-word accesses",
+          "F_aligned": true,
+          "F_capacity": 9,
+          "malloc_success_given": true
+        },
+        "operation_ledger": [
+          {
+            "step": "shell_memset",
+            "caller": "cat_command -> memset(F,0,cap)",
+            "request_line": "myshell.c:263",
+            "write_half_open": [
+              0,
+              9
+            ],
+            "written_bytes_hex": "00 00 00 00 00 00 00 00 00",
+            "length_bytes": 9,
+            "write_widths": {
+              "unaligned_byte_pre": 0,
+              "eight_words_groups": 0,
+              "single_op_t_writes": 1,
+              "tail_byte_writes": 1,
+              "op_t_size": 8,
+              "word_op_first": [
+                0,
+                8
+              ],
+              "tail_range": [
+                8,
+                9
+              ]
+            },
+            "buffer_hex": "00 00 00 00 00 00 00 00 00",
+            "first_NUL_offset": 0,
+            "byte_writers": [
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": []
+          },
+          {
+            "step": "first_strcpy_memcpy",
+            "caller": "STRCPY#1 -> MEMCPY(F,current_dir,cwdlen+1)",
+            "request_line": "strcpy.c:31",
+            "write_half_open": [
+              0,
+              5
+            ],
+            "written_bytes_hex": "2f 62 69 6e 00",
+            "length_bytes": 5,
+            "write_widths": {
+              "branch": "BYTE_ONLY",
+              "threshold": 16,
+              "per_byte_writes": 5,
+              "loop_range": [
+                0,
+                5
+              ],
+              "source_range": [
+                0,
+                5
+              ],
+              "source_cur_after": 5,
+              "dest_cur_after": 5
+            },
+            "buffer_hex": "2f 62 69 6e 00 00 00 00 00",
+            "first_NUL_offset": 4,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": [
+              {
+                "step": "first_strcpy_memcpy",
+                "offset": 4,
+                "value_hex": "00",
+                "previous_writer": "shell_memset"
+              }
+            ]
+          },
+          {
+            "step": "separator_store",
+            "caller": "cat_command direct assignment F[len]='/'",
+            "request_line": "myshell.c:266",
+            "write_half_open": [
+              4,
+              5
+            ],
+            "written_bytes_hex": "2f",
+            "length_bytes": 1,
+            "write_widths": {
+              "single_byte_store": 1
+            },
+            "buffer_hex": "2f 62 69 6e 2f 00 00 00 00",
+            "first_NUL_offset": 5,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "separator_store",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset",
+              "shell_memset"
+            ],
+            "bytes_identical_to_prewrite": []
+          },
+          {
+            "step": "second_strcpy_memcpy",
+            "caller": "STRCAT -> STRCPY#2 -> MEMCPY(F+d,argv1,arglen+1)",
+            "request_line": "strcpy.c:31",
+            "write_half_open": [
+              5,
+              9
+            ],
+            "written_bytes_hex": "2f 68 69 00",
+            "length_bytes": 4,
+            "write_widths": {
+              "branch": "BYTE_ONLY",
+              "threshold": 16,
+              "per_byte_writes": 4,
+              "source_range": [
+                0,
+                4
+              ],
+              "dest_range": [
+                5,
+                9
+              ],
+              "src_cur_after": 4,
+              "dst_cur_after": 9
+            },
+            "buffer_hex": "2f 62 69 6e 2f 2f 68 69 00",
+            "first_NUL_offset": 8,
+            "byte_writers": [
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "first_strcpy_memcpy",
+              "separator_store",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy",
+              "second_strcpy_memcpy"
+            ],
+            "bytes_identical_to_prewrite": [
+              {
+                "step": "second_strcpy_memcpy",
+                "offset": 8,
+                "value_hex": "00",
+                "previous_writer": "shell_memset"
+              }
+            ]
+          }
+        ],
+        "separator": {
+          "executed": true,
+          "index": 4,
+          "value_hex": "2f",
+          "before_offset_first_NUL": 4,
+          "first_NUL_after": 5,
+          "new_first_NUL_exposed_offset": 5,
+          "previous_writer_of_that_zero": "shell_memset"
+        },
+        "first_NUL_after_separator": 5,
+        "first_NUL_writer_after_separator": "shell_memset",
+        "first_NUL_after_final": 8,
+        "final_bytes_hex": "2f 62 69 6e 2f 2f 68 69 00",
+        "final_open_request_path": "/bin//hi",
+        "open_call": {
+          "owner": "cat_command",
+          "args": [
+            "F",
+            "O_RDONLY",
+            0
+          ],
+          "line": 270,
+          "return": "UNKNOWN"
+        },
+        "memset_write_classification": {
+          "unaligned_byte_pre": 0,
+          "eight_words_groups": 0,
+          "single_op_t_writes": 1,
+          "tail_byte_writes": 1,
+          "op_t_size": 8,
+          "word_op_first": [
+            0,
+            8
+          ],
+          "tail_range": [
+            8,
+            9
+          ]
+        },
+        "copy_one_write_classification": {
+          "branch": "BYTE_ONLY",
+          "threshold": 16,
+          "per_byte_writes": 5,
+          "loop_range": [
+            0,
+            5
+          ],
+          "source_range": [
+            0,
+            5
+          ],
+          "source_cur_after": 5,
+          "dest_cur_after": 5
+        },
+        "copy_two_write_classification": {
+          "branch": "BYTE_ONLY",
+          "threshold": 16,
+          "per_byte_writes": 4,
+          "source_range": [
+            0,
+            4
+          ],
+          "dest_range": [
+            5,
+            9
+          ],
+          "src_cur_after": 4,
+          "dst_cur_after": 9
+        },
+        "total_write_width_bytes": 19,
+        "distinct_dest_bytes_touched": 9,
+        "repeated_writes_count": 10,
+        "write_count_by_F_index": [
+          2,
+          2,
+          2,
+          2,
+          3,
+          2,
+          2,
+          2,
+          2
+        ],
+        "final_last_writer_by_F_index": [
+          "first_strcpy_memcpy",
+          "first_strcpy_memcpy",
+          "first_strcpy_memcpy",
+          "first_strcpy_memcpy",
+          "separator_store",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy",
+          "second_strcpy_memcpy"
+        ],
+        "same_value_rewrites": [
+          {
+            "step": "first_strcpy_memcpy",
+            "offset": 4,
+            "value_hex": "00",
+            "previous_writer": "shell_memset"
+          },
+          {
+            "step": "second_strcpy_memcpy",
+            "offset": 8,
+            "value_hex": "00",
+            "previous_writer": "shell_memset"
+          }
+        ],
+        "helper_call_owners": [
+          "cat_command -> memset",
+          "STRCPY#1 -> MEMCPY",
+          "STRCPY#2 -> MEMCPY"
+        ],
+        "notes": "write count includes byte stores that rewrite the same value and initialization over the entire buffer; unique bytes count each F location once; no runtime calls made"
+      }
+    ],
+    "source_files": [
+      "myshell.c:260-270",
+      "strcpy.c:29-32",
+      "strcat.c:28-32",
+      "memcpy.c:28-60",
+      "memset.c:22-83"
+    ],
+    "reused_fixed_125_paths": [
+      "/readme",
+      "/bin/hi",
+      "/bin//hi"
+    ],
+    "actual_open_effect": "UNKNOWN"
+  },
+  "evidence_boundaries": {
+    "actual_sh_linked_libc": "UNKNOWN",
+    "actual_generic_memcopy_header_selected": "UNATTESTED; conditional model",
+    "actual_PAGE_COPY_THRESHOLD": "UNKNOWN outside selected assumptions",
+    "actual_word_helper_runtime": "NOT_RUN",
+    "complete_local_P9": "NOT_RUN",
+    "C_preprocess": "NOT_RUN",
+    "build_link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_operations": "NOT_RUN"
+  },
+  "model_summaries": {
+    "case_counts": {
+      "D00_corrections": 2,
+      "memcpy": 4,
+      "memset": 6,
+      "cat": 3
+    },
+    "memcpy_examples": [
+      {
+        "id": "A126-M00",
+        "len": 0,
+        "branch": "BYTE_ONLY",
+        "byte_macro_iters": 0,
+        "helper": null
+      },
+      {
+        "id": "A126-M03",
+        "len": 3,
+        "branch": "BYTE_ONLY",
+        "byte_macro_iters": 3,
+        "helper": null
+      },
+      {
+        "id": "A126-M15",
+        "len": 15,
+        "branch": "BYTE_ONLY",
+        "byte_macro_iters": 15,
+        "helper": null
+      },
+      {
+        "id": "A126-M16",
+        "len": 16,
+        "branch": "WORD_BRANCH",
+        "byte_macro_iters": 0,
+        "helper": "_wordcopy_fwd_aligned"
+      }
+    ],
+    "memset_examples": [
+      {
+        "id": "B126-S00",
+        "len": 0,
+        "pre": 0,
+        "group": 0,
+        "word": 0,
+        "tail": 0,
+        "total": 0
+      },
+      {
+        "id": "B126-S07",
+        "len": 7,
+        "pre": 0,
+        "group": 0,
+        "word": 0,
+        "tail": 7,
+        "total": 7
+      },
+      {
+        "id": "B126-S08",
+        "len": 8,
+        "pre": 0,
+        "group": 0,
+        "word": 1,
+        "tail": 0,
+        "total": 8
+      },
+      {
+        "id": "B126-S09",
+        "len": 9,
+        "pre": 0,
+        "group": 0,
+        "word": 1,
+        "tail": 1,
+        "total": 9
+      },
+      {
+        "id": "B126-S64",
+        "len": 64,
+        "pre": 0,
+        "group": 1,
+        "word": 0,
+        "tail": 0,
+        "total": 64
+      },
+      {
+        "id": "B126-S09-U3",
+        "len": 9,
+        "pre": 5,
+        "group": 0,
+        "word": 0,
+        "tail": 4,
+        "total": 9
+      }
+    ],
+    "cat_write_counts": [
+      {
+        "id": "C125-01",
+        "total": 18,
+        "distinct": 9,
+        "path": "/readme",
+        "writer_before_append": "first_strcpy_memcpy"
+      },
+      {
+        "id": "C125-02",
+        "total": 17,
+        "distinct": 8,
+        "path": "/bin/hi",
+        "writer_before_append": "shell_memset"
+      },
+      {
+        "id": "C125-03",
+        "total": 19,
+        "distinct": 9,
+        "path": "/bin//hi",
+        "writer_before_append": "shell_memset"
+      }
+    ]
+  },
+  "graph_verification": {
+    "path": "libc-memory-copy-fill-paths.dot",
+    "unique_nodes": 184,
+    "typed_edges": 211,
+    "direct_call_instance_edges": 40,
+    "macro_expansion_edges": 12,
+    "positive_case_paths": 13,
+    "negative_root_separator_path": 1,
+    "source_owned_direct_calls": true,
+    "all_endpoints_declared": true,
+    "Graphviz": "NOT_RUN"
+  },
+  "inputs_read": [
+    "agent-workspace/lead/MYOS2-LEAD-002/177-user-libc-memory-copy-fill-contract.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-LIBC-STRING-COPY-APPEND-125-review.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-22-copy-append125-reviewed-memory-copy-fill126.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/176-user-libc-string-copy-append-contract.md",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/MANIFEST.md",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/libc-string-copy-append.md",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/facts-and-boundaries.yaml",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/libc-string-copy-append-paths.dot",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/deferred-findings.yaml",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/evidence.md",
+    "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/124-model-routing-and-pro-message-budget.md",
+    "agent-workspace/conventions.md",
+    "myinitramfs/mylib/myglibc/string/memcpy.c",
+    "myinitramfs/mylib/myglibc/string/memset.c",
+    "myinitramfs/mylib/myglibc/sysdeps/generic/memcopy.h",
+    "myinitramfs/mylib/myglibc/string/strcpy.c",
+    "myinitramfs/mylib/myglibc/string/strcat.c",
+    "myinitramfs/myshell/myshell.c",
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/debug/panic.c"
+  ]
+}

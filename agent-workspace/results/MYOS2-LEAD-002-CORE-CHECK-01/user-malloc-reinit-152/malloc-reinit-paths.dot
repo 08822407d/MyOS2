@@ -1,0 +1,46 @@
+// MYOS2-LEAD-002-CORE-CHECK-01 / CORE-USER-MALLOC-REINIT-152 / EXEC-25
+// Graphviz NOT_RUN; graph attributes copied from facts.graph
+digraph malloc_reinit_152 {
+  "REINIT_SPARSE__ENTRY" [variant="REINIT_SPARSE", stage="ENTRY", kind="GIVEN", source="GIVEN", snapshot_ref="REINIT_SPARSE:0", label="ENTRY"];
+  "REINIT_SPARSE__GLOBAL_ROOTS_RESET" [variant="REINIT_SPARSE", stage="GLOBAL_ROOTS_RESET", kind="execution", source="malloc.c:176–179", snapshot_ref="REINIT_SPARSE:10", label="GLOBAL_ROOTS_RESET"];
+  "REINIT_SPARSE__C9_CHILD_ROOTS_RESET" [variant="REINIT_SPARSE", stage="C9_CHILD_ROOTS_RESET", kind="execution", source="malloc.c:185 then 187–189", snapshot_ref="REINIT_SPARSE:660", label="C9_CHILD_ROOTS_RESET"];
+  "REINIT_SPARSE__REINIT_RETURN" [variant="REINIT_SPARSE", stage="REINIT_RETURN", kind="execution", source="malloc.c:220–221", snapshot_ref="REINIT_SPARSE:1131", label="REINIT_RETURN"];
+  "REINIT_SPARSE__SLAB_SELECTED" [variant="REINIT_SPARSE", stage="SLAB_SELECTED", kind="execution", source="malloc.c:249–286", snapshot_ref="REINIT_SPARSE:1145", label="SLAB_SELECTED"];
+  "REINIT_SPARSE__SCAN_RETURN" [variant="REINIT_SPARSE", stage="SCAN_RETURN", kind="execution", source="malloc.c:295", snapshot_ref="REINIT_SPARSE:1145", label="SCAN_RETURN"];
+  "REINIT_SPARSE__OBJECT_UPDATE_DONE" [variant="REINIT_SPARSE", stage="OBJECT_UPDATE_DONE", kind="execution", source="malloc.c:296–304", snapshot_ref="REINIT_SPARSE:1149", label="OBJECT_UPDATE_DONE"];
+  "REINIT_SPARSE__REFILL_CALL_BOUNDARY" [variant="REINIT_SPARSE", stage="REFILL_CALL_BOUNDARY", kind="analysis_stop", source="malloc.c:308–311", snapshot_ref="REINIT_SPARSE:1150", label="REFILL_CALL_BOUNDARY"];
+  "REINIT_SPARSE__OBS1" [variant="REINIT_SPARSE", stage="OBS1", kind="observation_only", source="malloc.c:151–169", snapshot_ref="REINIT_SPARSE:1131", label="0x54000080 → NULL"];
+  "REINIT_SPARSE__OBS2" [variant="REINIT_SPARSE", stage="OBS2", kind="observation_only", source="malloc.c:151–169", snapshot_ref="REINIT_SPARSE:1131", label="0x51400080 → NULL"];
+  "REINIT_SPARSE__OBS3" [variant="REINIT_SPARSE", stage="OBS3", kind="observation_only", source="malloc.c:151–169", snapshot_ref="REINIT_SPARSE:1131", label="0x61400080 → P9"];
+  "REINIT_FULL__ENTRY" [variant="REINIT_FULL", stage="ENTRY", kind="GIVEN", source="GIVEN", snapshot_ref="REINIT_FULL:0", label="ENTRY"];
+  "REINIT_FULL__GLOBAL_ROOTS_RESET" [variant="REINIT_FULL", stage="GLOBAL_ROOTS_RESET", kind="execution", source="malloc.c:176–179", snapshot_ref="REINIT_FULL:10", label="GLOBAL_ROOTS_RESET"];
+  "REINIT_FULL__C9_CHILD_ROOTS_RESET" [variant="REINIT_FULL", stage="C9_CHILD_ROOTS_RESET", kind="execution", source="malloc.c:185 then 187–189", snapshot_ref="REINIT_FULL:660", label="C9_CHILD_ROOTS_RESET"];
+  "REINIT_FULL__REINIT_RETURN" [variant="REINIT_FULL", stage="REINIT_RETURN", kind="execution", source="malloc.c:220–221", snapshot_ref="REINIT_FULL:1131", label="REINIT_RETURN"];
+  "REINIT_FULL__SLAB_SELECTED" [variant="REINIT_FULL", stage="SLAB_SELECTED", kind="execution", source="malloc.c:249–286", snapshot_ref="REINIT_FULL:1145", label="SLAB_SELECTED"];
+  "REINIT_FULL__SCAN_RETURN" [variant="REINIT_FULL", stage="SCAN_RETURN", kind="execution", source="malloc.c:295", snapshot_ref="REINIT_FULL:1145", label="SCAN_RETURN"];
+  "REINIT_FULL__OBJECT_UPDATE_SKIPPED" [variant="REINIT_FULL", stage="OBJECT_UPDATE_SKIPPED", kind="execution", source="malloc.c:296–304", snapshot_ref="REINIT_FULL:1145", label="OBJECT_UPDATE_SKIPPED"];
+  "REINIT_FULL__REFILL_CALL_BOUNDARY" [variant="REINIT_FULL", stage="REFILL_CALL_BOUNDARY", kind="analysis_stop", source="malloc.c:308–311", snapshot_ref="REINIT_FULL:1146", label="REFILL_CALL_BOUNDARY"];
+  "REINIT_FULL__OBS1" [variant="REINIT_FULL", stage="OBS1", kind="observation_only", source="malloc.c:151–169", snapshot_ref="REINIT_FULL:1131", label="0x54000080 → NULL"];
+  "REINIT_FULL__OBS2" [variant="REINIT_FULL", stage="OBS2", kind="observation_only", source="malloc.c:151–169", snapshot_ref="REINIT_FULL:1131", label="0x51400080 → NULL"];
+  "REINIT_FULL__OBS3" [variant="REINIT_FULL", stage="OBS3", kind="observation_only", source="malloc.c:151–169", snapshot_ref="REINIT_FULL:1131", label="0x61400080 → P9"];
+  "REINIT_SPARSE__ENTRY" -> "REINIT_SPARSE__GLOBAL_ROOTS_RESET" [kind="source_order", label="source order"];
+  "REINIT_SPARSE__GLOBAL_ROOTS_RESET" -> "REINIT_SPARSE__C9_CHILD_ROOTS_RESET" [kind="source_order", label="source order"];
+  "REINIT_SPARSE__C9_CHILD_ROOTS_RESET" -> "REINIT_SPARSE__REINIT_RETURN" [kind="source_order", label="source order"];
+  "REINIT_SPARSE__REINIT_RETURN" -> "REINIT_SPARSE__SLAB_SELECTED" [kind="controlled_next_top_level_call", label="malloc(0x4000)"];
+  "REINIT_SPARSE__SLAB_SELECTED" -> "REINIT_SPARSE__SCAN_RETURN" [kind="source_order", label="source order"];
+  "REINIT_SPARSE__SCAN_RETURN" -> "REINIT_SPARSE__OBJECT_UPDATE_DONE" [kind="source_order", label="source order"];
+  "REINIT_SPARSE__OBJECT_UPDATE_DONE" -> "REINIT_SPARSE__REFILL_CALL_BOUNDARY" [kind="source_order", label="source order"];
+  "REINIT_SPARSE__REINIT_RETURN" -> "REINIT_SPARSE__OBS1" [kind="observation_only", label="snapshot probe, no execution edge"];
+  "REINIT_SPARSE__REINIT_RETURN" -> "REINIT_SPARSE__OBS2" [kind="observation_only", label="snapshot probe, no execution edge"];
+  "REINIT_SPARSE__REINIT_RETURN" -> "REINIT_SPARSE__OBS3" [kind="observation_only", label="snapshot probe, no execution edge"];
+  "REINIT_FULL__ENTRY" -> "REINIT_FULL__GLOBAL_ROOTS_RESET" [kind="source_order", label="source order"];
+  "REINIT_FULL__GLOBAL_ROOTS_RESET" -> "REINIT_FULL__C9_CHILD_ROOTS_RESET" [kind="source_order", label="source order"];
+  "REINIT_FULL__C9_CHILD_ROOTS_RESET" -> "REINIT_FULL__REINIT_RETURN" [kind="source_order", label="source order"];
+  "REINIT_FULL__REINIT_RETURN" -> "REINIT_FULL__SLAB_SELECTED" [kind="controlled_next_top_level_call", label="malloc(0x4000)"];
+  "REINIT_FULL__SLAB_SELECTED" -> "REINIT_FULL__SCAN_RETURN" [kind="source_order", label="source order"];
+  "REINIT_FULL__SCAN_RETURN" -> "REINIT_FULL__OBJECT_UPDATE_SKIPPED" [kind="source_order", label="source order"];
+  "REINIT_FULL__OBJECT_UPDATE_SKIPPED" -> "REINIT_FULL__REFILL_CALL_BOUNDARY" [kind="source_order", label="source order"];
+  "REINIT_FULL__REINIT_RETURN" -> "REINIT_FULL__OBS1" [kind="observation_only", label="snapshot probe, no execution edge"];
+  "REINIT_FULL__REINIT_RETURN" -> "REINIT_FULL__OBS2" [kind="observation_only", label="snapshot probe, no execution edge"];
+  "REINIT_FULL__REINIT_RETURN" -> "REINIT_FULL__OBS3" [kind="observation_only", label="snapshot probe, no execution edge"];
+}

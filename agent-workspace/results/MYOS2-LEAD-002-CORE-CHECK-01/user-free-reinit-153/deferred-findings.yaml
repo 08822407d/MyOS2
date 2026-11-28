@@ -1,0 +1,131 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "batch_id": "CORE-USER-FREE-REINIT-153",
+  "conversation_display_name": "MYOS2-A-C11a 代码分析执行",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-25",
+  "produced_by": "GPT-6.2（系统标识）",
+  "model_per_owner": "GPT-6.2 Sol＋Extra／高推理（Owner指定）",
+  "actual_client_selection": "UNATTESTED",
+  "actual_backend_model": "UNATTESTED",
+  "actual_reasoning_effort": "UNATTESTED",
+  "date": "2026-11-26",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_pin_short12": "55488278ab63",
+  "execution_parent_short12": "6994f6b1aaec",
+  "read_channel": "connector",
+  "status": "AUTHOR_PENDING_MAINLINE_REVIEW",
+  "evidence_class": "SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / OBSERVATION / UNKNOWN",
+  "full_local_P9": "NOT_RUN",
+  "open_questions": [
+    "真实生产入口、C对象/指针、ABI/标准/DEBUG/编译器/链接、映射/生命周期、实际运行、原malloc外返、311 callee、N1547独立外证及实际后台档位未证；R152-01待主线判闭。"
+  ],
+  "record_type": "batch153_deferred_findings",
+  "inputs_read": [
+    "myinitramfs/mylib/myglibc/malloc/malloc.c",
+    "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+    "myinitramfs/mylib/include/utils.h",
+    "myinitramfs/mylib/util/list.c",
+    "myinitramfs/mylib/util/bitmap.c",
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/debug/panic.c",
+    "myinitramfs/CMakeLists.txt",
+    "myinitramfs/mylib/CMakeLists.txt",
+    "myinitramfs/mylib/myglibc/CMakeLists.txt",
+    "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+    "myinitramfs/mylib/util/CMakeLists.txt"
+  ],
+  "D00": {
+    "R152-01": {
+      "status": "SUBMITTED_FOR_MAINLINE_REVIEW",
+      "closure": "PENDING_MAINLINE_CLOSURE",
+      "addendum": "MANIFEST.md::R152_01_receipt_addendum; execution_handoff_receive; guidance_refresh",
+      "source_ref": {
+        "ref": "55488278ab63",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MALLOC-REINIT-152-review.md",
+        "selector": "§5 R152-01"
+      },
+      "package_source": {
+        "ref": "7ed4e9279b7d",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/212-executor-continuation/00-C10c-to-C11a-recovery-package.md",
+        "selector": "§4 package ID/type/authority and actual receipt bookkeeping; companion startup item4; entry#7185473439"
+      },
+      "historical_status": {
+        "arrival_task_adequacy": "NOT_RECORDED（旧正式接收记录没有明确到达后胜任判断；不以本次判断倒签）",
+        "arrival_capacity_judgment": "NOT_RECORDED（历史剩余上下文、实时容量UNATTESTED）",
+        "refresh_completed_at_152": "NOT_RECORDED（历史明确完成字段缺失；不从旧G00 PASS、交付或本轮刷新推为true；已公开加载材料记录保留）",
+        "actual_client_selection_backend_effort": "UNATTESTED",
+        "old_C10c_postcomment_G04": "UNKNOWN"
+      },
+      "current_evidence": "153 MANIFEST.current execution_handoff_receive actual adequacy/capacity judgment, guidance_refresh.refresh_completed=true (153 only), source versions and G00; no historical back-sign",
+      "limit": "旧RETURN_DOCUMENTATION、六件、作者#7185898830、160/160/0冻结，作者不自闭合"
+    }
+  },
+  "items": [
+    {
+      "qualified_id": "CORE-USER-FREE-REINIT-153::FR153-O01",
+      "kind": "conditional_reinit_address_consumer_boundary",
+      "status": "recorded_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbols": [
+          "upage_search",
+          "free"
+        ],
+        "selector": "A_OLD_DYNAMIC/A_OLD_STATIC: SEARCH_RETURN→ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE; B_NEW_SPARSE/B_NEW_FULL: OWNER_READ→EMPTY_GATE→SOURCE_LOOP_EMPTY_SLAB",
+        "evidence": [
+          "E153-001–011",
+          "E153-015–022"
+        ]
+      },
+      "observation": "同一明确再init派生状态的旧/新地址消费分流：旧失配在342前缺对象前提；新命中仍先被345/348阻断，不读残留图。",
+      "premises": "214独立R_S/R_F GIVEN复制；未声称真实旧地址合法payload",
+      "limit": "不重报147 NULL检查/空slab门，不证真实崩溃/释放/泄漏/UAF/生产入口",
+      "reopen_when": "另行授权真实入口及生命周期证据"
+    },
+    {
+      "qualified_id": "CORE-USER-FREE-REINIT-153::FR153-O02",
+      "kind": "conditional_cloned_state_two_free_consumption",
+      "status": "recorded_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbols": [
+          "free",
+          "upage_search"
+        ],
+        "selector": "C_CLONED_UPDATE_C1 VOID_FALLTHROUGH→C2 SOURCE_LOOP_EMPTY_SLAB；固定U_S prefix1149",
+        "evidence": [
+          "E153-012–029",
+          "E153-057–059"
+        ]
+      },
+      "observation": "独立克隆U_S内低位1四写后仍used且残留bit0；后继第二free先由空slab门循环而不求idx。",
+      "premises": "独立GIVEN克隆非原malloc栈，两个free之间无其它写",
+      "limit": "不证明原malloc正常返回/真实重入/真实释放，不重复登记147/151旧分类差异或152无清零。",
+      "reopen_when": "后续授权的状态消费及真实调用者分析"
+    }
+  ],
+  "inherited": [
+    {
+      "id": "R151-01",
+      "status": "CLOSED_BY_MAINLINE_CONSUMPTION_ADDENDUM",
+      "scope": "151原件、主线合读不变"
+    },
+    {
+      "id": "R149-01/R149-02/D150-O04",
+      "status": "CLOSED_BY_PRIOR_MAINLINE_DISPOSITION",
+      "scope": "149旧RETURN历史及150合读保留"
+    },
+    {
+      "id": "N1547",
+      "status": "UNKNOWN",
+      "scope": "不执行高位assigned，独立外证未知"
+    }
+  ]
+}

@@ -1,0 +1,501 @@
+{
+ "check": "USER_SYSCALL_STDIO_08",
+ "pin_time": "a039d9803ade",
+ "base": "ab3b4b86662c",
+ "anchors": {
+  "total": 70,
+  "ok": 70,
+  "by_kind": {
+   "asm_range": 3,
+   "build": 8,
+   "in_body": 45,
+   "initializer": 3,
+   "macro": 10,
+   "type_member": 1
+  },
+  "failures": []
+ },
+ "markdown_tags": {
+  "file": "user-syscall-stdio.md",
+  "total": 34,
+  "ok": 34,
+  "failures": []
+ },
+ "queries": {
+  "total": 38,
+  "tool_failures": 0,
+  "hit_refs_checked": 18,
+  "errors": [],
+  "ok": true
+ },
+ "structure_checks": {
+  "total": 23,
+  "ok": 23,
+  "rows": [
+   {
+    "id": "SS-01",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "ksys_read",
+    "ok": true,
+    "span": [
+     180,
+     181,
+     197
+    ],
+    "regex": "\\bmyos_fdget_pos\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-02",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "ksys_read",
+    "ok": true,
+    "span": [
+     180,
+     181,
+     197
+    ],
+    "regex": "\\bfdget_pos\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-03",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "ksys_write",
+    "ok": true,
+    "span": [
+     319,
+     320,
+     338
+    ],
+    "regex": "\\bfdget_pos\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-04",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "ksys_write",
+    "ok": true,
+    "span": [
+     319,
+     320,
+     338
+    ],
+    "regex": "\\bfdput_pos\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-05",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "do_writev",
+    "ok": true,
+    "span": [
+     386,
+     387,
+     407
+    ],
+    "regex": "\\bfdget_pos\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-06",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "do_writev",
+    "ok": true,
+    "span": [
+     386,
+     387,
+     407
+    ],
+    "regex": "\\bfdput_pos\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-07",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/fs/file.h",
+    "symbol": "__to_fd",
+    "ok": true,
+    "span": [
+     51,
+     52,
+     57
+    ],
+    "regex": "\\b(?:get_file|atomic_long_inc|fget)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-08",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/file.c",
+    "symbol": "myos_fdget_pos",
+    "ok": true,
+    "span": [
+     197,
+     198,
+     203
+    ],
+    "regex": "\\b(?:get_file|atomic_long_inc|fget)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-09",
+    "kind": "body_regex",
+    "path": "mykernel/fs/syscall.c",
+    "symbol": "sys_fcntl",
+    "ok": true,
+    "span": [
+     140,
+     142,
+     162
+    ],
+    "regex": "\\bfdget_raw\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-10",
+    "kind": "body_regex",
+    "path": "mykernel/fs/syscall.c",
+    "symbol": "sys_fcntl",
+    "ok": true,
+    "span": [
+     140,
+     142,
+     162
+    ],
+    "regex": "\\bfdput\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-11",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/file_table.c",
+    "symbol": "fput",
+    "ok": true,
+    "span": [
+     108,
+     109,
+     129
+    ],
+    "regex": "kmem_cache_free\\s*\\(\\s*filp_cachep",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-12",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/myos/syscall.c",
+    "symbol": "sys_ioctl",
+    "ok": true,
+    "span": [
+     131,
+     132,
+     154
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-13",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/myos/syscall.c",
+    "symbol": "sys_ioctl",
+    "ok": true,
+    "span": [
+     131,
+     132,
+     154
+    ],
+    "regex": "\\bfdget\\w*\\s*\\(|\\bf_op\\b|\\bcmd\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-14",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/myos/syscall.c",
+    "symbol": "sys_myos_putstring",
+    "ok": true,
+    "span": [
+     30,
+     31,
+     34
+    ],
+    "regex": "\\b(?:copy_from_user|strncpy_from_user|strndup_user|access_ok)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-15",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/entry/common.c",
+    "symbol": "do_syscall_64",
+    "ok": true,
+    "span": [
+     24,
+     25,
+     86
+    ],
+    "regex": "regs->ax\\s*=",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SS-16",
+    "kind": "body_regex",
+    "path": "mykernel/sched/forkexec/exec.c",
+    "symbol": "begin_new_exec",
+    "ok": true,
+    "span": [
+     851,
+     852,
+     1031
+    ],
+    "regex": "\\bdo_close_on_exec\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-17",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/fcntl.c",
+    "symbol": "do_fcntl",
+    "ok": true,
+    "span": [
+     6,
+     8,
+     113
+    ],
+    "regex": "\\bcase\\s+F_(?:GETFD|SETFD|SETFL)\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-18",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/fcntl.c",
+    "symbol": "do_fcntl",
+    "ok": true,
+    "span": [
+     6,
+     8,
+     113
+    ],
+    "regex": "\\bcase\\s+F_DUPFD(?:_CLOEXEC)?\\s*:",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SS-19",
+    "kind": "body_regex",
+    "path": "mykernel/fs/syscall.c",
+    "symbol": "sys_lseek",
+    "ok": true,
+    "span": [
+     75,
+     77,
+     91
+    ],
+    "regex": "fp\\s*==\\s*NULL|!\\s*fp\\b|fp\\s*!=\\s*NULL",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-20",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/namei.c",
+    "symbol": "path_init",
+    "ok": true,
+    "span": [
+     547,
+     548,
+     560
+    ],
+    "regex": "\\bdfd\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-21",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/file.c",
+    "symbol": "f_dupfd",
+    "ok": true,
+    "span": [
+     229,
+     230,
+     241
+    ],
+    "regex": "\\bNR_OPEN_DEFAULT\\b|\\bfd_count\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-22",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/file.c",
+    "symbol": "alloc_fd",
+    "ok": true,
+    "span": [
+     129,
+     130,
+     145
+    ],
+    "regex": "\\bflags\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SS-23",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "vfs_writev",
+    "ok": true,
+    "span": [
+     340,
+     342,
+     384
+    ],
+    "regex": "\\bret\\s*\\+=",
+    "active_matches": 1,
+    "expected": 1
+   }
+  ]
+ },
+ "value_tables": {
+  "VT-SYSTAB": {
+   "rows": 41,
+   "summary": {
+    "entries": 41,
+    "nr_syscalls": 453,
+    "unique_numbers": true,
+    "all_resolved": true,
+    "all_below_nr_syscalls": true,
+    "all_defined_once": true,
+    "without_active_return": [
+     "sys_dup",
+     "sys_dup2",
+     "sys_exit",
+     "sys_wait4"
+    ],
+    "dummy": [
+     "sys_dup",
+     "sys_dup2",
+     "sys_exit",
+     "sys_exit_group",
+     "sys_ioctl",
+     "sys_kill",
+     "sys_mprotect"
+    ]
+   },
+   "differs": [],
+   "ok": true
+  },
+  "VT-FDLIMITS": {
+   "values": {
+    "NR_OPEN_DEFAULT": 256,
+    "NR_OPEN_MAX": "NR_OPEN_DEFAULT",
+    "fd_array_size": "NR_OPEN_DEFAULT",
+    "INR_OPEN_CUR": 1024,
+    "RLIMIT_NOFILE_initial": "INR_OPEN_CUR",
+    "FDPUT_FPUT": 1,
+    "to_fd_flags": 3,
+    "myos_fdget_pos_flags": 0,
+    "init_files_fd_count": 0,
+    "dup_fd_sets_fd_count": "NR_OPEN_DEFAULT",
+    "f_dupfd_bound": "RLIMIT_NOFILE",
+    "f_dupfd_alloc_end": "nofile",
+    "to_fd_implies_fput": true,
+    "myos_fdget_pos_implies_fput": false,
+    "nofile_exceeds_table": true
+   },
+   "differs": [],
+   "ok": true
+  },
+  "ok": true
+ },
+ "external_ids_loaded": 542,
+ "structure": {
+  "errors": [],
+  "limits": {
+   "capabilities": [
+    12,
+    15
+   ],
+   "edges": [
+    23,
+    40
+   ],
+   "anchors": [
+    70,
+    75
+   ],
+   "candidates": [
+    3,
+    4
+   ]
+  },
+  "recount": {
+   "capabilities": 12,
+   "edges": 23,
+   "edges_indirect": 4,
+   "anchors": 70,
+   "anchors_by_kind": {
+    "asm_range": 3,
+    "build": 8,
+    "in_body": 45,
+    "initializer": 3,
+    "macro": 10,
+    "type_member": 1
+   },
+   "anchors_by_theme": {
+    "C01": 12,
+    "C02": 21,
+    "C03": 37
+   },
+   "queries": 38,
+   "structure_checks": 23,
+   "value_tables": 2,
+   "syscall_table_rows": 41,
+   "gap_status": 1,
+   "next_validation_candidates": 3,
+   "fd_lifecycle": 9,
+   "prior_unknowns": 4
+  },
+  "ok": true
+ },
+ "deferred_findings": {
+  "errors": [],
+  "recount": {
+   "findings": 5,
+   "evidence_appends": 5,
+   "errata": 0,
+   "findings_by_status": {
+    "deferred_owner_not_ready": 5,
+    "needs_evidence": 0,
+    "superseded_interpretation": 0
+   }
+  },
+  "ok": true
+ },
+ "hex40_in_package": [],
+ "all_ok": true,
+ "scan_index_repo_rebound": true
+}

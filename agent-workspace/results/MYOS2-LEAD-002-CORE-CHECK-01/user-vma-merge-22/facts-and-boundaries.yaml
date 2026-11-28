@@ -1,0 +1,2038 @@
+{
+  "task_id": "CORE-USER-VMA-MERGE-22",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "bounded_merge_facts_and_boundaries",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra (Owner selected; backend not attestable)",
+  "date": "2026-11-02",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task_contract_short12": "cffb519d089b",
+  "result_base_short12": "16baace7bd3c",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "phase": 2,
+  "nodes": [
+    {
+      "id": "VM22-N01",
+      "name": "simple_mmap_region",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N02",
+      "name": "simple_munmap_vma_range",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N03",
+      "name": "find_vma_prev_to_addr",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N04",
+      "name": "simple_do_vma_munmap",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N05",
+      "name": "simple_vma_merge",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N06",
+      "name": "simple_is_mergeable_vma",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N07",
+      "name": "simple_can_vma_merge_after",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N08",
+      "name": "simple_can_vma_merge_before",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N09",
+      "name": "find_vma_intersection",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N10",
+      "name": "vma_lookup",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N11",
+      "name": "simple_find_vma",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N12",
+      "name": "vma_pages",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N13",
+      "name": "__simple_vma_adjust",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N14",
+      "name": "vma_next_vma",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N15",
+      "name": "__vma_unlink_from_list",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N16",
+      "name": "list_header_delete_node",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N17",
+      "name": "list_del_init",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N18",
+      "name": "vm_area_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N19",
+      "name": "vma_init",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N20",
+      "name": "get_file",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N21",
+      "name": "call_mmap",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N22",
+      "name": "file.mmap_callback",
+      "kind": "indirect"
+    },
+    {
+      "id": "VM22-N23",
+      "name": "fput",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N24",
+      "name": "vm_area_free",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N25",
+      "name": "simple_vma_link",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N26",
+      "name": "__vma_link_to_list",
+      "kind": "function"
+    },
+    {
+      "id": "VM22-N27",
+      "name": "prev",
+      "kind": "local_pointer"
+    },
+    {
+      "id": "VM22-N28",
+      "name": "curr",
+      "kind": "local_pointer"
+    },
+    {
+      "id": "VM22-N29",
+      "name": "next",
+      "kind": "local_pointer"
+    },
+    {
+      "id": "VM22-N30",
+      "name": "adjust_target",
+      "kind": "local_pointer"
+    },
+    {
+      "id": "VM22-N31",
+      "name": "temp_vma",
+      "kind": "local_pointer"
+    },
+    {
+      "id": "VM22-N32",
+      "name": "returned_vma",
+      "kind": "local_pointer"
+    },
+    {
+      "id": "VM22-N33",
+      "name": "requested_addr",
+      "kind": "data"
+    },
+    {
+      "id": "VM22-N34",
+      "name": "requested_end",
+      "kind": "data"
+    },
+    {
+      "id": "VM22-N35",
+      "name": "requested_file",
+      "kind": "data"
+    },
+    {
+      "id": "VM22-N36",
+      "name": "requested_vm_flags",
+      "kind": "data"
+    },
+    {
+      "id": "VM22-N37",
+      "name": "requested_pgoff",
+      "kind": "data"
+    },
+    {
+      "id": "VM22-N38",
+      "name": "pglen",
+      "kind": "local_value"
+    },
+    {
+      "id": "VM22-N39",
+      "name": "vma_start_local",
+      "kind": "local_value"
+    },
+    {
+      "id": "VM22-N40",
+      "name": "vma_end_local",
+      "kind": "local_value"
+    },
+    {
+      "id": "VM22-N41",
+      "name": "vma_pgoff_local",
+      "kind": "local_value"
+    },
+    {
+      "id": "VM22-N42",
+      "name": "merge_prev",
+      "kind": "local_bool"
+    },
+    {
+      "id": "VM22-N43",
+      "name": "merge_next",
+      "kind": "local_bool"
+    },
+    {
+      "id": "VM22-N44",
+      "name": "VM_SPECIAL",
+      "kind": "macro"
+    },
+    {
+      "id": "VM22-N45",
+      "name": "VM_SOFTDIRTY",
+      "kind": "macro"
+    },
+    {
+      "id": "VM22-N46",
+      "name": "target.vm_start",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N47",
+      "name": "target.vm_end",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N48",
+      "name": "target.vm_pgoff",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N49",
+      "name": "target.vm_flags",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N50",
+      "name": "target.vm_page_prot",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N51",
+      "name": "target.vm_ops",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N52",
+      "name": "target.vm_file",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N53",
+      "name": "target.vm_private_data",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N54",
+      "name": "successor.vm_start",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N55",
+      "name": "successor.vm_pgoff",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N56",
+      "name": "mm.map_count",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N57",
+      "name": "mm.mm_mt.count",
+      "kind": "field"
+    },
+    {
+      "id": "VM22-N58",
+      "name": "return_address",
+      "kind": "data"
+    }
+  ],
+  "edges": [
+    {
+      "id": "VM22-E01",
+      "from": "VM22-N01",
+      "to": "VM22-N02",
+      "kind": "call",
+      "meaning": "old range handling precedes first merge",
+      "when": "entry reaches line 663",
+      "anchors": [
+        "VM22-A027",
+        "VM22-A001"
+      ]
+    },
+    {
+      "id": "VM22-E02",
+      "from": "VM22-N02",
+      "to": "VM22-N03",
+      "kind": "call",
+      "meaning": "write *pprev using strict predecessor",
+      "when": "callee reached; valid mm/iterator",
+      "anchors": [
+        "VM22-A001",
+        "VM22-A055",
+        "VM22-A090"
+      ]
+    },
+    {
+      "id": "VM22-E03",
+      "from": "VM22-N02",
+      "to": "VM22-N04",
+      "kind": "call",
+      "meaning": "process [addr,addr+len) before merge",
+      "when": "valid range and normal call",
+      "anchors": [
+        "VM22-A001"
+      ]
+    },
+    {
+      "id": "VM22-E04",
+      "from": "VM22-N01",
+      "to": "VM22-N05",
+      "kind": "call",
+      "meaning": "first call (mm,prev,addr,addr+len,vm_flags,file,pgoff)",
+      "when": "old range helper returned 0",
+      "anchors": [
+        "VM22-A027",
+        "VM22-A028"
+      ]
+    },
+    {
+      "id": "VM22-E05",
+      "from": "VM22-N01",
+      "to": "VM22-N32",
+      "kind": "effect",
+      "meaning": "first merge success assigns vma and jumps directly to out",
+      "when": "first merge result nonnull",
+      "anchors": [
+        "VM22-A028",
+        "VM22-A041"
+      ]
+    },
+    {
+      "id": "VM22-E06",
+      "from": "VM22-N01",
+      "to": "VM22-N18",
+      "kind": "call",
+      "meaning": "allocate new VMA only when first merge null",
+      "when": "first merge result NULL",
+      "anchors": [
+        "VM22-A029",
+        "VM22-A086"
+      ]
+    },
+    {
+      "id": "VM22-E07",
+      "from": "VM22-N18",
+      "to": "VM22-N19",
+      "kind": "call",
+      "meaning": "initializes newly created VMA after allocation",
+      "when": "allocation succeeds",
+      "anchors": [
+        "VM22-A086"
+      ]
+    },
+    {
+      "id": "VM22-E08",
+      "from": "VM22-N01",
+      "to": "VM22-N31",
+      "kind": "effect",
+      "meaning": "new VMA assigned to local vma for file callback branch",
+      "when": "first merge null and vm_area_alloc valid",
+      "anchors": [
+        "VM22-A029",
+        "VM22-A030"
+      ]
+    },
+    {
+      "id": "VM22-E09",
+      "from": "VM22-N01",
+      "to": "VM22-N20",
+      "kind": "call",
+      "meaning": "take VMA-held file ref",
+      "when": "file nonnull and new VMA allocated",
+      "anchors": [
+        "VM22-A031",
+        "VM22-A082"
+      ]
+    },
+    {
+      "id": "VM22-E10",
+      "from": "VM22-N01",
+      "to": "VM22-N52",
+      "kind": "effect",
+      "meaning": "assign temp_vma.vm_file = get_file(file) on new file VMA, not mutate a pre-existing merge target",
+      "when": "first merge returned NULL, new VMA and file valid",
+      "anchors": [
+        "VM22-A031",
+        "VM22-A082"
+      ]
+    },
+    {
+      "id": "VM22-E11",
+      "from": "VM22-N01",
+      "to": "VM22-N21",
+      "kind": "call",
+      "meaning": "named helper invocation on temporary VMA",
+      "when": "file nonnull and new VMA allocation",
+      "anchors": [
+        "VM22-A031",
+        "VM22-A083"
+      ]
+    },
+    {
+      "id": "VM22-E12",
+      "from": "VM22-N21",
+      "to": "VM22-N22",
+      "kind": "dynamic_call",
+      "meaning": "file->f_op->mmap(file,vma)",
+      "when": "valid file and f_op callback",
+      "anchors": [
+        "VM22-A083"
+      ]
+    },
+    {
+      "id": "VM22-E13",
+      "from": "VM22-N01",
+      "to": "VM22-N05",
+      "kind": "call",
+      "meaning": "second call passes callback-modified vma fields",
+      "when": "file callback returns 0, flags differ and prev != NULL",
+      "anchors": [
+        "VM22-A034",
+        "VM22-A035"
+      ]
+    },
+    {
+      "id": "VM22-E14",
+      "from": "VM22-N01",
+      "to": "VM22-N23",
+      "kind": "call",
+      "meaning": "on second merge success release temporary vma->vm_file",
+      "when": "merge pointer nonnull and valid temp_vma/file ref",
+      "anchors": [
+        "VM22-A036",
+        "VM22-A084"
+      ]
+    },
+    {
+      "id": "VM22-E15",
+      "from": "VM22-N01",
+      "to": "VM22-N24",
+      "kind": "call",
+      "meaning": "free temporary new VMA on second merge success",
+      "when": "fput returned normally, merge nonnull",
+      "anchors": [
+        "VM22-A036",
+        "VM22-A087"
+      ]
+    },
+    {
+      "id": "VM22-E16",
+      "from": "VM22-N01",
+      "to": "VM22-N32",
+      "kind": "effect",
+      "meaning": "replace local vma with merge old object then branch to unmap_writable",
+      "when": "second merge pointer nonnull",
+      "anchors": [
+        "VM22-A036",
+        "VM22-A037",
+        "VM22-A040"
+      ]
+    },
+    {
+      "id": "VM22-E17",
+      "from": "VM22-N01",
+      "to": "VM22-N25",
+      "kind": "call",
+      "meaning": "link new VMA only when neither merge branch returned old object",
+      "when": "new VMA path and normal callback/shmem/anon prep",
+      "anchors": [
+        "VM22-A039",
+        "VM22-A089"
+      ]
+    },
+    {
+      "id": "VM22-E18",
+      "from": "VM22-N25",
+      "to": "VM22-N26",
+      "kind": "call",
+      "meaning": "direct VMA list insertion",
+      "when": "link stage reached",
+      "anchors": [
+        "VM22-A089",
+        "VM22-A067",
+        "VM22-A068"
+      ]
+    },
+    {
+      "id": "VM22-E19",
+      "from": "VM22-N05",
+      "to": "VM22-N44",
+      "kind": "data",
+      "meaning": "checks special mask on input vm_flags",
+      "when": "merge entry",
+      "anchors": [
+        "VM22-A016",
+        "VM22-A080"
+      ]
+    },
+    {
+      "id": "VM22-E20",
+      "from": "VM22-N05",
+      "to": "VM22-N38",
+      "kind": "effect",
+      "meaning": "compute (end-addr)>>PAGE_SHIFT",
+      "when": "valid ordered byte interval",
+      "anchors": [
+        "VM22-A013",
+        "VM22-A061",
+        "VM22-A081"
+      ]
+    },
+    {
+      "id": "VM22-E21",
+      "from": "VM22-N05",
+      "to": "VM22-N09",
+      "kind": "call",
+      "meaning": "assign curr from bounded intersection query using prev?prev->vm_end:0",
+      "when": "not VM_SPECIAL",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A057"
+      ]
+    },
+    {
+      "id": "VM22-E22",
+      "from": "VM22-N09",
+      "to": "VM22-N03",
+      "kind": "call",
+      "meaning": "requires strict predecessor to even test next VMA",
+      "when": "valid list iteration and inputs",
+      "anchors": [
+        "VM22-A055",
+        "VM22-A056",
+        "VM22-A057",
+        "VM22-A058"
+      ]
+    },
+    {
+      "id": "VM22-E23",
+      "from": "VM22-N05",
+      "to": "VM22-N28",
+      "kind": "effect",
+      "meaning": "curr assigned from intersection helper; may be NULL",
+      "when": "not VM_SPECIAL and helper returns",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A057"
+      ]
+    },
+    {
+      "id": "VM22-E24",
+      "from": "VM22-N05",
+      "to": "VM22-N10",
+      "kind": "call",
+      "meaning": "derive next from point containment of end",
+      "when": "curr NULL or end==curr->vm_end",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A018",
+        "VM22-A059",
+        "VM22-A060"
+      ]
+    },
+    {
+      "id": "VM22-E25",
+      "from": "VM22-N10",
+      "to": "VM22-N11",
+      "kind": "call",
+      "meaning": "same start-inclusive/end-exclusive point lookup",
+      "when": "valid mm and iteration",
+      "anchors": [
+        "VM22-A059",
+        "VM22-A060"
+      ]
+    },
+    {
+      "id": "VM22-E26",
+      "from": "VM22-N05",
+      "to": "VM22-N29",
+      "kind": "effect",
+      "meaning": "next set to vma_lookup(mm,end) or NULL",
+      "when": "not VM_SPECIAL and helper returns",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A018"
+      ]
+    },
+    {
+      "id": "VM22-E27",
+      "from": "VM22-N05",
+      "to": "VM22-N27",
+      "kind": "data",
+      "meaning": "reads passed prev pointer, tests addr==prev->vm_end",
+      "when": "prev valid if nonnull",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A090",
+        "VM22-A055"
+      ]
+    },
+    {
+      "id": "VM22-E28",
+      "from": "VM22-N05",
+      "to": "VM22-N07",
+      "kind": "call",
+      "meaning": "check predecessor flags/file/close/pgoff+length",
+      "when": "prev nonnull and addr==prev->vm_end",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A012",
+        "VM22-A091"
+      ]
+    },
+    {
+      "id": "VM22-E29",
+      "from": "VM22-N07",
+      "to": "VM22-N06",
+      "kind": "call",
+      "meaning": "common compatibility for preceding VMA",
+      "when": "helper invoked",
+      "anchors": [
+        "VM22-A012",
+        "VM22-A007",
+        "VM22-A008"
+      ]
+    },
+    {
+      "id": "VM22-E30",
+      "from": "VM22-N07",
+      "to": "VM22-N12",
+      "kind": "call",
+      "meaning": "compute existing predecessor length in pages",
+      "when": "compatible prev and valid VMA",
+      "anchors": [
+        "VM22-A012",
+        "VM22-A061"
+      ]
+    },
+    {
+      "id": "VM22-E31",
+      "from": "VM22-N05",
+      "to": "VM22-N30",
+      "kind": "effect",
+      "meaning": "assign prev only when predecessor merge succeeds",
+      "when": "merge_prev true",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A020"
+      ]
+    },
+    {
+      "id": "VM22-E32",
+      "from": "VM22-N05",
+      "to": "VM22-N42",
+      "kind": "effect",
+      "meaning": "sets boolean true after assigning adjust_target prev",
+      "when": "prev adjacency and compatibility hold",
+      "anchors": [
+        "VM22-A020"
+      ]
+    },
+    {
+      "id": "VM22-E33",
+      "from": "VM22-N05",
+      "to": "VM22-N08",
+      "kind": "call",
+      "meaning": "check next compatibility and pgoff+pglen",
+      "when": "next !=NULL",
+      "anchors": [
+        "VM22-A021",
+        "VM22-A010",
+        "VM22-A092"
+      ]
+    },
+    {
+      "id": "VM22-E34",
+      "from": "VM22-N08",
+      "to": "VM22-N06",
+      "kind": "call",
+      "meaning": "common compatibility for successor",
+      "when": "helper invoked",
+      "anchors": [
+        "VM22-A010",
+        "VM22-A007",
+        "VM22-A008"
+      ]
+    },
+    {
+      "id": "VM22-E35",
+      "from": "VM22-N05",
+      "to": "VM22-N43",
+      "kind": "effect",
+      "meaning": "sets true if next check holds",
+      "when": "next nonnull and helper true",
+      "anchors": [
+        "VM22-A021",
+        "VM22-A022"
+      ]
+    },
+    {
+      "id": "VM22-E36",
+      "from": "VM22-N05",
+      "to": "VM22-N30",
+      "kind": "effect",
+      "meaning": "assign next only if !prev (pointer absence), not if !merge_prev",
+      "when": "next compatible and prev==NULL",
+      "anchors": [
+        "VM22-A022"
+      ]
+    },
+    {
+      "id": "VM22-E37",
+      "from": "VM22-N05",
+      "to": "VM22-N30",
+      "kind": "data",
+      "meaning": "reads possibly-uninitialized pointer in if(adjust_target==NULL)",
+      "when": "at least one merge flag true; no assignment in only-next and prev!=NULL",
+      "anchors": [
+        "VM22-A014",
+        "VM22-A020",
+        "VM22-A022",
+        "VM22-A023",
+        "VM22-A024"
+      ]
+    },
+    {
+      "id": "VM22-E38",
+      "from": "VM22-N05",
+      "to": "VM22-N28",
+      "kind": "data",
+      "meaning": "fallback source only inside if(adjust_target==NULL)",
+      "when": "test itself defined and evaluates true",
+      "anchors": [
+        "VM22-A024",
+        "VM22-A017"
+      ]
+    },
+    {
+      "id": "VM22-E39",
+      "from": "VM22-N05",
+      "to": "VM22-N41",
+      "kind": "effect",
+      "meaning": "store prev pgoff if prev merge true; not passed into adjust",
+      "when": "prev merge true",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A024"
+      ]
+    },
+    {
+      "id": "VM22-E40",
+      "from": "VM22-N05",
+      "to": "VM22-N39",
+      "kind": "effect",
+      "meaning": "set prev->vm_start when prev merged, otherwise input addr",
+      "when": "matching prev path",
+      "anchors": [
+        "VM22-A015",
+        "VM22-A019"
+      ]
+    },
+    {
+      "id": "VM22-E41",
+      "from": "VM22-N05",
+      "to": "VM22-N40",
+      "kind": "effect",
+      "meaning": "set next->vm_end on compatible next, otherwise requested end",
+      "when": "matching next path",
+      "anchors": [
+        "VM22-A015",
+        "VM22-A021",
+        "VM22-A022"
+      ]
+    },
+    {
+      "id": "VM22-E42",
+      "from": "VM22-N05",
+      "to": "VM22-N13",
+      "kind": "call",
+      "meaning": "perform boundary/pgoff updates using selected pointer",
+      "when": "at least one merge success, adjustment pointer valid",
+      "anchors": [
+        "VM22-A023",
+        "VM22-A024",
+        "VM22-A025"
+      ]
+    },
+    {
+      "id": "VM22-E43",
+      "from": "VM22-N13",
+      "to": "VM22-N46",
+      "kind": "effect",
+      "meaning": "write start before pgoff calculation",
+      "when": "valid selected target",
+      "anchors": [
+        "VM22-A003",
+        "VM22-A062"
+      ]
+    },
+    {
+      "id": "VM22-E44",
+      "from": "VM22-N13",
+      "to": "VM22-N48",
+      "kind": "effect",
+      "meaning": "add (start-old_vm_pgoff)>>PAGE_SHIFT mixing byte address and page index",
+      "when": "valid selected target and arithmetic",
+      "anchors": [
+        "VM22-A003",
+        "VM22-A066",
+        "VM22-A081"
+      ]
+    },
+    {
+      "id": "VM22-E45",
+      "from": "VM22-N13",
+      "to": "VM22-N47",
+      "kind": "effect",
+      "meaning": "write requested/extended end after pgoff",
+      "when": "valid target",
+      "anchors": [
+        "VM22-A003"
+      ]
+    },
+    {
+      "id": "VM22-E46",
+      "from": "VM22-N13",
+      "to": "VM22-N14",
+      "kind": "call",
+      "meaning": "iterate following linked VMA, including after each successful unlink",
+      "when": "target valid and list consistent",
+      "anchors": [
+        "VM22-A004",
+        "VM22-A005",
+        "VM22-A049",
+        "VM22-A050"
+      ]
+    },
+    {
+      "id": "VM22-E47",
+      "from": "VM22-N13",
+      "to": "VM22-N15",
+      "kind": "call",
+      "meaning": "unlink successor if end>=next->vm_end",
+      "when": "next nonnull, valid membership and loop reached",
+      "anchors": [
+        "VM22-A004",
+        "VM22-A069"
+      ]
+    },
+    {
+      "id": "VM22-E48",
+      "from": "VM22-N15",
+      "to": "VM22-N56",
+      "kind": "effect",
+      "meaning": "decrement map_count if control clears membership while",
+      "when": "valid vma and loop progresses",
+      "anchors": [
+        "VM22-A069"
+      ]
+    },
+    {
+      "id": "VM22-E49",
+      "from": "VM22-N15",
+      "to": "VM22-N16",
+      "kind": "call",
+      "meaning": "delegate double-list delete",
+      "when": "after map_count decrement",
+      "anchors": [
+        "VM22-A069",
+        "VM22-A071",
+        "VM22-A094"
+      ]
+    },
+    {
+      "id": "VM22-E50",
+      "from": "VM22-N16",
+      "to": "VM22-N17",
+      "kind": "call",
+      "meaning": "unlink and reinitialize when membership checked true",
+      "when": "valid member",
+      "anchors": [
+        "VM22-A071",
+        "VM22-A072",
+        "VM22-A094"
+      ]
+    },
+    {
+      "id": "VM22-E51",
+      "from": "VM22-N16",
+      "to": "VM22-N57",
+      "kind": "effect",
+      "meaning": "decrement header count on successful deletion only",
+      "when": "membership true and list helpers return",
+      "anchors": [
+        "VM22-A071",
+        "VM22-A094"
+      ]
+    },
+    {
+      "id": "VM22-E52",
+      "from": "VM22-N13",
+      "to": "VM22-N55",
+      "kind": "effect",
+      "meaning": "increment pgoff by (end-old_next.vm_start)>>PAGE_SHIFT for partial overlap",
+      "when": "next!=NULL and end>next.vm_start after full removals",
+      "anchors": [
+        "VM22-A005",
+        "VM22-A066"
+      ]
+    },
+    {
+      "id": "VM22-E53",
+      "from": "VM22-N13",
+      "to": "VM22-N54",
+      "kind": "effect",
+      "meaning": "set next->vm_start=end on partial overlap",
+      "when": "next valid and partial condition true",
+      "anchors": [
+        "VM22-A005",
+        "VM22-A062"
+      ]
+    },
+    {
+      "id": "VM22-E54",
+      "from": "VM22-N01",
+      "to": "VM22-N49",
+      "kind": "effect",
+      "meaning": "OR VM_SOFTDIRTY on returned vma object, macro may be 0",
+      "when": "success branch reaches out",
+      "anchors": [
+        "VM22-A041",
+        "VM22-A079"
+      ]
+    },
+    {
+      "id": "VM22-E55",
+      "from": "VM22-N01",
+      "to": "VM22-N58",
+      "kind": "effect",
+      "meaning": "returns addr rather than old target pointer",
+      "when": "successful out reached",
+      "anchors": [
+        "VM22-A041"
+      ]
+    },
+    {
+      "id": "VM22-E56",
+      "from": "VM22-N01",
+      "to": "VM22-N50",
+      "kind": "effect",
+      "meaning": "new VMA branch assigns vm_page_prot; first merge returns an old VMA without this new-field assignment",
+      "when": "first merge NULL and vm_area_alloc valid",
+      "anchors": [
+        "VM22-A028",
+        "VM22-A030"
+      ]
+    },
+    {
+      "from": "VM22-N06",
+      "to": "VM22-N36",
+      "kind": "data",
+      "meaning": "consumes requested vm_flags and compares to candidate vm_flags masked by SOFTDIRTY",
+      "when": "candidate nonnull and helper called",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A079"
+      ],
+      "id": "VM22-E57"
+    },
+    {
+      "from": "VM22-N06",
+      "to": "VM22-N35",
+      "kind": "data",
+      "meaning": "compares candidate vm_file pointer with requested file identity",
+      "when": "candidate valid and previous flag test passed",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A066"
+      ],
+      "id": "VM22-E58"
+    },
+    {
+      "from": "VM22-N08",
+      "to": "VM22-N37",
+      "kind": "data",
+      "meaning": "compares candidate next.vm_pgoff with caller pgoff+pglen, without checking next.vm_start==end",
+      "when": "candidate valid and helper called",
+      "anchors": [
+        "VM22-A010",
+        "VM22-A092"
+      ],
+      "id": "VM22-E59"
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "VM22-M01",
+      "name": "VM_SPECIAL refused",
+      "premise": "input vm_flags has any VM_SPECIAL component",
+      "flags": "merge_prev/next not evaluated",
+      "pointer": "no candidate used",
+      "changes": "none",
+      "outcome": "NULL",
+      "limits": "vm_special is input mask; no existing VMA normalization inferred",
+      "anchors": [
+        "VM22-A016",
+        "VM22-A080"
+      ]
+    },
+    {
+      "id": "VM22-M02",
+      "name": "no mergeable candidate",
+      "premise": "both helper tests false or next absent; no uninitialized pointer use",
+      "flags": "merge_prev=false,merge_next=false",
+      "pointer": "curr/next may exist",
+      "changes": "none",
+      "outcome": "NULL",
+      "limits": "initial iterator and valid prev/curr require their own proof",
+      "anchors": [
+        "VM22-A021",
+        "VM22-A023",
+        "VM22-A017"
+      ]
+    },
+    {
+      "id": "VM22-M03",
+      "name": "strict prev from initial call",
+      "premise": "prev=find_vma_prev_to_addr(mm,addr) stays valid and unmodified",
+      "flags": "addr==prev->vm_end impossible if prev.end<addr",
+      "pointer": "prev known before first merge",
+      "changes": "none at this guard",
+      "outcome": "predecessor merge test skipped",
+      "limits": "does not globally rule out other callers or mutation between calls",
+      "anchors": [
+        "VM22-A001",
+        "VM22-A019",
+        "VM22-A055",
+        "VM22-A090"
+      ]
+    },
+    {
+      "id": "VM22-M04",
+      "name": "direct predecessor merge hypothetical",
+      "premise": "caller supplies adjacent prev [0x10000,0x12000), pgoff1; request [0x12000,0x13000) pgoff3, same flags/file/no close",
+      "flags": "merge_prev=true,merge_next=false",
+      "pointer": "adjust_target=prev",
+      "changes": "prev end extends, pgoff becomes16 under unsigned 64-bit math",
+      "outcome": "return old prev if adjust completes",
+      "limits": "this adjacency conflicts with unchanged strict prev in ordinary first-call producer; not a runtime case",
+      "anchors": [
+        "VM22-A012",
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A003",
+        "VM22-A081",
+        "VM22-A090"
+      ]
+    },
+    {
+      "id": "VM22-M05",
+      "name": "first-call only successor with no prev",
+      "premise": "prev=NULL, vma_lookup(mm,end) returns next and compatible pgoff",
+      "flags": "merge_prev=false,merge_next=true",
+      "pointer": "adjust_target=next",
+      "changes": "target start=addr, end=next.end; target pgoff modified",
+      "outcome": "return old next if adjustment normal",
+      "limits": "curr from earlier broken helper may be NULL; null member traversal assumptions remain",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A018",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A024",
+        "VM22-A025",
+        "VM22-A055",
+        "VM22-A059"
+      ]
+    },
+    {
+      "id": "VM22-M06",
+      "name": "first-call only successor with strict earlier prev",
+      "premise": "prev nonnull with prev.end<addr, next compatible, but prev not adjacent",
+      "flags": "merge_prev=false,merge_next=true",
+      "pointer": "adjust_target uninitialized",
+      "changes": "cannot determine valid target update",
+      "outcome": "undefined or unproven",
+      "limits": "reading indeterminate adjust_target precedes any guaranteed fallback",
+      "anchors": [
+        "VM22-A014",
+        "VM22-A019",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A023",
+        "VM22-A024",
+        "VM22-A090"
+      ]
+    },
+    {
+      "id": "VM22-M07",
+      "name": "only next with prev nonnull but incompatible flags",
+      "premise": "prev exists, next has flags mismatch vs requested",
+      "flags": "merge_prev=false,merge_next=false",
+      "pointer": "no target",
+      "changes": "none",
+      "outcome": "NULL",
+      "limits": "a softdirty-only difference might be ignored only if config macro nonzero",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A008",
+        "VM22-A010",
+        "VM22-A023",
+        "VM22-A079"
+      ]
+    },
+    {
+      "id": "VM22-M08",
+      "name": "both predecessor and successor merge",
+      "premise": "direct helper caller supplies adjacent prev and compatible next at request end",
+      "flags": "merge_prev=true,merge_next=true",
+      "pointer": "adjust_target=prev",
+      "changes": "prev starts at old start, ends next.end; adjust can unlink next",
+      "outcome": "return old prev if adjustment succeeds",
+      "limits": "ordinary stable first-call strict predecessor excludes adjacent prev; no runtime proof",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A004"
+      ]
+    },
+    {
+      "id": "VM22-M09",
+      "name": "next contains end but starts before end",
+      "premise": "next VMA contains end, with next.vm_start<end, and pgoff happens to match pgoff+pglen",
+      "flags": "merge_next can be true despite nonadjacent boundary",
+      "pointer": "next or uninitialized depending on prev",
+      "changes": "may expand/alter overlapping VMA",
+      "outcome": "conditional old VMA or unproven",
+      "limits": "vma_lookup point containment does not require next.vm_start==end; upstream may have removed overlap",
+      "anchors": [
+        "VM22-A010",
+        "VM22-A018",
+        "VM22-A021",
+        "VM22-A059",
+        "VM22-A060",
+        "VM22-A092"
+      ]
+    },
+    {
+      "id": "VM22-M10",
+      "name": "next begins exactly at requested end",
+      "premise": "next.vm_start=end; valid flags/file/close/pgoff compatibility",
+      "flags": "merge_next=true",
+      "pointer": "next chosen only if prev NULL; otherwise uninit unless prev merge true",
+      "changes": "adjust next if defined",
+      "outcome": "old VMA identity conditional",
+      "limits": "genuine adjacency must be established separately, vma_lookup only finds containing end",
+      "anchors": [
+        "VM22-A010",
+        "VM22-A018",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A059"
+      ]
+    },
+    {
+      "id": "VM22-M11",
+      "name": "next ends exactly at requested end",
+      "premise": "curr !=NULL and end==curr.vm_end, next from vma_lookup(mm,end)",
+      "flags": "no direct guarantee",
+      "pointer": "depends on query result",
+      "changes": "no guaranteed mutation",
+      "outcome": "may return NULL",
+      "limits": "end-exclusive current VMA cannot contain end; another VMA may start there",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A018",
+        "VM22-A058",
+        "VM22-A059"
+      ]
+    },
+    {
+      "id": "VM22-M12",
+      "name": "curr from strict-predecessor intersection",
+      "premise": "valid queried [prev?prev.end:0,end) with ordered VMA list",
+      "flags": "indeterminate beyond helper result",
+      "pointer": "curr assigned or NULL",
+      "changes": "selection not guaranteed nearest",
+      "outcome": "depends on branch",
+      "limits": "R21-S02 forbids treating valid list as resolution of initial NULL member expression",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A055",
+        "VM22-A057",
+        "VM22-A058"
+      ]
+    },
+    {
+      "id": "VM22-M13",
+      "name": "candidate with close op",
+      "premise": "VMA.vm_ops nonnull and vm_ops.close nonnull",
+      "flags": "helper returns false",
+      "pointer": "does not select this VMA on that side",
+      "changes": "none from that candidate",
+      "outcome": "NULL if other side not compatible",
+      "limits": "does not prove all swallowed next nodes lack close",
+      "anchors": [
+        "VM22-A008",
+        "VM22-A004",
+        "VM22-A093"
+      ]
+    },
+    {
+      "id": "VM22-M14",
+      "name": "same flags/file but different vm_page_prot",
+      "premise": "candidate flags (ignoring SOFTDIRTY) and file equal, no close, pg offset match; template differs",
+      "flags": "helper may return true",
+      "pointer": "old target if initialized",
+      "changes": "old pgprot retained",
+      "outcome": "conditional merge",
+      "limits": "actual producer for divergent template not proven; permission analysis in20 not replayed",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A008",
+        "VM22-A010",
+        "VM22-A030",
+        "VM22-A063"
+      ]
+    },
+    {
+      "id": "VM22-M15",
+      "name": "same flags/file but divergent vm_private_data",
+      "premise": "candidate has different private data but same tested fields",
+      "flags": "helper may return true",
+      "pointer": "old candidate if initialized",
+      "changes": "private_data retained",
+      "outcome": "conditional merge",
+      "limits": "unknown actual callback/producer; not a proven bug",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A008",
+        "VM22-A066"
+      ]
+    },
+    {
+      "id": "VM22-M16",
+      "name": "file pointer differs",
+      "premise": "candidate.vm_file != requested file pointer",
+      "flags": "helper false",
+      "pointer": "candidate rejected",
+      "changes": "none",
+      "outcome": "NULL or other side",
+      "limits": "pointer identity is actual check, not inode equality",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A008",
+        "VM22-A066"
+      ]
+    },
+    {
+      "id": "VM22-M17",
+      "name": "VM flags mismatch other than SOFTDIRTY",
+      "premise": "xor flags &~VM_SOFTDIRTY nonzero",
+      "flags": "helper false",
+      "pointer": "candidate rejected",
+      "changes": "none",
+      "outcome": "NULL or other side",
+      "limits": "VM_SOFTDIRTY macro may be zero under build config",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A079"
+      ]
+    },
+    {
+      "id": "VM22-M18",
+      "name": "SOFTDIRTY-only mismatch",
+      "premise": "flags differ only in VM_SOFTDIRTY and configured macro bit nonzero",
+      "flags": "compatibility flag test passes",
+      "pointer": "candidate further gated file/close/pgoff",
+      "changes": "retained flags OR SOFTDIRTY later",
+      "outcome": "conditional merge",
+      "limits": "if macro=0 cannot claim bit ignored; OR may be no-op",
+      "anchors": [
+        "VM22-A007",
+        "VM22-A041",
+        "VM22-A079"
+      ]
+    },
+    {
+      "id": "VM22-M19",
+      "name": "predecessor file page continuity mismatch",
+      "premise": "prev.vm_pgoff+vma_pages(prev) != requested pgoff",
+      "flags": "merge_prev=false",
+      "pointer": "prev not selected",
+      "changes": "none",
+      "outcome": "other side evaluated",
+      "limits": "unsigned overflow of summed pages is distinct boundary",
+      "anchors": [
+        "VM22-A012",
+        "VM22-A061",
+        "VM22-A091"
+      ]
+    },
+    {
+      "id": "VM22-M20",
+      "name": "successor page offset mismatch",
+      "premise": "next.vm_pgoff != requested pgoff+pglen",
+      "flags": "merge_next=false",
+      "pointer": "next not selected",
+      "changes": "none",
+      "outcome": "NULL or predecessor",
+      "limits": "does not compare byte adjacency, overflow of pgoff+pglen possible",
+      "anchors": [
+        "VM22-A010",
+        "VM22-A013",
+        "VM22-A092"
+      ]
+    },
+    {
+      "id": "VM22-M21",
+      "name": "target page offset changes despite unchanged start",
+      "premise": "selected prev vm_start=0x10000, vm_pgoff=1, start argument unchanged",
+      "flags": "merge_prev true hypothetical",
+      "pointer": "adjust_target=prev",
+      "changes": "vm_pgoff=1+((65536-1)>>12)=16 vs old1",
+      "outcome": "returns after adjustment if valid",
+      "limits": "extends VL14-F02; no actual file read mis-mapping claim",
+      "anchors": [
+        "VM22-A003",
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A066",
+        "VM22-A081"
+      ]
+    },
+    {
+      "id": "VM22-M22",
+      "name": "successor start expansion pgoff",
+      "premise": "prev NULL; next [0x30000,0x32000), next.pgoff10; requested [0x2f000,0x30000), pgoff9",
+      "flags": "merge_next true",
+      "pointer": "adjust_target=next",
+      "changes": "vm_pgoff=10+((0x2f000-10)>>12)=56",
+      "outcome": "conditional return old next",
+      "limits": "expect9 in continuous file-page model, but only a paper counterexample",
+      "anchors": [
+        "VM22-A003",
+        "VM22-A010",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A081"
+      ]
+    },
+    {
+      "id": "VM22-M23",
+      "name": "fully covered adjacent VMA",
+      "premise": "valid target with following VMA next.end <= merged end",
+      "flags": "merge chosen and adjust valid",
+      "pointer": "target unchanged identity",
+      "changes": "__vma_unlink_from_list(next) decrements list counters if valid membership",
+      "outcome": "can continue loop",
+      "limits": "no vm_area_free/fput/close inside selected adjustment; historical VL14-F03",
+      "anchors": [
+        "VM22-A004",
+        "VM22-A069",
+        "VM22-A070",
+        "VM22-A071",
+        "VM22-A072",
+        "VM22-A094"
+      ]
+    },
+    {
+      "id": "VM22-M24",
+      "name": "partially covered following VMA",
+      "premise": "valid target with next.start<merged end<next.end after full-node removals",
+      "flags": "merge chosen, adjust valid",
+      "pointer": "target and next",
+      "changes": "next.pgoff += (end-next.start)>>12, next.start=end",
+      "outcome": "adjust returns if valid",
+      "limits": "same physical page tables or file bytes not certified",
+      "anchors": [
+        "VM22-A005",
+        "VM22-A066"
+      ]
+    },
+    {
+      "id": "VM22-M25",
+      "name": "incompatible following VMA completely swallowed",
+      "premise": "merged end covers next.end but next not necessarily selected via compatibility",
+      "flags": "any valid merge into target",
+      "pointer": "target",
+      "changes": "adjust loop unlinks next regardless next file/flags/close",
+      "outcome": "conditional unlink",
+      "limits": "if upper mapping truly empty prior to merge this situation excluded; 21/14 do not prove global emptiness",
+      "anchors": [
+        "VM22-A004",
+        "VM22-A008",
+        "VM22-A069"
+      ]
+    },
+    {
+      "id": "VM22-M26",
+      "name": "initial merge success",
+      "premise": "simple_munmap_vma_range returned0; first merge returns valid old target",
+      "flags": "either helper path in defined execution",
+      "pointer": "vma=old returned object",
+      "changes": "no vm_area_alloc or call_mmap; OR VM_SOFTDIRTY at out",
+      "outcome": "returns addr",
+      "limits": "original file refs and pgprot retained; no new PTE",
+      "anchors": [
+        "VM22-A027",
+        "VM22-A028",
+        "VM22-A029",
+        "VM22-A031",
+        "VM22-A041"
+      ]
+    },
+    {
+      "id": "VM22-M27",
+      "name": "initial merge failure then new VMA",
+      "premise": "first merge returns NULL, kmem_cache alloc succeeds",
+      "flags": "merge_prev/next false or VM_SPECIAL",
+      "pointer": "new temp VMA",
+      "changes": "new vm_flags/pgprot/pgoff set",
+      "outcome": "proceeds to callback/shmem/anon setup",
+      "limits": "new VMA later may fail or be linked; old pre-unmap side effects remain bounded",
+      "anchors": [
+        "VM22-A023",
+        "VM22-A029",
+        "VM22-A030",
+        "VM22-A031"
+      ]
+    },
+    {
+      "id": "VM22-M28",
+      "name": "callback did not change vm_flags",
+      "premise": "new file VMA; call_mmap returns0; local vm_flags==vma.vm_flags",
+      "flags": "second merge skipped",
+      "pointer": "temp VMA remains",
+      "changes": "simple_vma_link called if no other errors",
+      "outcome": "returns addr if normal",
+      "limits": "not all file callbacks or resources audited",
+      "anchors": [
+        "VM22-A031",
+        "VM22-A034",
+        "VM22-A038",
+        "VM22-A039"
+      ]
+    },
+    {
+      "id": "VM22-M29",
+      "name": "callback changed flags, prev NULL",
+      "premise": "new file VMA, flags differ but prev==NULL",
+      "flags": "second merge guard false",
+      "pointer": "temp VMA kept",
+      "changes": "simple_vma_link normally",
+      "outcome": "normal address if no error",
+      "limits": "no claim of automatic vm_page_prot recompute; R20-S02",
+      "anchors": [
+        "VM22-A030",
+        "VM22-A031",
+        "VM22-A034",
+        "VM22-A039"
+      ]
+    },
+    {
+      "id": "VM22-M30",
+      "name": "callback changed flags, prev nonNULL and second merge returns old VMA",
+      "premise": "file callback succeeded; address unchanged; flags differ; prev pointer valid; second merge returned valid pointer",
+      "flags": "second merge true",
+      "pointer": "temp VMA then replaced by old merge",
+      "changes": "fput(temp.vm_file), vm_area_free(temp), vma=merge; skip simple_vma_link",
+      "outcome": "return addr if normal",
+      "limits": "fput identity may differ if callback modified vm_file, so no fixed net ref count",
+      "anchors": [
+        "VM22-A031",
+        "VM22-A033",
+        "VM22-A034",
+        "VM22-A035",
+        "VM22-A036",
+        "VM22-A037",
+        "VM22-A040",
+        "VM22-A082",
+        "VM22-A084",
+        "VM22-A087"
+      ]
+    },
+    {
+      "id": "VM22-M31",
+      "name": "callback flags changed but second merge NULL",
+      "premise": "file callback returns success; prev nonnull; attempted merge returns NULL",
+      "flags": "second merge false",
+      "pointer": "temp still used",
+      "changes": "local vm_flags= vma.vm_flags then VMA linked",
+      "outcome": "returns addr if normal",
+      "limits": "vm_page_prot initially set before callback; no automatic refresh in selected out",
+      "anchors": [
+        "VM22-A030",
+        "VM22-A034",
+        "VM22-A037",
+        "VM22-A038",
+        "VM22-A039",
+        "VM22-A041"
+      ]
+    },
+    {
+      "id": "VM22-M32",
+      "name": "merge result is old object, not new",
+      "premise": "either first merge or second merge succeeded",
+      "flags": "merge success",
+      "pointer": "previously allocated old VMA",
+      "changes": "vm_start/end/offset may mutate; existing vm_file/ops/prot retained",
+      "outcome": "out returns addr",
+      "limits": "not equal to a new mapping or new PTE; no runtime validation",
+      "anchors": [
+        "VM22-A025",
+        "VM22-A028",
+        "VM22-A030",
+        "VM22-A036",
+        "VM22-A037",
+        "VM22-A041"
+      ]
+    },
+    {
+      "id": "VM22-M33",
+      "name": "invalid target read",
+      "premise": "only-next with prev nonnull, adjust_target never assigned",
+      "flags": "merge_next true",
+      "pointer": "adjust_target indeterminate",
+      "changes": "if(adjust_target==NULL) reads it before call",
+      "outcome": "no deterministic return",
+      "limits": "must stop any subsequent symbolic side-effect proof for actual C path",
+      "anchors": [
+        "VM22-A014",
+        "VM22-A022",
+        "VM22-A024",
+        "VM22-A025"
+      ]
+    },
+    {
+      "id": "VM22-M34",
+      "name": "initial NULL iterator bound",
+      "premise": "find_vma_prev_to_addr starts for_each_vma_topdown with vma=NULL",
+      "flags": "even with otherwise ordered list",
+      "pointer": "prev/curr provenance conditional",
+      "changes": "&vma->list evaluated in mm_prev_vma",
+      "outcome": "not guaranteed defined execution",
+      "limits": "R21-S02 precondition, cannot treat sorted list alone as reachability proof",
+      "anchors": [
+        "VM22-A055",
+        "VM22-A077",
+        "VM22-A078",
+        "VM22-A053",
+        "VM22-A054"
+      ]
+    },
+    {
+      "id": "VM22-M35",
+      "name": "old-range removal then error",
+      "premise": "simple_munmap_vma_range did nontransactional partial effects, later allocation/callback fails",
+      "flags": "failed merge/new path",
+      "pointer": "temp may exist",
+      "changes": "error path fput/free or cleanup not necessarily restore old list",
+      "outcome": "returns error if reached",
+      "limits": "R14-S01 prevents claiming brk field not restored; no runtime observed",
+      "anchors": [
+        "VM22-A027",
+        "VM22-A029",
+        "VM22-A042",
+        "VM22-A043",
+        "VM22-A044",
+        "VM22-A045"
+      ]
+    },
+    {
+      "id": "VM22-M36",
+      "name": "post-merge SOFTDIRTY macro=0",
+      "premise": "config has VM_SOFTDIRTY defined0 and out reached",
+      "flags": "both merge branches",
+      "pointer": "old or temp VMA",
+      "changes": "OR zero has no bit effect",
+      "outcome": "returns addr if normal",
+      "limits": "macro expression not equivalent unconditional flag change",
+      "anchors": [
+        "VM22-A041",
+        "VM22-A079"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "VM22-X01",
+      "actor": "simple_munmap_vma_range",
+      "target": "prev pointer",
+      "action": "sets *pprev from strict vm_end<start query, then calls range removal",
+      "when": "before first merge, valid traversal",
+      "anchors": [
+        "VM22-A001",
+        "VM22-A055",
+        "VM22-A090"
+      ]
+    },
+    {
+      "id": "VM22-X02",
+      "actor": "simple_vma_merge",
+      "target": "curr local",
+      "action": "assign from find_vma_intersection(prev?prev->end:0,end)",
+      "when": "after VM_SPECIAL check",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A057"
+      ]
+    },
+    {
+      "id": "VM22-X03",
+      "actor": "simple_vma_merge",
+      "target": "next local",
+      "action": "vma_lookup(mm,end) or NULL",
+      "when": "curr==NULL or end==curr->vm_end; otherwise NULL",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A018",
+        "VM22-A059"
+      ]
+    },
+    {
+      "id": "VM22-X04",
+      "actor": "simple_vma_merge",
+      "target": "adjust_target local",
+      "action": "write prev and mark merge_prev",
+      "when": "prev nonnull, addr==prev.end and helper true",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A091"
+      ]
+    },
+    {
+      "id": "VM22-X05",
+      "actor": "simple_vma_merge",
+      "target": "vma_pgoff local",
+      "action": "assign prev->vm_pgoff but do not consume in selected adjust call",
+      "when": "prev helper succeeds",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A024",
+        "VM22-A025"
+      ]
+    },
+    {
+      "id": "VM22-X06",
+      "actor": "simple_vma_merge",
+      "target": "adjust_target local",
+      "action": "write next only if prev==NULL; no write if prev!=NULL on next-only case",
+      "when": "next helper true",
+      "anchors": [
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A024"
+      ]
+    },
+    {
+      "id": "VM22-X07",
+      "actor": "__simple_vma_adjust",
+      "target": "target boundary and pgoff",
+      "action": "start assignment, mixed-unit page offset, end assignment",
+      "when": "valid initialized adjust_target and normal return",
+      "anchors": [
+        "VM22-A002",
+        "VM22-A003",
+        "VM22-A066"
+      ]
+    },
+    {
+      "id": "VM22-X08",
+      "actor": "__simple_vma_adjust",
+      "target": "successor unlink",
+      "action": "repeatedly call __vma_unlink_from_list for fully covered next nodes",
+      "when": "valid object and end>=next.end",
+      "anchors": [
+        "VM22-A004",
+        "VM22-A069"
+      ]
+    },
+    {
+      "id": "VM22-X09",
+      "actor": "__simple_vma_adjust",
+      "target": "successor partial trim",
+      "action": "update next.vm_pgoff and vm_start",
+      "when": "valid next after full removal and end>next.vm_start",
+      "anchors": [
+        "VM22-A005",
+        "VM22-A066"
+      ]
+    },
+    {
+      "id": "VM22-X10",
+      "actor": "__vma_unlink_from_list",
+      "target": "mm map_count",
+      "action": "decrement map_count before checked deletion",
+      "when": "list membership loop normal termination",
+      "anchors": [
+        "VM22-A069",
+        "VM22-A070"
+      ]
+    },
+    {
+      "id": "VM22-X11",
+      "actor": "list_header_delete_node",
+      "target": "mm_mt.count/link",
+      "action": "if contains, list_del_init and count--, not vm_area_free",
+      "when": "valid member and linked header",
+      "anchors": [
+        "VM22-A071",
+        "VM22-A072",
+        "VM22-A094"
+      ]
+    },
+    {
+      "id": "VM22-X12",
+      "actor": "simple_mmap_region",
+      "target": "first merge return",
+      "action": "nonNULL merge skips vm_area_alloc/get_file/call_mmap and uses old VMA",
+      "when": "old removal returns and merge succeeds",
+      "anchors": [
+        "VM22-A027",
+        "VM22-A028",
+        "VM22-A029",
+        "VM22-A031"
+      ]
+    },
+    {
+      "id": "VM22-X13",
+      "actor": "simple_mmap_region",
+      "target": "temporary VMA allocation",
+      "action": "new VMA with new flags/pgprot/pgoff; file get_file and call_mmap",
+      "when": "first merge NULL and creation succeeds",
+      "anchors": [
+        "VM22-A029",
+        "VM22-A030",
+        "VM22-A031",
+        "VM22-A082"
+      ]
+    },
+    {
+      "id": "VM22-X14",
+      "actor": "simple_mmap_region",
+      "target": "second-merge temporary cleanup",
+      "action": "fput(temp->vm_file), vm_area_free(temp), vma=merge",
+      "when": "callback returned0, flags differ, prev nonnull, merge returns old pointer",
+      "anchors": [
+        "VM22-A034",
+        "VM22-A035",
+        "VM22-A036",
+        "VM22-A037",
+        "VM22-A084",
+        "VM22-A087"
+      ]
+    },
+    {
+      "id": "VM22-X15",
+      "actor": "simple_mmap_region",
+      "target": "new VMA linking",
+      "action": "simple_vma_link only if first and second merge do not jump out",
+      "when": "new VMA branch continues",
+      "anchors": [
+        "VM22-A038",
+        "VM22-A039",
+        "VM22-A089"
+      ]
+    },
+    {
+      "id": "VM22-X16",
+      "actor": "simple_mmap_region",
+      "target": "softdirty and returned addr",
+      "action": "vma.vm_flags |= VM_SOFTDIRTY (may OR zero); return addr",
+      "when": "out reached normally",
+      "anchors": [
+        "VM22-A041",
+        "VM22-A079"
+      ]
+    },
+    {
+      "id": "VM22-X17",
+      "actor": "error labels",
+      "target": "file resource and VMA",
+      "action": "on selected errors may call vm_ops.close/fput, simple_unmap_region, vm_area_free",
+      "when": "error control flow reaches labels with valid data",
+      "anchors": [
+        "VM22-A042",
+        "VM22-A043",
+        "VM22-A044",
+        "VM22-A045",
+        "VM22-A084",
+        "VM22-A085"
+      ]
+    }
+  ],
+  "identity_ledger": [
+    {
+      "object": "input_prev",
+      "producer": "simple_munmap_vma_range sets *pprev=find_vma_prev_to_addr(mm,start)",
+      "at": "before initial merge",
+      "invariant": "if valid/unmodified and produced by strict < predicate then prev.end<addr, so merge_prev adjacency predicate false",
+      "anchors": [
+        "VM22-A001",
+        "VM22-A055",
+        "VM22-A090",
+        "VM22-A019"
+      ]
+    },
+    {
+      "object": "curr",
+      "producer": "find_vma_intersection(mm, prev?prev->vm_end:0,end)",
+      "at": "after VM_SPECIAL gate",
+      "invariant": "bounded helper with strict prior; not necessarily nearest or even nonnull; NULL traversal precondition unclosed",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A055",
+        "VM22-A057"
+      ]
+    },
+    {
+      "object": "next",
+      "producer": "vma_lookup(mm,end) when curr==NULL or end==curr.end, else NULL",
+      "at": "after curr selection",
+      "invariant": "point containment at end, not proof next.start=end",
+      "anchors": [
+        "VM22-A017",
+        "VM22-A018",
+        "VM22-A059",
+        "VM22-A060"
+      ]
+    },
+    {
+      "object": "adjust_target",
+      "producer": "prev on merge_prev; next only if merge_next and !prev; may otherwise be indeterminate",
+      "at": "before fallback and adjust",
+      "invariant": "only-next & prev!=NULL reads uninitialized value",
+      "anchors": [
+        "VM22-A014",
+        "VM22-A020",
+        "VM22-A022",
+        "VM22-A024",
+        "VM22-A025"
+      ]
+    },
+    {
+      "object": "vma_pgoff_local",
+      "producer": "prev.vm_pgoff assigned on merge_prev",
+      "at": "prev-match side effect",
+      "invariant": "not an argument to __simple_vma_adjust; cannot substitute for target.vm_pgoff write",
+      "anchors": [
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A024",
+        "VM22-A003"
+      ]
+    },
+    {
+      "object": "target_fields",
+      "producer": "__simple_vma_adjust writes start,pgoff,end",
+      "at": "after valid initialized target",
+      "invariant": "pgoff uses mixed units and is updated even when start unchanged",
+      "anchors": [
+        "VM22-A002",
+        "VM22-A003",
+        "VM22-A066",
+        "VM22-A081"
+      ]
+    },
+    {
+      "object": "temp_vma",
+      "producer": "vm_area_alloc after initial merge NULL",
+      "at": "new-file call_mmap path",
+      "invariant": "second merge success frees temp and replaces local vma with old merge object",
+      "anchors": [
+        "VM22-A029",
+        "VM22-A030",
+        "VM22-A031",
+        "VM22-A036",
+        "VM22-A037",
+        "VM22-A087"
+      ]
+    },
+    {
+      "object": "removed_successor",
+      "producer": "vma_next_vma(target) loop inside adjust",
+      "at": "full coverage",
+      "invariant": "decrement list accounting, no paired free/fput/close in this local body",
+      "anchors": [
+        "VM22-A004",
+        "VM22-A069",
+        "VM22-A071",
+        "VM22-A094"
+      ]
+    },
+    {
+      "object": "return",
+      "producer": "simple_mmap_region::out",
+      "at": "after successful merge/link",
+      "invariant": "returns requested addr, not pointer identity or PTE success",
+      "anchors": [
+        "VM22-A028",
+        "VM22-A037",
+        "VM22-A041"
+      ]
+    }
+  ],
+  "bounded_math": [
+    {
+      "label": "prev extension changes pgoff without changing start",
+      "premise": "64-bit ulong, PAGE_SHIFT12, prev=[0x10000,0x12000), vm_pgoff1; req=[0x12000,0x13000), pgoff3; direct helper call",
+      "before": 1,
+      "after": 16,
+      "desired_if_unmoved": 1,
+      "root": "VL14-F02",
+      "anchors": [
+        "VM22-A003",
+        "VM22-A012",
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A061",
+        "VM22-A066",
+        "VM22-A081"
+      ]
+    },
+    {
+      "label": "next-only expansion pgoff",
+      "premise": "64-bit ulong, next=[0x30000,0x32000), vm_pgoff10; req=[0x2f000,0x30000), pgoff9; prev=NULL and valid next lookup",
+      "before": 10,
+      "after": 56,
+      "expected_for_contiguous_mapping": 9,
+      "root": "VL14-F02",
+      "anchors": [
+        "VM22-A003",
+        "VM22-A010",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A061",
+        "VM22-A066",
+        "VM22-A081"
+      ]
+    },
+    {
+      "label": "no adjacency check in next compatibility",
+      "premise": "next.vm_start < requested_end < next.vm_end; lookup finds next by containing end; page offsets happen to match",
+      "next_check": "next.vm_pgoff == request.pgoff + pglen",
+      "missing_predicate": "next.vm_start == requested_end",
+      "anchors": [
+        "VM22-A010",
+        "VM22-A018",
+        "VM22-A021",
+        "VM22-A059",
+        "VM22-A092"
+      ]
+    },
+    {
+      "label": "strict predecessor vs adjacency",
+      "premise": "prev from find_vma_prev_to_addr unchanged",
+      "producer_predicate": "prev.vm_end < addr",
+      "merge_predicate": "addr == prev.vm_end",
+      "both_true": false,
+      "anchors": [
+        "VM22-A001",
+        "VM22-A019",
+        "VM22-A055",
+        "VM22-A090"
+      ]
+    }
+  ],
+  "counts": {
+    "anchors": 94,
+    "nodes": 58,
+    "edges": 59,
+    "scenarios": 36,
+    "effects": 17,
+    "identities": 9,
+    "math": 4
+  },
+  "consumption": [
+    "R21-S01/S02/S03 initial NULL and strict predecessor caveats; do not assume selected path simply because code defined",
+    "R20-S02/S04 after callback second merge replaces the object, does not refresh old object's protection automatically",
+    "R14-S01/S02 and VL14-F01/F02/F03/F05 preserved; new path evidence is not new root cause",
+    "Objects, references, list count, VMA fields, PTE and CPU access are separate claims"
+  ],
+  "limits": [
+    "Static text only, no compilation/preprocessing/execution or runtime leak",
+    "Uninitialized adjust_target is not a numeric or stable pointer that can be modeled after UB",
+    "Conditional local direct-call predecessor case is not verified normal selected producer",
+    "VM_SOFTDIRTY may be zero, and return addr is not proof of VMA/PTE correctness",
+    "No branch writes except the authorized batch six-file delivery"
+  ]
+}

@@ -1,0 +1,2378 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PERCPU-BOOTSTRAP-86",
+  "record_type": "percpu_first_chunk_cpu_offsets_boot_GDT_GS_static_facts",
+  "produced_by": "GPT-6 (visible model family; backend unverified)",
+  "model_per_owner": "GPT-6 + Extra (Owner choice)",
+  "date": "2026-11-14",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW_AFTER_FORMAL_PUBLICATION",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "build_execution": "NOT_RUN",
+  "open_questions": [
+    "PC86-U01",
+    "PC86-U02",
+    "PC86-U03",
+    "PC86-U04",
+    "PC86-U05",
+    "PC86-U06",
+    "PC86-U07",
+    "PC86-U08",
+    "PC86-U09"
+  ],
+  "source_pin_short12": "a039d9803ade",
+  "mainline_release_short12": "d2edb61330d9",
+  "execution_parent_short12": "2489ea8e6963",
+  "G00": {
+    "result": "PASS",
+    "lead_direct": "d2edb61330d9",
+    "exec_direct": "2489ea8e6963",
+    "master_direct": "e8e60cd19540",
+    "time_direct": "a039d9803ade",
+    "pr16": "OPEN_UNMERGED",
+    "pr17": "OPEN_DRAFT_UNMERGED",
+    "batch86_dir_preflight": "EXPECTED_404",
+    "formal_marker_before": 0,
+    "older_85_comment": 6869453153,
+    "read_channel": "connector",
+    "write_before_gate": "NONE"
+  },
+  "status_of_prior": {
+    "R84_01": "CLOSED_DOCUMENTATION_ONLY_BY_C06",
+    "batch84": "COMPOSITE_PASS_PENDING_LOCAL",
+    "batch85": "PASS_PENDING_LOCAL_WITH_R85_S01_S02_S03",
+    "batch86_D00": "NOT_REQUIRED",
+    "prior_artifacts_modified": false,
+    "original_findings_recounted_as_new": 0
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E001",
+        "PC86-E002",
+        "PC86-E003",
+        "PC86-E004",
+        "PC86-E005"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/mm/misc/percpu.c",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E006",
+        "PC86-E007",
+        "PC86-E008",
+        "PC86-E009",
+        "PC86-E010",
+        "PC86-E013",
+        "PC86-E014",
+        "PC86-E015",
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E018",
+        "PC86-E019",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/include/linux/smp/percpu_chunk.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E011",
+        "PC86-E012"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.c",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E023",
+        "PC86-E024",
+        "PC86-E025"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/log2.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E026",
+        "PC86-E027",
+        "PC86-E028"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/include/linux/smp/percpu.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E031"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E032",
+        "PC86-E033",
+        "PC86-E034"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E035",
+        "PC86-E036"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/threads.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E037"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E038"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E039",
+        "PC86-E040",
+        "PC86-E041",
+        "PC86-E042",
+        "PC86-E059",
+        "PC86-E060",
+        "PC86-E061"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E043",
+        "PC86-E044",
+        "PC86-E045",
+        "PC86-E046",
+        "PC86-E047",
+        "PC86-E048",
+        "PC86-E049",
+        "PC86-E051",
+        "PC86-E052",
+        "PC86-E053"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/include/linux/compiler/compiler.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E050"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/current.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E054",
+        "PC86-E057"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/smp/percpu_area.c",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E055",
+        "PC86-E056",
+        "PC86-E070"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E058"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/common.c",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E062",
+        "PC86-E063"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/desc_arch.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E064",
+        "PC86-E065",
+        "PC86-E066",
+        "PC86-E067"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/desc_const_arch.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E068",
+        "PC86-E069"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/insns/x86msr_const.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E071"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/insns/x86msr.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E072",
+        "PC86-E073"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/insns/fsgsbase.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E074",
+        "PC86-E075"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/head_64.S",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [
+        "PC86-E076",
+        "PC86-E077"
+      ],
+      "extent": "fixed-source file fetched and bounded relevant definitions extracted; no unscoped exhaustive code survey"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/sections.h",
+      "pin": "time@a039d9803ade",
+      "read_channel": "GitHub_connector",
+      "read_class": "NEW_READ_CURRENT_C06b_TURN",
+      "quote_ids": [],
+      "extent": "read to distinguish declarations of __per_cpu_load/start/end from actual definitions; no [VERIFIED] anchor, because extern declarations alone cannot establish storage"
+    }
+  ],
+  "source_scope": {
+    "fixed_time_paths_used": 25,
+    "soft_limit": 24,
+    "overage": 1,
+    "mandatory_options_flags_direct_read": true,
+    "unmatched_40hex_expected": 0,
+    "soft_overage_justification": "25th direct near dependency is asm-generic/sections.h, whose extern symbols were inspected to distinguish declarations from linker storage; deliberately not assigned any P2 VERIFIED definition. All other 24 sources provide bounded actual anchors; not a full tree survey."
+  },
+  "reading_account": {
+    "NEW_READ_FULL_THIS_TURN": [
+      "agent-workspace/lead/MYOS2-LEAD-002/122-user-percpu-bootstrap-contract.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-BOOT-BUILD-CONTRACT-85-review.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-EARLY-ROOT-HANDOFF-84-DOC-CLOSURE-review.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-14-boot-build85-reviewed-percpu86-ready.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md",
+      "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+      "PR17_comment:6869453153",
+      "mykernel/scripts/options_flags.cmake@a039d9803ade",
+      "mykernel/scripts/options_flags.cmake@e8e60cd19540",
+      "mykernel/debug/panic.c@a039d9803ade",
+      "mykernel/debug/panic.c@e8e60cd19540",
+      "agent-workspace/conventions.md@d2edb61330d9"
+    ],
+    "NEW_READ_THIS_TURN_BOUNDED_FIXED_SOURCE": [
+      "mykernel/arch/x86_64/kernel.lds",
+      "mykernel/mm/misc/percpu.c",
+      "mykernel/include/linux/smp/percpu_chunk.h",
+      "mykernel/mm/early/memblock.c",
+      "mykernel/include/linux/kernel/log2.h",
+      "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "mykernel/include/linux/smp/percpu.h",
+      "mykernel/arch/x86_64/myos/pre_init.c",
+      "mykernel/include/linux/kernel/cpumask.h",
+      "mykernel/include/linux/kernel/threads.h",
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "mykernel/arch/x86_64/include/asm/percpu.h",
+      "mykernel/include/linux/compiler/compiler.h",
+      "mykernel/arch/x86_64/include/asm/current.h",
+      "mykernel/arch/x86_64/smp/percpu_area.c",
+      "mykernel/init/main.c",
+      "mykernel/arch/x86_64/kernel/cpu/common.c",
+      "mykernel/arch/x86_64/processor/desc_arch.h",
+      "mykernel/arch/x86_64/processor/desc_const_arch.h",
+      "mykernel/arch/x86_64/insns/x86msr_const.h",
+      "mykernel/arch/x86_64/insns/x86msr.h",
+      "mykernel/arch/x86_64/insns/fsgsbase.h",
+      "mykernel/arch/x86_64/kernel/head_64.S",
+      "mykernel/include/linux/kernel/asm-generic/sections.h (context-only extern; no definition anchor)"
+    ],
+    "NEW_READ_THIS_TURN_PARTIAL": [
+      "CORE-USER-BOOT-MEMORY-MAP-80-review.md@d2edb61330d9: opening/front matter plus R80-S01/S02/S03 relevant visible part only; not certified complete"
+    ],
+    "SAME_ACTIVE_C06b_CONVERSATION_READ_REUSED": [
+      "119 receipt and Mnemosyne guidance from 84 same active C06b source objects; no new receive ritual",
+      "Nine MyOS2 rules read by CHAT-EXEC-11 in original 84 in this same conversation; 63/79/protocol were additionally freshly fully read now",
+      "Original six pieces batch84 and six pieces batch85 and their fixed-source evidence from this same conversation, not new full re-read now",
+      "R84-S01/S02/S03, R85-S01/S02/S03 as fully present in current fixed receipts; R81/R82/R83 bounded supplements from earlier valid session reading, only to the extent actually read"
+    ],
+    "NOT_READ": [
+      "full dynamic perCPU allocator or reclaim implementation",
+      "all later nr_cpu_ids writers and full tag parser",
+      "complete AP/hotplug/SMP and GDT/TSS/context switch paths",
+      "compiled ELF/link map and any generated current kernel output",
+      "CPU register/feature live state",
+      "full local P9 mechanical harness; external hardware manual"
+    ],
+    "source_qualifications": [
+      "Never import C06 Pro reviewer historical read qualification",
+      "85 facts.not_inherited_from_mainline=false is conflicting author metadata per R85-S03; no reinterpretation as actual inherited read",
+      "Read status split explicitly NEW/REUSED/UNREAD; no fabricated Mnemosyne reload or background timeline",
+      "R85-S01 parser double-space correction retained as history; not repeated as a new topic",
+      "R85-S02 __pic__/CONFIG conditional and tool platform scope maintained",
+      "Linked symbol declaration read has no strong P2 quote: actual __per_cpu_load/start/end definitions anchored only in kernel.lds."
+    ]
+  },
+  "linkage_and_size_equations": {
+    "L": "linked __per_cpu_load",
+    "T": "linked __per_cpu_start",
+    "E": "linked __per_cpu_end",
+    "B": "runtime pcpu_base_addr",
+    "N": "runtime nr_cpu_ids",
+    "S": "(size_t)(E-T) under representable valid link-symbol difference",
+    "R": "2*PAGE_SIZE; if PAGE_SIZE=4096 then 8192 bytes",
+    "Y": "0 size_t dynamic bytes",
+    "SUM": "S+R+Y under no overflow",
+    "C": "roundup_pow_of_two(SUM) within the macro's valid shift/width domain",
+    "first_data_bytes": "N*C with valid size_t multiplication",
+    "second_data_bytes": "N*C with valid size_t multiplication",
+    "offset_array_request_bytes": "N*sizeof(void*)",
+    "per_cpu_offset_array_capacity": "NR_CPUS (=CONFIG_NR_CPUS at actual compile time)",
+    "unit_offsets": "U_i=i*S (bytes)",
+    "delta": "D=(ulong)B-(ulong)T (unsigned byte-address difference)",
+    "published_offset": "O_i=D+U_i",
+    "per_cpu_pointer": "(V+O_i) as pointer, where V is linked perCPU symbol address",
+    "current_pointer": "(V+rdgsbase()) as pointer",
+    "boot_percpu_offset": "(ulong)L",
+    "CPU0_GS_write_source": "wrmsrl(MSR_GS_BASE,O_0) after load_direct_gdt(0)",
+    "storage_types": {
+      "S": "size_t",
+      "R": "size_t",
+      "Y": "size_t",
+      "SUM": "size_t",
+      "C": "size_t",
+      "free_bytes": "int",
+      "free_offset": "int",
+      "pcpu_unit_offsets": "const ulong *",
+      "published_offset": "unsigned long array",
+      "nr_cpu_ids": "unsigned",
+      "offset_alloc_element": "sizeof(void *)"
+    }
+  },
+  "failure_prefixes": [
+    {
+      "id": "A_FAIL_META_FIRST",
+      "condition": "first metadata DMA32 allocation returns NULL",
+      "last_valid_source": "early helper returns NULL",
+      "first_unproved": "pcpu_first_chunk->data dereference",
+      "evidence_ids": [
+        "PC86-E013",
+        "PC86-E018"
+      ]
+    },
+    {
+      "id": "A_FAIL_DATA_FIRST",
+      "condition": "metadata allocated, first data DMA32 returns NULL, S>0",
+      "last_valid_source": "list insertion done with chunk->data NULL if helper proceeds",
+      "first_unproved": "memcpy destination validity",
+      "evidence_ids": [
+        "PC86-E014",
+        "PC86-E015",
+        "PC86-E020"
+      ]
+    },
+    {
+      "id": "A_FAIL_OFFSET_ARRAY",
+      "condition": "first chunk/copy done, offset array NULL and N>0",
+      "last_valid_source": "pcpu_unit_offsets pointer assigned NULL",
+      "first_unproved": "((ulong *)pcpu_unit_offsets)[0]",
+      "evidence_ids": [
+        "PC86-E021",
+        "PC86-E025"
+      ]
+    },
+    {
+      "id": "A_FAIL_RESERVED",
+      "condition": "second metadata DMA32 allocation returns NULL",
+      "last_valid_source": "pcpu_reserved_chunk assigned NULL",
+      "first_unproved": "pcpu_reserved_chunk->base_addr",
+      "evidence_ids": [
+        "PC86-E022",
+        "PC86-E013"
+      ]
+    }
+  ],
+  "matrices": {
+    "template_and_storage_matrix": [
+      {
+        "id": "PC86-A-T01",
+        "source_stage": "link script",
+        "subject": "template input",
+        "inputs": "__per_cpu_load assigned before .data..percpu; __per_cpu_start/end within output section",
+        "established_static_conclusion": "three link symbols are textually distinct; section has alignment/input rules",
+        "first_unproven_gate": "actual link map and whether load/start addresses coincide",
+        "evidence_ids": [
+          "PC86-E001",
+          "PC86-E002",
+          "PC86-E003",
+          "PC86-E004"
+        ]
+      },
+      {
+        "id": "PC86-A-T02",
+        "source_stage": "size expression",
+        "subject": "static_size",
+        "inputs": "S=(size_t)(__per_cpu_end-__per_cpu_start), under valid link-symbol difference",
+        "established_static_conclusion": "template length is S bytes; source pointer still &__per_cpu_load",
+        "first_unproven_gate": "linker extent and legal pointer difference not observed",
+        "evidence_ids": [
+          "PC86-E016",
+          "PC86-E001",
+          "PC86-E004"
+        ]
+      },
+      {
+        "id": "PC86-A-T03",
+        "source_stage": "reserved/dynamic",
+        "subject": "size_sum",
+        "inputs": "reserved=2*PAGE_SIZE, dyn=0, sum=S+reserved",
+        "established_static_conclusion": "under PAGE_SIZE=4096 and no overflow reserved=8192 bytes",
+        "first_unproven_gate": "actual configuration/C arithmetic overflow",
+        "evidence_ids": [
+          "PC86-E016",
+          "PC86-E017",
+          "PC86-E029",
+          "PC86-E030"
+        ]
+      },
+      {
+        "id": "PC86-A-T04",
+        "source_stage": "allocation quantum",
+        "subject": "chunk_size",
+        "inputs": "C=roundup_pow_of_two(size_sum)",
+        "established_static_conclusion": "C is a rounded chunk-size value separate from S and sum",
+        "first_unproven_gate": "size_sum valid range and any shift-width invalid cases",
+        "evidence_ids": [
+          "PC86-E017",
+          "PC86-E026",
+          "PC86-E027",
+          "PC86-E028"
+        ]
+      },
+      {
+        "id": "PC86-A-T05",
+        "source_stage": "per-CPU template",
+        "subject": "memcpy source/dest",
+        "inputs": "memcpy(pcpu_first_chunk->data,&__per_cpu_load,S) once in scoped setup function",
+        "established_static_conclusion": "only one explicit S-byte copy; not a per-cpu loop",
+        "first_unproven_gate": "actual source availability, other writers, successful memory",
+        "evidence_ids": [
+          "PC86-E020",
+          "PC86-E001",
+          "PC86-E002"
+        ]
+      },
+      {
+        "id": "PC86-A-T06",
+        "source_stage": "input section examples",
+        "subject": "hot/GDT template",
+        "inputs": "pcpu_hot initializer has nonzero current_task; GDT template holds entries conditional on CONFIG",
+        "established_static_conclusion": "the linked template can contain initialized nonzero bytes",
+        "first_unproven_gate": "actual emitted .data..percpu ELF and effective GDT configuration",
+        "evidence_ids": [
+          "PC86-E055",
+          "PC86-E070",
+          "PC86-E003"
+        ]
+      },
+      {
+        "id": "PC86-A-T07",
+        "source_stage": "chunk object",
+        "subject": "fields",
+        "inputs": "simple_pcpu_chunk has int free_bytes/free_offset and void* data/base_addr",
+        "established_static_conclusion": "C size_t metadata is stored into narrower int members",
+        "first_unproven_gate": "actual ABI sizes and conversion results for concrete linked size",
+        "evidence_ids": [
+          "PC86-E011",
+          "PC86-E012",
+          "PC86-E019"
+        ]
+      },
+      {
+        "id": "PC86-A-T08",
+        "source_stage": "capacity comparison",
+        "subject": "N*chunk_size vs unit offsets",
+        "inputs": "early data alloc uses N*C, later pcpu_unit_offsets[i]=i*S",
+        "established_static_conclusion": "allocation span, logical unit step and template extent are three distinct quantities",
+        "first_unproven_gate": "no ABI/linker N/S value, address disjointness not observed",
+        "evidence_ids": [
+          "PC86-E014",
+          "PC86-E021"
+        ]
+      }
+    ],
+    "first_chunk_allocation_and_publication_matrix": [
+      {
+        "id": "PC86-A-P01",
+        "source_stage": "early chunk metadata",
+        "subject": "first call",
+        "inputs": "myos_memblock_alloc_DMA32(sizeof(*chunk),sizeof(*chunk))",
+        "established_static_conclusion": "first metadata has size/alignment sizeof struct; NULL explicitly tested",
+        "first_unproven_gate": "memblock success & alignment constraints unknown",
+        "evidence_ids": [
+          "PC86-E013",
+          "PC86-E024"
+        ]
+      },
+      {
+        "id": "PC86-A-P02",
+        "source_stage": "early chunk data",
+        "subject": "within each early helper",
+        "inputs": "myos_memblock_alloc_DMA32(N*C,C)",
+        "established_static_conclusion": "backing memory requested for N*C and aligned to C; pointer not locally null-checked",
+        "first_unproven_gate": "size product overflow, zero size and actual allocator return",
+        "evidence_ids": [
+          "PC86-E014",
+          "PC86-E015",
+          "PC86-E024"
+        ]
+      },
+      {
+        "id": "PC86-A-P03",
+        "source_stage": "list publication",
+        "subject": "early helper",
+        "inputs": "INIT_LIST_HEAD then list_header_add_to_tail before helper return",
+        "established_static_conclusion": "list insertion appears without data pointer success check",
+        "first_unproven_gate": "list helper implementation/valid pointer not fully audited",
+        "evidence_ids": [
+          "PC86-E014",
+          "PC86-E015"
+        ]
+      },
+      {
+        "id": "PC86-A-P04",
+        "source_stage": "first global",
+        "subject": "setup first chunk",
+        "inputs": "pcpu_first_chunk=early_pcpu_create_chunk; then pcpu_base_addr=pcpu_first_chunk->data",
+        "established_static_conclusion": "global base stores first chunk's data pointer if helper returned a valid object",
+        "first_unproven_gate": "first helper may return NULL; no caller guard",
+        "evidence_ids": [
+          "PC86-E018",
+          "PC86-E007",
+          "PC86-E009"
+        ]
+      },
+      {
+        "id": "PC86-A-P05",
+        "source_stage": "initial occupancy",
+        "subject": "first chunk metadata",
+        "inputs": "free_bytes=C-sum; free_offset=sum; base_addr=0",
+        "established_static_conclusion": "metadata stored after successful first create and before memcpy",
+        "first_unproven_gate": "int conversion, negative free quantity and overall layout proof",
+        "evidence_ids": [
+          "PC86-E019",
+          "PC86-E011",
+          "PC86-E012"
+        ]
+      },
+      {
+        "id": "PC86-A-P06",
+        "source_stage": "CPU offset array",
+        "subject": "normal zone",
+        "inputs": "pcpu_unit_offsets=myos_memblock_alloc_normal(N*sizeof(void*),8)",
+        "established_static_conclusion": "requested offset storage is N pointer-size bytes",
+        "first_unproven_gate": "NULL allocation, ABI equality sizeof(void*) vs ulong not checked",
+        "evidence_ids": [
+          "PC86-E021",
+          "PC86-E025",
+          "PC86-E008"
+        ]
+      },
+      {
+        "id": "PC86-A-P07",
+        "source_stage": "reserved chunk",
+        "subject": "second helper call",
+        "inputs": "pcpu_reserved_chunk=early_pcpu_create_chunk(); base_addr=data-(ulong)pcpu_base_addr",
+        "established_static_conclusion": "reserved chunk uses separately allocated data, not simply a reserved subrange of first chunk in this helper",
+        "first_unproven_gate": "second helper failure and pointer arithmetic conditions unresolved",
+        "evidence_ids": [
+          "PC86-E022",
+          "PC86-E010",
+          "PC86-E012"
+        ]
+      },
+      {
+        "id": "PC86-A-P08",
+        "source_stage": "allocator zeroing",
+        "subject": "DMA32/normal",
+        "inputs": "if(ptr) memset(ptr,0,size) before return",
+        "established_static_conclusion": "successful wrapper return is conditional zeroed bytes",
+        "first_unproven_gate": "mapping and physical-to-virtual memory accessibility not proven",
+        "evidence_ids": [
+          "PC86-E024",
+          "PC86-E025",
+          "PC86-E023"
+        ]
+      }
+    ],
+    "initialization_and_failure_matrix": [
+      {
+        "id": "PC86-A-FL01",
+        "source_stage": "metadata returns NULL",
+        "subject": "first call",
+        "inputs": "early helper if(!chunk) return NULL, caller immediately dereferences",
+        "established_static_conclusion": "proof of subsequent normal setup stops at pcpu_first_chunk->data",
+        "first_unproven_gate": "no actual allocator failure observed",
+        "evidence_ids": [
+          "PC86-E013",
+          "PC86-E018"
+        ]
+      },
+      {
+        "id": "PC86-A-FL02",
+        "source_stage": "data returns NULL",
+        "subject": "first metadata succeeds",
+        "inputs": "early helper publishes chunk even if chunk->data is NULL",
+        "established_static_conclusion": "later memcpy with S>0 cannot be certified; execution after invalid memory access not inferred",
+        "first_unproven_gate": "memblock return and memory validity unknown",
+        "evidence_ids": [
+          "PC86-E014",
+          "PC86-E015",
+          "PC86-E020"
+        ]
+      },
+      {
+        "id": "PC86-A-FL03",
+        "source_stage": "offset array returns NULL",
+        "subject": "N>0, first chunk valid",
+        "inputs": "setup writes ((ulong*)pcpu_unit_offsets)[i] without local guard",
+        "established_static_conclusion": "normal successful initialization cannot be certified",
+        "first_unproven_gate": "returned pointer/array storage unknown",
+        "evidence_ids": [
+          "PC86-E021",
+          "PC86-E025"
+        ]
+      },
+      {
+        "id": "PC86-A-FL04",
+        "source_stage": "reserved metadata returns NULL",
+        "subject": "first chunk and offsets valid",
+        "inputs": "caller unconditionally computes pcpu_reserved_chunk->base_addr",
+        "established_static_conclusion": "completion after a NULL reserved chunk is unproven",
+        "first_unproven_gate": "second call failure was not executed",
+        "evidence_ids": [
+          "PC86-E022",
+          "PC86-E013"
+        ]
+      },
+      {
+        "id": "PC86-A-FL05",
+        "source_stage": "size_t -> int",
+        "subject": "C and sum may exceed INT representable range",
+        "inputs": "int free_offset/free_bytes receive size_t expressions",
+        "established_static_conclusion": "narrowed/truncated/sign-changed metadata is a conditional risk, not a tested result",
+        "first_unproven_gate": "actual ABI and valid linked extent unknown",
+        "evidence_ids": [
+          "PC86-E011",
+          "PC86-E019"
+        ]
+      },
+      {
+        "id": "PC86-A-FL06",
+        "source_stage": "roundup overflow input",
+        "subject": "sum is 0 or exceeds maximum representable power-of-two",
+        "inputs": "macro has n==1 and __roundup_pow_of_two(n) paths, shift result",
+        "established_static_conclusion": "cannot use arbitrary precision rounding without input and shift preconditions",
+        "first_unproven_gate": "real compiler interpretation / runtime n values unknown",
+        "evidence_ids": [
+          "PC86-E017",
+          "PC86-E026",
+          "PC86-E027",
+          "PC86-E028"
+        ]
+      },
+      {
+        "id": "PC86-A-FL07",
+        "source_stage": "template copy source mismatch",
+        "subject": "__per_cpu_load differs from __per_cpu_start",
+        "inputs": "copy length=end-start but begins at load marker",
+        "established_static_conclusion": "exact intended source window may not match entire section without linker equality",
+        "first_unproven_gate": "actual linked section VMA/LMA unresolved",
+        "evidence_ids": [
+          "PC86-E001",
+          "PC86-E002",
+          "PC86-E004",
+          "PC86-E020"
+        ]
+      }
+    ],
+    "cpu_index_and_capacity_matrix": [
+      {
+        "id": "PC86-B-I01",
+        "subject": "CPU count object",
+        "inputs": "unsigned nr_cpu_ids; get_smpinfo sets core_num; parse_tag handles MYOS2 CPU_TOPO",
+        "established_static_conclusion": "one scoped producer/consumer link, no exhaustive writers",
+        "first_unproven_gate": "tag length/validity and all initialization paths not verified",
+        "evidence_ids": [
+          "PC86-E032",
+          "PC86-E033",
+          "PC86-E034"
+        ]
+      },
+      {
+        "id": "PC86-B-I02",
+        "subject": "possible CPU iteration",
+        "inputs": "for_each_possible_cpu -> for_each_cpu -> for int(cpu)=0;cpu<nr_cpu_ids",
+        "established_static_conclusion": "contiguous 0..N-1 loop, not a sparse cpumask check",
+        "first_unproven_gate": "N and entry preconditions unknown",
+        "evidence_ids": [
+          "PC86-E035",
+          "PC86-E036"
+        ]
+      },
+      {
+        "id": "PC86-B-I03",
+        "subject": "fixed array limit",
+        "inputs": "__per_cpu_offset[NR_CPUS], NR_CPUS=CONFIG_NR_CPUS; source CFLAGS string -DCONFIG_NR_CPUS=256",
+        "established_static_conclusion": "array length is fixed at selected compile-time CONFIG, distinct from runtime N",
+        "first_unproven_gate": "actual config/other defines and N<=NR_CPUS not verified",
+        "evidence_ids": [
+          "PC86-E037",
+          "PC86-E038",
+          "PC86-E040"
+        ]
+      },
+      {
+        "id": "PC86-B-I04",
+        "subject": "first N offset alloc",
+        "inputs": "nr_cpu_ids * sizeof(void *) in normal memblock",
+        "established_static_conclusion": "storage uses pointer-byte width, later values stored as ulong",
+        "first_unproven_gate": "sizeof(void*)==sizeof(ulong) must be an ABI assumption",
+        "evidence_ids": [
+          "PC86-E021",
+          "PC86-E025"
+        ]
+      },
+      {
+        "id": "PC86-B-I05",
+        "subject": "loop index",
+        "inputs": "int cpu loop despite outer uint cpu declaration in setup function",
+        "established_static_conclusion": "source macro creates a local int-style declarator; N may exceed signed range",
+        "first_unproven_gate": "actual preprocessing/C declaration semantics not executed",
+        "evidence_ids": [
+          "PC86-E035",
+          "PC86-E041"
+        ]
+      },
+      {
+        "id": "PC86-B-I06",
+        "subject": "zero/large count",
+        "inputs": "N=0 produces no for-loop iterations; N>bound may reach __per_cpu_offset out-of-bounds",
+        "established_static_conclusion": "conditional CPU0 branch absent if N=0; capacity risk if N>NR_CPUS",
+        "first_unproven_gate": "allocator and parser success not attested",
+        "evidence_ids": [
+          "PC86-E035",
+          "PC86-E036",
+          "PC86-E040",
+          "PC86-E042"
+        ]
+      }
+    ],
+    "offset_address_equation_matrix": [
+      {
+        "id": "PC86-B-E01",
+        "subject": "unit-step equation",
+        "inputs": "pcpu_unit_offsets[i]=i*static_size",
+        "established_static_conclusion": "U_i=i*S bytes, not i*C; source of write is allocated ulong array",
+        "first_unproven_gate": "multiplication overflow, pointer width, valid N",
+        "evidence_ids": [
+          "PC86-E021",
+          "PC86-E008"
+        ]
+      },
+      {
+        "id": "PC86-B-E02",
+        "subject": "delta equation",
+        "inputs": "delta=(ulong)pcpu_base_addr-(ulong)__per_cpu_start",
+        "established_static_conclusion": "D=B-T, difference of C pointer representations cast to unsigned long",
+        "first_unproven_gate": "actual valid link/runtime addresses, overflow and mapping",
+        "evidence_ids": [
+          "PC86-E041",
+          "PC86-E002",
+          "PC86-E007"
+        ]
+      },
+      {
+        "id": "PC86-B-E03",
+        "subject": "public offset",
+        "inputs": "__per_cpu_offset[i]=delta+pcpu_unit_offsets[i]",
+        "established_static_conclusion": "O_i=D+i*S for each visited i",
+        "first_unproven_gate": "N<=NR_CPUS, no unsigned wrap, allocation success",
+        "evidence_ids": [
+          "PC86-E042",
+          "PC86-E043",
+          "PC86-E040"
+        ]
+      },
+      {
+        "id": "PC86-B-E04",
+        "subject": "ordinary per_cpu formula",
+        "inputs": "per_cpu(var,i)=*SHIFT_PERCPU_PTR(&(var),O_i)",
+        "established_static_conclusion": "if symbol V belongs to template, computed address V+D+i*S",
+        "first_unproven_gate": "RELOC_HIDE details and computed virtual address valid",
+        "evidence_ids": [
+          "PC86-E048",
+          "PC86-E049",
+          "PC86-E047",
+          "PC86-E050"
+        ]
+      },
+      {
+        "id": "PC86-B-E05",
+        "subject": "boot-time macro",
+        "inputs": "BOOT_PERCPU_OFFSET is (ulong)__per_cpu_load and this_cpu_off initialized from it",
+        "established_static_conclusion": "boot variable initialization not identical by definition to later D=B-T",
+        "first_unproven_gate": "final link symbol values and compiler output unknown",
+        "evidence_ids": [
+          "PC86-E051",
+          "PC86-E039",
+          "PC86-E001",
+          "PC86-E002"
+        ]
+      },
+      {
+        "id": "PC86-B-E06",
+        "subject": "current cpu formula",
+        "inputs": "this_cpu_ptr uses arch_raw_cpu_ptr; raw_cpu_read_long(x) casts rdgsbase()",
+        "established_static_conclusion": "current pointer uses current register GS base + link symbol, not memory this_cpu_off",
+        "first_unproven_gate": "rdgsbase availability, MSR value and mapping unknown",
+        "evidence_ids": [
+          "PC86-E049",
+          "PC86-E052",
+          "PC86-E053",
+          "PC86-E057"
+        ]
+      },
+      {
+        "id": "PC86-B-E07",
+        "subject": "two offset objects",
+        "inputs": "pcpu_unit_offsets is a separate const ulong* pointer; __per_cpu_offset is fixed NR_CPUS array",
+        "established_static_conclusion": "U_i and O_i reside in different storage despite similarly named suffixes",
+        "first_unproven_gate": "same type ABI assumptions but no memory alias proof",
+        "evidence_ids": [
+          "PC86-E008",
+          "PC86-E040",
+          "PC86-E043"
+        ]
+      }
+    ],
+    "publication_and_template_coverage_matrix": [
+      {
+        "id": "PC86-B-P01",
+        "subject": "publish order",
+        "inputs": "setup first chunk, computes D, writes __per_cpu_offset then this_cpu_off then cpu_number",
+        "established_static_conclusion": "source order of three assignments per visited CPU",
+        "first_unproven_gate": "callee return and memory writes/addresses still conditional",
+        "evidence_ids": [
+          "PC86-E041",
+          "PC86-E042"
+        ]
+      },
+      {
+        "id": "PC86-B-P02",
+        "subject": "template scope",
+        "inputs": "single memcpy(data,&load,S) before per-CPU loop",
+        "established_static_conclusion": "one CPU unit nominally gets source bytes; no per-CPU template duplication loop in this function",
+        "first_unproven_gate": "other copies/writers outside audited bounded path unknown",
+        "evidence_ids": [
+          "PC86-E020",
+          "PC86-E021",
+          "PC86-E042"
+        ]
+      },
+      {
+        "id": "PC86-B-P03",
+        "subject": "successful zeroing",
+        "inputs": "DMA32 allocation wrapper zeroes N*C if ptr nonnull",
+        "established_static_conclusion": "other backing units are initially zero on successful zeroed allocation",
+        "first_unproven_gate": "values later written by loop and other writers must be counted",
+        "evidence_ids": [
+          "PC86-E014",
+          "PC86-E024",
+          "PC86-E055"
+        ]
+      },
+      {
+        "id": "PC86-B-P04",
+        "subject": "hot template vs CPU writes",
+        "inputs": "pcpu_hot template has current_task, preempt_count, stack; loop assigns cpu_number only",
+        "established_static_conclusion": "CPU>0 fields other than cpu_number not initialized from template by that loop",
+        "first_unproven_gate": "additional writers and actual CPU activity unknown",
+        "evidence_ids": [
+          "PC86-E055",
+          "PC86-E054",
+          "PC86-E042"
+        ]
+      },
+      {
+        "id": "PC86-B-P05",
+        "subject": "perCPU this_cpu_off",
+        "inputs": "this_cpu_off source initialized to BOOT offset; loop stores O_i in per_cpu(this_cpu_off,i)",
+        "established_static_conclusion": "stored value is CPU instance data, separate from current GS register write",
+        "first_unproven_gate": "GS register state only addressed in CPU0 branch",
+        "evidence_ids": [
+          "PC86-E039",
+          "PC86-E042",
+          "PC86-E061"
+        ]
+      },
+      {
+        "id": "PC86-B-P06",
+        "subject": "possible CPU versus CPU0",
+        "inputs": "loop always begins at 0 when N>0, CPU0 branch conditional on this iteration",
+        "established_static_conclusion": "CPU0 (not arbitrary boot CPU index) singled out",
+        "first_unproven_gate": "actual physical BSP number / cpu data initialization unknown",
+        "evidence_ids": [
+          "PC86-E035",
+          "PC86-E036",
+          "PC86-E059"
+        ]
+      },
+      {
+        "id": "PC86-B-P07",
+        "subject": "head assembly early consumers",
+        "inputs": "secondary_startup_64 indexes __per_cpu_offset, then current_task and TASK_threadsp",
+        "established_static_conclusion": "early consumers depend on a coherent offset/stack and independent code paths",
+        "first_unproven_gate": "no AP chain or actual reachability shown",
+        "evidence_ids": [
+          "PC86-E076",
+          "PC86-E077",
+          "PC86-E040"
+        ]
+      },
+      {
+        "id": "PC86-B-P08",
+        "subject": "perCPU variable storage",
+        "inputs": "__PCPU_ATTRS and BASE_SECTION/READ_MOSTLY macros specify .data..percpu section names",
+        "established_static_conclusion": "one declared template is used as address basis; output section matches not same as observed object",
+        "first_unproven_gate": "actual compilation/ELF and per-variable location unobserved",
+        "evidence_ids": [
+          "PC86-E044",
+          "PC86-E045",
+          "PC86-E046",
+          "PC86-E001",
+          "PC86-E003"
+        ]
+      }
+    ],
+    "boot_cpu_switch_order_matrix": [
+      {
+        "id": "PC86-C-O01",
+        "subject": "start_kernel caller",
+        "inputs": "setup_arch(NULL) then setup_per_cpu_areas()",
+        "established_static_conclusion": "ordered C call sites; not necessarily executed to completion",
+        "first_unproven_gate": "setup_arch returns successfully and earlier memory mappings valid",
+        "evidence_ids": [
+          "PC86-E058"
+        ]
+      },
+      {
+        "id": "PC86-C-O02",
+        "subject": "setup stage order",
+        "inputs": "simple_pcpu_setup_first_chunk then delta then for_each_possible_cpu",
+        "established_static_conclusion": "source has first allocation/copy before offset publishing",
+        "first_unproven_gate": "allocation failures can stop path before loop",
+        "evidence_ids": [
+          "PC86-E041",
+          "PC86-E018",
+          "PC86-E020",
+          "PC86-E021"
+        ]
+      },
+      {
+        "id": "PC86-C-O03",
+        "subject": "per iteration writes",
+        "inputs": "O_i, per_cpu(this_cpu_off), pcpu_hot.cpu_number assigned in order",
+        "established_static_conclusion": "program source sequence before CPU0 switch branch",
+        "first_unproven_gate": "each computed address valid and earlier call returns",
+        "evidence_ids": [
+          "PC86-E042",
+          "PC86-E043",
+          "PC86-E049"
+        ]
+      },
+      {
+        "id": "PC86-C-O04",
+        "subject": "conditional boot switch",
+        "inputs": "if(cpu==0) invokes load_direct_gdt(cpu)",
+        "established_static_conclusion": "at N>0 CPU0 path contains GDT request",
+        "first_unproven_gate": "N source valid, loop executed, and load_direct_gdt returns",
+        "evidence_ids": [
+          "PC86-E059",
+          "PC86-E060",
+          "PC86-E035"
+        ]
+      },
+      {
+        "id": "PC86-C-O05",
+        "subject": "GDT helper internals",
+        "inputs": "get_cpu_gdt_rw, GDT_SIZE-1, load_gdt then refresh_segment_registers",
+        "established_static_conclusion": "source requests GDT descriptor load and segment refresh in this order",
+        "first_unproven_gate": "nested implementations/assembly and hardware consequences not verified",
+        "evidence_ids": [
+          "PC86-E062",
+          "PC86-E063",
+          "PC86-E064",
+          "PC86-E065",
+          "PC86-E066",
+          "PC86-E067"
+        ]
+      },
+      {
+        "id": "PC86-C-O06",
+        "subject": "GS BASE publication",
+        "inputs": "wrmsrl(MSR_GS_BASE,per_cpu_offset(cpu)) follows load_direct_gdt",
+        "established_static_conclusion": "MSR write request appears after GDT refresh for CPU0 in program order",
+        "first_unproven_gate": "load_direct_gdt and refresh return, MSR instruction succeeds",
+        "evidence_ids": [
+          "PC86-E060",
+          "PC86-E061",
+          "PC86-E071",
+          "PC86-E072",
+          "PC86-E073"
+        ]
+      }
+    ],
+    "GDT_GS_and_current_view_matrix": [
+      {
+        "id": "PC86-C-G01",
+        "subject": "GDT address",
+        "inputs": "get_cpu_gdt_rw(cpu) returns per_cpu(gdt_page,cpu).gdt",
+        "established_static_conclusion": "GDT address uses O_cpu and linker symbol via per_cpu macro, not GSBASE to locate",
+        "first_unproven_gate": "GDT bytes initialized, V+D+i*S mapped and valid",
+        "evidence_ids": [
+          "PC86-E064",
+          "PC86-E048",
+          "PC86-E049",
+          "PC86-E070"
+        ]
+      },
+      {
+        "id": "PC86-C-G02",
+        "subject": "descriptor size",
+        "inputs": "GDT_ENTRIES=16, GDT_SIZE=16*8; gdt_descr.size=GDT_SIZE-1",
+        "established_static_conclusion": "nominal descriptor limit 127 and address from GDT pointer under macro inputs",
+        "first_unproven_gate": "actual compiler/layout and CPU validity of descriptors unknown",
+        "evidence_ids": [
+          "PC86-E068",
+          "PC86-E069",
+          "PC86-E062"
+        ]
+      },
+      {
+        "id": "PC86-C-G03",
+        "subject": "register reload",
+        "inputs": "load_gdt contains inline lgdt; refresh_segment_registers includes ss reload and lretq",
+        "established_static_conclusion": "source indicates GDT and segment register update requests, not hardware proof",
+        "first_unproven_gate": "runtime fault/return and full effects of lower code unknown",
+        "evidence_ids": [
+          "PC86-E065",
+          "PC86-E066",
+          "PC86-E067"
+        ]
+      },
+      {
+        "id": "PC86-C-G04",
+        "subject": "GS register target",
+        "inputs": "MSR_GS_BASE has macro value and wrmsrl splits argument to __wrmsr",
+        "established_static_conclusion": "GSBASE write intended to use O_0 after GDT helper",
+        "first_unproven_gate": "CPU permission, MSR behavior, execution unseen",
+        "evidence_ids": [
+          "PC86-E061",
+          "PC86-E071",
+          "PC86-E072",
+          "PC86-E073"
+        ]
+      },
+      {
+        "id": "PC86-C-G05",
+        "subject": "current CPU pointer",
+        "inputs": "raw_cpu_read_long ignores parameter and calls rdgsbase; arch_raw_cpu_ptr adds link address",
+        "established_static_conclusion": "postswitch current view is conditional on actual GS register, not on this_cpu_off memory assignment alone",
+        "first_unproven_gate": "FSGSBASE capability/use gate and hardware state unknown",
+        "evidence_ids": [
+          "PC86-E052",
+          "PC86-E053",
+          "PC86-E074",
+          "PC86-E075",
+          "PC86-E057"
+        ]
+      },
+      {
+        "id": "PC86-C-G06",
+        "subject": "source templates",
+        "inputs": "pcpu_hot has current_task and cpu_number fields; gdt_page source has initialized initializer",
+        "established_static_conclusion": "representative consumer get_current reads pcpu_hot.current_task; GDT uses another template object",
+        "first_unproven_gate": "whether current CPU copy and memory are valid and synchronized unknown",
+        "evidence_ids": [
+          "PC86-E054",
+          "PC86-E055",
+          "PC86-E057",
+          "PC86-E070",
+          "PC86-E064"
+        ]
+      },
+      {
+        "id": "PC86-C-G07",
+        "subject": "early secondary path",
+        "inputs": "early common label accesses __per_cpu_offset, current_task and TASK_threadsp",
+        "established_static_conclusion": "same named __per_cpu_offset is a source dependency before C handoff; no AP success proof",
+        "first_unproven_gate": "actual CPU path, saved stack and initial offset states unknown",
+        "evidence_ids": [
+          "PC86-E076",
+          "PC86-E077",
+          "PC86-E040"
+        ]
+      }
+    ],
+    "cross_stage_gates_matrix": [
+      {
+        "id": "PC86-C-X01",
+        "subject": "link to first allocation",
+        "inputs": "ELF perCPU symbols and runtime memory are separate",
+        "established_static_conclusion": "only after valid S, C and mapped storage can single copy be considered meaningful",
+        "first_unproven_gate": "link map and earlier memblock stage not run",
+        "evidence_ids": [
+          "PC86-E001",
+          "PC86-E002",
+          "PC86-E004",
+          "PC86-E016",
+          "PC86-E020",
+          "PC86-E024"
+        ]
+      },
+      {
+        "id": "PC86-C-X02",
+        "subject": "first chunk to offsets",
+        "inputs": "first chunk NULL or data failure stops normal path before O_i publication",
+        "established_static_conclusion": "no successful offset table may be inferred when helper returned invalid pointer",
+        "first_unproven_gate": "alloc returns/other writes unknown",
+        "evidence_ids": [
+          "PC86-E013",
+          "PC86-E015",
+          "PC86-E018",
+          "PC86-E021",
+          "PC86-E041"
+        ]
+      },
+      {
+        "id": "PC86-C-X03",
+        "subject": "CPU indexing",
+        "inputs": "for_each_possible_cpu walks contiguous 0..N-1 but fixed __per_cpu_offset uses NR_CPUS",
+        "established_static_conclusion": "CPU number, array capacity and N must be jointly checked",
+        "first_unproven_gate": "external N validation beyond scoped producer unknown",
+        "evidence_ids": [
+          "PC86-E033",
+          "PC86-E035",
+          "PC86-E036",
+          "PC86-E037",
+          "PC86-E040",
+          "PC86-E042"
+        ]
+      },
+      {
+        "id": "PC86-C-X04",
+        "subject": "template and GDT",
+        "inputs": "CPU0 GDT loaded from per_cpu(gdt_page,0) only if template and offset are coherent",
+        "established_static_conclusion": "a successful lgdt is not shown by source, and other CPU template coverage remains limited",
+        "first_unproven_gate": "link input/ABI/address/CPU capability not verified",
+        "evidence_ids": [
+          "PC86-E020",
+          "PC86-E042",
+          "PC86-E064",
+          "PC86-E065",
+          "PC86-E070"
+        ]
+      },
+      {
+        "id": "PC86-C-X05",
+        "subject": "GS and current",
+        "inputs": "CPU0 GS write requested after GDT helper; current uses rdgsbase",
+        "established_static_conclusion": "memory this_cpu_off, offset array, GS MSR and current register are different state holders",
+        "first_unproven_gate": "MSR instruction, rdgsbase feature and active CPU mapping unknown",
+        "evidence_ids": [
+          "PC86-E039",
+          "PC86-E042",
+          "PC86-E052",
+          "PC86-E053",
+          "PC86-E061",
+          "PC86-E074"
+        ]
+      },
+      {
+        "id": "PC86-C-X06",
+        "subject": "historical gates",
+        "inputs": "84 root CR3/readiness and 85 build offsets remain separate preconditions",
+        "established_static_conclusion": "neither old PASS_PENDING_LOCAL is a real build or startup demonstration",
+        "first_unproven_gate": "local P9/ELF/CPU execution all NOT_RUN",
+        "evidence_ids": [
+          "PC86-E058",
+          "PC86-E076",
+          "PC86-E077"
+        ]
+      }
+    ],
+    "cross_topic_A_B_C_join_matrix": [
+      {
+        "id": "PC86-ABC-J01",
+        "subject": "size lineage",
+        "inputs": "static S -> sum=S+8192 -> C=round_pow2(sum) -> allocation N*C -> offsets i*S",
+        "established_static_conclusion": "distinct quantities cannot be merged into a generic perCPU size",
+        "first_unproven_gate": "link size and C-width assumptions required",
+        "evidence_ids": [
+          "PC86-E016",
+          "PC86-E017",
+          "PC86-E014",
+          "PC86-E021",
+          "PC86-E028"
+        ]
+      },
+      {
+        "id": "PC86-ABC-J02",
+        "subject": "one copy vs index loop",
+        "inputs": "first chunk copies S bytes once; subsequent N iterations write offset fields",
+        "established_static_conclusion": "does not prove CPU>0 receives all template initializers",
+        "first_unproven_gate": "other writers and real CPU count unknown",
+        "evidence_ids": [
+          "PC86-E020",
+          "PC86-E021",
+          "PC86-E035",
+          "PC86-E042",
+          "PC86-E055"
+        ]
+      },
+      {
+        "id": "PC86-ABC-J03",
+        "subject": "offset link to GDT",
+        "inputs": "O_i=B-__per_cpu_start+i*S; per_cpu(gdt_page,i) and get_cpu_gdt_rw consume O_i",
+        "established_static_conclusion": "GDT pointer source expression originates from published memory array",
+        "first_unproven_gate": "actual mapped region and GDT contents not proven",
+        "evidence_ids": [
+          "PC86-E041",
+          "PC86-E042",
+          "PC86-E048",
+          "PC86-E049",
+          "PC86-E064"
+        ]
+      },
+      {
+        "id": "PC86-ABC-J04",
+        "subject": "CPU0 switch to current view",
+        "inputs": "CPU0 GDT load/refresh then GS write; get_current uses rdgsbase",
+        "established_static_conclusion": "post-switch current pointer relies on actual GS and source template bytes",
+        "first_unproven_gate": "no CPU instruction/runtime evidence",
+        "evidence_ids": [
+          "PC86-E060",
+          "PC86-E061",
+          "PC86-E052",
+          "PC86-E053",
+          "PC86-E057",
+          "PC86-E070"
+        ]
+      },
+      {
+        "id": "PC86-ABC-J05",
+        "subject": "preexisting raw assembly",
+        "inputs": "head_64.S uses offset array/current_task/TASK_threadsp",
+        "established_static_conclusion": "source shows early consumers are not automatically tied to successful setup_per_cpu_areas",
+        "first_unproven_gate": "startup timing/phase and ABI symbol freshness unknown",
+        "evidence_ids": [
+          "PC86-E076",
+          "PC86-E077",
+          "PC86-E040"
+        ]
+      },
+      {
+        "id": "PC86-ABC-J06",
+        "subject": "failure propagation",
+        "inputs": "first alloc/data/offset/reserved can fail before or after other publications",
+        "established_static_conclusion": "linear declaration and actual completion must be separated",
+        "first_unproven_gate": "no injected failures or actual boot measured",
+        "evidence_ids": [
+          "PC86-E013",
+          "PC86-E015",
+          "PC86-E018",
+          "PC86-E021",
+          "PC86-E022"
+        ]
+      }
+    ]
+  },
+  "matrix_groups": 10,
+  "matrix_rows": 69,
+  "matrix_group_sizes": {
+    "template_and_storage_matrix": 8,
+    "first_chunk_allocation_and_publication_matrix": 8,
+    "initialization_and_failure_matrix": 7,
+    "cpu_index_and_capacity_matrix": 6,
+    "offset_address_equation_matrix": 7,
+    "publication_and_template_coverage_matrix": 8,
+    "boot_cpu_switch_order_matrix": 6,
+    "GDT_GS_and_current_view_matrix": 7,
+    "cross_stage_gates_matrix": 6,
+    "cross_topic_A_B_C_join_matrix": 6
+  },
+  "finite_condition_models": [
+    {
+      "model_id": "PC86-M01",
+      "topic": "A",
+      "phase": "A sizing / success hypothetically",
+      "inputs": "S=0B, N=1, PAGE_SIZE=4096B,dyn=0",
+      "units": "S,sum,C,offset all bytes; N CPUs",
+      "outputs": {
+        "static": 0,
+        "reserved": 8192,
+        "dynamic": 0,
+        "sum": 8192,
+        "chunk": 8192,
+        "first_allocation_span_bytes": 8192,
+        "second_allocation_span_bytes": 8192,
+        "offset_array_bytes_assuming_pointer8": 8,
+        "offsets": [
+          0
+        ],
+        "copy_calls": 1,
+        "copy_bytes": 0,
+        "free_bytes_size_t": 0,
+        "free_offset_size_t": 8192
+      },
+      "assumptions": "LP64, link-difference representable, aligned non-overlapping memblock success, no overflow, source/data mapped",
+      "stop_gate": "ABI and real link/image/data copies not observed",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022",
+        "PC86-E024",
+        "PC86-E025",
+        "PC86-E028",
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M02",
+      "topic": "A",
+      "phase": "A sizing / success hypothetically",
+      "inputs": "S=1B, N=1, PAGE_SIZE=4096B,dyn=0",
+      "units": "S,sum,C,offset all bytes; N CPUs",
+      "outputs": {
+        "static": 1,
+        "reserved": 8192,
+        "dynamic": 0,
+        "sum": 8193,
+        "chunk": 16384,
+        "first_allocation_span_bytes": 16384,
+        "second_allocation_span_bytes": 16384,
+        "offset_array_bytes_assuming_pointer8": 8,
+        "offsets": [
+          0
+        ],
+        "copy_calls": 1,
+        "copy_bytes": 1,
+        "free_bytes_size_t": 8191,
+        "free_offset_size_t": 8193
+      },
+      "assumptions": "LP64, link-difference representable, aligned non-overlapping memblock success, no overflow, source/data mapped",
+      "stop_gate": "ABI and real link/image/data copies not observed",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022",
+        "PC86-E024",
+        "PC86-E025",
+        "PC86-E028",
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M03",
+      "topic": "A",
+      "phase": "A sizing / success hypothetically",
+      "inputs": "S=4096B, N=1, PAGE_SIZE=4096B,dyn=0",
+      "units": "S,sum,C,offset all bytes; N CPUs",
+      "outputs": {
+        "static": 4096,
+        "reserved": 8192,
+        "dynamic": 0,
+        "sum": 12288,
+        "chunk": 16384,
+        "first_allocation_span_bytes": 16384,
+        "second_allocation_span_bytes": 16384,
+        "offset_array_bytes_assuming_pointer8": 8,
+        "offsets": [
+          0
+        ],
+        "copy_calls": 1,
+        "copy_bytes": 4096,
+        "free_bytes_size_t": 4096,
+        "free_offset_size_t": 12288
+      },
+      "assumptions": "LP64, link-difference representable, aligned non-overlapping memblock success, no overflow, source/data mapped",
+      "stop_gate": "ABI and real link/image/data copies not observed",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022",
+        "PC86-E024",
+        "PC86-E025",
+        "PC86-E028",
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M04",
+      "topic": "A",
+      "phase": "A sizing / success hypothetically",
+      "inputs": "S=4097B, N=2, PAGE_SIZE=4096B,dyn=0",
+      "units": "S,sum,C,offset all bytes; N CPUs",
+      "outputs": {
+        "static": 4097,
+        "reserved": 8192,
+        "dynamic": 0,
+        "sum": 12289,
+        "chunk": 16384,
+        "first_allocation_span_bytes": 32768,
+        "second_allocation_span_bytes": 32768,
+        "offset_array_bytes_assuming_pointer8": 16,
+        "offsets": [
+          0,
+          4097
+        ],
+        "copy_calls": 1,
+        "copy_bytes": 4097,
+        "free_bytes_size_t": 4095,
+        "free_offset_size_t": 12289
+      },
+      "assumptions": "LP64, link-difference representable, aligned non-overlapping memblock success, no overflow, source/data mapped",
+      "stop_gate": "ABI and real link/image/data copies not observed",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022",
+        "PC86-E024",
+        "PC86-E025",
+        "PC86-E028",
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M05",
+      "topic": "A",
+      "phase": "A sizing / success hypothetically",
+      "inputs": "S=8192B, N=2, PAGE_SIZE=4096B,dyn=0",
+      "units": "S,sum,C,offset all bytes; N CPUs",
+      "outputs": {
+        "static": 8192,
+        "reserved": 8192,
+        "dynamic": 0,
+        "sum": 16384,
+        "chunk": 16384,
+        "first_allocation_span_bytes": 32768,
+        "second_allocation_span_bytes": 32768,
+        "offset_array_bytes_assuming_pointer8": 16,
+        "offsets": [
+          0,
+          8192
+        ],
+        "copy_calls": 1,
+        "copy_bytes": 8192,
+        "free_bytes_size_t": 0,
+        "free_offset_size_t": 16384
+      },
+      "assumptions": "LP64, link-difference representable, aligned non-overlapping memblock success, no overflow, source/data mapped",
+      "stop_gate": "ABI and real link/image/data copies not observed",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022",
+        "PC86-E024",
+        "PC86-E025",
+        "PC86-E028",
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M06",
+      "topic": "A",
+      "phase": "A sizing / success hypothetically",
+      "inputs": "S=8193B, N=3, PAGE_SIZE=4096B,dyn=0",
+      "units": "S,sum,C,offset all bytes; N CPUs",
+      "outputs": {
+        "static": 8193,
+        "reserved": 8192,
+        "dynamic": 0,
+        "sum": 16385,
+        "chunk": 32768,
+        "first_allocation_span_bytes": 98304,
+        "second_allocation_span_bytes": 98304,
+        "offset_array_bytes_assuming_pointer8": 24,
+        "offsets": [
+          0,
+          8193,
+          16386
+        ],
+        "copy_calls": 1,
+        "copy_bytes": 8193,
+        "free_bytes_size_t": 16383,
+        "free_offset_size_t": 16385
+      },
+      "assumptions": "LP64, link-difference representable, aligned non-overlapping memblock success, no overflow, source/data mapped",
+      "stop_gate": "ABI and real link/image/data copies not observed",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022",
+        "PC86-E024",
+        "PC86-E025",
+        "PC86-E028",
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M07",
+      "topic": "A",
+      "phase": "A sizing / success hypothetically",
+      "inputs": "S=4096B, N=0, PAGE_SIZE=4096B,dyn=0",
+      "units": "S,sum,C,offset all bytes; N CPUs",
+      "outputs": {
+        "static": 4096,
+        "reserved": 8192,
+        "dynamic": 0,
+        "sum": 12288,
+        "chunk": 16384,
+        "first_allocation_span_bytes": 0,
+        "second_allocation_span_bytes": 0,
+        "offset_array_bytes_assuming_pointer8": 0,
+        "offsets": [],
+        "copy_calls": 1,
+        "copy_bytes": 4096,
+        "free_bytes_size_t": 4096,
+        "free_offset_size_t": 12288
+      },
+      "assumptions": "LP64, link-difference representable, aligned non-overlapping memblock success, no overflow, source/data mapped",
+      "stop_gate": "zero-byte data/offset alloc behavior unknown; no CPU0 iteration",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E020",
+        "PC86-E021",
+        "PC86-E022",
+        "PC86-E024",
+        "PC86-E025",
+        "PC86-E028",
+        "PC86-E029",
+        "PC86-E030"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M08",
+      "topic": "A",
+      "phase": "metadata failure",
+      "inputs": "first early_pcpu_create_chunk metadata= NULL",
+      "units": "allocation return pointer",
+      "outputs": {
+        "first_chunk": "NULL",
+        "next_source_action": "pcpu_first_chunk->data; no valid dereference proof"
+      },
+      "assumptions": "hypothetical allocator NULL result",
+      "stop_gate": "execution stops at unguarded dereference, not a measured trap",
+      "evidence_ids": [
+        "PC86-E013",
+        "PC86-E018"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M09",
+      "topic": "A",
+      "phase": "data failure",
+      "inputs": "first metadata non-NULL, data=NULL, S=4096",
+      "units": "pointer, bytes",
+      "outputs": {
+        "data": "NULL",
+        "list_publication": "attempted",
+        "memcpy_bytes": 4096
+      },
+      "assumptions": "link source readable, N>0, DMA32 data returned NULL",
+      "stop_gate": "memcpy with data NULL not normal success; postfault state unknown",
+      "evidence_ids": [
+        "PC86-E014",
+        "PC86-E015",
+        "PC86-E020"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M10",
+      "topic": "A",
+      "phase": "offset array failure",
+      "inputs": "first chunk healthy, N=2, pcpu_unit_offsets=NULL",
+      "units": "pointer, index",
+      "outputs": {
+        "allocation": "NULL",
+        "first_loop_store": "((ulong*)NULL)[0]"
+      },
+      "assumptions": "all prior memcpy and allocations succeeded",
+      "stop_gate": "valid first offset write cannot be established",
+      "evidence_ids": [
+        "PC86-E021",
+        "PC86-E025"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M11",
+      "topic": "A",
+      "phase": "reserved metadata failure",
+      "inputs": "first chunk+offsets success, reserved create=NULL",
+      "units": "pointer",
+      "outputs": {
+        "pcpu_reserved_chunk": "NULL",
+        "next_operation": "pcpu_reserved_chunk->base_addr"
+      },
+      "assumptions": "prior steps return normally",
+      "stop_gate": "subsequent valid dereference not established",
+      "evidence_ids": [
+        "PC86-E022",
+        "PC86-E013"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M12",
+      "topic": "A",
+      "phase": "narrowing threshold",
+      "inputs": "S=2147483648, reserve=8192, N=1",
+      "units": "bytes, 64-bit size_t, 32-bit int",
+      "outputs": {
+        "sum": 2147491840,
+        "chunk": 4294967296,
+        "int_free_offset_input": 2147491840,
+        "int_free_bytes_input": 2147475456,
+        "first_data_bytes": 4294967296
+      },
+      "assumptions": "64-bit size_t/ulong, int max 2147483647, all large allocations hypothetically succeeded",
+      "stop_gate": "C out-of-range unsigned-to-signed conversion implementation-dependent; no runtime witness",
+      "evidence_ids": [
+        "PC86-E011",
+        "PC86-E017",
+        "PC86-E019",
+        "PC86-E028"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M13",
+      "topic": "B",
+      "phase": "address equation",
+      "inputs": "L=0x100000,T=0x100000,B=0x200000,V=L+0x100,S=4096,N=2",
+      "units": "64-bit virtual byte addresses",
+      "outputs": {
+        "delta": 1048576,
+        "U": [
+          0,
+          4096
+        ],
+        "O": [
+          1048576,
+          1052672
+        ],
+        "ptrs": [
+          2097408,
+          2101504
+        ]
+      },
+      "assumptions": "LP64, no wrap; linked symbol offsets V-T match within template; valid mapping",
+      "stop_gate": "percpu pointer values not proof of real CPU memory",
+      "evidence_ids": [
+        "PC86-E002",
+        "PC86-E007",
+        "PC86-E021",
+        "PC86-E041",
+        "PC86-E042",
+        "PC86-E043",
+        "PC86-E048",
+        "PC86-E049"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M14",
+      "topic": "B",
+      "phase": "stride versus allocation",
+      "inputs": "S=4096,N=3,C=16384",
+      "units": "bytes",
+      "outputs": {
+        "allocation_total": 49152,
+        "U": [
+          0,
+          4096,
+          8192
+        ],
+        "nominal_C_width_windows": [
+          [
+            0,
+            16384
+          ],
+          [
+            4096,
+            20480
+          ],
+          [
+            8192,
+            24576
+          ]
+        ],
+        "windows_overlap": true
+      },
+      "assumptions": "all allocations succeed; C-width window interpretation is hypothetical, not a proven use range",
+      "stop_gate": "actual perCPU reserved/dynamic allocation may differ; scoped overlap is candidate only",
+      "evidence_ids": [
+        "PC86-E014",
+        "PC86-E017",
+        "PC86-E021"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M15",
+      "topic": "B",
+      "phase": "one CPU",
+      "inputs": "N=1,S=4096",
+      "units": "indices",
+      "outputs": {
+        "visited": [
+          0
+        ],
+        "offsets": [
+          0
+        ],
+        "CPU0_GDT_GS_requests": "present_if_callees_return"
+      },
+      "assumptions": "normal successful prior phases",
+      "stop_gate": "cannot infer actual register state or other CPU existence",
+      "evidence_ids": [
+        "PC86-E021",
+        "PC86-E035",
+        "PC86-E036",
+        "PC86-E059",
+        "PC86-E060",
+        "PC86-E061"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M16",
+      "topic": "B",
+      "phase": "zero CPUs",
+      "inputs": "N=0,S=4096",
+      "units": "indices",
+      "outputs": {
+        "visited": [],
+        "CPU0_branch": "not_reached",
+        "data_alloc_request_bytes": 0,
+        "offset_alloc_request_bytes": 0
+      },
+      "assumptions": "ignore potential prior allocator failure for loop-only evaluation",
+      "stop_gate": "actual N=0 path and zero-size alloc outcomes unknown",
+      "evidence_ids": [
+        "PC86-E021",
+        "PC86-E035",
+        "PC86-E036",
+        "PC86-E059"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M17",
+      "topic": "B",
+      "phase": "overflow index",
+      "inputs": "N=257,NR_CPUS=256,S=4096",
+      "units": "array elements/index",
+      "outputs": {
+        "fixed_array_valid_last_index": 255,
+        "first_excess_index": 256,
+        "visited_indices_in_source_loop": "0..256"
+      },
+      "assumptions": "actual compiled NR_CPUS=256, parse supplies N257, earlier alloc and loop reach index256",
+      "stop_gate": "not a proven live input or actual OOB write; stop before postinvalid effects",
+      "evidence_ids": [
+        "PC86-E032",
+        "PC86-E033",
+        "PC86-E035",
+        "PC86-E037",
+        "PC86-E038",
+        "PC86-E040",
+        "PC86-E042"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M18",
+      "topic": "B",
+      "phase": "offset storage ABI",
+      "inputs": "N=3,sizeof(void*)=8,sizeof(ulong)=8",
+      "units": "bytes",
+      "outputs": {
+        "requested_bytes": 24,
+        "ulong_stores": 3,
+        "store_bytes": 24,
+        "last_start_offset": 16
+      },
+      "assumptions": "LP64 and a valid 24byte allocation",
+      "stop_gate": "unknown ABI if not LP64 or if allocator returns insufficient space",
+      "evidence_ids": [
+        "PC86-E021",
+        "PC86-E025",
+        "PC86-E008"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M19",
+      "topic": "B",
+      "phase": "sparse CPU hypothesis",
+      "inputs": "expected CPUs {0,2}, nr_cpu_ids=3",
+      "units": "indices",
+      "outputs": {
+        "visited_actual_from_macro": [
+          0,
+          1,
+          2
+        ],
+        "expected_sparse_set": [
+          0,
+          2
+        ],
+        "extra_visited": 1
+      },
+      "assumptions": "hypothetical sparse membership external to macro, no CPU mask filtering",
+      "stop_gate": "not a confirmed real sparse CPU topology",
+      "evidence_ids": [
+        "PC86-E035",
+        "PC86-E036",
+        "PC86-E032"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M20",
+      "topic": "B",
+      "phase": "static/reserved overlap arithmetic",
+      "inputs": "S=4096,C=16384,N=2",
+      "units": "bytes",
+      "outputs": [
+        {
+          "first_static": [
+            0,
+            4096
+          ],
+          "unit1_static": [
+            4096,
+            8192
+          ],
+          "hypothetical_reserved_within_unit0": [
+            4096,
+            12288
+          ],
+          "intersection_with_unit1_static": [
+            4096,
+            8192
+          ]
+        }
+      ],
+      "assumptions": "interpret reserved bytes appended to CPU0 static and perCPU units stepped S; valid memory",
+      "stop_gate": "does not prove reserved allocator actually writes overlapping ranges",
+      "evidence_ids": [
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E019",
+        "PC86-E021"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M21",
+      "topic": "B",
+      "phase": "template CPU1",
+      "inputs": "N=2,S>0 and nonzero pcpu_hot.current_task template",
+      "units": "bytes, memory contents",
+      "outputs": {
+        "template_copies": 1,
+        "CPU0_current_task": "copied template",
+        "CPU1_before_specific_writes": "zero under successful DMA32 zeroing",
+        "CPU1_cpu_number": "written 1",
+        "CPU1_current_task": "not assigned by shown loop"
+      },
+      "assumptions": "data chunk zeroed on successful memblock return, V stays in S, no other writer",
+      "stop_gate": "not real CPU1 invocation/current evidence",
+      "evidence_ids": [
+        "PC86-E020",
+        "PC86-E024",
+        "PC86-E042",
+        "PC86-E054",
+        "PC86-E055",
+        "PC86-E057"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M22",
+      "topic": "B",
+      "phase": "boot and current delta not identical",
+      "inputs": "L=0x100000,T=0x101000,B=0x200000,S=4096",
+      "units": "unsigned address bytes",
+      "outputs": {
+        "boot_percpu_offset": 1048576,
+        "runtime_delta": 1044480,
+        "runtime_O_cpu0": 1044480,
+        "difference": 4096
+      },
+      "assumptions": "hypothetical link arrangement L!=T, valid remap and no wrap",
+      "stop_gate": "actual linker may make L=T; not a witnessed difference",
+      "evidence_ids": [
+        "PC86-E001",
+        "PC86-E002",
+        "PC86-E041",
+        "PC86-E051"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M23",
+      "topic": "C",
+      "phase": "CPU0 normal request sequence",
+      "inputs": "N=1,all first chunk allocations/copies/offsets succeed",
+      "units": "logical phases",
+      "outputs": {
+        "ordered": [
+          "publish O0",
+          "write this_cpu_off[0]",
+          "write cpu_number[0]",
+          "call load_direct_gdt(0)",
+          "inside helper load_gdt",
+          "inside helper refresh_segment_registers",
+          "request wrmsrl(MSR_GS_BASE,O0)"
+        ]
+      },
+      "assumptions": "every prior call returns, GDT address valid",
+      "stop_gate": "no CPU instruction success proof",
+      "evidence_ids": [
+        "PC86-E042",
+        "PC86-E059",
+        "PC86-E060",
+        "PC86-E061",
+        "PC86-E062",
+        "PC86-E063",
+        "PC86-E064",
+        "PC86-E072"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M24",
+      "topic": "C",
+      "phase": "GDT nonreturn",
+      "inputs": "N=1, load_direct_gdt or refresh_segment_registers does not return",
+      "units": "logical phases",
+      "outputs": {
+        "O0": "published",
+        "load_direct_gdt": "called",
+        "GS_write": "not reached"
+      },
+      "assumptions": "hypothetical non-return, prior setup valid",
+      "stop_gate": "no assertion about actual failure/exception",
+      "evidence_ids": [
+        "PC86-E059",
+        "PC86-E060",
+        "PC86-E061",
+        "PC86-E063",
+        "PC86-E066",
+        "PC86-E067"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M25",
+      "topic": "C",
+      "phase": "MSR failure hypothesis",
+      "inputs": "N=1, load_direct_gdt returns, MSR write faults",
+      "units": "logical phases",
+      "outputs": {
+        "GDT_request": "prior",
+        "MSR_request": "issued",
+        "post_GS_read": "no valid runtime proof"
+      },
+      "assumptions": "hypothetical failed hardware write, no live processor report",
+      "stop_gate": "CPU state after trap not derived",
+      "evidence_ids": [
+        "PC86-E061",
+        "PC86-E071",
+        "PC86-E072",
+        "PC86-E073"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M26",
+      "topic": "C",
+      "phase": "CPU1 loop treatment",
+      "inputs": "N=2,perCPU loop reaches cpu1",
+      "units": "logical phases",
+      "outputs": {
+        "cpu1_offset": "published",
+        "cpu1_cpu_number": "1",
+        "cpu1_GDT_GS_calls_from_this_function": 0
+      },
+      "assumptions": "normal per-CPU memory setup, CPU0 already iterated",
+      "stop_gate": "does not audit or exclude AP initialization elsewhere",
+      "evidence_ids": [
+        "PC86-E035",
+        "PC86-E042",
+        "PC86-E059",
+        "PC86-E060",
+        "PC86-E061"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M27",
+      "topic": "C",
+      "phase": "pre-/post-GS current view",
+      "inputs": "N=1, old_GSbase G_old!=O0, both mapped, new template copied",
+      "units": "addresses",
+      "outputs": {
+        "before_expr": "V+G_old",
+        "after_requested_expr": "V+O0",
+        "memory_this_cpu_off": "O0"
+      },
+      "assumptions": "conditional GSBASE update succeeds and rdgsbase available",
+      "stop_gate": "actual MSR state not observed; no safe early dereference guarantee",
+      "evidence_ids": [
+        "PC86-E039",
+        "PC86-E042",
+        "PC86-E052",
+        "PC86-E053",
+        "PC86-E061",
+        "PC86-E074",
+        "PC86-E075"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M28",
+      "topic": "C",
+      "phase": "FSGSBASE unavailable condition",
+      "inputs": "rdgsbase execution without feature enabled",
+      "units": "processor feature/register gate",
+      "outputs": {
+        "source_request": "rdgsbase mnemonic",
+        "guard_in_local_raw_cpu_read_long": "none in quoted macro",
+        "result": "UNKNOWN, no hardware semantics asserted"
+      },
+      "assumptions": "hypothetical unsupported feature, actual CPU feature checks not audited",
+      "stop_gate": "need official hardware manual/CPU evidence for runtime effects",
+      "evidence_ids": [
+        "PC86-E052",
+        "PC86-E053",
+        "PC86-E074",
+        "PC86-E075"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    },
+    {
+      "model_id": "PC86-M29",
+      "topic": "C",
+      "phase": "GDT size symbolic",
+      "inputs": "GDT_ENTRIES=16, GDT_SIZE=16*8",
+      "units": "entries,bytes",
+      "outputs": {
+        "GDT_SIZE": 128,
+        "gdt_descr_size_input": 127
+      },
+      "assumptions": "definition applies in selected CMake/preprocessor configuration",
+      "stop_gate": "not actual LGDT completion or safe descriptor contents",
+      "evidence_ids": [
+        "PC86-E062",
+        "PC86-E068",
+        "PC86-E069"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_INTEGER_OR_TEXT"
+    }
+  ],
+  "model_count": 29,
+  "model_counts": {
+    "A": 12,
+    "B": 10,
+    "C": 7
+  },
+  "prior_findings_links": [
+    {
+      "prior": "R84-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY_BY_C06_COMPOSITE_PASS_PENDING_LOCAL",
+      "this_batch": "NO_D00_NO_REOPEN"
+    },
+    {
+      "prior": "R85-S01/S02/S03",
+      "status": "MANDATORY_CONSUMPTION_CORRECTIONS_APPLIED",
+      "this_batch": "No restatement of parser double-space false blank line; P5/tool scope/source metadata conservatively preserved"
+    },
+    {
+      "prior": "R84-S01/S02/S03;R83-S01/S02/S03;R82-S01/S02/S03;R81-S01/S02/S03",
+      "status": "RETAIN_HISTORICAL_BOUNDED_LAYERS",
+      "this_batch": "No CR3, machine-code, AP startup or physical startup re-affirmation"
+    },
+    {
+      "prior": "BM80-F/U;PT81-F/U;DM82-F/U;TI83-F/U;ER84-F/U;BB85-F/U",
+      "status": "ORIGINAL_IDS_UNCHANGED",
+      "this_batch": "No prior issue counted new; candidate overlap not summed as independent verified root causes"
+    }
+  ],
+  "source_anchor_ids": [
+    "PC86-E001",
+    "PC86-E002",
+    "PC86-E003",
+    "PC86-E004",
+    "PC86-E005",
+    "PC86-E006",
+    "PC86-E007",
+    "PC86-E008",
+    "PC86-E009",
+    "PC86-E010",
+    "PC86-E011",
+    "PC86-E012",
+    "PC86-E013",
+    "PC86-E014",
+    "PC86-E015",
+    "PC86-E016",
+    "PC86-E017",
+    "PC86-E018",
+    "PC86-E019",
+    "PC86-E020",
+    "PC86-E021",
+    "PC86-E022",
+    "PC86-E023",
+    "PC86-E024",
+    "PC86-E025",
+    "PC86-E026",
+    "PC86-E027",
+    "PC86-E028",
+    "PC86-E029",
+    "PC86-E030",
+    "PC86-E031",
+    "PC86-E032",
+    "PC86-E033",
+    "PC86-E034",
+    "PC86-E035",
+    "PC86-E036",
+    "PC86-E037",
+    "PC86-E038",
+    "PC86-E039",
+    "PC86-E040",
+    "PC86-E041",
+    "PC86-E042",
+    "PC86-E043",
+    "PC86-E044",
+    "PC86-E045",
+    "PC86-E046",
+    "PC86-E047",
+    "PC86-E048",
+    "PC86-E049",
+    "PC86-E050",
+    "PC86-E051",
+    "PC86-E052",
+    "PC86-E053",
+    "PC86-E054",
+    "PC86-E055",
+    "PC86-E056",
+    "PC86-E057",
+    "PC86-E058",
+    "PC86-E059",
+    "PC86-E060",
+    "PC86-E061",
+    "PC86-E062",
+    "PC86-E063",
+    "PC86-E064",
+    "PC86-E065",
+    "PC86-E066",
+    "PC86-E067",
+    "PC86-E068",
+    "PC86-E069",
+    "PC86-E070",
+    "PC86-E071",
+    "PC86-E072",
+    "PC86-E073",
+    "PC86-E074",
+    "PC86-E075",
+    "PC86-E076",
+    "PC86-E077"
+  ],
+  "self_evaluation": {
+    "source_anchor_count": 77,
+    "source_anchor_mismatch_after_batch_verification": 0,
+    "source_quote_reconfirmed": 77,
+    "matrix_ref_invalid": 0,
+    "model_ref_invalid": 0,
+    "findings_ref_invalid": 0,
+    "full_local_P9": "NOT_RUN",
+    "system_build": "NOT_RUN",
+    "program_and_repo_script_execution": "NOT_RUN",
+    "hardware": "NOT_RUN"
+  },
+  "execution_context": {
+    "executor": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "conversation": "MYOS2-A-C06b 代码分析执行",
+    "branch": "claude/dazzling-cori-q0dnyt",
+    "PR": 17,
+    "writer_permission": "ONE_SIX_FILE_RESULT_DIRECTORY_AND_ONE_COMMENT_ONLY",
+    "mainline_review": "MYOS2-A-C06 Pro independent PENDING",
+    "excluded_actions": [
+      "kernel modifications",
+      "old outputs modifications",
+      "build/run/repo scripts",
+      "external models/subagents",
+      "PR metadata changes",
+      "merge/force push"
+    ]
+  }
+}

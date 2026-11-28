@@ -1,0 +1,106 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-MALLOC-REINIT-152",
+  "conversation_display_name": "MYOS2-A-C11a 代码分析执行",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-25",
+  "produced_by": "GPT-6.2（系统标识）",
+  "model_per_owner": "GPT-6.2 Sol＋Extra／高推理",
+  "actual_client_model": "UNATTESTED",
+  "actual_backend_model": "UNATTESTED",
+  "actual_reasoning_effort": "UNATTESTED",
+  "date": "2026-11-26",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time@a039d9803ade",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_pin_short12": "7ed4e9279b7d",
+  "execution_parent_short12": "07d636217117",
+  "read_channel": "GitHub connector；自制文本/整数辅助核验",
+  "status": "AUTHOR_PREPUBLICATION",
+  "evidence_class": "SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / OBSERVATION / UNKNOWN",
+  "full_local_P9": "NOT_RUN",
+  "open_questions": [
+    "实际生产入口、C指针/对象/映射/寿命、真实ABI/标准/DEBUG/编译器/链接/运行及311 callee未证；N1547外部标准独立外证UNKNOWN；后台档位未证。"
+  ],
+  "record_type": "DEFERRED_FINDINGS",
+  "inputs_read": [
+    "myinitramfs/mylib/myglibc/malloc/malloc.c",
+    "myinitramfs/mylib/myglibc/malloc/_malloc.h",
+    "myinitramfs/mylib/include/utils.h",
+    "myinitramfs/mylib/util/list.c",
+    "myinitramfs/mylib/util/bitmap.c",
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/debug/panic.c",
+    "myinitramfs/CMakeLists.txt",
+    "myinitramfs/mylib/CMakeLists.txt",
+    "myinitramfs/mylib/myglibc/CMakeLists.txt",
+    "myinitramfs/mylib/myglibc/malloc/CMakeLists.txt",
+    "myinitramfs/mylib/util/CMakeLists.txt"
+  ],
+  "D00": [],
+  "findings": [
+    {
+      "id": "152-O01",
+      "status": "OBSERVATION_PENDING_MAINLINE_REVIEW",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "init_uslab",
+        "lines": [
+          174,
+          221
+        ],
+        "selector": "REINIT_SPARSE/REINIT_FULL: ENTRY→GLOBAL_ROOTS_RESET→C9_CHILD_ROOTS_RESET→REINIT_RETURN; E152-043–052,089–101,035–038"
+      },
+      "observation": "直接再次init在给定活metadata下重建根，D/Qd仍存活/owner保留却脱离各根；旧/新地址只读索引观察不同，根计数与给定owner合计分离。",
+      "boundary": "不是实际泄漏/释放/UAF，生产入口、映射与生命周期未知。"
+    },
+    {
+      "id": "152-O02",
+      "status": "OBSERVATION_PENDING_MAINLINE_REVIEW",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "malloc",
+        "lines": [
+          249,
+          311
+        ],
+        "selector": "REINIT_SPARSE/REINIT_FULL: REINIT_RETURN→SLAB_SELECTED→SCAN_RETURN→OBJECT_UPDATE_DONE/SKIPPED→REFILL_CALL_BOUNDARY; E152-043–052,056–071,102–105"
+      },
+      "observation": "来自实际再init后态的位图残留和计数字段重置，导致两种局部值/分类；两例均到311，不能消费callee返回。",
+      "boundary": "不把旧无清零、临时count、scan-limit分别重报；真实callee与malloc外返未知。"
+    }
+  ],
+  "inherited": [
+    {
+      "id": "R151-01",
+      "state": "CLOSED_BY_MAINLINE_CONSUMPTION_ADDENDUM",
+      "source_ref": {
+        "ref": "7ed4e9279b7d",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MALLOC-STATE-CONSUMPTION-151-review.md",
+        "selector": "补注与旧E151-064/080/081；D00=[]；旧作者两摘要保留，按完整源/模型消费"
+      }
+    },
+    {
+      "id": "R149-01/R149-02/D150-O04",
+      "state": "KEEP_MAINLINE_ADJUDICATION_AND_ORIGINAL_RETURN_HISTORY",
+      "source_ref": {
+        "ref": "7ed4e9279b7d",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/213-user-malloc-reinit-contract.md",
+        "selector": "§1历史消费与150 D00/C10独审§3合读"
+      }
+    },
+    {
+      "id": "N1547",
+      "state": "UNKNOWN_EXTERNAL_STANDARD_EVIDENCE",
+      "source_ref": {
+        "ref": "7ed4e9279b7d",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/213-user-malloc-reinit-contract.md",
+        "selector": "§3不执行assigned高位查询；不重开N1547"
+      }
+    }
+  ]
+}

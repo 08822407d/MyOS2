@@ -1,0 +1,140 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "batch_id": "CORE-USER-MALLOC-REFILL-149",
+  "conversation_display_name": "MYOS2-A-C10c 代码分析执行",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-24",
+  "produced_by": "GPT-6.2",
+  "model_per_owner": "GPT-6.2 Sol；Extra／高推理强度（Owner指定）",
+  "actual_model_identifier_basis": "系统标识GPT-6.2；客户端选择不可见",
+  "actual_backend_model": "UNATTESTED",
+  "actual_reasoning_effort": "UNATTESTED",
+  "date": "2026-11-25",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_pin_short12": "95d47a823b80",
+  "execution_parent_short12": "d2c99a1f285b",
+  "read_channel": "connector",
+  "status": "AUTHOR_PENDING_MAINLINE_REVIEW",
+  "evidence_class": "SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / CONDITIONAL_FRAGMENT / UNKNOWN",
+  "open_questions": [
+    "完整补充递归及终止性、实际对象建立/映射、bitmap载荷、真实ABI/标准/编译器/DEBUG、sh实际链接与运行均未证；N1547独立外证沿旧UNKNOWN。"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "record_type": "batch149_deferred_observations",
+  "D00": [],
+  "items": [
+    {
+      "qualified_id": "CORE-USER-MALLOC-REFILL-149::RF149-O01",
+      "kind": "potential_dependency_cycle",
+      "status": "recorded_no_runtime_claim_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "uslab_alloc",
+        "selector": "A32/A64/A8K/A16K / E149-048,E149-049,E149-050"
+      },
+      "premises": "仅对应独立GIVEN与有限源码模型",
+      "observation": "GIVEN布局与合法档位下metadata 64自依赖、map 32↔16K及64↔8K；动态page条件选择32。",
+      "impact": "条件依赖、计数或对象访问边界；非实际缺陷确认",
+      "counterevidence_or_limit": "实际各门与返回未知；不同分支可不递归；不证明无限递归。",
+      "unknown_dependencies": "真实ABI/映射/调用可达性/完整递归/实际对象/运行",
+      "reopen": "授权的完整递归/对象模型专项",
+      "validation": "待主线裁定及另行授权，不修补"
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-REFILL-149::RF149-O02",
+      "kind": "reservation_count_vs_physical_membership",
+      "status": "recorded_no_runtime_claim_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "malloc",
+        "selector": "B_MORE/B_LAST/B_NO_USED / E149-063,E149-064,E149-065,E149-066,E149-067"
+      },
+      "premises": "仅对应独立GIVEN与有限源码模型",
+      "observation": "count0→1只预留计数，物理空链仍空；前两例nested gate假不代表备用节点，第三例消耗anchor。",
+      "impact": "条件依赖、计数或对象访问边界；非实际缺陷确认",
+      "counterevidence_or_limit": "限定GIVEN瞬态；前两例used优先不触及free摘首；无实际运行。",
+      "unknown_dependencies": "真实ABI/映射/调用可达性/完整递归/实际对象/运行",
+      "reopen": "计数与对象一致性专项",
+      "validation": "待主线裁定及另行授权，不修补"
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-REFILL-149::RF149-O03",
+      "kind": "missing_slab_object_premise",
+      "status": "recorded_no_runtime_claim_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/util/list.c",
+        "symbol": "list_header_remove_head",
+        "selector": "B_NO_USED / E149-074,E149-075,E149-076"
+      },
+      "premises": "仅对应独立GIVEN与有限源码模型",
+      "observation": "count>0且空self-loop时remove_head返回anchor并减count1→0；NULL等待假，offset0投影不建立slab。",
+      "impact": "条件依赖、计数或对象访问边界；非实际缺陷确认",
+      "counterevidence_or_limit": "不是源码显式停点，不执行286；实际可达性/故障未知。",
+      "unknown_dependencies": "真实ABI/映射/调用可达性/完整递归/实际对象/运行",
+      "reopen": "独立对象前提/可达性复核",
+      "validation": "待主线裁定及另行授权，不修补"
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-REFILL-149::RF149-O04",
+      "kind": "metadata_result_object_gate",
+      "status": "recorded_no_runtime_claim_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "uslab_alloc",
+        "selector": "B_MORE/B_LAST/C_META_NULL / E149-048,E149-049,E149-050"
+      },
+      "premises": "仅对应独立GIVEN与有限源码模型",
+      "observation": "地址投影或GIVEN NULL并不保证活uslab对象，226前停止分析。",
+      "impact": "条件依赖、计数或对象访问边界；非实际缺陷确认",
+      "counterevidence_or_limit": "不添源码检查、不宣称实际故障；合法D独立C例可继续。",
+      "unknown_dependencies": "真实ABI/映射/调用可达性/完整递归/实际对象/运行",
+      "reopen": "对象建立/调用结果专项",
+      "validation": "待主线裁定及另行授权，不修补"
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-REFILL-149::RF149-O05",
+      "kind": "map_null_field_boundary",
+      "status": "recorded_no_runtime_claim_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "uslab_alloc",
+        "selector": "C_MAP_NULL / E149-048,E149-049,E149-050"
+      },
+      "premises": "仅对应独立GIVEN与有限源码模型",
+      "observation": "合法D.colormap写NULL；独立P与frame前提可使callee返回D；未直接访问bitmap载荷。",
+      "impact": "条件依赖、计数或对象访问边界；非实际缺陷确认",
+      "counterevidence_or_limit": "不是真实返回路径；后续使用未知；D.owner未由本层写。",
+      "unknown_dependencies": "真实ABI/映射/调用可达性/完整递归/实际对象/运行",
+      "reopen": "调用响应/载荷前提复核",
+      "validation": "待主线裁定及另行授权，不修补"
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-REFILL-149::RF149-O06",
+      "kind": "page_result_object_gate",
+      "status": "recorded_no_runtime_claim_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "uslab_alloc",
+        "selector": "C_PAGE_NULL / E149-048,E149-049,E149-050"
+      },
+      "premises": "仅对应独立GIVEN与有限源码模型",
+      "observation": "D.upage_p写NULL后232读vaddr缺对象；313 caller检查在返回后。",
+      "impact": "条件依赖、计数或对象访问边界；非实际缺陷确认",
+      "counterevidence_or_limit": "NULL字段存储不是对NULL对象写；不宣称真实故障或自然返回NULL。",
+      "unknown_dependencies": "真实ABI/映射/调用可达性/完整递归/实际对象/运行",
+      "reopen": "调用响应/对象生命期复核",
+      "validation": "待主线裁定及另行授权，不修补"
+    }
+  ],
+  "old_findings": "148/147/146/combined145及更早裁定不改不重开；N1547、链接/载荷未知继承，不列新增"
+}

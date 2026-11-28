@@ -1,0 +1,2013 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6 + Extra next tier",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-12",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "ea5eb636ae89",
+  "initial_execution_head_short12": "5a8c5dc1cd38",
+  "read_channel": "connector",
+  "D00": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "review_receiver": "MYOS2-A-C06",
+  "prior_return_disposition": {
+    "returned_id": "R77-01",
+    "review": "RETURN_DOCUMENTATION_ONLY",
+    "submitted_status": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+    "closure_authority": "MYOS2-A-C06",
+    "author_did_not_close": true,
+    "historical77_commit_short12": "5a8c5dc1cd38",
+    "historical77_comment": 6821135838,
+    "count_method": "Complete GitHub-connected UTF-8 text for all six historical files at fixed old commit; exact character substring scan per LF line including explanatory prose, with regex source-definition-label classification. No repository scripts, not full local P9.",
+    "raw_prefix_representation": "U+005B immediately followed by ASCII VERIFIED; no literal such prefix in the new explanatory documents",
+    "original_six_file_counts": [
+      {
+        "file": "MANIFEST.md",
+        "raw_reserved_prefixes": 1,
+        "source_definition_labels": 0,
+        "non_source_hits": 1,
+        "extra_location": "line 111, P9-5 textual explanation; source body unrelated"
+      },
+      {
+        "file": "page-allocator-lifecycle.md",
+        "raw_reserved_prefixes": 0,
+        "source_definition_labels": 0,
+        "non_source_hits": 0
+      },
+      {
+        "file": "facts-and-boundaries.yaml",
+        "raw_reserved_prefixes": 0,
+        "source_definition_labels": 0,
+        "non_source_hits": 0
+      },
+      {
+        "file": "page-allocator-lifecycle-paths.dot",
+        "raw_reserved_prefixes": 0,
+        "source_definition_labels": 0,
+        "non_source_hits": 0
+      },
+      {
+        "file": "deferred-findings.yaml",
+        "raw_reserved_prefixes": 0,
+        "source_definition_labels": 0,
+        "non_source_hits": 0
+      },
+      {
+        "file": "evidence.md",
+        "raw_reserved_prefixes": 121,
+        "source_definition_labels": 121,
+        "non_source_hits": 0
+      }
+    ],
+    "historical_source_definition_labels": 121,
+    "historical_raw_prefixes": 122,
+    "historical_non_source_occurrences": 1,
+    "historical_MANIFEST_claimed_raw_count": 121,
+    "replacement_consumption": [
+      {
+        "target": "old77 MANIFEST self_check verified_claims / P9-5",
+        "replacement": "121 numbered genuine definition labels plus 1 explanatory textual prefix equals 122 raw occurrences, so old all-file raw count 121 invalid; retain 121 tag identities without inflating source evidence"
+      },
+      {
+        "target": "old77 page-allocator-lifecycle.md evidence totalisation",
+        "replacement": "its 121 short definition anchors remain historic technical evidence, not a certificate that all six files had 121 raw occurrences"
+      },
+      {
+        "target": "old77 facts.methods pin_source_anchors and independent_source_literal_reconfirmations",
+        "replacement": "historical 121 source labels and author's claimed recheck apply to those source labels; do not reinterpret as 121 total raw occurrences; these were not independently rechecked in78"
+      },
+      {
+        "target": "old77 evidence.md introduction",
+        "replacement": "historical 121 P2-labelled definitions, no extra source definition introduced by MANIFEST's single explanatory prefix"
+      },
+      {
+        "target": "old77 PR17 formal comment 6821135838",
+        "replacement": "the comment's count of 121 defined source anchors remains, but cannot be promoted to an all-file P6 prefix count of 121"
+      }
+    ],
+    "R77_S01": {
+      "page_hook_flag": "filtered_alloc_gfp after prepare_alloc_flags",
+      "slab_object_hook_flag": "original_gfpflags after successful object retrieval",
+      "new_raw_source_reaudit": false
+    },
+    "R77_S02": {
+      "order_too_large": "immediate NULL from __myos_alloc_pages, not next zone attempt",
+      "zone_miss": "only then next preference index",
+      "expand_order": "add_to_free_list -> set_buddy_order",
+      "free_tail_order": "set_buddy_order -> add_to_free_list",
+      "one_common_graph_sequence": false
+    },
+    "R77_S03": {
+      "multi_level_example": "PFN16/order0, buddies PFN17/order0 then PFN18/order1 then PFN20/order2; conditionally merges [16,18)->[16,20)->[16,24), old buddy nodes remain in old lists if none unlinked; not runtime proof",
+      "PA77_F01_F02": "remain needs_evidence"
+    },
+    "historical77_files_or_comment_modified": false,
+    "R77_01_still_open": true
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/mm/page_alloc/mmzone.c",
+      "source_blob_short12": "5a3ff12e9257",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_api_arch.h",
+      "source_blob_short12": "04cc0246d422",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/numa.h",
+      "source_blob_short12": "838bd4ff8c4c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/cache.h",
+      "source_blob_short12": "56fe48458d0d",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/mmzone_const_arch.h",
+      "source_blob_short12": "028b218e31cf",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.c",
+      "source_blob_short12": "91f0898a257f",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_const.h",
+      "source_blob_short12": "48e0f747d1a9",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_types.h",
+      "source_blob_short12": "c8555b5e5b4e",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_init.c",
+      "source_blob_short12": "23c8934e03b5",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy.c",
+      "source_blob_short12": "629f998030e5",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/mmzone_const.h",
+      "source_blob_short12": "cbba3149ce6c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "source_blob_short12": "645e2175f153",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "source_blob_short12": "1c03094d91b3",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "source_blob_short12": "b10e280f26f0",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/highmem/highmem_macro.h",
+      "source_blob_short12": "12c0ea77419f",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/mmzone_types.h",
+      "source_blob_short12": "8572e503b8cf",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "source_blob_short12": "6eccf6602440",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_macro.h",
+      "source_blob_short12": "30ec09c3079d",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy_types.h",
+      "source_blob_short12": "0ec6d8f72503",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy.h",
+      "source_blob_short12": "b97e1e86f23a",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/page.h",
+      "source_blob_short12": "5a70a70a720e",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/page-flags.h",
+      "source_blob_short12": "2f2789b1eee8",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "source_blob_short12": "06a900f8d509",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "source_blob_short12": "cb90337ff538",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.h",
+      "source_blob_short12": "2b38facdc5bc",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/insns/bitops_arch.h",
+      "source_blob_short12": "87ae81db82d1",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "bounded direct or nearest dependency"
+    }
+  ],
+  "node_storage_matrix": [
+    {
+      "stage": "zone_sizes_init",
+      "before": "memblock and node_data[] origin legal",
+      "operation": "myos_memblock_alloc_normal(MAX_NUMNODES*sizeof(pg_data_t),SMP_CACHE_BYTES)",
+      "after": "conditionally valid nodes pointer, not null-certified by caller",
+      "anchors": [
+        "A01",
+        "A03",
+        "A04",
+        "A05",
+        "A09"
+      ],
+      "stop": "normal allocation may return NULL; node_data[i] store still attempted"
+    },
+    {
+      "stage": "publish node pointers",
+      "operation": "for i in [0,MAX_NUMNODES), NODE_DATA(i)=nodes+i",
+      "after": "node_data array entries set to offsets of returned nodes",
+      "anchors": [
+        "A01",
+        "A02"
+      ],
+      "stop": "array capacity, nonNULL nodes, alignment, and sizeof remain uncompiled"
+    },
+    {
+      "stage": "free_area_init",
+      "operation": "pgdat=NODE_DATA(0), memset(pgdat,0,sizeof(pg_data_t)) before get_pfn_range/calculate_node_totalpages",
+      "after": "source zero-request then node_start and zones if mapping legal",
+      "anchors": [
+        "A24",
+        "A25"
+      ],
+      "stop": "cannot certify zero pointer or writable page mapping"
+    },
+    {
+      "stage": "alloc_node_mem_map",
+      "operation": "if no node_spanned_pages return; otherwise align start down/order pages and end up; size=(end-start)*sizeof(page_s)",
+      "anchors": [
+        "A27",
+        "A28",
+        "A29",
+        "A39"
+      ],
+      "stop": "width, multiplication/overflow, valid span and allocated extent"
+    },
+    {
+      "stage": "map allocation and publish",
+      "operation": "phys_to_virt(memblock_alloc_range(size,SMP_CACHE_BYTES,MAX_DMA_PFN,0)); if(!map) while(1); memset; node_mem_map=mem_map=map+offset",
+      "anchors": [
+        "A30",
+        "A31",
+        "A32",
+        "A33",
+        "A34",
+        "A35",
+        "A41"
+      ],
+      "stop": "physical zero sentinel can turn into nonNULL high virtual pointer; no VM mapping proof"
+    },
+    {
+      "stage": "node list initialization",
+      "operation": "for int i<ulong node_spanned_pages: INIT_LIST_S(node_mem_map[i].lru/buddy_list)",
+      "anchors": [
+        "A37"
+      ],
+      "stop": "int width, true extent and nonzero PFN bias not proven"
+    }
+  ],
+  "memmap_index_matrix": [
+    {
+      "start_pfn": 0,
+      "spanned": 16,
+      "max_order_nr_pages": 1024,
+      "start_aligned": 0,
+      "offset": 0,
+      "end_aligned": 1024,
+      "allocated_descriptor_count": 1024,
+      "local_index0": "map[0]",
+      "global_pfn0": "map[0]",
+      "global_pfn1": "map[1]",
+      "condition": "source algebra conditional sizeof(page_s)=S; pointer valid",
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36",
+        "A37"
+      ]
+    },
+    {
+      "start_pfn": 1,
+      "spanned": 16,
+      "max_order_nr_pages": 1024,
+      "start_aligned": 0,
+      "offset": 1,
+      "end_aligned": 1024,
+      "allocated_descriptor_count": 1024,
+      "local_index0": "map[1]",
+      "global_pfn1": "map[2]",
+      "gap": "different address for same conceptual PFN",
+      "anchors": [
+        "A27",
+        "A35",
+        "A36",
+        "A37"
+      ],
+      "limit": "PB78-F01 conditional no extra bias adjustment"
+    },
+    {
+      "start_pfn": 1024,
+      "spanned": 16,
+      "max_order_nr_pages": 1024,
+      "start_aligned": 1024,
+      "offset": 0,
+      "end_aligned": 2048,
+      "allocated_descriptor_count": 1024,
+      "local_index0": "map[0]",
+      "global_pfn1024": "map[1024]",
+      "first_invalid": "one-past descriptor extent",
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36",
+        "A37"
+      ],
+      "limit": "PB78-F01/known valid allocation extent conditional"
+    },
+    {
+      "start_pfn": 1025,
+      "spanned": 16,
+      "max_order_nr_pages": 1024,
+      "start_aligned": 1024,
+      "offset": 1,
+      "end_aligned": 2048,
+      "allocated_descriptor_count": 1024,
+      "local_index0": "map[1]",
+      "global_pfn1025": "map[1026]",
+      "first_invalid": "past descriptor extent",
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36"
+      ],
+      "limit": "no runtime address fault asserted"
+    },
+    {
+      "start_pfn": 0,
+      "spanned": 0,
+      "alloc_node_mem_map": "returns without allocating",
+      "global_mem_map": "not initialized by this call",
+      "anchors": [
+        "A27"
+      ],
+      "limit": "callers must establish empty-zone handling independently"
+    }
+  ],
+  "address_unit_and_failure_matrix": [
+    {
+      "caller": "myos_memblock_alloc_normal",
+      "lower_limit": "MAX_DMA_PFN << PAGE_SHIFT",
+      "selected_C_value_bytes": 16777216,
+      "source": "memblock_alloc_internal physical byte boundaries",
+      "anchors": [
+        "A07",
+        "A09",
+        "A11"
+      ],
+      "stop": "direct mapping and reserved capacity needed"
+    },
+    {
+      "caller": "alloc_node_mem_map",
+      "lower_limit": "MAX_DMA_PFN raw",
+      "selected_C_value_bytes": 4096,
+      "source": "memblock_alloc_range takes phys_addr_t byte limits",
+      "anchors": [
+        "A07",
+        "A12",
+        "A41"
+      ],
+      "stop": "PB78-F03, range may choose below intended 16MB normal boundary, not proof it did"
+    },
+    {
+      "caller": "memblock_alloc_range",
+      "bounds": "end==ACCESSIBLE(0) -> memblock.current_limit; start=max(start,PAGE_SIZE), end=max(start,end)",
+      "return": "found && !simple_mmblk_reserve -> phys candidate; else 0",
+      "anchors": [
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19"
+      ],
+      "stop": "allocation/reservation success not inferred from function name"
+    },
+    {
+      "caller": "memblock_alloc_internal",
+      "failure": "checks alloc==0 before phys_to_virt, so returns NULL on that path",
+      "anchors": [
+        "A10",
+        "A11"
+      ],
+      "stop": "fallback strips lower limit only if previous call zero and min_addr nonzero"
+    },
+    {
+      "caller": "alloc_node_mem_map",
+      "failure": "converts physical 0 with phys_to_virt/__va first, then tests map==NULL",
+      "anchors": [
+        "A30",
+        "A31",
+        "A32",
+        "A33",
+        "A34"
+      ],
+      "stop": "PB78-F02: high PAGE_OFFSET could be nonNULL; no claim actual physical 0 allocation failure occurred"
+    },
+    {
+      "caller": "node_data[] publish",
+      "failure": "nodes==NULL not guarded before nodes+i and NODE_DATA(i) assignment",
+      "anchors": [
+        "A01",
+        "A02"
+      ],
+      "stop": "PB78-U01, actual initialisation success unknown"
+    }
+  ],
+  "zone_initialization_matrix": [
+    {
+      "stage": "zone_sizes_init",
+      "operation": "zeros five-slot max_zone_pfns then assigns DMA min(MAX_DMA_PFN,max_low_pfn), DMA32 min(MAX_DMA32_PFN,max_low_pfn), NORMAL max_low_pfn",
+      "anchors": [
+        "A06",
+        "B01"
+      ],
+      "limit": "MOVABLE/DEVICE remain zero in this producer"
+    },
+    {
+      "stage": "free_area_init",
+      "operation": "arch_zone_lowest/highest populated sequentially from max_zone_pfn and start_pfn initialized1",
+      "anchors": [
+        "B03"
+      ],
+      "limit": "source-only, max_low_pfn origin unknown"
+    },
+    {
+      "stage": "calculate_node_totalpages",
+      "operation": "for zones call __myos_calculate_node_pages; writes zone.start/spanned/present, node.nr_zones=MAX_NR_ZONES and sums",
+      "anchors": [
+        "B10",
+        "B11",
+        "B12",
+        "B13"
+      ],
+      "limit": "empty node callee may return without writing spanned/absent"
+    },
+    {
+      "stage": "free_area_init_core",
+      "operation": "reads span/present and calls zone_init_internals; lock initialization commented",
+      "anchors": [
+        "B14",
+        "B15",
+        "B16"
+      ],
+      "limit": "pgdat memset0 is not tested spin_lock_init"
+    },
+    {
+      "stage": "memmap_init",
+      "operation": "starts PFN1, for all zones reassigns zone.start/spanned/name, sets present_pages=0, initializes free_area heads and each page",
+      "anchors": [
+        "B17",
+        "B18",
+        "B19"
+      ],
+      "limit": "PB78-F06: overwrites earlier present counts; not evidence of end-user consequence"
+    }
+  ],
+  "page_metadata_initial_state": [
+    {
+      "case": "initial map allocation",
+      "operation": "memset(map,0,size) request if map valid",
+      "anchors": [
+        "A35"
+      ],
+      "limit": "union page_type/_mapcount storage starts zero conditionally; not full page_type writer census"
+    },
+    {
+      "case": "each page from memmap_init",
+      "operation": "init_page_count sets _refcount=1, initializes lru and buddy_list",
+      "anchors": [
+        "B19",
+        "B20",
+        "B21",
+        "B27"
+      ],
+      "limit": "page_mapcount_reset is commented; flags and union not freshly reset here"
+    },
+    {
+      "case": "reservation",
+      "operation": "reserve_bootmem_region PFN_DOWN(start)..PFN_UP(end), pfn_valid only upper-bound test; __init_single_page again; SetPageReserved",
+      "anchors": [
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B32"
+      ],
+      "limit": "holes, mapping valid and page existence independent"
+    },
+    {
+      "case": "handoff",
+      "operation": "memblock_free_pages clears Reserved and sets refcount0 on each block page, then requests managed_pages increment and __free_pages_ok",
+      "anchors": [
+        "C33",
+        "C34",
+        "C35"
+      ],
+      "limit": "does not certify buddy list inclusion or actual physical free"
+    },
+    {
+      "case": "page storage types",
+      "operation": "page.flags and flag_defs union; page_type and _mapcount another union; _refcount independent member",
+      "anchors": [
+        "B23",
+        "B24",
+        "B25",
+        "B26"
+      ],
+      "limit": "GAP-M08 and MR-02 prohibit global PageBuddy conclusions"
+    }
+  ],
+  "span_hole_and_reserved_matrix": [
+    {
+      "case": "empty node",
+      "node_start": 0,
+      "node_end": 0,
+      "callee": "__myos_calculate_node_pages early returns without writing output pointers",
+      "caller": "reads local spanned/absent afterward",
+      "anchors": [
+        "B06",
+        "B10",
+        "B11"
+      ],
+      "stop": "PB78-F04, no deterministic count result"
+    },
+    {
+      "case": "nonempty zone no hole",
+      "zone_span": 16,
+      "contained_present_memory": 16,
+      "expected_absent": 0,
+      "expected_present": 16,
+      "anchors": [
+        "B07",
+        "B08",
+        "B09",
+        "B12"
+      ],
+      "limit": "requires nonempty ranges sorted and in-zone; MAX and clamp semantics conditional"
+    },
+    {
+      "case": "nonempty zone with hole",
+      "zone_span": 16,
+      "contained_present_memory": 12,
+      "expected_absent": 4,
+      "expected_present": 12,
+      "anchors": [
+        "B07",
+        "B08",
+        "B09",
+        "B12"
+      ],
+      "limit": "source memory PFN iteration not reserved-free; 12 present pages not necessarily 12 free pages"
+    },
+    {
+      "case": "zone coverage reset",
+      "present_before_memmap_init": 12,
+      "present_after_memmap_init": 0,
+      "anchors": [
+        "B12",
+        "B18"
+      ],
+      "limit": "PB78-F06 local data overwrite, no future consumer proved"
+    },
+    {
+      "case": "nonexistent PFN under max_pfn",
+      "pfn_valid_result": true,
+      "can_access_mem_map": "unknown",
+      "anchors": [
+        "B28",
+        "B29"
+      ],
+      "limit": "a simple upper bound does not validate hole/allocated extent"
+    },
+    {
+      "case": "reserved phys interval [4097,8191)",
+      "rounded_PFN_range": "[1,2)",
+      "reserve_pages": [
+        1
+      ],
+      "anchors": [
+        "B29",
+        "B30",
+        "B31"
+      ],
+      "limit": "pfn_valid/pfn_to_page and memory extent valid"
+    },
+    {
+      "case": "reserved phys interval [4097,8193)",
+      "rounded_PFN_range": "[1,3)",
+      "reserve_pages": [
+        1,
+        2
+      ],
+      "anchors": [
+        "B29",
+        "B30"
+      ],
+      "limit": "not same as half-open byte interval"
+    }
+  ],
+  "free_range_iterator_matrix": [
+    {
+      "case": "no reservations cnt=0",
+      "memory": "[4096,20480)",
+      "reserved": [],
+      "conditional_output": [
+        "[4096,20480)"
+      ],
+      "anchors": [
+        "C04",
+        "C12",
+        "C15",
+        "C17",
+        "C18",
+        "C20"
+      ],
+      "limit": "regions[0] tail slot address valid, no skip flags; sorted metadata"
+    },
+    {
+      "case": "reserve beginning",
+      "memory": "[4096,20480)",
+      "reserved": [
+        "[4096,8192)"
+      ],
+      "conditional_output": [
+        "[8192,20480)"
+      ],
+      "anchors": [
+        "C12",
+        "C18",
+        "C19",
+        "C20",
+        "C21"
+      ],
+      "limit": "sorted disjoint regions and valid count"
+    },
+    {
+      "case": "reserve middle",
+      "memory": "[4096,20480)",
+      "reserved": [
+        "[8192,12288)"
+      ],
+      "conditional_output": [
+        "[4096,8192)",
+        "[12288,20480)"
+      ],
+      "anchors": [
+        "C12",
+        "C17",
+        "C18",
+        "C20",
+        "C21"
+      ],
+      "limit": "reserve metadata stable; no actual boot memory map asserted"
+    },
+    {
+      "case": "reserve end",
+      "memory": "[4096,20480)",
+      "reserved": [
+        "[16384,20480)"
+      ],
+      "conditional_output": [
+        "[4096,16384)"
+      ],
+      "anchors": [
+        "C18",
+        "C20"
+      ],
+      "limit": "stop after sentinel"
+    },
+    {
+      "case": "two memory regions",
+      "memory": [
+        "[4096,12288)",
+        "[16384,24576)"
+      ],
+      "reserved": [
+        "[8192,20480)"
+      ],
+      "conditional_output": [
+        "[4096,8192)",
+        "[20480,24576)"
+      ],
+      "anchors": [
+        "C15",
+        "C16",
+        "C18",
+        "C20",
+        "C21"
+      ],
+      "limit": "same as source gap intersection only with sorted disjoint nonoverlapping lists"
+    },
+    {
+      "case": "all reserved",
+      "memory": "[4096,12288)",
+      "reserved": [
+        "[4096,12288)"
+      ],
+      "conditional_output": [],
+      "anchors": [
+        "C12",
+        "C18",
+        "C19",
+        "C22"
+      ],
+      "limit": "does not imply memblock_free_all has no other writes"
+    },
+    {
+      "case": "for_each_memblock_type tail",
+      "cnt": 0,
+      "max": 256,
+      "iteration_indices": [
+        0
+      ],
+      "tail": "regions[0] valid but empty zero-initialized static slot",
+      "anchors": [
+        "C04",
+        "C45"
+      ],
+      "limit": "does not certify stale tail at arbitrary future cnt"
+    },
+    {
+      "case": "for_each_memblock_type cnt=max",
+      "cnt": 256,
+      "max": 256,
+      "iteration_indices": "0..256",
+      "earliest_stop": "regions[256] formed and dereferenced in body outside capacity",
+      "anchors": [
+        "C04",
+        "C05",
+        "C45"
+      ],
+      "limit": "whether valid writer ever permits cnt==max not proved"
+    },
+    {
+      "case": "__simple_next_mem_range tail",
+      "cnt": 1,
+      "max": 256,
+      "idx_b": 1,
+      "r": "&regions[1] within allocated capacity",
+      "r_gap_end": "PHYS_ADDR_MAX without dereferencing r.base",
+      "anchors": [
+        "C17",
+        "C18"
+      ],
+      "limit": "cnt<=max-1 and valid previous reserved[0]; distinguishes pointer from dereference"
+    },
+    {
+      "case": "iterator sentinel",
+      "sentinel": "ULLONG_MAX",
+      "behavior": "macro stops only when next sets sentinel",
+      "anchors": [
+        "C13",
+        "C14",
+        "C22"
+      ],
+      "limit": "zero-progress/invalid pointer not certified"
+    }
+  ],
+  "bootstrap_chunk_matrix": [
+    {
+      "case": "positive [1,9) PFN",
+      "input": [
+        1,
+        9
+      ],
+      "isolated_chunks": [
+        {
+          "pfn": 1,
+          "order": 0,
+          "end": 2
+        },
+        {
+          "pfn": 2,
+          "order": 1,
+          "end": 4
+        },
+        {
+          "pfn": 4,
+          "order": 2,
+          "end": 8
+        },
+        {
+          "pfn": 8,
+          "order": 0,
+          "end": 9
+        }
+      ],
+      "pages": 8,
+      "anchors": [
+        "C25",
+        "C27",
+        "C28",
+        "C29"
+      ],
+      "limit": "ONLY isolated branch model after pretending an initialized pages accumulator; real function hits read-of-uninitialized before chunk loop"
+    },
+    {
+      "case": "positive aligned [16,24) PFN",
+      "input": [
+        16,
+        24
+      ],
+      "isolated_chunks": [
+        {
+          "pfn": 16,
+          "order": 3,
+          "end": 24
+        }
+      ],
+      "pages": 8,
+      "anchors": [
+        "C27",
+        "C28",
+        "C40"
+      ],
+      "limit": "isolated conditional, no actual handoff"
+    },
+    {
+      "case": "positive unaligned [17,25) PFN",
+      "input": [
+        17,
+        25
+      ],
+      "isolated_chunks": [
+        {
+          "pfn": 17,
+          "order": 0,
+          "end": 18
+        },
+        {
+          "pfn": 18,
+          "order": 1,
+          "end": 20
+        },
+        {
+          "pfn": 20,
+          "order": 2,
+          "end": 24
+        },
+        {
+          "pfn": 24,
+          "order": 0,
+          "end": 25
+        }
+      ],
+      "pages": 8,
+      "anchors": [
+        "C27",
+        "C28"
+      ],
+      "limit": "isolated conditional, not run"
+    },
+    {
+      "case": "start PFN zero",
+      "input": [
+        0,
+        16
+      ],
+      "earliest_stop": "__ffs(0) requested with undefined zero input (after earlier uninitialised pages +=)",
+      "anchors": [
+        "C24",
+        "C26",
+        "C27",
+        "C29"
+      ],
+      "limit": "cannot calculate chosen order and handoff"
+    },
+    {
+      "case": "empty clipped interval",
+      "input_bytes": [
+        8192,
+        8192
+      ],
+      "after_PFN_clip": "start>=end",
+      "effect": "continue, no pages+= or chunk calls for this interval",
+      "anchors": [
+        "C25"
+      ],
+      "limit": "reserve initialization before loop still separately executed"
+    },
+    {
+      "case": "unaligned raw interval",
+      "input_bytes": [
+        4097,
+        16383
+      ],
+      "PFN_UP_start": 2,
+      "PFN_DOWN_end": 3,
+      "clipped_PFNs": "[2,3)",
+      "isolated_chunks": [
+        {
+          "pfn": 2,
+          "order": 0,
+          "end": 3
+        }
+      ],
+      "anchors": [
+        "C25",
+        "C30",
+        "C31"
+      ],
+      "limit": "isolated if allocator/metadata valid"
+    },
+    {
+      "case": "end capped by max_low_pfn",
+      "input_bytes": [
+        4096,
+        1048576
+      ],
+      "max_low_pfn": 16,
+      "clipped_PFNs": "[1,16)",
+      "anchors": [
+        "C25"
+      ],
+      "limit": "not claim underlying region physical extents valid"
+    }
+  ],
+  "handoff_transition_matrix": [
+    {
+      "stage": "mem_init",
+      "action": "after_bootmem=1 THEN memblock_free_all()",
+      "anchors": [
+        "C36"
+      ],
+      "stop": "state bit does not imply free_all returned"
+    },
+    {
+      "stage": "memmap_init_reserved_pages",
+      "action": "reserved memblock types iterated cnt+1, reserve_bootmem_region per selected rgn",
+      "anchors": [
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C38"
+      ],
+      "stop": "tail slot/cnt and hole/PFN validity"
+    },
+    {
+      "stage": "memblock_free_all",
+      "action": "uint64 i=0, pages declared without initialisation, free range iterator begins after reserved mark",
+      "anchors": [
+        "C24",
+        "C38"
+      ],
+      "stop": "at first positive returned PFN interval, pages+= reads indeterminate value"
+    },
+    {
+      "stage": "conditional chunk",
+      "action": "if start_pfn<end_pfn, choose order via __ffs then reduce until chunk fits, request memblock_free_pages and advance",
+      "anchors": [
+        "C25",
+        "C27",
+        "C28",
+        "C29"
+      ],
+      "stop": "startPFN0 undefined __ffs; no actual handoff certified past prior uninitialised read"
+    },
+    {
+      "stage": "memblock_free_pages",
+      "action": "on valid block each page ClearReserved, set refcount0, then managed_pages += nr_pages, then __free_pages_ok",
+      "anchors": [
+        "C33",
+        "C34",
+        "C35"
+      ],
+      "stop": "valid zone/desc and callee; counter can change before list attachment succeeded"
+    },
+    {
+      "stage": "__free_pages_ok",
+      "action": "lookup PFN/zone, free prepare, lock and buddy free",
+      "anchors": [
+        "C47",
+        "C48",
+        "C49"
+      ],
+      "stop": "R77 F01/F02 & MC-01/05 physical/owner invariants still open"
+    },
+    {
+      "stage": "mm_core_init",
+      "action": "mem_init before kmem_cache_init",
+      "anchors": [
+        "C37"
+      ],
+      "stop": "direct source order, not complete boot success"
+    }
+  ],
+  "earliest_stop_matrix": [
+    {
+      "case": "node table memblock allocation returns NULL",
+      "stop": "nodes+i used without caller null guard in zone_sizes_init",
+      "anchors": [
+        "A01",
+        "A02"
+      ]
+    },
+    {
+      "case": "PFN-space node table count unknown",
+      "stop": "MAX_NUMNODES depends on CONFIG_NODES_SHIFT and sizeof(pg_data_t), cannot assert compiled size",
+      "anchors": [
+        "A03",
+        "A04"
+      ]
+    },
+    {
+      "case": "memblock reserve failure",
+      "stop": "memblock_alloc_range returns phys 0, caller must check before translating",
+      "anchors": [
+        "A15",
+        "A18"
+      ]
+    },
+    {
+      "case": "node_mem_map phys allocation returns 0",
+      "stop": "phys_to_virt(0) yields nonNULL PAGE_OFFSET on selected __va model; if(!map) may miss failure, stop before memset",
+      "anchors": [
+        "A30",
+        "A31",
+        "A32",
+        "A33",
+        "A34"
+      ]
+    },
+    {
+      "case": "map descriptor pointer/extent",
+      "stop": "map+offset plus absolute PFN may exceed allocation for node_start>=1024 model",
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36"
+      ],
+      "finding": "PB78-F01"
+    },
+    {
+      "case": "raw MAX_DMA_PFN units",
+      "stop": "memmap_alloc_range lower bound 4096 physical bytes, normal wrapper lower bound 16MiB; actual placement unknown",
+      "anchors": [
+        "A07",
+        "A09",
+        "A41"
+      ],
+      "finding": "PB78-F03"
+    },
+    {
+      "case": "zero-node branch",
+      "stop": "__myos_calculate_node_pages returns early without setting output spanned/absent; caller reads later",
+      "anchors": [
+        "B06",
+        "B10",
+        "B11"
+      ],
+      "finding": "PB78-F04"
+    },
+    {
+      "case": "hole or invalid PFN",
+      "stop": "pfn_valid upper bound test not proof mem_map mapping or RAM presence",
+      "anchors": [
+        "B28",
+        "B29"
+      ]
+    },
+    {
+      "case": "present_pages overwritten",
+      "stop": "later memmap_init assigns 0 regardless previous calculate_node_totalpages result",
+      "anchors": [
+        "B12",
+        "B18"
+      ],
+      "finding": "PB78-F05"
+    },
+    {
+      "case": "zone.lock",
+      "stop": "zone_init_internals lock init is commented; zeroed struct not a tested lock init",
+      "anchors": [
+        "B14"
+      ]
+    },
+    {
+      "case": "reserve iteration at cnt+1",
+      "stop": "if cnt==max then pointer beyond type.regions allocation; valid writer capacity not proven",
+      "anchors": [
+        "C04",
+        "C05",
+        "C45"
+      ]
+    },
+    {
+      "case": "free range iterator data",
+      "stop": "requires sorted nonoverlap, valid tail slot and flags; no universal memblock algorithm audit",
+      "anchors": [
+        "C12",
+        "C15",
+        "C17",
+        "C18"
+      ]
+    },
+    {
+      "case": "positive free PFN interval",
+      "stop": "pages+=end-start reads uninitialized automatic pages before chunk loop",
+      "anchors": [
+        "C24",
+        "C25",
+        "C26"
+      ],
+      "finding": "PB78-F06"
+    },
+    {
+      "case": "free interval starts PFN0",
+      "stop": "__ffs(0) lacks defined result; cannot derive initial order",
+      "anchors": [
+        "C27",
+        "C29"
+      ]
+    },
+    {
+      "case": "handoff zone invalid",
+      "stop": "managed_pages update/zone lookup invalid, don't reach __free_pages_ok claims",
+      "anchors": [
+        "C33",
+        "C34",
+        "C35",
+        "C47"
+      ]
+    },
+    {
+      "case": "physical reclamation",
+      "stop": "__free_pages_ok source request not guarantee valid buddy insertion or reuse",
+      "anchors": [
+        "C47",
+        "C48",
+        "C49"
+      ]
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "PB78-M01",
+      "kind": "numa_default",
+      "input": {
+        "CONFIG_NODES_SHIFT": "undefined"
+      },
+      "expected": {
+        "NODES_SHIFT": 0,
+        "MAX_NUMNODES": 1
+      },
+      "anchors": [
+        "A03",
+        "A04"
+      ],
+      "limits": "preprocessor conditional model, not compiled config"
+    },
+    {
+      "id": "PB78-M02",
+      "kind": "nodes_count_double",
+      "input": {
+        "CONFIG_NODES_SHIFT": 1
+      },
+      "expected": {
+        "NODES_SHIFT": 1,
+        "MAX_NUMNODES": 2
+      },
+      "anchors": [
+        "A03",
+        "A04"
+      ],
+      "limits": "not evidence runtime supports NUMA2"
+    },
+    {
+      "id": "PB78-M03",
+      "kind": "dma_pfn",
+      "input": {
+        "PAGE_SHIFT": 12,
+        "MAX_DMA_PFN": "(16MiB)>>12"
+      },
+      "expected": {
+        "MAX_DMA_PFN": 4096,
+        "shifted_bytes": 16777216
+      },
+      "anchors": [
+        "A07",
+        "A09"
+      ],
+      "limits": "selected macro branch"
+    },
+    {
+      "id": "PB78-M04",
+      "kind": "lower_bound_mismatch",
+      "input": {
+        "normal_raw_lower": "MAX_DMA_PFN<<12",
+        "memmap_raw_lower": "MAX_DMA_PFN"
+      },
+      "expected": {
+        "normal_bytes": 16777216,
+        "memmap_bytes": 4096
+      },
+      "anchors": [
+        "A07",
+        "A09",
+        "A41"
+      ],
+      "limits": "valid memblock range, not physical placement proof"
+    },
+    {
+      "id": "PB78-M05",
+      "kind": "map_start0",
+      "input": {
+        "node_start": 0,
+        "node_span": 16,
+        "alignment": 1024
+      },
+      "expected": {
+        "floor_start": 0,
+        "offset": 0,
+        "aligned_end": 1024,
+        "descriptors": 1024,
+        "global_pfn0": "map[0]"
+      },
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M06",
+      "kind": "map_start1",
+      "input": {
+        "node_start": 1,
+        "node_span": 16,
+        "alignment": 1024
+      },
+      "expected": {
+        "floor_start": 0,
+        "offset": 1,
+        "aligned_end": 1024,
+        "local_index0": "map[1]",
+        "global_pfn1": "map[2]"
+      },
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36",
+        "A37"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M07",
+      "kind": "map_start1024",
+      "input": {
+        "node_start": 1024,
+        "node_span": 16,
+        "alignment": 1024
+      },
+      "expected": {
+        "floor_start": 1024,
+        "offset": 0,
+        "aligned_end": 2048,
+        "descriptors": 1024,
+        "global_pfn1024": "map[1024] (one-past)"
+      },
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M08",
+      "kind": "map_start1025",
+      "input": {
+        "node_start": 1025,
+        "node_span": 16,
+        "alignment": 1024
+      },
+      "expected": {
+        "floor_start": 1024,
+        "offset": 1,
+        "aligned_end": 2048,
+        "descriptors": 1024,
+        "global_pfn1025": "map[1026] (past)"
+      },
+      "anchors": [
+        "A27",
+        "A29",
+        "A35",
+        "A36"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M09",
+      "kind": "zero_phys_sentinel",
+      "input": {
+        "phys_allocation": 0,
+        "PAGE_OFFSET": "0xffff800000000000"
+      },
+      "expected": {
+        "phys_to_virt_source": "PAGE_OFFSET+0 (nonNULL)",
+        "map_null_check": false
+      },
+      "anchors": [
+        "A30",
+        "A31",
+        "A32",
+        "A33",
+        "A34"
+      ],
+      "limits": "machine pointer representability, mapped extent not established"
+    },
+    {
+      "id": "PB78-M10",
+      "kind": "empty_node",
+      "input": {
+        "node_spanned_pages": 0
+      },
+      "expected": {
+        "alloc_node_mem_map": "returns without allocating"
+      },
+      "anchors": [
+        "A27"
+      ],
+      "limits": "later users not assumed valid"
+    },
+    {
+      "id": "PB78-M11",
+      "kind": "memblock_alloc_fallback",
+      "input": {
+        "min_addr": 16777216,
+        "first_alloc": 0
+      },
+      "expected": {
+        "retry_min_addr": 0
+      },
+      "anchors": [
+        "A10"
+      ],
+      "limits": "second call may also fail"
+    },
+    {
+      "id": "PB78-M12",
+      "kind": "zone_nonempty_nohole",
+      "input": {
+        "zone_span": 16,
+        "present_memory": 16
+      },
+      "expected": {
+        "absent": 0,
+        "present": 16
+      },
+      "anchors": [
+        "B07",
+        "B08",
+        "B09",
+        "B12"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M13",
+      "kind": "zone_nonempty_hole",
+      "input": {
+        "zone_span": 16,
+        "present_memory": 12
+      },
+      "expected": {
+        "absent": 4,
+        "present": 12
+      },
+      "anchors": [
+        "B08",
+        "B09",
+        "B12"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M14",
+      "kind": "empty_node_calculate",
+      "input": {
+        "node_start": 0,
+        "node_end": 0
+      },
+      "expected": {
+        "outputs_written": false,
+        "caller_defined_result": "STOP"
+      },
+      "anchors": [
+        "B06",
+        "B10",
+        "B11"
+      ],
+      "limits": "indeterminate local inputs; no concrete counter"
+    },
+    {
+      "id": "PB78-M15",
+      "kind": "zone_present_reset",
+      "input": {
+        "pre_memmap_present": 12
+      },
+      "expected": {
+        "post_memmap_present": 0
+      },
+      "anchors": [
+        "B12",
+        "B18"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M16",
+      "kind": "reserved_fragment",
+      "input": {
+        "start_byte": 4097,
+        "end_byte": 8193,
+        "PAGE_SIZE": 4096
+      },
+      "expected": {
+        "start_pfn": 1,
+        "end_pfn": 3,
+        "marked_PFNs": [
+          1,
+          2
+        ]
+      },
+      "anchors": [
+        "B29",
+        "B30",
+        "B31"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M17",
+      "kind": "hole_pfn_valid",
+      "input": {
+        "PFN": 500,
+        "max_pfn": 1000,
+        "memory_contains_PFN": false
+      },
+      "expected": {
+        "pfn_valid_source": true,
+        "valid_actual_page": "unknown"
+      },
+      "anchors": [
+        "B28",
+        "B29"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M18",
+      "kind": "iterator_no_reservation",
+      "input": {
+        "memory": [
+          "[4096,20480)"
+        ],
+        "reserved": []
+      },
+      "expected": {
+        "segments": [
+          "[4096,20480)"
+        ]
+      },
+      "anchors": [
+        "C12",
+        "C18",
+        "C20"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M19",
+      "kind": "iterator_reserve_middle",
+      "input": {
+        "memory": [
+          "[4096,20480)"
+        ],
+        "reserved": [
+          "[8192,12288)"
+        ]
+      },
+      "expected": {
+        "segments": [
+          "[4096,8192)",
+          "[12288,20480)"
+        ]
+      },
+      "anchors": [
+        "C12",
+        "C17",
+        "C18",
+        "C20"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M20",
+      "kind": "iterator_reserve_head_tail",
+      "input": {
+        "memory": [
+          "[4096,28672)"
+        ],
+        "reserved": [
+          "[4096,8192)",
+          "[24576,28672)"
+        ]
+      },
+      "expected": {
+        "segments": [
+          "[8192,24576)"
+        ]
+      },
+      "anchors": [
+        "C12",
+        "C18",
+        "C20"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M21",
+      "kind": "iterator_multiple_memory",
+      "input": {
+        "memory": [
+          "[4096,12288)",
+          "[16384,24576)"
+        ],
+        "reserved": [
+          "[8192,20480)"
+        ]
+      },
+      "expected": {
+        "segments": [
+          "[4096,8192)",
+          "[20480,24576)"
+        ]
+      },
+      "anchors": [
+        "C15",
+        "C16",
+        "C18",
+        "C20"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M22",
+      "kind": "iterator_all_reserved",
+      "input": {
+        "memory": [
+          "[4096,12288)"
+        ],
+        "reserved": [
+          "[4096,12288)"
+        ]
+      },
+      "expected": {
+        "segments": []
+      },
+      "anchors": [
+        "C12",
+        "C18",
+        "C22"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M23",
+      "kind": "tail_cnt0",
+      "input": {
+        "cnt": 0,
+        "max": 256
+      },
+      "expected": {
+        "for_each_type_indices": [
+          0
+        ],
+        "array_index_valid": true
+      },
+      "anchors": [
+        "C04",
+        "C45"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M24",
+      "kind": "tail_cnt_max",
+      "input": {
+        "cnt": 256,
+        "max": 256
+      },
+      "expected": {
+        "last_index": 256,
+        "array_index_valid": false
+      },
+      "anchors": [
+        "C04",
+        "C05",
+        "C45"
+      ],
+      "limits": "requires cnt==max producer, not proved"
+    },
+    {
+      "id": "PB78-M25",
+      "kind": "free_positive_prefix",
+      "input": {
+        "PFN_start": 1,
+        "PFN_end": 9
+      },
+      "expected": {
+        "earliest_stop": "uninitialized pages +=, so actual chunks not certified"
+      },
+      "anchors": [
+        "C24",
+        "C26"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M26",
+      "kind": "isolated_chunk_1_9",
+      "input": {
+        "PFN_start": 1,
+        "PFN_end": 9
+      },
+      "expected": {
+        "chunks": [
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            2,
+            1,
+            4
+          ],
+          [
+            4,
+            2,
+            8
+          ],
+          [
+            8,
+            0,
+            9
+          ]
+        ],
+        "total_pages": 8
+      },
+      "anchors": [
+        "C27",
+        "C28",
+        "C29"
+      ],
+      "limits": "counterfactual with initialized pages and all valid, not execution"
+    },
+    {
+      "id": "PB78-M27",
+      "kind": "isolated_chunk_16_24",
+      "input": {
+        "PFN_start": 16,
+        "PFN_end": 24
+      },
+      "expected": {
+        "chunks": [
+          [
+            16,
+            3,
+            24
+          ]
+        ],
+        "total_pages": 8
+      },
+      "anchors": [
+        "C27",
+        "C28"
+      ],
+      "limits": "counterfactual only"
+    },
+    {
+      "id": "PB78-M28",
+      "kind": "isolated_chunk_17_25",
+      "input": {
+        "PFN_start": 17,
+        "PFN_end": 25
+      },
+      "expected": {
+        "chunks": [
+          [
+            17,
+            0,
+            18
+          ],
+          [
+            18,
+            1,
+            20
+          ],
+          [
+            20,
+            2,
+            24
+          ],
+          [
+            24,
+            0,
+            25
+          ]
+        ],
+        "total_pages": 8
+      },
+      "anchors": [
+        "C27",
+        "C28"
+      ],
+      "limits": "counterfactual only"
+    },
+    {
+      "id": "PB78-M29",
+      "kind": "isolated_chunk_start0",
+      "input": {
+        "PFN_start": 0,
+        "PFN_end": 16
+      },
+      "expected": {
+        "first_ffs_argument": 0,
+        "result": "undefined/STOP"
+      },
+      "anchors": [
+        "C27",
+        "C29"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M30",
+      "kind": "boot_handoff_order",
+      "input": {
+        "valid_pages": 8,
+        "order": 3
+      },
+      "expected": {
+        "clear_reserved_pages": 8,
+        "set_page_ref_to0_pages": 8,
+        "managed_pages_add": 8,
+        "next": "__free_pages_ok requested"
+      },
+      "anchors": [
+        "C33",
+        "C34",
+        "C35"
+      ],
+      "limits": "no physical insertion proof"
+    },
+    {
+      "id": "PB78-M31",
+      "kind": "after_bootmem_sequence",
+      "input": {
+        "at_entry": 0
+      },
+      "expected": {
+        "after_bootmem_before_free_all": 1,
+        "free_all_success": "unknown"
+      },
+      "anchors": [
+        "C36"
+      ],
+      "limits": "pure source algebra/boolean, valid metadata and representable integer/pointer inputs, NOT_RUN"
+    },
+    {
+      "id": "PB78-M32",
+      "kind": "historical_D00_counts",
+      "input": {
+        "historical_77_evidence": 121,
+        "historical_77_manifest_extra": 1
+      },
+      "expected": {
+        "source_labels": 121,
+        "raw_prefixes": 122,
+        "corrected": true
+      },
+      "anchors": [],
+      "limits": "documentation accounting only; NOT kernel model"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-01",
+      "status": "static_concern_local",
+      "disposition": "buddy merge old unlink still conditional, not re-examined"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-02",
+      "status": "static_concern",
+      "disposition": "allocator free lock asymmetry historical"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-03",
+      "status": "static_concern",
+      "disposition": "zero hook overlap historical"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-04",
+      "status": "static_concern",
+      "disposition": "preference array overrun historical"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-05",
+      "status": "static_concern",
+      "disposition": "selected folio_put absent free handoff historical"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "static_concern",
+      "disposition": "slab live-object release historical"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-01",
+      "status": "path_local",
+      "disposition": "direct/folio release distinction not reclosed"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-08",
+      "status": "needs_evidence",
+      "disposition": "PageBuddy init not global proof"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::GAP-M08",
+      "status": "needs_evidence",
+      "disposition": "page_type alternate writers still unknown"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U07",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U09",
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F01",
+      "status": "needs_evidence",
+      "disposition": "lower-PFN pointer candidate unchanged"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F02",
+      "status": "needs_evidence",
+      "disposition": "refcount drift candidate unchanged"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77-REVIEW-001::R77-01",
+      "status": "RETURN_DOCUMENTATION_ONLY_PENDING_C06",
+      "disposition": "D00 submitted, not self-closed"
+    }
+  ],
+  "new_conditional_findings_count": 6,
+  "new_evidence_gaps_count": 8,
+  "source_budget": {
+    "core_and_nearest_files": 26,
+    "soft_limit": 24,
+    "overrun": 2,
+    "overrun_justification": "Two extra nearest definitions were required to ground PFN zero-word handling and the source physical/virtual mapping formula; no full-tree expansion, all 26 contribute one or more bounded short anchors."
+  },
+  "methods": {
+    "fixed_source": "time@a039d9803ade",
+    "raw_prefixes_new": 136,
+    "new_definition_labels": 136,
+    "new_evidence_second_read_matches": 136,
+    "models": 32,
+    "full_local_P9": "NOT_RUN",
+    "preprocess_compile_execute": "NOT_RUN",
+    "Graphviz": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": []
+}

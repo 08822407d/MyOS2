@@ -1,0 +1,237 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EARLY-ROOT-HANDOFF-84",
+  "produced_by": "GPT-6（当前会话标识；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-13",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "final_pending_Pro_mainline_review",
+  "runtime_evidence": "NOT_RUN",
+  "open_questions": [
+    "ER84-U01",
+    "ER84-U02",
+    "ER84-U03",
+    "ER84-U04",
+    "ER84-U05",
+    "ER84-U06",
+    "ER84-U07",
+    "ER84-U08"
+  ],
+  "new_conditional_findings": [
+    {
+      "id": "ER84-F01",
+      "kind": "new_conditional_candidate_not_runtime_defect",
+      "stage": "G01/G02",
+      "title": "非零2MiB对齐load_delta未同步修正静态高映射PMD叶项",
+      "condition": "__startup_64 permits nonzero 2MiB-aligned load_delta; static PMDS leaves encode original 0-based physical frames; only high root and level3 pointers receive += delta",
+      "source": [
+        "head64.c::__startup_64@74-89",
+        "head_64.S::level2_kernel_pgt@400",
+        "pgtable_const_arch.h::PMDS@391-396"
+      ],
+      "static_interpretation": "在固定显式源码内看不到对level2_kernel_pgt的大页物理基址修正；例如link高VA _text PMD8仍指向16MiB，物理载入位移2MiB时文本处于18MiB。潜在映射不一致依赖输入装载/实际代码生成/调用路径，不认证实机错误。",
+      "review_trigger": "复核非零delta可达性、其他可写映射者、最终链接map和可启动输入；不能据评论'load_delta==0'作证明",
+      "status": "OPEN_FOR_PRO_REVIEW",
+      "code_patch_authorized": false,
+      "hardware_verdict": "NOT_RUN"
+    },
+    {
+      "id": "ER84-F02",
+      "kind": "new_conditional_candidate_not_runtime_defect",
+      "stage": "G02",
+      "title": "head64.c早期修正混用RIP辅助地址与普通高地址全局访问",
+      "condition": "Fixed time C options -mcmodel=kernel -fno-pie -fno-pic; __startup_64 derives early_pgts/pgd via rip_rel_ptr, but uses ordinary level3_kernel_pgt[510/511] and phys_base/next_early_pgt globals",
+      "source": [
+        "head64.c::__startup_64@53-89",
+        "head64.c::__startup_64@101-105",
+        "asm/asm.h::rip_rel_ptr@98-102",
+        "options_flags.cmake@39-42"
+      ],
+      "static_interpretation": "C源码注释声称PIC但固定配置非PIE/PIC；普通全局地址实际机器码及相位可访问性未经预处理/汇编/运行验证，因此只登记不确定性。",
+      "review_trigger": "独立核对编译/链接模型及早期实际映射可访问性，届时另行授权才能构建，不在84试编",
+      "status": "OPEN_FOR_PRO_REVIEW",
+      "code_patch_authorized": false,
+      "hardware_verdict": "NOT_RUN"
+    },
+    {
+      "id": "ER84-F03",
+      "kind": "new_conditional_candidate_not_runtime_defect",
+      "stage": "G01",
+      "title": "链接范围1GiB断言可能宽于非随机分支512MiB静态PMD名义覆盖",
+      "condition": "KERNEL_IMAGE_SIZE=512MiB when CONFIG_RANDOMIZE_BASE not defined; kernel.lds ASSERT only verifies _end-__START_KERNEL_map<=1GiB",
+      "source": [
+        "pgtable_const_arch.h::KERNEL_IMAGE_SIZE@376-380",
+        "head_64.S::level2_kernel_pgt@400",
+        "kernel.lds::ASSERT@186-187"
+      ],
+      "static_interpretation": "某些理论链接布局在1GiB断言内但超出512MiB叶项覆盖；配置全量、实际布局和其他映射门未获证。",
+      "review_trigger": "仅主线判断条件/影响；固定time实际map未产生",
+      "status": "OPEN_FOR_PRO_REVIEW",
+      "code_patch_authorized": false,
+      "hardware_verdict": "NOT_RUN"
+    },
+    {
+      "id": "ER84-F04",
+      "kind": "new_conditional_candidate_not_runtime_defect",
+      "stage": "G02",
+      "title": "MAX_PHYSMEM_BITS校验只约束起点而未约束整段临时叶表覆盖",
+      "condition": "if (physaddr >>46) loops, but N=DIV_ROUND_UP(_end-_text,2MiB) leaves can extend past 46-bit end when start is near upper bound",
+      "source": [
+        "head64.c::__startup_64@66-68",
+        "head64.c::__startup_64@120-123",
+        "mmzone_const_arch.h@138-139"
+      ],
+      "static_interpretation": "例如起点2^46-2MiB、N=2通过起点检查而第二片物理基址达2^46；硬件/装载器是否允许该输入未证。",
+      "review_trigger": "核装载约束和实际镜像span；不是声明实际硬件必失败",
+      "status": "OPEN_FOR_PRO_REVIEW",
+      "code_patch_authorized": false,
+      "hardware_verdict": "NOT_RUN"
+    },
+    {
+      "id": "ER84-F05",
+      "kind": "new_conditional_candidate_not_runtime_defect",
+      "stage": "G01/G03",
+      "title": "initial_code存储在未显式收集的.ref.data输入节而非可直接断言的数据段",
+      "condition": "head_64.S uses __REFDATA for initial_code and kernel.lds explicitly consumes .data,.data.rel*,.data..page_aligned*, but not .ref.data by name",
+      "source": [
+        "head_64.S::initial_code@284-287",
+        "linux/init/init.h::__REFDATA@115-117",
+        "kernel.lds::.data@58-62"
+      ],
+      "static_interpretation": "orphan section链接规则可能仍将其放到可访问段；没有真实link map/PHDR未能断言地址最终失败。",
+      "review_trigger": "若主线需要可验证ELF范围，独立许可后进行链接映射检查；84不生成ELF",
+      "status": "OPEN_FOR_PRO_REVIEW",
+      "code_patch_authorized": false,
+      "hardware_verdict": "NOT_RUN"
+    }
+  ],
+  "new_uncertainty_gaps": [
+    {
+      "id": "ER84-U01",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G02",
+      "question": "直接全局地址访问是否在身份映射的C阶段使用正确地址",
+      "reason": "CFLAGS为非PIC且中间可能产生绝对/高半地址访问，源码与代码生成不同证据层",
+      "limited_followup_for_mainline": "以固定编译链产生的链接/汇编证据另行验证，当前NOT_RUN",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    },
+    {
+      "id": "ER84-U02",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G01",
+      "question": "各输入节及init_top_pgt、initial_code的真实最终输出节、PT_LOAD和清零边界是什么",
+      "reason": "当前仅证明输入节标记与脚本匹配模式，不拥有最终ELF链接map",
+      "limited_followup_for_mainline": "高地址物理/虚拟布局与编译器COMMON行为交独立构建许可",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    },
+    {
+      "id": "ER84-U03",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G02",
+      "question": "入口前身份映射、CPU/stack/GDT和RIP间接目标可达性如何保证",
+      "reason": "start_64汇编注释描述前置条件；未加载GRUB/loader/固件完整链",
+      "limited_followup_for_mainline": "独立启动环境/实机证据，84不扩展",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    },
+    {
+      "id": "ER84-U04",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G01/G02",
+      "question": "非零load_delta时有无其他修正写者或旁路映射可保证静态高映射正确",
+      "reason": "read __startup_64 lacks leaf fixup; global end-to-end write inventory not performed",
+      "limited_followup_for_mainline": "保留ER84-F01及相关root身份条件，不凭本批消极搜寻断言全库不存在",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    },
+    {
+      "id": "ER84-U05",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G03",
+      "question": "idt_setup_early_handler和myos_early_init_system是否返回、修改页表或CR3",
+      "reason": "仅记录call site，合同明确不深入所有先行callee",
+      "limited_followup_for_mainline": "在Mainline Pro判定必要时追加定点源码读取；暂不自闭合",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    },
+    {
+      "id": "ER84-U06",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G03",
+      "question": "BSS清零、根项复制、后来load_cr3对应的活动CR3和TLB实际结果如何关联",
+      "reason": "值写入/函数调用存在≠硬件生效；中途可能有其他写者/缓存",
+      "limited_followup_for_mainline": "保留旧PT81/DM82/TI83条件；不得认证boot通过",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    },
+    {
+      "id": "ER84-U07",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G01",
+      "question": "CONFIG_RANDOMIZE_BASE是否从其他构建源生效，且最终镜像是否落在512MiB或1GiB限内",
+      "reason": "options_flags.cmake全文未见该定义，但不等于所有工程配置无定义；未预处理或链接",
+      "limited_followup_for_mainline": "有限主线静态配置追查或单独构建许可",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    },
+    {
+      "id": "ER84-U08",
+      "kind": "new_evidence_gap_not_new_failure_root",
+      "stage": "G01/G02/G03",
+      "question": "旧PT81-U03/U06、DM82-U08、TI83源窗口/保护位/根身份缺口是否已由新发现关闭",
+      "reason": "84仅新接合面；R81/R82/R83三类补充限定继续有效，无实际验证",
+      "limited_followup_for_mainline": "保留旧ID和状态，交Pro主线判断是否具体缩小，84不计旧问题为新独立根因",
+      "status": "OPEN",
+      "not_closed_by_84": true
+    }
+  ],
+  "non_duplicates_and_inherited_restrictions": [
+    {
+      "prefix": "PT81",
+      "refs": [
+        "R81-S01",
+        "R81-S02",
+        "R81-S03",
+        "PT81-U03",
+        "PT81-U06"
+      ],
+      "rule": "页缓冲直映射身份/生存期与allocation source界限保留，不重做81"
+    },
+    {
+      "prefix": "DM82",
+      "refs": [
+        "R82-S01",
+        "R82-S02",
+        "R82-S03",
+        "DM82-U08"
+      ],
+      "rule": "分段提升/endpoint整数与映射累计不混淆，不重做82"
+    },
+    {
+      "prefix": "TI83",
+      "refs": [
+        "R83-S01",
+        "R83-S02",
+        "R83-S03",
+        "TI83-F01..F08",
+        "TI83-U01..U10"
+      ],
+      "rule": "互斥支路、present/flags、真实写包装和同层索引限定，未关闭不重新计独立缺陷"
+    }
+  ],
+  "triage": {
+    "new_conditional_candidate_count": 5,
+    "new_gap_count": 8,
+    "old_id_recount_as_new": 0,
+    "owner_decisions_requested_now": [],
+    "D00": "NOT_REQUIRED",
+    "patch_authorization": "NONE",
+    "acceptance_ceiling": "PASS_PENDING_LOCAL",
+    "requested_next_action": "mainline_Pro_independent_review",
+    "final_state": "NOT_YET_MAINLINE_ACCEPTED"
+  }
+}

@@ -1,0 +1,4075 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-RUNQUEUE-CLOCK-UPDATE-133",
+  "record_type": "phase2_source_model_and_precise_replay",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "conversation_display_name": "MYOS2-A-C08c 代码分析执行",
+  "date": "2026-11-23",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "lead_release_short12": "f73f55546245",
+  "exec_parent_short12": "1021b4b7740c",
+  "model_per_owner": "GPT-6＋Extra",
+  "produced_by": "GPT-6 self-report",
+  "actual_backend_model": "UNATTESTED",
+  "actual_backend_effort": "UNATTESTED",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "record_type": "phase2_D00_precise_addendum",
+    "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+    "R132_01": {
+      "old_selectors": [
+        "132 facts B.case_results[*].events/gate/loop_bottom",
+        "132 facts C.cases[*].need_resched_bottom",
+        "132 DOT S132_B1_loop..B4_loop",
+        "132 deferred POST_LOOP_Q_NEED"
+      ],
+      "cases": [
+        {
+          "id": "B1",
+          "corrected_events": [
+            {
+              "id": "B1_T01",
+              "new_seq": 1,
+              "old_seq": 1,
+              "kind": "PREV_SAVE",
+              "owner": "__schedule",
+              "site": "core.c:1034",
+              "detail": "prev=P"
+            },
+            {
+              "id": "B1_T02",
+              "new_seq": 2,
+              "old_seq": 7,
+              "kind": "SWITCH_COUNT_POINTER",
+              "owner": "__schedule",
+              "site": "core.c:1069",
+              "detail": "&P.nivcsw"
+            },
+            {
+              "id": "B1_T03",
+              "new_seq": 3,
+              "old_seq": null,
+              "kind": "PREV_STATE_READ",
+              "owner": "__schedule",
+              "site": "core.c:1078",
+              "detail": "TASK_RUNNING"
+            },
+            {
+              "id": "B1_T04",
+              "new_seq": 4,
+              "old_seq": 8,
+              "kind": "PICK_CALL_START",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "call pick_next_task; wait for callee"
+            },
+            {
+              "id": "B1_T05",
+              "new_seq": 5,
+              "old_seq": 2,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:9",
+              "detail": "retval = curr_task=current"
+            },
+            {
+              "id": "B1_T06",
+              "new_seq": 6,
+              "old_seq": 3,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:12",
+              "detail": "used_jiffies=jiffies-last_jiffies"
+            },
+            {
+              "id": "B1_T07",
+              "new_seq": 7,
+              "old_seq": 4,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:14–18",
+              "detail": "trigger = (need || idle || time_expired || nonrunning) && count>0"
+            },
+            {
+              "id": "B1_T08",
+              "new_seq": 8,
+              "old_seq": 5,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:56",
+              "detail": "rq->curr = retval"
+            },
+            {
+              "id": "B1_T09",
+              "new_seq": 9,
+              "old_seq": 6,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:57",
+              "detail": "return retval"
+            },
+            {
+              "id": "B1_T10",
+              "new_seq": 10,
+              "old_seq": 8,
+              "kind": "PICK_RETURN_NEXT",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "next=P"
+            },
+            {
+              "id": "B1_T11",
+              "new_seq": 11,
+              "old_seq": 9,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1118",
+              "detail": "clear_tsk_need_resched(prev)"
+            },
+            {
+              "id": "B1_T12",
+              "new_seq": 12,
+              "old_seq": 10,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1119",
+              "detail": "clear_preempt_need_resched()"
+            },
+            {
+              "id": "B1_T13",
+              "new_seq": 13,
+              "old_seq": 11,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1124",
+              "detail": "if(prev != next)"
+            },
+            {
+              "id": "B1_T14",
+              "new_seq": 14,
+              "old_seq": 12,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1163–1167",
+              "detail": "else branch, no count increment or context_switch invocation"
+            },
+            {
+              "id": "B1_T15",
+              "new_seq": 15,
+              "old_seq": 13,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1169",
+              "detail": "local_irq_enable() at function tail if reached"
+            }
+          ],
+          "mapping": [
+            {
+              "old_seq": 1,
+              "new_seq": 1,
+              "event_id": "B1_T01",
+              "kind": "PREV_SAVE"
+            },
+            {
+              "old_seq": 7,
+              "new_seq": 2,
+              "event_id": "B1_T02",
+              "kind": "SWITCH_COUNT_POINTER"
+            },
+            {
+              "old_seq": null,
+              "new_seq": 3,
+              "event_id": "B1_T03",
+              "kind": "PREV_STATE_READ"
+            },
+            {
+              "old_seq": 8,
+              "new_seq": 4,
+              "event_id": "B1_T04",
+              "kind": "PICK_CALL_START"
+            },
+            {
+              "old_seq": 2,
+              "new_seq": 5,
+              "event_id": "B1_T05",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 3,
+              "new_seq": 6,
+              "event_id": "B1_T06",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 4,
+              "new_seq": 7,
+              "event_id": "B1_T07",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 5,
+              "new_seq": 8,
+              "event_id": "B1_T08",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 6,
+              "new_seq": 9,
+              "event_id": "B1_T09",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 8,
+              "new_seq": 10,
+              "event_id": "B1_T10",
+              "kind": "PICK_RETURN_NEXT"
+            },
+            {
+              "old_seq": 9,
+              "new_seq": 11,
+              "event_id": "B1_T11",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 10,
+              "new_seq": 12,
+              "event_id": "B1_T12",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 11,
+              "new_seq": 13,
+              "event_id": "B1_T13",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 12,
+              "new_seq": 14,
+              "event_id": "B1_T14",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 13,
+              "new_seq": 15,
+              "event_id": "B1_T15",
+              "kind": "AFTER_PICK"
+            }
+          ],
+          "count_input": 0,
+          "count_input_truth": false,
+          "count_expression_evaluated": true,
+          "count_expression_result": false,
+          "selection_gate": false,
+          "loop_bottom": {
+            "id": "S132_B1_loop",
+            "when": "normal return to P loop bottom and no new reflag",
+            "result": false,
+            "statement": "P flag cleared; under stated conditions no second iteration"
+          },
+          "original_ten_output_fields": {
+            "P_vruntime": 10,
+            "R_vruntime": 30,
+            "last_jiffies": 100,
+            "queue": [],
+            "queue_count": 0,
+            "rq_curr": "P",
+            "returned_task_ptr": "P",
+            "rq_nr_switches": 8,
+            "P_nivcsw": 5,
+            "P_nvcsw": 4
+          }
+        },
+        {
+          "id": "B2",
+          "corrected_events": [
+            {
+              "id": "B2_T01",
+              "new_seq": 1,
+              "old_seq": 1,
+              "kind": "PREV_SAVE",
+              "owner": "__schedule",
+              "site": "core.c:1034",
+              "detail": "prev=P"
+            },
+            {
+              "id": "B2_T02",
+              "new_seq": 2,
+              "old_seq": 7,
+              "kind": "SWITCH_COUNT_POINTER",
+              "owner": "__schedule",
+              "site": "core.c:1069",
+              "detail": "&P.nivcsw"
+            },
+            {
+              "id": "B2_T03",
+              "new_seq": 3,
+              "old_seq": null,
+              "kind": "PREV_STATE_READ",
+              "owner": "__schedule",
+              "site": "core.c:1078",
+              "detail": "TASK_RUNNING"
+            },
+            {
+              "id": "B2_T04",
+              "new_seq": 4,
+              "old_seq": 8,
+              "kind": "PICK_CALL_START",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "call pick_next_task; wait for callee"
+            },
+            {
+              "id": "B2_T05",
+              "new_seq": 5,
+              "old_seq": 2,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:9",
+              "detail": "retval = curr_task=current"
+            },
+            {
+              "id": "B2_T06",
+              "new_seq": 6,
+              "old_seq": 3,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:12",
+              "detail": "used_jiffies=jiffies-last_jiffies"
+            },
+            {
+              "id": "B2_T07",
+              "new_seq": 7,
+              "old_seq": 4,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:14–18",
+              "detail": "trigger = (need || idle || time_expired || nonrunning) && count>0"
+            },
+            {
+              "id": "B2_T08",
+              "new_seq": 8,
+              "old_seq": 5,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:56",
+              "detail": "rq->curr = retval"
+            },
+            {
+              "id": "B2_T09",
+              "new_seq": 9,
+              "old_seq": 6,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:57",
+              "detail": "return retval"
+            },
+            {
+              "id": "B2_T10",
+              "new_seq": 10,
+              "old_seq": 8,
+              "kind": "PICK_RETURN_NEXT",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "next=P"
+            },
+            {
+              "id": "B2_T11",
+              "new_seq": 11,
+              "old_seq": 9,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1118",
+              "detail": "clear_tsk_need_resched(prev)"
+            },
+            {
+              "id": "B2_T12",
+              "new_seq": 12,
+              "old_seq": 10,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1119",
+              "detail": "clear_preempt_need_resched()"
+            },
+            {
+              "id": "B2_T13",
+              "new_seq": 13,
+              "old_seq": 11,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1124",
+              "detail": "if(prev != next)"
+            },
+            {
+              "id": "B2_T14",
+              "new_seq": 14,
+              "old_seq": 12,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1163–1167",
+              "detail": "else branch, no count increment or context_switch invocation"
+            },
+            {
+              "id": "B2_T15",
+              "new_seq": 15,
+              "old_seq": 13,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1169",
+              "detail": "local_irq_enable() at function tail if reached"
+            }
+          ],
+          "mapping": [
+            {
+              "old_seq": 1,
+              "new_seq": 1,
+              "event_id": "B2_T01",
+              "kind": "PREV_SAVE"
+            },
+            {
+              "old_seq": 7,
+              "new_seq": 2,
+              "event_id": "B2_T02",
+              "kind": "SWITCH_COUNT_POINTER"
+            },
+            {
+              "old_seq": null,
+              "new_seq": 3,
+              "event_id": "B2_T03",
+              "kind": "PREV_STATE_READ"
+            },
+            {
+              "old_seq": 8,
+              "new_seq": 4,
+              "event_id": "B2_T04",
+              "kind": "PICK_CALL_START"
+            },
+            {
+              "old_seq": 2,
+              "new_seq": 5,
+              "event_id": "B2_T05",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 3,
+              "new_seq": 6,
+              "event_id": "B2_T06",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 4,
+              "new_seq": 7,
+              "event_id": "B2_T07",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 5,
+              "new_seq": 8,
+              "event_id": "B2_T08",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 6,
+              "new_seq": 9,
+              "event_id": "B2_T09",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 8,
+              "new_seq": 10,
+              "event_id": "B2_T10",
+              "kind": "PICK_RETURN_NEXT"
+            },
+            {
+              "old_seq": 9,
+              "new_seq": 11,
+              "event_id": "B2_T11",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 10,
+              "new_seq": 12,
+              "event_id": "B2_T12",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 11,
+              "new_seq": 13,
+              "event_id": "B2_T13",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 12,
+              "new_seq": 14,
+              "event_id": "B2_T14",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 13,
+              "new_seq": 15,
+              "event_id": "B2_T15",
+              "kind": "AFTER_PICK"
+            }
+          ],
+          "count_input": 2,
+          "count_input_truth": true,
+          "count_expression_evaluated": false,
+          "count_expression_result": "NOT_EVALUATED",
+          "selection_gate": false,
+          "loop_bottom": {
+            "id": "S132_B2_loop",
+            "when": "normal return to P loop bottom and no new reflag",
+            "result": false,
+            "statement": "P flag cleared; under stated conditions no second iteration"
+          },
+          "original_ten_output_fields": {
+            "P_vruntime": 10,
+            "R_vruntime": 30,
+            "last_jiffies": 100,
+            "queue": [
+              "Q",
+              "R"
+            ],
+            "queue_count": 2,
+            "rq_curr": "P",
+            "returned_task_ptr": "P",
+            "rq_nr_switches": 8,
+            "P_nivcsw": 5,
+            "P_nvcsw": 4
+          }
+        },
+        {
+          "id": "B3",
+          "corrected_events": [
+            {
+              "id": "B3_T01",
+              "new_seq": 1,
+              "old_seq": 1,
+              "kind": "PREV_SAVE",
+              "owner": "__schedule",
+              "site": "core.c:1034",
+              "detail": "prev=P"
+            },
+            {
+              "id": "B3_T02",
+              "new_seq": 2,
+              "old_seq": 13,
+              "kind": "SWITCH_COUNT_POINTER",
+              "owner": "__schedule",
+              "site": "core.c:1069",
+              "detail": "&P.nivcsw"
+            },
+            {
+              "id": "B3_T03",
+              "new_seq": 3,
+              "old_seq": null,
+              "kind": "PREV_STATE_READ",
+              "owner": "__schedule",
+              "site": "core.c:1078",
+              "detail": "TASK_RUNNING"
+            },
+            {
+              "id": "B3_T04",
+              "new_seq": 4,
+              "old_seq": 14,
+              "kind": "PICK_CALL_START",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "call pick_next_task; wait for callee"
+            },
+            {
+              "id": "B3_T05",
+              "new_seq": 5,
+              "old_seq": 2,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:9",
+              "detail": "retval = curr_task=current"
+            },
+            {
+              "id": "B3_T06",
+              "new_seq": 6,
+              "old_seq": 3,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:12",
+              "detail": "used_jiffies=jiffies-last_jiffies"
+            },
+            {
+              "id": "B3_T07",
+              "new_seq": 7,
+              "old_seq": 4,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:14–18",
+              "detail": "trigger = (need || idle || time_expired || nonrunning) && count>0"
+            },
+            {
+              "id": "B3_T08",
+              "new_seq": 8,
+              "old_seq": 5,
+              "kind": "PICK_INNER",
+              "owner": "list_header_remove_head",
+              "site": "mykernel/lib/list/double_list.h:653–657",
+              "detail": "list_del_init(Q), then count--"
+            },
+            {
+              "id": "B3_T09",
+              "new_seq": 9,
+              "old_seq": 6,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:37–44",
+              "detail": "tmp_list=R; compare old P.vruntime10>R.vruntime30 ==false; list_add_to_prev(P,R)"
+            },
+            {
+              "id": "B3_T10",
+              "new_seq": 10,
+              "old_seq": 7,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:45",
+              "detail": "running_lhdr.count++ explicitly once"
+            },
+            {
+              "id": "B3_T11",
+              "new_seq": 11,
+              "old_seq": 8,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:49–50",
+              "detail": "P.se.vruntime += used_jiffies after reinsertion"
+            },
+            {
+              "id": "B3_T12",
+              "new_seq": 12,
+              "old_seq": 9,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:52–53",
+              "detail": "retval from next_lp=Q"
+            },
+            {
+              "id": "B3_T13",
+              "new_seq": 13,
+              "old_seq": 10,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:54",
+              "detail": "last_jiffies = fixed current case jiffies"
+            },
+            {
+              "id": "B3_T14",
+              "new_seq": 14,
+              "old_seq": 11,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:56",
+              "detail": "rq->curr = retval"
+            },
+            {
+              "id": "B3_T15",
+              "new_seq": 15,
+              "old_seq": 12,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:57",
+              "detail": "return retval"
+            },
+            {
+              "id": "B3_T16",
+              "new_seq": 16,
+              "old_seq": 14,
+              "kind": "PICK_RETURN_NEXT",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "next=Q"
+            },
+            {
+              "id": "B3_T17",
+              "new_seq": 17,
+              "old_seq": 15,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1118",
+              "detail": "clear_tsk_need_resched(prev)"
+            },
+            {
+              "id": "B3_T18",
+              "new_seq": 18,
+              "old_seq": 16,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1119",
+              "detail": "clear_preempt_need_resched()"
+            },
+            {
+              "id": "B3_T19",
+              "new_seq": 19,
+              "old_seq": 17,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1124",
+              "detail": "if(prev != next)"
+            },
+            {
+              "id": "B3_T20",
+              "new_seq": 20,
+              "old_seq": 18,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1125",
+              "detail": "rq->nr_switches++"
+            },
+            {
+              "id": "B3_T21",
+              "new_seq": 21,
+              "old_seq": 19,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1130",
+              "detail": "RCU_INIT_POINTER(rq->curr,next) second publication"
+            },
+            {
+              "id": "B3_T22",
+              "new_seq": 22,
+              "old_seq": 20,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1153",
+              "detail": "++*switch_count -> P.nivcsw"
+            },
+            {
+              "id": "B3_T23",
+              "new_seq": 23,
+              "old_seq": 21,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1162",
+              "detail": "context_switch(rq,P,Q,&rf) call"
+            },
+            {
+              "id": "B3_T24",
+              "new_seq": 24,
+              "old_seq": 22,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1169",
+              "detail": "local_irq_enable() at function tail if reached"
+            }
+          ],
+          "mapping": [
+            {
+              "old_seq": 1,
+              "new_seq": 1,
+              "event_id": "B3_T01",
+              "kind": "PREV_SAVE"
+            },
+            {
+              "old_seq": 13,
+              "new_seq": 2,
+              "event_id": "B3_T02",
+              "kind": "SWITCH_COUNT_POINTER"
+            },
+            {
+              "old_seq": null,
+              "new_seq": 3,
+              "event_id": "B3_T03",
+              "kind": "PREV_STATE_READ"
+            },
+            {
+              "old_seq": 14,
+              "new_seq": 4,
+              "event_id": "B3_T04",
+              "kind": "PICK_CALL_START"
+            },
+            {
+              "old_seq": 2,
+              "new_seq": 5,
+              "event_id": "B3_T05",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 3,
+              "new_seq": 6,
+              "event_id": "B3_T06",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 4,
+              "new_seq": 7,
+              "event_id": "B3_T07",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 5,
+              "new_seq": 8,
+              "event_id": "B3_T08",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 6,
+              "new_seq": 9,
+              "event_id": "B3_T09",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 7,
+              "new_seq": 10,
+              "event_id": "B3_T10",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 8,
+              "new_seq": 11,
+              "event_id": "B3_T11",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 9,
+              "new_seq": 12,
+              "event_id": "B3_T12",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 10,
+              "new_seq": 13,
+              "event_id": "B3_T13",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 11,
+              "new_seq": 14,
+              "event_id": "B3_T14",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 12,
+              "new_seq": 15,
+              "event_id": "B3_T15",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 14,
+              "new_seq": 16,
+              "event_id": "B3_T16",
+              "kind": "PICK_RETURN_NEXT"
+            },
+            {
+              "old_seq": 15,
+              "new_seq": 17,
+              "event_id": "B3_T17",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 16,
+              "new_seq": 18,
+              "event_id": "B3_T18",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 17,
+              "new_seq": 19,
+              "event_id": "B3_T19",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 18,
+              "new_seq": 20,
+              "event_id": "B3_T20",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 19,
+              "new_seq": 21,
+              "event_id": "B3_T21",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 20,
+              "new_seq": 22,
+              "event_id": "B3_T22",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 21,
+              "new_seq": 23,
+              "event_id": "B3_T23",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 22,
+              "new_seq": 24,
+              "event_id": "B3_T24",
+              "kind": "AFTER_PICK"
+            }
+          ],
+          "count_input": 2,
+          "count_input_truth": true,
+          "count_expression_evaluated": true,
+          "count_expression_result": true,
+          "selection_gate": true,
+          "loop_bottom": {
+            "id": "S132_B3_loop",
+            "when": "actual saved context resumes and reaches loop bottom, flag of that context at that time",
+            "result": "UNKNOWN",
+            "statement": "Q selected is not proof of which context reaches loop bottom or when"
+          },
+          "original_ten_output_fields": {
+            "P_vruntime": 13,
+            "R_vruntime": 30,
+            "last_jiffies": 103,
+            "queue": [
+              "P",
+              "R"
+            ],
+            "queue_count": 2,
+            "rq_curr": "Q",
+            "returned_task_ptr": "Q",
+            "rq_nr_switches": 9,
+            "P_nivcsw": 6,
+            "P_nvcsw": 4
+          }
+        },
+        {
+          "id": "B4",
+          "corrected_events": [
+            {
+              "id": "B4_T01",
+              "new_seq": 1,
+              "old_seq": 1,
+              "kind": "PREV_SAVE",
+              "owner": "__schedule",
+              "site": "core.c:1034",
+              "detail": "prev=P"
+            },
+            {
+              "id": "B4_T02",
+              "new_seq": 2,
+              "old_seq": 13,
+              "kind": "SWITCH_COUNT_POINTER",
+              "owner": "__schedule",
+              "site": "core.c:1069",
+              "detail": "&P.nivcsw"
+            },
+            {
+              "id": "B4_T03",
+              "new_seq": 3,
+              "old_seq": null,
+              "kind": "PREV_STATE_READ",
+              "owner": "__schedule",
+              "site": "core.c:1078",
+              "detail": "TASK_RUNNING"
+            },
+            {
+              "id": "B4_T04",
+              "new_seq": 4,
+              "old_seq": 14,
+              "kind": "PICK_CALL_START",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "call pick_next_task; wait for callee"
+            },
+            {
+              "id": "B4_T05",
+              "new_seq": 5,
+              "old_seq": 2,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:9",
+              "detail": "retval = curr_task=current"
+            },
+            {
+              "id": "B4_T06",
+              "new_seq": 6,
+              "old_seq": 3,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:12",
+              "detail": "used_jiffies=jiffies-last_jiffies"
+            },
+            {
+              "id": "B4_T07",
+              "new_seq": 7,
+              "old_seq": 4,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:14–18",
+              "detail": "trigger = (need || idle || time_expired || nonrunning) && count>0"
+            },
+            {
+              "id": "B4_T08",
+              "new_seq": 8,
+              "old_seq": 5,
+              "kind": "PICK_INNER",
+              "owner": "list_header_remove_head",
+              "site": "mykernel/lib/list/double_list.h:653–657",
+              "detail": "list_del_init(Q), then count--"
+            },
+            {
+              "id": "B4_T09",
+              "new_seq": 9,
+              "old_seq": 6,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:37–44",
+              "detail": "tmp_list=R; compare old P.vruntime10>R.vruntime30 ==false; list_add_to_prev(P,R)"
+            },
+            {
+              "id": "B4_T10",
+              "new_seq": 10,
+              "old_seq": 7,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:45",
+              "detail": "running_lhdr.count++ explicitly once"
+            },
+            {
+              "id": "B4_T11",
+              "new_seq": 11,
+              "old_seq": 8,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:49–50",
+              "detail": "P.se.vruntime += used_jiffies after reinsertion"
+            },
+            {
+              "id": "B4_T12",
+              "new_seq": 12,
+              "old_seq": 9,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:52–53",
+              "detail": "retval from next_lp=Q"
+            },
+            {
+              "id": "B4_T13",
+              "new_seq": 13,
+              "old_seq": 10,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:54",
+              "detail": "last_jiffies = fixed current case jiffies"
+            },
+            {
+              "id": "B4_T14",
+              "new_seq": 14,
+              "old_seq": 11,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:56",
+              "detail": "rq->curr = retval"
+            },
+            {
+              "id": "B4_T15",
+              "new_seq": 15,
+              "old_seq": 12,
+              "kind": "PICK_INNER",
+              "owner": "pick_next_task_myos",
+              "site": "mykernel/sched/scheduler/myos_rt.c:57",
+              "detail": "return retval"
+            },
+            {
+              "id": "B4_T16",
+              "new_seq": 16,
+              "old_seq": 14,
+              "kind": "PICK_RETURN_NEXT",
+              "owner": "__schedule",
+              "site": "core.c:1116",
+              "detail": "next=Q"
+            },
+            {
+              "id": "B4_T17",
+              "new_seq": 17,
+              "old_seq": 15,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1118",
+              "detail": "clear_tsk_need_resched(prev)"
+            },
+            {
+              "id": "B4_T18",
+              "new_seq": 18,
+              "old_seq": 16,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1119",
+              "detail": "clear_preempt_need_resched()"
+            },
+            {
+              "id": "B4_T19",
+              "new_seq": 19,
+              "old_seq": 17,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1124",
+              "detail": "if(prev != next)"
+            },
+            {
+              "id": "B4_T20",
+              "new_seq": 20,
+              "old_seq": 18,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1125",
+              "detail": "rq->nr_switches++"
+            },
+            {
+              "id": "B4_T21",
+              "new_seq": 21,
+              "old_seq": 19,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1130",
+              "detail": "RCU_INIT_POINTER(rq->curr,next) second publication"
+            },
+            {
+              "id": "B4_T22",
+              "new_seq": 22,
+              "old_seq": 20,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1153",
+              "detail": "++*switch_count -> P.nivcsw"
+            },
+            {
+              "id": "B4_T23",
+              "new_seq": 23,
+              "old_seq": 21,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1162",
+              "detail": "context_switch(rq,P,Q,&rf) call"
+            },
+            {
+              "id": "B4_T24",
+              "new_seq": 24,
+              "old_seq": 22,
+              "kind": "AFTER_PICK",
+              "owner": "__schedule",
+              "site": "mykernel/sched/scheduler/scheduler_core.c:1169",
+              "detail": "local_irq_enable() at function tail if reached"
+            }
+          ],
+          "mapping": [
+            {
+              "old_seq": 1,
+              "new_seq": 1,
+              "event_id": "B4_T01",
+              "kind": "PREV_SAVE"
+            },
+            {
+              "old_seq": 13,
+              "new_seq": 2,
+              "event_id": "B4_T02",
+              "kind": "SWITCH_COUNT_POINTER"
+            },
+            {
+              "old_seq": null,
+              "new_seq": 3,
+              "event_id": "B4_T03",
+              "kind": "PREV_STATE_READ"
+            },
+            {
+              "old_seq": 14,
+              "new_seq": 4,
+              "event_id": "B4_T04",
+              "kind": "PICK_CALL_START"
+            },
+            {
+              "old_seq": 2,
+              "new_seq": 5,
+              "event_id": "B4_T05",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 3,
+              "new_seq": 6,
+              "event_id": "B4_T06",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 4,
+              "new_seq": 7,
+              "event_id": "B4_T07",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 5,
+              "new_seq": 8,
+              "event_id": "B4_T08",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 6,
+              "new_seq": 9,
+              "event_id": "B4_T09",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 7,
+              "new_seq": 10,
+              "event_id": "B4_T10",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 8,
+              "new_seq": 11,
+              "event_id": "B4_T11",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 9,
+              "new_seq": 12,
+              "event_id": "B4_T12",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 10,
+              "new_seq": 13,
+              "event_id": "B4_T13",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 11,
+              "new_seq": 14,
+              "event_id": "B4_T14",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 12,
+              "new_seq": 15,
+              "event_id": "B4_T15",
+              "kind": "PICK_INNER"
+            },
+            {
+              "old_seq": 14,
+              "new_seq": 16,
+              "event_id": "B4_T16",
+              "kind": "PICK_RETURN_NEXT"
+            },
+            {
+              "old_seq": 15,
+              "new_seq": 17,
+              "event_id": "B4_T17",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 16,
+              "new_seq": 18,
+              "event_id": "B4_T18",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 17,
+              "new_seq": 19,
+              "event_id": "B4_T19",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 18,
+              "new_seq": 20,
+              "event_id": "B4_T20",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 19,
+              "new_seq": 21,
+              "event_id": "B4_T21",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 20,
+              "new_seq": 22,
+              "event_id": "B4_T22",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 21,
+              "new_seq": 23,
+              "event_id": "B4_T23",
+              "kind": "AFTER_PICK"
+            },
+            {
+              "old_seq": 22,
+              "new_seq": 24,
+              "event_id": "B4_T24",
+              "kind": "AFTER_PICK"
+            }
+          ],
+          "count_input": 2,
+          "count_input_truth": true,
+          "count_expression_evaluated": true,
+          "count_expression_result": true,
+          "selection_gate": true,
+          "loop_bottom": {
+            "id": "S132_B4_loop",
+            "when": "actual saved context resumes and reaches loop bottom, flag of that context at that time",
+            "result": "UNKNOWN",
+            "statement": "Q selected is not proof of which context reaches loop bottom or when"
+          },
+          "original_ten_output_fields": {
+            "P_vruntime": 20,
+            "R_vruntime": 30,
+            "last_jiffies": 110,
+            "queue": [
+              "P",
+              "R"
+            ],
+            "queue_count": 2,
+            "rq_curr": "Q",
+            "returned_task_ptr": "Q",
+            "rq_nr_switches": 9,
+            "P_nivcsw": 6,
+            "P_nvcsw": 4
+          }
+        }
+      ],
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "preserve_40_fields": true
+    },
+    "R132_02": {
+      "old": {
+        "from": "S132_class_member",
+        "to": "S132_picker",
+        "kind": "INDIRECT_CALL_INSTANCE",
+        "unique_matches": 1,
+        "source_chain_caller": "myos_rt_sched_class"
+      },
+      "correct": {
+        "static_edge": {
+          "from": "S132_class_member",
+          "to": "S132_picker",
+          "kind": "STATIC_INITIALIZER_TARGET_ONLY"
+        },
+        "indirect_call": {
+          "from": "S132_class_iter",
+          "to": "S132_picker",
+          "kind": "INDIRECT_CALL_INSTANCE",
+          "owner": "__pick_next_task",
+          "line": "scheduler.h:264"
+        },
+        "rq_prev_arguments": [
+          "rq",
+          "prev"
+        ],
+        "nonnull": "return p immediately",
+        "null": "next class",
+        "all_null": "BUG() only at loop exhaustion"
+      },
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW"
+    },
+    "R132_03": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "counts": [
+        {
+          "name": "130_five_DIAG",
+          "nodes": 40,
+          "edges": 35,
+          "per_cluster": [
+            {
+              "id": "CD_LOST",
+              "nodes": 8,
+              "edges": 7
+            },
+            {
+              "id": "LS_DOT",
+              "nodes": 8,
+              "edges": 7
+            },
+            {
+              "id": "CAT_NOTE",
+              "nodes": 8,
+              "edges": 7
+            },
+            {
+              "id": "RMDIR_TMPD",
+              "nodes": 8,
+              "edges": 7
+            },
+            {
+              "id": "RM_LOG",
+              "nodes": 8,
+              "edges": 7
+            }
+          ]
+        },
+        {
+          "name": "131_five_DIAG",
+          "nodes": 70,
+          "edges": 80
+        },
+        {
+          "name": "131_five_DIAG_plus_A_INIT_C_YIELD",
+          "nodes": 91,
+          "edges": 99
+        },
+        {
+          "name": "132_corrected_five_DIAG",
+          "nodes": 85,
+          "edges": 115
+        }
+      ],
+      "old_132_baseline_91_99_scope": "131 five DIAG plus A_INIT and C_YIELD, not five DIAG alone",
+      "read_in_this_round": [
+        "130 fixed DOT",
+        "131 fixed facts/DOT",
+        "132 fixed facts/DOT"
+      ],
+      "past_author_private_read_status": "UNKNOWN"
+    },
+    "historical_closed": [
+      "R130-02",
+      "R131-01",
+      "R131-02"
+    ]
+  },
+  "A": {
+    "scope": "only time fixed scheduler_core.c:20-28 & 1032-1078, scheduler_const.h flags, runqueue_types.h fields, clock.h local_clock, timer.h declaration, tsc.c native_sched_clock, myos_rt.c limited picker",
+    "source_order": [
+      {
+        "owner": "__schedule",
+        "line": "scheduler_core.c:1032-1034",
+        "action": "cpu=smp_processor_id, rq=cpu_rq(cpu), prev=rq->curr"
+      },
+      {
+        "owner": "__schedule",
+        "line": "scheduler_core.c:1065",
+        "action": "rq.clock_update_flags <<=1"
+      },
+      {
+        "owner": "__schedule",
+        "line": "scheduler_core.c:1066",
+        "action": "update_rq_clock(rq)"
+      },
+      {
+        "owner": "update_rq_clock",
+        "line": "scheduler_core.c:24",
+        "action": "delta = local_clock() - rq.clock"
+      },
+      {
+        "owner": "update_rq_clock",
+        "line": "scheduler_core.c:25-26",
+        "action": "if delta<0 return"
+      },
+      {
+        "owner": "update_rq_clock",
+        "line": "scheduler_core.c:27",
+        "action": "rq.clock += delta when nonnegative"
+      },
+      {
+        "owner": "__schedule",
+        "line": "scheduler_core.c:1067",
+        "action": "rq.clock_update_flags = RQCF_UPDATED"
+      },
+      {
+        "owner": "__schedule",
+        "line": "scheduler_core.c:1069",
+        "action": "switch_count=&prev.nivcsw"
+      },
+      {
+        "owner": "__schedule",
+        "line": "scheduler_core.c:1116",
+        "action": "pick_next_task invoked LATER; picker reads jiffies"
+      }
+    ],
+    "values": {
+      "RQCF_REQ_SKIP": 1,
+      "RQCF_ACT_SKIP": 2,
+      "RQCF_UPDATED": 4
+    },
+    "definitions": {
+      "clock_update_flags": "uint",
+      "clock": "u64",
+      "clock_task": "u64",
+      "clock_pelt": "u64"
+    },
+    "update_clock_checks_flags": false,
+    "comments_vs_active": "RQCF skip optimization comment cannot be interpreted as active skip in selected update_rq_clock body",
+    "local_clock": "static inline u64 returns native_sched_clock()",
+    "native_sched_clock_branches": [
+      {
+        "condition": "__use_tsc=true",
+        "return": "cycles_2_ns(rdtsc())",
+        "intent": "u64 nanoseconds"
+      },
+      {
+        "condition": "__use_tsc=false",
+        "return": "(jiffies_64 - INITIAL_JIFFIES)*(1000000000 / HZ)",
+        "notes": "integer division first and u64 tick arithmetic; real HZ and clock state not sampled"
+      }
+    ],
+    "native_sched_clock_prototype": "asm/timer.h:12 unsigned long long native_sched_clock(void);",
+    "actual__use_tsc": "UNKNOWN",
+    "unit_and_semantics": "local_clock intended nanoseconds; per-CPU real monotonicity not proven by these samples",
+    "unsigned_to_signed": "contract forces low64 two's complement for overflow; C implementation-defined otherwise",
+    "no_writes_in_selected_range_to": [
+      "rq.clock_task",
+      "rq.clock_pelt"
+    ],
+    "picker_reads": "jiffies - myos_rq.last_jiffies, independent code operand from local_clock; physical correlation not presumed"
+  },
+  "B": {
+    "continuous": [
+      {
+        "id": "B1",
+        "input": {
+          "clock_ns": 1000,
+          "clock_update_flags": 1,
+          "clock_task": 700,
+          "clock_pelt": 600,
+          "local_clock_return_ns": 1012
+        },
+        "shift_flags": 2,
+        "call_flags": 2,
+        "local_clock_calls": 1,
+        "delta": {
+          "operands": [
+            {
+              "expr": "local_clock()",
+              "type": "u64",
+              "value": 1012
+            },
+            {
+              "expr": "rq->clock",
+              "type": "u64",
+              "value": 1000
+            }
+          ],
+          "operation": "u64 - u64 mod 2^64",
+          "u64_result_decimal": "12",
+          "assignment_type": "s64",
+          "conversion_assumption": "contract-specific low64 two's complement, not universal C guarantee",
+          "s64_result": 12,
+          "compare_delta_lt_zero": false
+        },
+        "control": {
+          "update_clock_early_return": false,
+          "clock_plus_equal_executed": true,
+          "source_level_plus_equal_even_if_zero": false,
+          "compiler_store_instruction": "UNKNOWN"
+        },
+        "after_update": {
+          "clock_ns": 1012,
+          "clock_update_flags": 2,
+          "clock_task": 700,
+          "clock_pelt": 600
+        },
+        "after_caller": {
+          "clock_ns": 1012,
+          "clock_update_flags": 4,
+          "clock_task": 700,
+          "clock_pelt": 600
+        },
+        "source_write_owners": {
+          "shift": "__schedule scheduler_core.c:1065",
+          "sample": "update_rq_clock core.c:24 via local_clock()",
+          "clock_plus_equal": "update_rq_clock core.c:27",
+          "flags_overwrite": "__schedule core.c:1067",
+          "clock_task": "NO_WRITE_IN_SELECTED_RANGE",
+          "clock_pelt": "NO_WRITE_IN_SELECTED_RANGE"
+        }
+      },
+      {
+        "id": "B2",
+        "input": {
+          "clock_ns": 1012,
+          "clock_update_flags": 4,
+          "clock_task": 700,
+          "clock_pelt": 600,
+          "local_clock_return_ns": 1012
+        },
+        "shift_flags": 8,
+        "call_flags": 8,
+        "local_clock_calls": 1,
+        "delta": {
+          "operands": [
+            {
+              "expr": "local_clock()",
+              "type": "u64",
+              "value": 1012
+            },
+            {
+              "expr": "rq->clock",
+              "type": "u64",
+              "value": 1012
+            }
+          ],
+          "operation": "u64 - u64 mod 2^64",
+          "u64_result_decimal": "0",
+          "assignment_type": "s64",
+          "conversion_assumption": "contract-specific low64 two's complement, not universal C guarantee",
+          "s64_result": 0,
+          "compare_delta_lt_zero": false
+        },
+        "control": {
+          "update_clock_early_return": false,
+          "clock_plus_equal_executed": true,
+          "source_level_plus_equal_even_if_zero": true,
+          "compiler_store_instruction": "UNKNOWN"
+        },
+        "after_update": {
+          "clock_ns": 1012,
+          "clock_update_flags": 8,
+          "clock_task": 700,
+          "clock_pelt": 600
+        },
+        "after_caller": {
+          "clock_ns": 1012,
+          "clock_update_flags": 4,
+          "clock_task": 700,
+          "clock_pelt": 600
+        },
+        "source_write_owners": {
+          "shift": "__schedule scheduler_core.c:1065",
+          "sample": "update_rq_clock core.c:24 via local_clock()",
+          "clock_plus_equal": "update_rq_clock core.c:27",
+          "flags_overwrite": "__schedule core.c:1067",
+          "clock_task": "NO_WRITE_IN_SELECTED_RANGE",
+          "clock_pelt": "NO_WRITE_IN_SELECTED_RANGE"
+        }
+      },
+      {
+        "id": "B3",
+        "input": {
+          "clock_ns": 1012,
+          "clock_update_flags": 4,
+          "clock_task": 700,
+          "clock_pelt": 600,
+          "local_clock_return_ns": 1008
+        },
+        "shift_flags": 8,
+        "call_flags": 8,
+        "local_clock_calls": 1,
+        "delta": {
+          "operands": [
+            {
+              "expr": "local_clock()",
+              "type": "u64",
+              "value": 1008
+            },
+            {
+              "expr": "rq->clock",
+              "type": "u64",
+              "value": 1012
+            }
+          ],
+          "operation": "u64 - u64 mod 2^64",
+          "u64_result_decimal": "18446744073709551612",
+          "assignment_type": "s64",
+          "conversion_assumption": "contract-specific low64 two's complement, not universal C guarantee",
+          "s64_result": -4,
+          "compare_delta_lt_zero": true
+        },
+        "control": {
+          "update_clock_early_return": true,
+          "clock_plus_equal_executed": false,
+          "source_level_plus_equal_even_if_zero": false,
+          "compiler_store_instruction": "UNKNOWN"
+        },
+        "after_update": {
+          "clock_ns": 1012,
+          "clock_update_flags": 8,
+          "clock_task": 700,
+          "clock_pelt": 600
+        },
+        "after_caller": {
+          "clock_ns": 1012,
+          "clock_update_flags": 4,
+          "clock_task": 700,
+          "clock_pelt": 600
+        },
+        "source_write_owners": {
+          "shift": "__schedule scheduler_core.c:1065",
+          "sample": "update_rq_clock core.c:24 via local_clock()",
+          "clock_plus_equal": "SKIPPED",
+          "flags_overwrite": "__schedule core.c:1067",
+          "clock_task": "NO_WRITE_IN_SELECTED_RANGE",
+          "clock_pelt": "NO_WRITE_IN_SELECTED_RANGE"
+        }
+      }
+    ],
+    "flag_zero_control": {
+      "id": "B0_initial_flag_zero",
+      "input": {
+        "clock_ns": 1000,
+        "clock_update_flags": 0,
+        "clock_task": 700,
+        "clock_pelt": 600,
+        "local_clock_return_ns": 1012
+      },
+      "shift_flags": 0,
+      "call_flags": 0,
+      "local_clock_calls": 1,
+      "delta": {
+        "operands": [
+          {
+            "expr": "local_clock()",
+            "type": "u64",
+            "value": 1012
+          },
+          {
+            "expr": "rq->clock",
+            "type": "u64",
+            "value": 1000
+          }
+        ],
+        "operation": "u64 - u64 mod 2^64",
+        "u64_result_decimal": "12",
+        "assignment_type": "s64",
+        "conversion_assumption": "contract-specific low64 two's complement, not universal C guarantee",
+        "s64_result": 12,
+        "compare_delta_lt_zero": false
+      },
+      "control": {
+        "update_clock_early_return": false,
+        "clock_plus_equal_executed": true,
+        "source_level_plus_equal_even_if_zero": false,
+        "compiler_store_instruction": "UNKNOWN"
+      },
+      "after_update": {
+        "clock_ns": 1012,
+        "clock_update_flags": 0,
+        "clock_task": 700,
+        "clock_pelt": 600
+      },
+      "after_caller": {
+        "clock_ns": 1012,
+        "clock_update_flags": 4,
+        "clock_task": 700,
+        "clock_pelt": 600
+      },
+      "source_write_owners": {
+        "shift": "__schedule scheduler_core.c:1065",
+        "sample": "update_rq_clock core.c:24 via local_clock()",
+        "clock_plus_equal": "update_rq_clock core.c:27",
+        "flags_overwrite": "__schedule core.c:1067",
+        "clock_task": "NO_WRITE_IN_SELECTED_RANGE",
+        "clock_pelt": "NO_WRITE_IN_SELECTED_RANGE"
+      }
+    },
+    "local_clock_call_count": 3,
+    "initial": {
+      "clock": 1000,
+      "flags": 1,
+      "clock_task": 700,
+      "clock_pelt": 600
+    },
+    "all_final": {
+      "clock": 1012,
+      "flags": 4,
+      "clock_task": 700,
+      "clock_pelt": 600
+    }
+  },
+  "C": {
+    "independent_cases": [
+      {
+        "id": "C1",
+        "inputs": {
+          "local_clock_ns": 1012,
+          "picker_jiffies": 103,
+          "initial_clock": 1000,
+          "initial_flags": 1,
+          "P_key": 10,
+          "R_key": 30,
+          "queue": [
+            "Q",
+            "R"
+          ],
+          "need": false,
+          "time_slice": 10,
+          "last_jiffies": 100,
+          "counters": {
+            "nr_switches": 8,
+            "P_nivcsw": 5,
+            "P_nvcsw": 4
+          }
+        },
+        "clock": {
+          "id": "C1",
+          "input": {
+            "clock_ns": 1000,
+            "clock_update_flags": 1,
+            "clock_task": 700,
+            "clock_pelt": 600,
+            "local_clock_return_ns": 1012
+          },
+          "shift_flags": 2,
+          "call_flags": 2,
+          "local_clock_calls": 1,
+          "delta": {
+            "operands": [
+              {
+                "expr": "local_clock()",
+                "type": "u64",
+                "value": 1012
+              },
+              {
+                "expr": "rq->clock",
+                "type": "u64",
+                "value": 1000
+              }
+            ],
+            "operation": "u64 - u64 mod 2^64",
+            "u64_result_decimal": "12",
+            "assignment_type": "s64",
+            "conversion_assumption": "contract-specific low64 two's complement, not universal C guarantee",
+            "s64_result": 12,
+            "compare_delta_lt_zero": false
+          },
+          "control": {
+            "update_clock_early_return": false,
+            "clock_plus_equal_executed": true,
+            "source_level_plus_equal_even_if_zero": false,
+            "compiler_store_instruction": "UNKNOWN"
+          },
+          "after_update": {
+            "clock_ns": 1012,
+            "clock_update_flags": 2,
+            "clock_task": 700,
+            "clock_pelt": 600
+          },
+          "after_caller": {
+            "clock_ns": 1012,
+            "clock_update_flags": 4,
+            "clock_task": 700,
+            "clock_pelt": 600
+          },
+          "source_write_owners": {
+            "shift": "__schedule scheduler_core.c:1065",
+            "sample": "update_rq_clock core.c:24 via local_clock()",
+            "clock_plus_equal": "update_rq_clock core.c:27",
+            "flags_overwrite": "__schedule core.c:1067",
+            "clock_task": "NO_WRITE_IN_SELECTED_RANGE",
+            "clock_pelt": "NO_WRITE_IN_SELECTED_RANGE"
+          }
+        },
+        "picker": {
+          "count_input": 2,
+          "count_comparison_evaluated": false,
+          "count_comparison_result": "NOT_EVALUATED",
+          "read_jiffies": 103,
+          "previous_last_jiffies": 100,
+          "used_jiffies": 3,
+          "need_resched": false,
+          "current_is_idle": false,
+          "time_slice": 10,
+          "used_ge_slice": false,
+          "current_state": "TASK_RUNNING",
+          "gate": false,
+          "queue_before": [
+            "Q",
+            "R"
+          ],
+          "removed_head": null,
+          "queue_after_remove": "NOT_EXECUTED",
+          "insert_P_using_prior_vruntime10_before_R30": false,
+          "queue_after": [
+            "Q",
+            "R"
+          ],
+          "count_changes": [],
+          "count_final": 2,
+          "P_vruntime_before": 10,
+          "P_vruntime_after": 10,
+          "last_jiffies_after": 100,
+          "next": "P",
+          "rq_curr": "P",
+          "return_pointer": "P"
+        },
+        "counters": {
+          "rq_nr_switches": 8,
+          "P_nivcsw": 5,
+          "P_nvcsw": 4,
+          "context_switch_called": false,
+          "first_clock_write": "__schedule update_rq_clock",
+          "pick_rq_curr_write": "pick_next_task_myos line56",
+          "RCU_second_publish": "SKIPPED"
+        },
+        "unknowns": [
+          "real switch and resume",
+          "real hardware clock correlation",
+          "unprovided clock and irq state"
+        ]
+      },
+      {
+        "id": "C2",
+        "inputs": {
+          "local_clock_ns": 1012,
+          "picker_jiffies": 110,
+          "initial_clock": 1000,
+          "initial_flags": 1,
+          "P_key": 10,
+          "R_key": 30,
+          "queue": [
+            "Q",
+            "R"
+          ],
+          "need": false,
+          "time_slice": 10,
+          "last_jiffies": 100,
+          "counters": {
+            "nr_switches": 8,
+            "P_nivcsw": 5,
+            "P_nvcsw": 4
+          }
+        },
+        "clock": {
+          "id": "C2",
+          "input": {
+            "clock_ns": 1000,
+            "clock_update_flags": 1,
+            "clock_task": 700,
+            "clock_pelt": 600,
+            "local_clock_return_ns": 1012
+          },
+          "shift_flags": 2,
+          "call_flags": 2,
+          "local_clock_calls": 1,
+          "delta": {
+            "operands": [
+              {
+                "expr": "local_clock()",
+                "type": "u64",
+                "value": 1012
+              },
+              {
+                "expr": "rq->clock",
+                "type": "u64",
+                "value": 1000
+              }
+            ],
+            "operation": "u64 - u64 mod 2^64",
+            "u64_result_decimal": "12",
+            "assignment_type": "s64",
+            "conversion_assumption": "contract-specific low64 two's complement, not universal C guarantee",
+            "s64_result": 12,
+            "compare_delta_lt_zero": false
+          },
+          "control": {
+            "update_clock_early_return": false,
+            "clock_plus_equal_executed": true,
+            "source_level_plus_equal_even_if_zero": false,
+            "compiler_store_instruction": "UNKNOWN"
+          },
+          "after_update": {
+            "clock_ns": 1012,
+            "clock_update_flags": 2,
+            "clock_task": 700,
+            "clock_pelt": 600
+          },
+          "after_caller": {
+            "clock_ns": 1012,
+            "clock_update_flags": 4,
+            "clock_task": 700,
+            "clock_pelt": 600
+          },
+          "source_write_owners": {
+            "shift": "__schedule scheduler_core.c:1065",
+            "sample": "update_rq_clock core.c:24 via local_clock()",
+            "clock_plus_equal": "update_rq_clock core.c:27",
+            "flags_overwrite": "__schedule core.c:1067",
+            "clock_task": "NO_WRITE_IN_SELECTED_RANGE",
+            "clock_pelt": "NO_WRITE_IN_SELECTED_RANGE"
+          }
+        },
+        "picker": {
+          "count_input": 2,
+          "count_comparison_evaluated": true,
+          "count_comparison_result": true,
+          "read_jiffies": 110,
+          "previous_last_jiffies": 100,
+          "used_jiffies": 10,
+          "need_resched": false,
+          "current_is_idle": false,
+          "time_slice": 10,
+          "used_ge_slice": true,
+          "current_state": "TASK_RUNNING",
+          "gate": true,
+          "queue_before": [
+            "Q",
+            "R"
+          ],
+          "removed_head": "Q",
+          "queue_after_remove": [
+            "R"
+          ],
+          "insert_P_using_prior_vruntime10_before_R30": true,
+          "queue_after": [
+            "P",
+            "R"
+          ],
+          "count_changes": [
+            "2->1: list_header_remove_head",
+            "1->2: pick_next_task_myos"
+          ],
+          "count_final": 2,
+          "P_vruntime_before": 10,
+          "P_vruntime_after": 20,
+          "last_jiffies_after": 110,
+          "next": "Q",
+          "rq_curr": "Q",
+          "return_pointer": "Q"
+        },
+        "counters": {
+          "rq_nr_switches": 9,
+          "P_nivcsw": 6,
+          "P_nvcsw": 4,
+          "context_switch_called": true,
+          "first_clock_write": "__schedule update_rq_clock",
+          "pick_rq_curr_write": "pick_next_task_myos line56",
+          "RCU_second_publish": "__schedule line1130"
+        },
+        "unknowns": [
+          "real switch and resume",
+          "real hardware clock correlation",
+          "unprovided clock and irq state"
+        ]
+      },
+      {
+        "id": "C3",
+        "inputs": {
+          "local_clock_ns": 996,
+          "picker_jiffies": 110,
+          "initial_clock": 1000,
+          "initial_flags": 1,
+          "P_key": 10,
+          "R_key": 30,
+          "queue": [
+            "Q",
+            "R"
+          ],
+          "need": false,
+          "time_slice": 10,
+          "last_jiffies": 100,
+          "counters": {
+            "nr_switches": 8,
+            "P_nivcsw": 5,
+            "P_nvcsw": 4
+          }
+        },
+        "clock": {
+          "id": "C3",
+          "input": {
+            "clock_ns": 1000,
+            "clock_update_flags": 1,
+            "clock_task": 700,
+            "clock_pelt": 600,
+            "local_clock_return_ns": 996
+          },
+          "shift_flags": 2,
+          "call_flags": 2,
+          "local_clock_calls": 1,
+          "delta": {
+            "operands": [
+              {
+                "expr": "local_clock()",
+                "type": "u64",
+                "value": 996
+              },
+              {
+                "expr": "rq->clock",
+                "type": "u64",
+                "value": 1000
+              }
+            ],
+            "operation": "u64 - u64 mod 2^64",
+            "u64_result_decimal": "18446744073709551612",
+            "assignment_type": "s64",
+            "conversion_assumption": "contract-specific low64 two's complement, not universal C guarantee",
+            "s64_result": -4,
+            "compare_delta_lt_zero": true
+          },
+          "control": {
+            "update_clock_early_return": true,
+            "clock_plus_equal_executed": false,
+            "source_level_plus_equal_even_if_zero": false,
+            "compiler_store_instruction": "UNKNOWN"
+          },
+          "after_update": {
+            "clock_ns": 1000,
+            "clock_update_flags": 2,
+            "clock_task": 700,
+            "clock_pelt": 600
+          },
+          "after_caller": {
+            "clock_ns": 1000,
+            "clock_update_flags": 4,
+            "clock_task": 700,
+            "clock_pelt": 600
+          },
+          "source_write_owners": {
+            "shift": "__schedule scheduler_core.c:1065",
+            "sample": "update_rq_clock core.c:24 via local_clock()",
+            "clock_plus_equal": "SKIPPED",
+            "flags_overwrite": "__schedule core.c:1067",
+            "clock_task": "NO_WRITE_IN_SELECTED_RANGE",
+            "clock_pelt": "NO_WRITE_IN_SELECTED_RANGE"
+          }
+        },
+        "picker": {
+          "count_input": 2,
+          "count_comparison_evaluated": true,
+          "count_comparison_result": true,
+          "read_jiffies": 110,
+          "previous_last_jiffies": 100,
+          "used_jiffies": 10,
+          "need_resched": false,
+          "current_is_idle": false,
+          "time_slice": 10,
+          "used_ge_slice": true,
+          "current_state": "TASK_RUNNING",
+          "gate": true,
+          "queue_before": [
+            "Q",
+            "R"
+          ],
+          "removed_head": "Q",
+          "queue_after_remove": [
+            "R"
+          ],
+          "insert_P_using_prior_vruntime10_before_R30": true,
+          "queue_after": [
+            "P",
+            "R"
+          ],
+          "count_changes": [
+            "2->1: list_header_remove_head",
+            "1->2: pick_next_task_myos"
+          ],
+          "count_final": 2,
+          "P_vruntime_before": 10,
+          "P_vruntime_after": 20,
+          "last_jiffies_after": 110,
+          "next": "Q",
+          "rq_curr": "Q",
+          "return_pointer": "Q"
+        },
+        "counters": {
+          "rq_nr_switches": 9,
+          "P_nivcsw": 6,
+          "P_nvcsw": 4,
+          "context_switch_called": true,
+          "first_clock_write": "__schedule update_rq_clock",
+          "pick_rq_curr_write": "pick_next_task_myos line56",
+          "RCU_second_publish": "__schedule line1130"
+        },
+        "unknowns": [
+          "real switch and resume",
+          "real hardware clock correlation",
+          "unprovided clock and irq state"
+        ]
+      }
+    ],
+    "paired_comparisons": {
+      "C1_C2": "same local ns 1012 and rq.clock 1012, only jiffies 103 vs 110 determines no selection vs Q & P key charge",
+      "C2_C3": "same jiffies 110 and Q/P20/last110, local ns 1012 vs996 controls rq.clock 1012 vs1000"
+    },
+    "scope": "independent given states; no live clock read or actual scheduler task switch"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "group": "D00_B1",
+        "id": "B1_T01",
+        "label": "1. PREV_SAVE prev=P"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T02",
+        "label": "2. SWITCH_COUNT_POINTER &P.nivcsw"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T03",
+        "label": "3. PREV_STATE_READ TASK_RUNNING"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T04",
+        "label": "4. PICK_CALL_START call pick_next_task; wait for callee"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T05",
+        "label": "5. PICK_INNER retval = curr_task=current"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T06",
+        "label": "6. PICK_INNER used_jiffies=jiffies-last_jiffies"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T07",
+        "label": "7. PICK_INNER trigger = (need || idle || time_expired || nonrunning) && count>0"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T08",
+        "label": "8. PICK_INNER rq->curr = retval"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T09",
+        "label": "9. PICK_INNER return retval"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T10",
+        "label": "10. PICK_RETURN_NEXT next=P"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T11",
+        "label": "11. AFTER_PICK clear_tsk_need_resched(prev)"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T12",
+        "label": "12. AFTER_PICK clear_preempt_need_resched()"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T13",
+        "label": "13. AFTER_PICK if(prev != next)"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T14",
+        "label": "14. AFTER_PICK else branch, no count increment or context_switch invocation"
+      },
+      {
+        "group": "D00_B1",
+        "id": "B1_T15",
+        "label": "15. AFTER_PICK local_irq_enable() at function tail if reached"
+      },
+      {
+        "group": "D00_B1",
+        "id": "D133_B1_loop",
+        "label": "P flag cleared; under stated conditions no second iteration; condition: normal return to P loop bottom and no new reflag"
+      },
+      {
+        "group": "D00_B1",
+        "id": "D133_B1_count",
+        "label": "count input 0, evaluated=true, result=false"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T01",
+        "label": "1. PREV_SAVE prev=P"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T02",
+        "label": "2. SWITCH_COUNT_POINTER &P.nivcsw"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T03",
+        "label": "3. PREV_STATE_READ TASK_RUNNING"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T04",
+        "label": "4. PICK_CALL_START call pick_next_task; wait for callee"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T05",
+        "label": "5. PICK_INNER retval = curr_task=current"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T06",
+        "label": "6. PICK_INNER used_jiffies=jiffies-last_jiffies"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T07",
+        "label": "7. PICK_INNER trigger = (need || idle || time_expired || nonrunning) && count>0"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T08",
+        "label": "8. PICK_INNER rq->curr = retval"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T09",
+        "label": "9. PICK_INNER return retval"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T10",
+        "label": "10. PICK_RETURN_NEXT next=P"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T11",
+        "label": "11. AFTER_PICK clear_tsk_need_resched(prev)"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T12",
+        "label": "12. AFTER_PICK clear_preempt_need_resched()"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T13",
+        "label": "13. AFTER_PICK if(prev != next)"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T14",
+        "label": "14. AFTER_PICK else branch, no count increment or context_switch invocation"
+      },
+      {
+        "group": "D00_B2",
+        "id": "B2_T15",
+        "label": "15. AFTER_PICK local_irq_enable() at function tail if reached"
+      },
+      {
+        "group": "D00_B2",
+        "id": "D133_B2_loop",
+        "label": "P flag cleared; under stated conditions no second iteration; condition: normal return to P loop bottom and no new reflag"
+      },
+      {
+        "group": "D00_B2",
+        "id": "D133_B2_count",
+        "label": "count input 2, evaluated=false, result=NOT_EVALUATED"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T01",
+        "label": "1. PREV_SAVE prev=P"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T02",
+        "label": "2. SWITCH_COUNT_POINTER &P.nivcsw"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T03",
+        "label": "3. PREV_STATE_READ TASK_RUNNING"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T04",
+        "label": "4. PICK_CALL_START call pick_next_task; wait for callee"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T05",
+        "label": "5. PICK_INNER retval = curr_task=current"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T06",
+        "label": "6. PICK_INNER used_jiffies=jiffies-last_jiffies"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T07",
+        "label": "7. PICK_INNER trigger = (need || idle || time_expired || nonrunning) && count>0"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T08",
+        "label": "8. PICK_INNER list_del_init(Q), then count--"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T09",
+        "label": "9. PICK_INNER tmp_list=R; compare old P.vruntime10>R.vruntime30 ==false; list_add_to_prev(P,R)"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T10",
+        "label": "10. PICK_INNER running_lhdr.count++ explicitly once"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T11",
+        "label": "11. PICK_INNER P.se.vruntime += used_jiffies after reinsertion"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T12",
+        "label": "12. PICK_INNER retval from next_lp=Q"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T13",
+        "label": "13. PICK_INNER last_jiffies = fixed current case jiffies"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T14",
+        "label": "14. PICK_INNER rq->curr = retval"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T15",
+        "label": "15. PICK_INNER return retval"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T16",
+        "label": "16. PICK_RETURN_NEXT next=Q"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T17",
+        "label": "17. AFTER_PICK clear_tsk_need_resched(prev)"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T18",
+        "label": "18. AFTER_PICK clear_preempt_need_resched()"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T19",
+        "label": "19. AFTER_PICK if(prev != next)"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T20",
+        "label": "20. AFTER_PICK rq->nr_switches++"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T21",
+        "label": "21. AFTER_PICK RCU_INIT_POINTER(rq->curr,next) second publication"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T22",
+        "label": "22. AFTER_PICK ++*switch_count -> P.nivcsw"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T23",
+        "label": "23. AFTER_PICK context_switch(rq,P,Q,&rf) call"
+      },
+      {
+        "group": "D00_B3",
+        "id": "B3_T24",
+        "label": "24. AFTER_PICK local_irq_enable() at function tail if reached"
+      },
+      {
+        "group": "D00_B3",
+        "id": "D133_B3_loop",
+        "label": "Q selected is not proof of which context reaches loop bottom or when; condition: actual saved context resumes and reaches loop bottom, flag of that context at that time"
+      },
+      {
+        "group": "D00_B3",
+        "id": "D133_B3_count",
+        "label": "count input 2, evaluated=true, result=true"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T01",
+        "label": "1. PREV_SAVE prev=P"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T02",
+        "label": "2. SWITCH_COUNT_POINTER &P.nivcsw"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T03",
+        "label": "3. PREV_STATE_READ TASK_RUNNING"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T04",
+        "label": "4. PICK_CALL_START call pick_next_task; wait for callee"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T05",
+        "label": "5. PICK_INNER retval = curr_task=current"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T06",
+        "label": "6. PICK_INNER used_jiffies=jiffies-last_jiffies"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T07",
+        "label": "7. PICK_INNER trigger = (need || idle || time_expired || nonrunning) && count>0"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T08",
+        "label": "8. PICK_INNER list_del_init(Q), then count--"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T09",
+        "label": "9. PICK_INNER tmp_list=R; compare old P.vruntime10>R.vruntime30 ==false; list_add_to_prev(P,R)"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T10",
+        "label": "10. PICK_INNER running_lhdr.count++ explicitly once"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T11",
+        "label": "11. PICK_INNER P.se.vruntime += used_jiffies after reinsertion"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T12",
+        "label": "12. PICK_INNER retval from next_lp=Q"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T13",
+        "label": "13. PICK_INNER last_jiffies = fixed current case jiffies"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T14",
+        "label": "14. PICK_INNER rq->curr = retval"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T15",
+        "label": "15. PICK_INNER return retval"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T16",
+        "label": "16. PICK_RETURN_NEXT next=Q"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T17",
+        "label": "17. AFTER_PICK clear_tsk_need_resched(prev)"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T18",
+        "label": "18. AFTER_PICK clear_preempt_need_resched()"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T19",
+        "label": "19. AFTER_PICK if(prev != next)"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T20",
+        "label": "20. AFTER_PICK rq->nr_switches++"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T21",
+        "label": "21. AFTER_PICK RCU_INIT_POINTER(rq->curr,next) second publication"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T22",
+        "label": "22. AFTER_PICK ++*switch_count -> P.nivcsw"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T23",
+        "label": "23. AFTER_PICK context_switch(rq,P,Q,&rf) call"
+      },
+      {
+        "group": "D00_B4",
+        "id": "B4_T24",
+        "label": "24. AFTER_PICK local_irq_enable() at function tail if reached"
+      },
+      {
+        "group": "D00_B4",
+        "id": "D133_B4_loop",
+        "label": "Q selected is not proof of which context reaches loop bottom or when; condition: actual saved context resumes and reaches loop bottom, flag of that context at that time"
+      },
+      {
+        "group": "D00_B4",
+        "id": "D133_B4_count",
+        "label": "count input 2, evaluated=true, result=true"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_owner",
+        "label": "__pick_next_task owns indirect call at scheduler.h:264"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_member",
+        "label": "myos_rt .pick_next_task stores pointer, not call"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_argument",
+        "label": "rq and prev arguments from __pick_next_task"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_call",
+        "label": "p=class->pick_next_task(rq,prev)"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_callee",
+        "label": "pick_next_task_myos function body"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_nonnull",
+        "label": "p non-NULL -> immediate return p"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_null",
+        "label": "p NULL -> continue class iteration"
+      },
+      {
+        "group": "D00_CLASS",
+        "id": "D133_CLASS_end",
+        "label": "all classes exhausted -> BUG() at scheduler.h:276"
+      },
+      {
+        "group": "D00_COUNTS",
+        "id": "D133_SCOPE_130_five_DIAG",
+        "label": "130_five_DIAG: 40 nodes / 35 typed edges"
+      },
+      {
+        "group": "D00_COUNTS",
+        "id": "D133_SCOPE_131_five_DIAG",
+        "label": "131_five_DIAG: 70 nodes / 80 typed edges"
+      },
+      {
+        "group": "D00_COUNTS",
+        "id": "D133_SCOPE_131_five_DIAG_plus_A_INIT_C_YIELD",
+        "label": "131_five_DIAG_plus_A_INIT_C_YIELD: 91 nodes / 99 typed edges"
+      },
+      {
+        "group": "D00_COUNTS",
+        "id": "D133_SCOPE_132_corrected_five_DIAG",
+        "label": "132_corrected_five_DIAG: 85 nodes / 115 typed edges"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_owner",
+        "label": "__schedule source: flags <<=1 -> call update_rq_clock -> set RQCF_UPDATED"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_shift",
+        "label": "clock_update_flags <<= 1"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_call",
+        "label": "__schedule directly calls update_rq_clock(rq)"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_sample",
+        "label": "update_rq_clock calls local_clock()"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_wrapper",
+        "label": "local_clock returns native_sched_clock()"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_tsc",
+        "label": "__use_tsc=true -> rdtsc -> cycles_2_ns"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_fallback",
+        "label": "__use_tsc=false -> jiffies_64 formula with integer 1000000000/HZ"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_delta",
+        "label": "u64 sample - u64 rq.clock then assigned to s64"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_negative",
+        "label": "delta<0 early return from update_rq_clock"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_add",
+        "label": "delta>=0 -> rq.clock += delta, even if delta0"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_overwrite",
+        "label": "__schedule always sets flags=RQCF_UPDATED 4"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_separate",
+        "label": "picker later uses jiffies - last_jiffies; not rq.clock"
+      },
+      {
+        "group": "A_CLOCK",
+        "id": "D133_A_fields",
+        "label": "clock_task/clock_pelt not written in studied segment"
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "id": "D133_B1_input",
+        "label": "clock=1000, flags=1"
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "id": "D133_B1_shift",
+        "label": "flags <<=1 -> 2"
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "id": "D133_B1_sample",
+        "label": "local_clock() called once, return 1012"
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "id": "D133_B1_delta",
+        "label": "u64 12 -> s64 12 per specified conversion"
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "id": "D133_B1_guard",
+        "label": "delta<0 = false"
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "id": "D133_B1_add",
+        "label": "rq.clock += 12 executed"
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "id": "D133_B1_overwrite",
+        "label": "caller sets flags=4; clock=1012; task700, pelt600"
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "id": "D133_B2_input",
+        "label": "clock=1012, flags=4"
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "id": "D133_B2_shift",
+        "label": "flags <<=1 -> 8"
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "id": "D133_B2_sample",
+        "label": "local_clock() called once, return 1012"
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "id": "D133_B2_delta",
+        "label": "u64 0 -> s64 0 per specified conversion"
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "id": "D133_B2_guard",
+        "label": "delta<0 = false"
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "id": "D133_B2_add",
+        "label": "rq.clock += 0 executed"
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "id": "D133_B2_overwrite",
+        "label": "caller sets flags=4; clock=1012; task700, pelt600"
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "id": "D133_B3_input",
+        "label": "clock=1012, flags=4"
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "id": "D133_B3_shift",
+        "label": "flags <<=1 -> 8"
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "id": "D133_B3_sample",
+        "label": "local_clock() called once, return 1008"
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "id": "D133_B3_delta",
+        "label": "u64 18446744073709551612 -> s64 -4 per specified conversion"
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "id": "D133_B3_guard",
+        "label": "delta<0 = true"
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "id": "D133_B3_add",
+        "label": "early return, += skipped"
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "id": "D133_B3_overwrite",
+        "label": "caller sets flags=4; clock=1012; task700, pelt600"
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "id": "D133_B0_initial_flag_zero_input",
+        "label": "clock=1000, flags=0"
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "id": "D133_B0_initial_flag_zero_shift",
+        "label": "flags <<=1 -> 0"
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "id": "D133_B0_initial_flag_zero_sample",
+        "label": "local_clock() called once, return 1012"
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "id": "D133_B0_initial_flag_zero_delta",
+        "label": "u64 12 -> s64 12 per specified conversion"
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "id": "D133_B0_initial_flag_zero_guard",
+        "label": "delta<0 = false"
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "id": "D133_B0_initial_flag_zero_add",
+        "label": "rq.clock += 12 executed"
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "id": "D133_B0_initial_flag_zero_overwrite",
+        "label": "caller sets flags=4; clock=1012; task700, pelt600"
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "id": "D133_C1_input",
+        "label": "C1 independent clock1000 flags1, P10, Q R, tick last100"
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "id": "D133_C1_clock",
+        "label": "local ns=1012, delta=12"
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "id": "D133_C1_clock_after",
+        "label": "rq.clock=1012, final flags4"
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "id": "D133_C1_picker",
+        "label": "picker reads jiffies=103 used=3"
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "id": "D133_C1_gate",
+        "label": "selection gate=false"
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "id": "D133_C1_queue",
+        "label": "queue=Q,R P key=10 last=100"
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "id": "D133_C1_counts",
+        "label": "next=P nr_switches=8 nivcsw=5 nvcsw4"
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "id": "D133_C2_input",
+        "label": "C2 independent clock1000 flags1, P10, Q R, tick last100"
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "id": "D133_C2_clock",
+        "label": "local ns=1012, delta=12"
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "id": "D133_C2_clock_after",
+        "label": "rq.clock=1012, final flags4"
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "id": "D133_C2_picker",
+        "label": "picker reads jiffies=110 used=10"
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "id": "D133_C2_gate",
+        "label": "selection gate=true"
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "id": "D133_C2_queue",
+        "label": "queue=P,R P key=20 last=110"
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "id": "D133_C2_counts",
+        "label": "next=Q nr_switches=9 nivcsw=6 nvcsw4"
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "id": "D133_C3_input",
+        "label": "C3 independent clock1000 flags1, P10, Q R, tick last100"
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "id": "D133_C3_clock",
+        "label": "local ns=996, delta=-4"
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "id": "D133_C3_clock_after",
+        "label": "rq.clock=1000, final flags4"
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "id": "D133_C3_picker",
+        "label": "picker reads jiffies=110 used=10"
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "id": "D133_C3_gate",
+        "label": "selection gate=true"
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "id": "D133_C3_queue",
+        "label": "queue=P,R P key=20 last=110"
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "id": "D133_C3_counts",
+        "label": "next=Q nr_switches=9 nivcsw=6 nvcsw4"
+      }
+    ],
+    "edges": [
+      {
+        "group": "D00_B1",
+        "from": "B1_T01",
+        "to": "B1_T02",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T02",
+        "to": "B1_T03",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T03",
+        "to": "B1_T04",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T04",
+        "to": "B1_T05",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T05",
+        "to": "B1_T06",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T06",
+        "to": "B1_T07",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T07",
+        "to": "B1_T08",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T08",
+        "to": "B1_T09",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T09",
+        "to": "B1_T10",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T10",
+        "to": "B1_T11",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T11",
+        "to": "B1_T12",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T12",
+        "to": "B1_T13",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T13",
+        "to": "B1_T14",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T14",
+        "to": "B1_T15",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T15",
+        "to": "D133_B1_loop",
+        "kind": "CONDITIONAL_RESUMED_CONTEXT",
+        "label": ""
+      },
+      {
+        "group": "D00_B1",
+        "from": "B1_T07",
+        "to": "D133_B1_count",
+        "kind": "BOOLEAN_SHORT_CIRCUIT_EVIDENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T01",
+        "to": "B2_T02",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T02",
+        "to": "B2_T03",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T03",
+        "to": "B2_T04",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T04",
+        "to": "B2_T05",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T05",
+        "to": "B2_T06",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T06",
+        "to": "B2_T07",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T07",
+        "to": "B2_T08",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T08",
+        "to": "B2_T09",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T09",
+        "to": "B2_T10",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T10",
+        "to": "B2_T11",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T11",
+        "to": "B2_T12",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T12",
+        "to": "B2_T13",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T13",
+        "to": "B2_T14",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T14",
+        "to": "B2_T15",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T15",
+        "to": "D133_B2_loop",
+        "kind": "CONDITIONAL_RESUMED_CONTEXT",
+        "label": ""
+      },
+      {
+        "group": "D00_B2",
+        "from": "B2_T07",
+        "to": "D133_B2_count",
+        "kind": "BOOLEAN_SHORT_CIRCUIT_EVIDENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T01",
+        "to": "B3_T02",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T02",
+        "to": "B3_T03",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T03",
+        "to": "B3_T04",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T04",
+        "to": "B3_T05",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T05",
+        "to": "B3_T06",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T06",
+        "to": "B3_T07",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T07",
+        "to": "B3_T08",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T08",
+        "to": "B3_T09",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T09",
+        "to": "B3_T10",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T10",
+        "to": "B3_T11",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T11",
+        "to": "B3_T12",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T12",
+        "to": "B3_T13",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T13",
+        "to": "B3_T14",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T14",
+        "to": "B3_T15",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T15",
+        "to": "B3_T16",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T16",
+        "to": "B3_T17",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T17",
+        "to": "B3_T18",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T18",
+        "to": "B3_T19",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T19",
+        "to": "B3_T20",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T20",
+        "to": "B3_T21",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T21",
+        "to": "B3_T22",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T22",
+        "to": "B3_T23",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T23",
+        "to": "B3_T24",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T24",
+        "to": "D133_B3_loop",
+        "kind": "CONDITIONAL_RESUMED_CONTEXT",
+        "label": ""
+      },
+      {
+        "group": "D00_B3",
+        "from": "B3_T07",
+        "to": "D133_B3_count",
+        "kind": "BOOLEAN_SHORT_CIRCUIT_EVIDENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T01",
+        "to": "B4_T02",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T02",
+        "to": "B4_T03",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T03",
+        "to": "B4_T04",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T04",
+        "to": "B4_T05",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T05",
+        "to": "B4_T06",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T06",
+        "to": "B4_T07",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T07",
+        "to": "B4_T08",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T08",
+        "to": "B4_T09",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T09",
+        "to": "B4_T10",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T10",
+        "to": "B4_T11",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T11",
+        "to": "B4_T12",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T12",
+        "to": "B4_T13",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T13",
+        "to": "B4_T14",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T14",
+        "to": "B4_T15",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T15",
+        "to": "B4_T16",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T16",
+        "to": "B4_T17",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T17",
+        "to": "B4_T18",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T18",
+        "to": "B4_T19",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T19",
+        "to": "B4_T20",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T20",
+        "to": "B4_T21",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T21",
+        "to": "B4_T22",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T22",
+        "to": "B4_T23",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T23",
+        "to": "B4_T24",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T24",
+        "to": "D133_B4_loop",
+        "kind": "CONDITIONAL_RESUMED_CONTEXT",
+        "label": ""
+      },
+      {
+        "group": "D00_B4",
+        "from": "B4_T07",
+        "to": "D133_B4_count",
+        "kind": "BOOLEAN_SHORT_CIRCUIT_EVIDENCE",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_owner",
+        "to": "D133_CLASS_call",
+        "kind": "INDIRECT_CALL_INSTANCE",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_owner",
+        "to": "D133_CLASS_member",
+        "kind": "MEMBER_READ",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_member",
+        "to": "D133_CLASS_callee",
+        "kind": "STATIC_INITIALIZER_TARGET_ONLY",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_member",
+        "to": "D133_CLASS_call",
+        "kind": "FUNCTION_POINTER_VALUE",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_argument",
+        "to": "D133_CLASS_call",
+        "kind": "RQ_AND_PREV_DATA",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_call",
+        "to": "D133_CLASS_callee",
+        "kind": "TARGET_RESOLUTION_IF_MYOS_RT",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_call",
+        "to": "D133_CLASS_nonnull",
+        "kind": "CONDITION_RESULT_NONNULL",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_call",
+        "to": "D133_CLASS_null",
+        "kind": "CONDITION_RESULT_NULL",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_null",
+        "to": "D133_CLASS_owner",
+        "kind": "NEXT_CLASS_LOOP",
+        "label": ""
+      },
+      {
+        "group": "D00_CLASS",
+        "from": "D133_CLASS_null",
+        "to": "D133_CLASS_end",
+        "kind": "EXHAUSTED_ALL_CLASSES_ONLY",
+        "label": ""
+      },
+      {
+        "group": "D00_COUNTS",
+        "from": "D133_SCOPE_130_five_DIAG",
+        "to": "D133_SCOPE_131_five_DIAG",
+        "kind": "NEW_VERSION_SAME_FIVE_GROUPS",
+        "label": ""
+      },
+      {
+        "group": "D00_COUNTS",
+        "from": "D133_SCOPE_131_five_DIAG",
+        "to": "D133_SCOPE_131_five_DIAG_plus_A_INIT_C_YIELD",
+        "kind": "EXPAND_SCOPE_ADD_A_AND_C",
+        "label": ""
+      },
+      {
+        "group": "D00_COUNTS",
+        "from": "D133_SCOPE_131_five_DIAG",
+        "to": "D133_SCOPE_132_corrected_five_DIAG",
+        "kind": "NEW_VERSION_SAME_FIVE_GROUPS",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_owner",
+        "to": "D133_A_shift",
+        "kind": "DIRECT_STATEMENT",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_shift",
+        "to": "D133_A_call",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_call",
+        "to": "D133_A_sample",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_sample",
+        "to": "D133_A_wrapper",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_wrapper",
+        "to": "D133_A_tsc",
+        "kind": "CONDITION_USE_TSC",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_wrapper",
+        "to": "D133_A_fallback",
+        "kind": "CONDITION_NO_TSC",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_tsc",
+        "to": "D133_A_delta",
+        "kind": "RETURN_U64_VALUE",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_fallback",
+        "to": "D133_A_delta",
+        "kind": "RETURN_U64_VALUE",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_delta",
+        "to": "D133_A_negative",
+        "kind": "CONDITIONAL_CHECK",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_negative",
+        "to": "D133_A_add",
+        "kind": "CONDITION_NONNEGATIVE",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_negative",
+        "to": "D133_A_overwrite",
+        "kind": "CONDITION_NEGATIVE_RETURN_TO_CALLER",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_add",
+        "to": "D133_A_overwrite",
+        "kind": "NORMAL_RETURN_TO_CALLER",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_overwrite",
+        "to": "D133_A_separate",
+        "kind": "SOURCE_LATER_PICKER",
+        "label": ""
+      },
+      {
+        "group": "A_CLOCK",
+        "from": "D133_A_call",
+        "to": "D133_A_fields",
+        "kind": "NO_WRITE_IN_SELECTED_FUNCTION",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "from": "D133_B1_input",
+        "to": "D133_B1_shift",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "from": "D133_B1_shift",
+        "to": "D133_B1_sample",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "from": "D133_B1_sample",
+        "to": "D133_B1_delta",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "from": "D133_B1_delta",
+        "to": "D133_B1_guard",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "from": "D133_B1_guard",
+        "to": "D133_B1_add",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B1",
+        "from": "D133_B1_add",
+        "to": "D133_B1_overwrite",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "from": "D133_B2_input",
+        "to": "D133_B2_shift",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "from": "D133_B2_shift",
+        "to": "D133_B2_sample",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "from": "D133_B2_sample",
+        "to": "D133_B2_delta",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "from": "D133_B2_delta",
+        "to": "D133_B2_guard",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "from": "D133_B2_guard",
+        "to": "D133_B2_add",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B2",
+        "from": "D133_B2_add",
+        "to": "D133_B2_overwrite",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "from": "D133_B3_input",
+        "to": "D133_B3_shift",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "from": "D133_B3_shift",
+        "to": "D133_B3_sample",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "from": "D133_B3_sample",
+        "to": "D133_B3_delta",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "from": "D133_B3_delta",
+        "to": "D133_B3_guard",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "from": "D133_B3_guard",
+        "to": "D133_B3_add",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B3",
+        "from": "D133_B3_add",
+        "to": "D133_B3_overwrite",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "from": "D133_B0_initial_flag_zero_input",
+        "to": "D133_B0_initial_flag_zero_shift",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "from": "D133_B0_initial_flag_zero_shift",
+        "to": "D133_B0_initial_flag_zero_sample",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "from": "D133_B0_initial_flag_zero_sample",
+        "to": "D133_B0_initial_flag_zero_delta",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "from": "D133_B0_initial_flag_zero_delta",
+        "to": "D133_B0_initial_flag_zero_guard",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "from": "D133_B0_initial_flag_zero_guard",
+        "to": "D133_B0_initial_flag_zero_add",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "B_CLOCK_B0_initial_flag_zero",
+        "from": "D133_B0_initial_flag_zero_add",
+        "to": "D133_B0_initial_flag_zero_overwrite",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "from": "D133_C1_input",
+        "to": "D133_C1_clock",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "from": "D133_C1_clock",
+        "to": "D133_C1_clock_after",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "from": "D133_C1_clock_after",
+        "to": "D133_C1_picker",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "from": "D133_C1_picker",
+        "to": "D133_C1_gate",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "from": "D133_C1_gate",
+        "to": "D133_C1_queue",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C1",
+        "from": "D133_C1_queue",
+        "to": "D133_C1_counts",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "from": "D133_C2_input",
+        "to": "D133_C2_clock",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "from": "D133_C2_clock",
+        "to": "D133_C2_clock_after",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "from": "D133_C2_clock_after",
+        "to": "D133_C2_picker",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "from": "D133_C2_picker",
+        "to": "D133_C2_gate",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "from": "D133_C2_gate",
+        "to": "D133_C2_queue",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C2",
+        "from": "D133_C2_queue",
+        "to": "D133_C2_counts",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "from": "D133_C3_input",
+        "to": "D133_C3_clock",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "from": "D133_C3_clock",
+        "to": "D133_C3_clock_after",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "from": "D133_C3_clock_after",
+        "to": "D133_C3_picker",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "from": "D133_C3_picker",
+        "to": "D133_C3_gate",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "from": "D133_C3_gate",
+        "to": "D133_C3_queue",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      },
+      {
+        "group": "C_COMPARE_C3",
+        "from": "D133_C3_queue",
+        "to": "D133_C3_counts",
+        "kind": "SOURCE_EVENT_ORDER",
+        "label": ""
+      }
+    ],
+    "groups": [
+      "D00_B1",
+      "D00_B2",
+      "D00_B3",
+      "D00_B4",
+      "D00_CLASS",
+      "D00_COUNTS",
+      "A_CLOCK",
+      "B_CLOCK_B1",
+      "B_CLOCK_B2",
+      "B_CLOCK_B3",
+      "B_CLOCK_B0_initial_flag_zero",
+      "C_COMPARE_C1",
+      "C_COMPARE_C2",
+      "C_COMPARE_C3"
+    ],
+    "counts": {
+      "nodes": 160,
+      "edges": 151
+    }
+  },
+  "controls": {
+    "phase": 2,
+    "full_local_P9": "NOT_RUN",
+    "preprocessing": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "repository_scripts": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_clock_sample": "NOT_RUN",
+    "real_process_or_scheduler_or_files": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "real TSC state __use_tsc",
+    "context_switch actual result and bottom retest",
+    "compiler store at +=0, real task/IRQ effects"
+  ]
+}

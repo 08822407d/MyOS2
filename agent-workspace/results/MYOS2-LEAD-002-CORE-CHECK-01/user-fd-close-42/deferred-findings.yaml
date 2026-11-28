@@ -1,0 +1,132 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FD-CLOSE-42",
+  "record_type": "incremental_deferred_findings_and_history_links",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-05",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "owner_action_now": "none",
+  "new_finding_count": 1,
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-FD-CLOSE-42::CL42-F01",
+      "id": "CL42-F01",
+      "title": "静态存储期全局init_files在files_struct最后引用归还时亦落入files_cachep free调用",
+      "kind": [
+        "source_fact",
+        "bounded_conditional_inference",
+        "allocation_origin_gap"
+      ],
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "evidence": [
+        "CL42-S019",
+        "CL42-S022",
+        "CL42-S025",
+        "CL42-S026",
+        "CL42-S034",
+        "CL42-S035"
+      ],
+      "claim": "init_files是源码定义的全局静态存储期files_struct对象，refcount初值1且fd_count初值0。put_files_struct对files.refcount dec_and_test成真后并不根据其来源过滤，循环结束调用kmem_cache_free(files_cachep,files)。在files恰为&init_files且最后引用到来、函数正常到达此处的模型中，向该缓存释放函数提交了非该cache动态分配的静态对象地址。",
+      "premises": [
+        "实际存在一个tsk->files/put_files_struct输入指向&init_files",
+        "此表在该点仍有效且refcount正常从1减到0",
+        "循环无需访问非法槽；init_files初始fd_count0或另有全安全范围",
+        "kmem_cache_free被实际调用且未有其它中途修改"
+      ],
+      "impact": "局部释放请求与对象来源的匹配条件未在put_files_struct处建立；不能断言目标机器运行中确实走该路径、物理释放成功或出现内存损坏。",
+      "counter_evidence": [
+        "若init_files从未到达最后引用归还，该条件不会触发",
+        "dup_fd动态分配的文件表来自files_cachep，不能把所有files对象都说成静态来源",
+        "files.refcount>1则此次put不进入表缓存free路径",
+        "静态存储期来源并不证明实际调用时的指针就是&init_files"
+      ],
+      "unknown": [
+        "init_task或其它真实任务退出时是否仍持有init_files",
+        "此全局对象引用计数在完整fork/exec/exit轨道的状态",
+        "缓存free实现对非cache对象的实际反应；本批禁止展开",
+        "真实编译、运行和并发结果"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-09",
+        "CORE-USER-VFS-BASELINE-05::UV-10"
+      ],
+      "blocks": {
+        "bounded_static_work": false,
+        "future_runtime": "须先核实际可达性与具体对象来源；未获授权不得运行"
+      },
+      "ai_suggestion": "未来专项先证实init_files真实使用和最后引用路径，再比较全局表与动态表回收策略；这是候选问题，不是已获Owner采用的修复设计。",
+      "future_verification": {
+        "required_read_only": [
+          "定位init_files赋给任务的实际调用位置、refcount操作及静态存储期确认",
+          "保持条件模型和新源码pin独立"
+        ],
+        "requires_separate_authorization": [
+          "扩展至完整任务/表生命周期调查",
+          "任何补丁、编译或运行"
+        ],
+        "reopen_gate": "Owner明确准备处理并限定新任务，且按届时固定源码重核"
+      },
+      "source_identity": "time@a039d9803ade; file.c::init_files/put_files_struct; fork.c::files_cachep/proc_caches_init"
+    }
+  ],
+  "history_preserved": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-09",
+      "status": "needs_evidence",
+      "increment": "dup_fd的kzalloc file副本和fput filp_cachep来源交叉属于旧问题；本批只定点确认对象分层，未复核slab正确性"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "status": "deferred_owner_not_ready",
+      "increment": "sys_close绕过f_count调用kfree、filp_close经fput是已有根因；本批只补NULL/slot clearing顺序和条件前提"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-11",
+      "status": "deferred_owner_not_ready",
+      "increment": "fd_count与固定256容量不自动相等；close/put_files_struct新增局部停止点，不冒充新根因"
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-01",
+      "status": "deferred_owner_not_ready",
+      "increment": "flags3无配对增引用可改变后来exit时file计数前提；不复演write/非正常释放"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F01",
+      "status": "deferred_owner_not_ready",
+      "increment": "取回空槽无效成员访问不等于本次close的kfree(NULL)门"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F02",
+      "status": "deferred_owner_not_ready",
+      "increment": "mmap输入窄化不由本批处理"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F03",
+      "status": "needs_evidence",
+      "increment": "模式mask和本地关闭无关"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41-REVIEW-001::R41-S01",
+      "status": "mandatory_supplement",
+      "increment": "非NULL不是有效对象；有限计数与opaque副作用不能越界"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41-REVIEW-001::R41-S02",
+      "status": "mandatory_supplement",
+      "increment": "类型别名与实际检查条件分开；源码条件不等于分析前提"
+    }
+  ],
+  "not_promoted_to_new_findings": [
+    "close直接kfree不检查f_count: 历史UV-10",
+    "dup_fd通过kzalloc复制file后向filp_cachep释放: 历史UV-09",
+    "fd_count>256后可能访问物理数组界外: 历史UV-11/R40-S01",
+    "同一file多槽但引用计数不配平: 本批仅设辅助条件模型；实际可达性未证，优先作为UV-10/US-01的关联边界"
+  ],
+  "runtime_evidence": "NOT_RUN",
+  "kernel_change_authorized": false,
+  "old_records_overwritten": false,
+  "mainline_acceptance": "PENDING"
+}

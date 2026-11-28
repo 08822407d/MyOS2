@@ -1,0 +1,2949 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101",
+  "record_type": "bounded_irq_registration_route_timer_dispatch_facts_with_D00",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "mainline_owner": "MYOS2-A-C07",
+  "produced_by": "GPT-6（可见模型家族；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-18",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "0cd745b92280",
+  "exec_parent_short12": "dd07c3b19fa1",
+  "master_short12": "e8e60cd19540",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C07_PRO",
+  "mainline_acceptance": "PENDING",
+  "old100": "RETURN",
+  "R100_01": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "old99_composite": "PASS_PENDING_LOCAL_R99_01_CLOSED",
+  "D00": {
+    "record_type": "R100_01_append_only_documentary_correction",
+    "followup_id": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101",
+    "old_task": "CORE-USER-SMP-BOOT-PATH-100",
+    "R100_01": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+    "R100_01_mainline_close_allowed": false,
+    "old100_review_status": "RETURN",
+    "old100_artifacts_edited": false,
+    "old100_comment_edited": false,
+    "old100_selfcheck_frozen": [
+      101,
+      101,
+      0
+    ],
+    "old100_literal_quote_count": 101,
+    "original_all_101_definition_single_command_qualified_summary": "WITHDRAWN",
+    "six_corrections": [
+      {
+        "old_qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-E032",
+        "source_ref": "time@a039d9803ade",
+        "original_path": "mykernel/scripts/options_flags.cmake",
+        "original_selector": "set(CMAKE_C_FLAGS_CONFIG)",
+        "original_line_range": [
+          58,
+          61
+        ],
+        "literal_quote_rechecked_in_frozen_100": true,
+        "new_evidence_ids": [
+          "IR101-E005"
+        ],
+        "corrected_symbol_or_command": "mykernel/scripts/options_flags.cmake::set(CMAKE_C_FLAGS) [second config-append command]",
+        "kind": "REAL_COMMAND_WRONG_ORIGINAL_SELECTOR",
+        "disposition": "RETAIN_TRUE_LITERAL; CORRECT_OR_WITHDRAW_OLD_SELECTOR_AS_SOURCE_IDENTIFIER",
+        "affected_consumers": [
+          "A-C03",
+          "B-L06"
+        ],
+        "still_unproved": "Actual CMake configuration / output ELF / linker symbol and source inclusion remain NOT_RUN",
+        "state": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+      },
+      {
+        "old_qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-E061",
+        "source_ref": "time@a039d9803ade",
+        "original_path": "mykernel/CMakeLists.txt",
+        "original_selector": "file(GLOB_RECURSE_KC)",
+        "original_line_range": [
+          30,
+          30
+        ],
+        "literal_quote_rechecked_in_frozen_100": true,
+        "new_evidence_ids": [
+          "IR101-E003"
+        ],
+        "corrected_symbol_or_command": "mykernel/CMakeLists.txt::file(GLOB_RECURSE KERNEL_C_SRCS)",
+        "kind": "REAL_COMMAND_WRONG_ORIGINAL_SELECTOR",
+        "disposition": "RETAIN_TRUE_LITERAL; CORRECT_OR_WITHDRAW_OLD_SELECTOR_AS_SOURCE_IDENTIFIER",
+        "affected_consumers": [
+          "B-L01"
+        ],
+        "still_unproved": "Actual CMake configuration / output ELF / linker symbol and source inclusion remain NOT_RUN",
+        "state": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+      },
+      {
+        "old_qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-E062",
+        "source_ref": "time@a039d9803ade",
+        "original_path": "mykernel/CMakeLists.txt",
+        "original_selector": "file(GLOB_RECURSE_KASM)",
+        "original_line_range": [
+          31,
+          31
+        ],
+        "literal_quote_rechecked_in_frozen_100": true,
+        "new_evidence_ids": [
+          "IR101-E004"
+        ],
+        "corrected_symbol_or_command": "mykernel/CMakeLists.txt::file(GLOB_RECURSE KERNEL_ASM_SRCS)",
+        "kind": "REAL_COMMAND_WRONG_ORIGINAL_SELECTOR",
+        "disposition": "RETAIN_TRUE_LITERAL; CORRECT_OR_WITHDRAW_OLD_SELECTOR_AS_SOURCE_IDENTIFIER",
+        "affected_consumers": [
+          "B-L01"
+        ],
+        "still_unproved": "Actual CMake configuration / output ELF / linker symbol and source inclusion remain NOT_RUN",
+        "state": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+      },
+      {
+        "old_qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-E063",
+        "source_ref": "time@a039d9803ade",
+        "original_path": "mykernel/CMakeLists.txt",
+        "original_selector": "list(REMOVE_ITEM)",
+        "original_line_range": [
+          32,
+          33
+        ],
+        "literal_quote_rechecked_in_frozen_100": true,
+        "new_evidence_ids": [
+          "IR101-E001",
+          "IR101-E002"
+        ],
+        "corrected_symbol_or_command": "TWO_SEPARATE_COMMANDS: list(REMOVE_ITEM KERNEL_C_SRCS), list(REMOVE_ITEM KERNEL_ASM_SRCS)",
+        "kind": "CROSS_COMMAND_ANCHOR_INVALID_SINGLE_UNIT",
+        "disposition": "WITHDRAW_OLD_SINGLE_COMMAND_VALIDITY; SEPARATE_TWO_NEW_ANCHORS",
+        "affected_consumers": [
+          "B-L05"
+        ],
+        "still_unproved": "Actual CMake configuration / output ELF / linker symbol and source inclusion remain NOT_RUN",
+        "state": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+      },
+      {
+        "old_qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-E069",
+        "source_ref": "time@a039d9803ade",
+        "original_path": "mykernel/arch/x86_64/kernel.lds",
+        "original_selector": ".text_output",
+        "original_line_range": [
+          28,
+          32
+        ],
+        "literal_quote_rechecked_in_frozen_100": true,
+        "new_evidence_ids": [
+          "IR101-E006"
+        ],
+        "corrected_symbol_or_command": "mykernel/arch/x86_64/kernel.lds::.text",
+        "kind": "REAL_LINKER_OUTPUT_SECTION_WRONG_ALIAS",
+        "disposition": "RETAIN_TRUE_LITERAL; CORRECT_OR_WITHDRAW_OLD_SELECTOR_AS_SOURCE_IDENTIFIER",
+        "affected_consumers": [
+          "B-P06",
+          "B-L04"
+        ],
+        "still_unproved": "Actual CMake configuration / output ELF / linker symbol and source inclusion remain NOT_RUN",
+        "state": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+      },
+      {
+        "old_qualified_id": "CORE-USER-SMP-BOOT-PATH-100::SP100-E070",
+        "source_ref": "time@a039d9803ade",
+        "original_path": "mykernel/arch/x86_64/kernel.lds",
+        "original_selector": ".text_output",
+        "original_line_range": [
+          33,
+          35
+        ],
+        "literal_quote_rechecked_in_frozen_100": true,
+        "new_evidence_ids": [
+          "IR101-E007"
+        ],
+        "corrected_symbol_or_command": "mykernel/arch/x86_64/kernel.lds::.text",
+        "kind": "REAL_LINKER_OUTPUT_SECTION_WRONG_ALIAS",
+        "disposition": "RETAIN_TRUE_LITERAL; CORRECT_OR_WITHDRAW_OLD_SELECTOR_AS_SOURCE_IDENTIFIER",
+        "affected_consumers": [
+          "B-P06",
+          "B-L04"
+        ],
+        "still_unproved": "Actual CMake configuration / output ELF / linker symbol and source inclusion remain NOT_RUN",
+        "state": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+      }
+    ],
+    "expected_old_ID_count": 6,
+    "R100_S01": {
+      "extra_support": [
+        "IR101-E008",
+        "IR101-E009",
+        "IR101-E010"
+      ],
+      "note": "target_include_directories is build declaration; load_direct_gdt and cursor advance actual C call lines, not successful operation; this executor independently read percpu_area.c fully and asm/apic.h context, previously not asserted for 100 original"
+    },
+    "R100_S02": {
+      "note": "Preserve allocation and valid object before use; AP table read first index1 and stable second read explicitly conditional; no source-known MSR meaning or guaranteed reachability; actual CPU0/run not certified"
+    },
+    "R100_S03": {
+      "note": "x86_64_start_kernel calls myos_early_init_system AND start_kernel in same caller; the former is not shown calling latter. Old DOT text counts not runtime evidence; preserve PC86 and BT97 root identifiers"
+    },
+    "supersedes_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-smp-boot-path-100/evidence.md",
+    "supersedes_scope": "only correction of six old anchor qualifications, old file unchanged",
+    "source_ref": "time@a039d9803ade"
+  },
+  "source_quote_index": [
+    {
+      "id": "IR101-E001",
+      "source_path": "mykernel/CMakeLists.txt",
+      "definition": "list(REMOVE_ITEM KERNEL_C_SRCS)",
+      "claim_class": "CMAKE_COMMAND",
+      "topic": "D00",
+      "line_start": 32,
+      "line_end": 32
+    },
+    {
+      "id": "IR101-E002",
+      "source_path": "mykernel/CMakeLists.txt",
+      "definition": "list(REMOVE_ITEM KERNEL_ASM_SRCS)",
+      "claim_class": "CMAKE_COMMAND",
+      "topic": "D00",
+      "line_start": 33,
+      "line_end": 33
+    },
+    {
+      "id": "IR101-E003",
+      "source_path": "mykernel/CMakeLists.txt",
+      "definition": "file(GLOB_RECURSE KERNEL_C_SRCS)",
+      "claim_class": "CMAKE_COMMAND",
+      "topic": "D00",
+      "line_start": 30,
+      "line_end": 30
+    },
+    {
+      "id": "IR101-E004",
+      "source_path": "mykernel/CMakeLists.txt",
+      "definition": "file(GLOB_RECURSE KERNEL_ASM_SRCS)",
+      "claim_class": "CMAKE_COMMAND",
+      "topic": "D00",
+      "line_start": 31,
+      "line_end": 31
+    },
+    {
+      "id": "IR101-E005",
+      "source_path": "mykernel/scripts/options_flags.cmake",
+      "definition": "set(CMAKE_C_FLAGS)",
+      "claim_class": "CMAKE_COMMAND_CONFIG_APPEND",
+      "topic": "D00",
+      "line_start": 58,
+      "line_end": 61
+    },
+    {
+      "id": "IR101-E006",
+      "source_path": "mykernel/arch/x86_64/kernel.lds",
+      "definition": ".text",
+      "claim_class": "LINKER_OUTPUT_SECTION",
+      "topic": "D00",
+      "line_start": 28,
+      "line_end": 32
+    },
+    {
+      "id": "IR101-E007",
+      "source_path": "mykernel/arch/x86_64/kernel.lds",
+      "definition": ".text",
+      "claim_class": "LINKER_OUTPUT_SECTION",
+      "topic": "D00",
+      "line_start": 33,
+      "line_end": 35
+    },
+    {
+      "id": "IR101-E008",
+      "source_path": "mykernel/scripts/target_kernel.cmake",
+      "definition": "target_include_directories(kernel)",
+      "claim_class": "CMAKE_COMMAND",
+      "topic": "D00",
+      "line_start": 2,
+      "line_end": 5
+    },
+    {
+      "id": "IR101-E009",
+      "source_path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "definition": "setup_per_cpu_areas",
+      "claim_class": "C_FUNCTION",
+      "topic": "D00",
+      "line_start": 125,
+      "line_end": 125
+    },
+    {
+      "id": "IR101-E010",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_cputopo_info",
+      "claim_class": "C_FUNCTION",
+      "topic": "D00",
+      "line_start": 401,
+      "line_end": 401
+    },
+    {
+      "id": "IR101-E011",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "irq_descriptors",
+      "claim_class": "GLOBAL_OBJECT",
+      "topic": "A",
+      "line_start": 13,
+      "line_end": 13
+    },
+    {
+      "id": "IR101-E012",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "definition": "IOAPIC_map",
+      "claim_class": "STRUCT",
+      "topic": "A",
+      "line_start": 21,
+      "line_end": 25
+    },
+    {
+      "id": "IR101-E013",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "definition": "hw_int_controller_s",
+      "claim_class": "ANONYMOUS_STRUCT",
+      "topic": "A",
+      "line_start": 29,
+      "line_end": 33
+    },
+    {
+      "id": "IR101-E014",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "definition": "hw_int_controller_s",
+      "claim_class": "ANONYMOUS_STRUCT",
+      "topic": "A",
+      "line_start": 34,
+      "line_end": 35
+    },
+    {
+      "id": "IR101-E015",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "definition": "myos_irq_desc_s",
+      "claim_class": "ANONYMOUS_STRUCT",
+      "topic": "A",
+      "line_start": 37,
+      "line_end": 41
+    },
+    {
+      "id": "IR101-E016",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "definition": "myos_irq_desc_s",
+      "claim_class": "ANONYMOUS_STRUCT",
+      "topic": "A",
+      "line_start": 42,
+      "line_end": 46
+    },
+    {
+      "id": "IR101-E017",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "register_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 175,
+      "line_end": 179
+    },
+    {
+      "id": "IR101-E018",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "register_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 181,
+      "line_end": 185
+    },
+    {
+      "id": "IR101-E019",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "register_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 186,
+      "line_end": 190
+    },
+    {
+      "id": "IR101-E020",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "register_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 190,
+      "line_end": 194
+    },
+    {
+      "id": "IR101-E021",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "register_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 195,
+      "line_end": 195
+    },
+    {
+      "id": "IR101-E022",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "unregister_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 198,
+      "line_end": 202
+    },
+    {
+      "id": "IR101-E023",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "unregister_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 203,
+      "line_end": 207
+    },
+    {
+      "id": "IR101-E024",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "unregister_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 210,
+      "line_end": 214
+    },
+    {
+      "id": "IR101-E025",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "unregister_irq",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 216,
+      "line_end": 216
+    },
+    {
+      "id": "IR101-E026",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "hwint_irq_handler",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 160,
+      "line_end": 164
+    },
+    {
+      "id": "IR101-E027",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "hwint_irq_handler",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 166,
+      "line_end": 169
+    },
+    {
+      "id": "IR101-E028",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "excep_hwint_context",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 120,
+      "line_end": 124
+    },
+    {
+      "id": "IR101-E029",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "excep_hwint_context",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 125,
+      "line_end": 129
+    },
+    {
+      "id": "IR101-E030",
+      "source_path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "definition": "NR_VECTORS",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 111,
+      "line_end": 111
+    },
+    {
+      "id": "IR101-E031",
+      "source_path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "definition": "FIRST_EXTERNAL_VECTOR",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 38,
+      "line_end": 38
+    },
+    {
+      "id": "IR101-E032",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_enable",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 31,
+      "line_end": 34
+    },
+    {
+      "id": "IR101-E033",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_enable",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 34,
+      "line_end": 37
+    },
+    {
+      "id": "IR101-E034",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_disable",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 39,
+      "line_end": 42
+    },
+    {
+      "id": "IR101-E035",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_disable",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 42,
+      "line_end": 45
+    },
+    {
+      "id": "IR101-E036",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_install",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 47,
+      "line_end": 51
+    },
+    {
+      "id": "IR101-E037",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_uninstall",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 53,
+      "line_end": 56
+    },
+    {
+      "id": "IR101-E038",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_level_ack",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 58,
+      "line_end": 60
+    },
+    {
+      "id": "IR101-E039",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_level_ack",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 61,
+      "line_end": 63
+    },
+    {
+      "id": "IR101-E040",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_edge_ack",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 65,
+      "line_end": 68
+    },
+    {
+      "id": "IR101-E041",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_read",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 70,
+      "line_end": 74
+    },
+    {
+      "id": "IR101-E042",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_read",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 75,
+      "line_end": 78
+    },
+    {
+      "id": "IR101-E043",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_read",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 80,
+      "line_end": 84
+    },
+    {
+      "id": "IR101-E044",
+      "source_path": "mykernel/arch/x86_64/include/asm/apic.h",
+      "definition": "apic_msr_write",
+      "claim_class": "INLINE_C_FUNCTION",
+      "topic": "B",
+      "line_start": 156,
+      "line_end": 160
+    },
+    {
+      "id": "IR101-E045",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_write",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 90,
+      "line_end": 94
+    },
+    {
+      "id": "IR101-E046",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_write",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 95,
+      "line_end": 99
+    },
+    {
+      "id": "IR101-E047",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_write",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 100,
+      "line_end": 104
+    },
+    {
+      "id": "IR101-E048",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 110,
+      "line_end": 114
+    },
+    {
+      "id": "IR101-E049",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 115,
+      "line_end": 118
+    },
+    {
+      "id": "IR101-E050",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 123,
+      "line_end": 126
+    },
+    {
+      "id": "IR101-E051",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "myos_init_bsp_intr",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 222,
+      "line_end": 226
+    },
+    {
+      "id": "IR101-E052",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 133,
+      "line_end": 135
+    },
+    {
+      "id": "IR101-E053",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "ioapic_retentry_T",
+      "claim_class": "PACKED_STRUCT",
+      "topic": "B",
+      "line_start": 444,
+      "line_end": 448
+    },
+    {
+      "id": "IR101-E054",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "ioapic_retentry_T",
+      "claim_class": "PACKED_STRUCT",
+      "topic": "B",
+      "line_start": 449,
+      "line_end": 453
+    },
+    {
+      "id": "IR101-E055",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "ioapic_retentry_T",
+      "claim_class": "PACKED_STRUCT",
+      "topic": "B",
+      "line_start": 454,
+      "line_end": 458
+    },
+    {
+      "id": "IR101-E056",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "ioapic_retentry_T",
+      "claim_class": "PACKED_STRUCT",
+      "topic": "B",
+      "line_start": 459,
+      "line_end": 463
+    },
+    {
+      "id": "IR101-E057",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "ioapic_retentry_T",
+      "claim_class": "PACKED_STRUCT",
+      "topic": "B",
+      "line_start": 464,
+      "line_end": 468
+    },
+    {
+      "id": "IR101-E058",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "IO_APIC_DEFAULT_PHYS_BASE",
+      "claim_class": "MACRO",
+      "topic": "B",
+      "line_start": 14,
+      "line_end": 14
+    },
+    {
+      "id": "IR101-E059",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "definition": "VECTOR_IRQ",
+      "claim_class": "MACRO",
+      "topic": "B",
+      "line_start": 61,
+      "line_end": 61
+    },
+    {
+      "id": "IR101-E060",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "definition": "HPET_TIMER0_IRQ",
+      "claim_class": "MACRO",
+      "topic": "B",
+      "line_start": 87,
+      "line_end": 87
+    },
+    {
+      "id": "IR101-E061",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "myos_init_percpu_intr",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 229,
+      "line_end": 232
+    },
+    {
+      "id": "IR101-E062",
+      "source_path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "definition": "FIRST_SYSTEM_VECTOR",
+      "claim_class": "MACRO",
+      "topic": "B",
+      "line_start": 113,
+      "line_end": 113
+    },
+    {
+      "id": "IR101-E063",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "HPET_int_controller",
+      "claim_class": "GLOBAL_STRUCT",
+      "topic": "C",
+      "line_start": 514,
+      "line_end": 518
+    },
+    {
+      "id": "IR101-E064",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "HPET_int_controller",
+      "claim_class": "GLOBAL_STRUCT",
+      "topic": "C",
+      "line_start": 519,
+      "line_end": 521
+    },
+    {
+      "id": "IR101-E065",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "HPET_handler",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 525,
+      "line_end": 529
+    },
+    {
+      "id": "IR101-E066",
+      "source_path": "mykernel/arch/x86_64/include/asm/ptrace.h",
+      "definition": "pt_regs",
+      "claim_class": "STRUCT_FIELD",
+      "topic": "C",
+      "line_start": 31,
+      "line_end": 35
+    },
+    {
+      "id": "IR101-E067",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_HPET_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 539,
+      "line_end": 543
+    },
+    {
+      "id": "IR101-E068",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_HPET_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 543,
+      "line_end": 547
+    },
+    {
+      "id": "IR101-E069",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_HPET_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 548,
+      "line_end": 550
+    },
+    {
+      "id": "IR101-E070",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_HPET_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 552,
+      "line_end": 554
+    },
+    {
+      "id": "IR101-E071",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "lvt_timer_t",
+      "claim_class": "STRUCT",
+      "topic": "C",
+      "line_start": 327,
+      "line_end": 331
+    },
+    {
+      "id": "IR101-E072",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "lvt_timer_t",
+      "claim_class": "STRUCT",
+      "topic": "C",
+      "line_start": 334,
+      "line_end": 338
+    },
+    {
+      "id": "IR101-E073",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "lvt_timer",
+      "claim_class": "GLOBAL_OBJECT",
+      "topic": "C",
+      "line_start": 21,
+      "line_end": 21
+    },
+    {
+      "id": "IR101-E074",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_int_controller",
+      "claim_class": "GLOBAL_STRUCT",
+      "topic": "C",
+      "line_start": 22,
+      "line_end": 26
+    },
+    {
+      "id": "IR101-E075",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_int_controller",
+      "claim_class": "GLOBAL_STRUCT",
+      "topic": "C",
+      "line_start": 26,
+      "line_end": 29
+    },
+    {
+      "id": "IR101-E076",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_handler",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 31,
+      "line_end": 35
+    },
+    {
+      "id": "IR101-E077",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_handler",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 36,
+      "line_end": 40
+    },
+    {
+      "id": "IR101-E078",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 43,
+      "line_end": 47
+    },
+    {
+      "id": "IR101-E079",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 48,
+      "line_end": 50
+    },
+    {
+      "id": "IR101-E080",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 52,
+      "line_end": 53
+    },
+    {
+      "id": "IR101-E081",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_ack",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 55,
+      "line_end": 59
+    },
+    {
+      "id": "IR101-E082",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_ack",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 60,
+      "line_end": 61
+    },
+    {
+      "id": "IR101-E083",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "SCALE",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 16,
+      "line_end": 16
+    },
+    {
+      "id": "IR101-E084",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "definition": "LAPIC_LVT_TIMER_IRQ",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 108,
+      "line_end": 108
+    },
+    {
+      "id": "IR101-E085",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "definition": "VECTOR_IPI",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 105,
+      "line_end": 105
+    },
+    {
+      "id": "IR101-E086",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "APIC_LVT_TIMER_PERIODIC",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 103,
+      "line_end": 103
+    },
+    {
+      "id": "IR101-E087",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "APIC_TMICT",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 119,
+      "line_end": 119
+    },
+    {
+      "id": "IR101-E088",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "APIC_LVTT",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 92,
+      "line_end": 92
+    },
+    {
+      "id": "IR101-E089",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "APIC_TDCR",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 121,
+      "line_end": 121
+    },
+    {
+      "id": "IR101-E090",
+      "source_path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "definition": "APIC_TDR_DIV_128",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 131,
+      "line_end": 131
+    },
+    {
+      "id": "IR101-E091",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 163,
+      "line_end": 165
+    },
+    {
+      "id": "IR101-E092",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 174,
+      "line_end": 177
+    },
+    {
+      "id": "IR101-E093",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 190,
+      "line_end": 194
+    },
+    {
+      "id": "IR101-E094",
+      "source_path": "mykernel/arch/x86_64/kernel/irqinit.c",
+      "definition": "init_IRQ",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 70,
+      "line_end": 73
+    },
+    {
+      "id": "IR101-E095",
+      "source_path": "mykernel/arch/x86_64/kernel/irqinit.c",
+      "definition": "init_IRQ",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 81,
+      "line_end": 83
+    },
+    {
+      "id": "IR101-E096",
+      "source_path": "mykernel/arch/x86_64/kernel/idt.c",
+      "definition": "idt_setup_apic_and_irq_gates",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 85,
+      "line_end": 89
+    },
+    {
+      "id": "IR101-E097",
+      "source_path": "mykernel/arch/x86_64/kernel/idt.c",
+      "definition": "idt_setup_apic_and_irq_gates",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 94,
+      "line_end": 94
+    },
+    {
+      "id": "IR101-E098",
+      "source_path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "definition": "irq_entries_start",
+      "claim_class": "ASM_MACRO_ENTRY",
+      "topic": "C/ABC",
+      "line_start": 365,
+      "line_end": 369
+    },
+    {
+      "id": "IR101-E099",
+      "source_path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "definition": "irq_entries_start",
+      "claim_class": "ASM_MACRO_ENTRY",
+      "topic": "C/ABC",
+      "line_start": 370,
+      "line_end": 372
+    },
+    {
+      "id": "IR101-E100",
+      "source_path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "definition": "sa_entintr_retp",
+      "claim_class": "ASM_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 313,
+      "line_end": 317
+    },
+    {
+      "id": "IR101-E101",
+      "source_path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "definition": "sa_entintr_retp",
+      "claim_class": "ASM_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 319,
+      "line_end": 323
+    },
+    {
+      "id": "IR101-E102",
+      "source_path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "definition": "sa_entintr_retp",
+      "claim_class": "ASM_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 324,
+      "line_end": 327
+    },
+    {
+      "id": "IR101-E103",
+      "source_path": "mykernel/arch/x86_64/kernel/time.c",
+      "definition": "hpet_time_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 34,
+      "line_end": 38
+    },
+    {
+      "id": "IR101-E104",
+      "source_path": "mykernel/arch/x86_64/kernel/time.c",
+      "definition": "late_time_init",
+      "claim_class": "C_FUNCTION",
+      "topic": "C/ABC",
+      "line_start": 50,
+      "line_end": 52
+    },
+    {
+      "id": "IR101-E105",
+      "source_path": "mykernel/sched/scheduler/preempt_macro.h",
+      "definition": "in_atomic",
+      "claim_class": "MACRO",
+      "topic": "C/ABC",
+      "line_start": 62,
+      "line_end": 64
+    }
+  ],
+  "source_count": 22,
+  "source_quote_recheck": {
+    "short_anchor_count": 105,
+    "all_contiguous_one_to_five": true,
+    "independent_fixed_time_reopened": "105 original; four refined replacements separately verified fixed time",
+    "category_boundary": "C_FUNCTION_STRUCT_GLOBAL_MACRO_ASM_CMAKE_SINGLE_COMMAND_LINKER_OUTPUT",
+    "complete_local_P9": "NOT_RUN"
+  },
+  "matrices": {
+    "descriptor_lifecycle_matrix": [
+      {
+        "id": "A-L01",
+        "node": "irq_descriptors",
+        "inputs": "NR_VECTORS=256 fixed array",
+        "source_effect": "global source definition exists; no successful runtime initialization measured",
+        "first_stop_gate": "Actual selected binary and vector bound before deref",
+        "evidence_ids": [
+          "IR101-E011",
+          "IR101-E030"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L02",
+        "node": "register_irq",
+        "inputs": "unsigned long irq supplied from caller",
+        "source_effect": "forms &irq_descriptors[irq] with no local index condition",
+        "first_stop_gate": "For irq>=256, earliest member write lacks valid element; do not assert prior formation itself trap",
+        "evidence_ids": [
+          "IR101-E017",
+          "IR101-E018",
+          "IR101-E030"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L03",
+        "node": "register_irq",
+        "inputs": "caller-owned controller/name and raw arg, parameter by value",
+        "source_effect": "stores controller, name pointer, parameter, flags zero and handler",
+        "first_stop_gate": "No deep-copy or lifetime/ownership handoff proved for borrowed pointers",
+        "evidence_ids": [
+          "IR101-E015",
+          "IR101-E016",
+          "IR101-E018",
+          "IR101-E019"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L04",
+        "node": "register_irq",
+        "inputs": "controller null",
+        "source_effect": "writes descriptor and returns literal1 without install/enable branch",
+        "first_stop_gate": "Return1 is not hardware-install certificate",
+        "evidence_ids": [
+          "IR101-E018",
+          "IR101-E019",
+          "IR101-E020",
+          "IR101-E021"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L05",
+        "node": "register_irq",
+        "inputs": "controller nonnull and install/enable callbacks may independently be null",
+        "source_effect": "install requested before enable, each checked for null; install result discarded",
+        "first_stop_gate": "No callback result, device state or final enable acknowledgement",
+        "evidence_ids": [
+          "IR101-E013",
+          "IR101-E014",
+          "IR101-E019",
+          "IR101-E020",
+          "IR101-E021"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L06",
+        "node": "register_irq",
+        "inputs": "same vector registered again",
+        "source_effect": "new descriptor fields are overwritten before new callback invocations",
+        "first_stop_gate": "No earlier disable/uninstall in this body; no race or verified concurrent readers",
+        "evidence_ids": [
+          "IR101-E018",
+          "IR101-E019",
+          "IR101-E020"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L07",
+        "node": "unregister_irq",
+        "inputs": "controller nonnull and valid descriptor",
+        "source_effect": "disable requested then uninstall requested if each callback exists",
+        "first_stop_gate": "Callback may return/modify state; no successful hardware disable proof",
+        "evidence_ids": [
+          "IR101-E022",
+          "IR101-E023"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L08",
+        "node": "unregister_irq",
+        "inputs": "valid descriptor, callbacks returned normally",
+        "source_effect": "clears controller/name/parameter/flags/handler then returns1",
+        "first_stop_gate": "No in-flight handler wait or foreign memory deallocation shown in this body",
+        "evidence_ids": [
+          "IR101-E023",
+          "IR101-E024",
+          "IR101-E025"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-L09",
+        "node": "hwint_irq_handler",
+        "inputs": "regs irq_nr converted to unsigned long vec",
+        "source_effect": "descriptor indexed by vec, handler and ack accessed",
+        "first_stop_gate": "Must prove vec in 0..255 and irq_d points valid object",
+        "evidence_ids": [
+          "IR101-E026",
+          "IR101-E027",
+          "IR101-E030"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      }
+    ],
+    "callback_ownership_and_return_matrix": [
+      {
+        "id": "A-R01",
+        "node": "install_result",
+        "inputs": "controller.install type unsigned long callback",
+        "source_effect": "register_irq calls it without assignment/test before enable",
+        "first_stop_gate": "Return value discarded; next effect depends on callee normal return",
+        "evidence_ids": [
+          "IR101-E013",
+          "IR101-E019",
+          "IR101-E020"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-R02",
+        "node": "enable_disable",
+        "inputs": "controller enable and disable void callbacks",
+        "source_effect": "install/enable and disable/uninstall use different ordered paths",
+        "first_stop_gate": "Names/void signature do not certify device transition",
+        "evidence_ids": [
+          "IR101-E013",
+          "IR101-E014",
+          "IR101-E019",
+          "IR101-E020",
+          "IR101-E022",
+          "IR101-E023"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-R03",
+        "node": "stack_arg",
+        "inputs": "register_irq receives void* arg",
+        "source_effect": "arg passed immediately to controller.install, not stored in IRQ descriptor fields",
+        "first_stop_gate": "Synchronous callee reads only if controller.install reaches valid object",
+        "evidence_ids": [
+          "IR101-E017",
+          "IR101-E018",
+          "IR101-E020",
+          "IR101-E036"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-R04",
+        "node": "borrowed_fields",
+        "inputs": "irq_name and controller are pointers; handler a callback",
+        "source_effect": "register_irq stores pointer values; unregister resets to zero",
+        "first_stop_gate": "Real ownership, lifetime, synchronization remain with external callers",
+        "evidence_ids": [
+          "IR101-E015",
+          "IR101-E016",
+          "IR101-E018",
+          "IR101-E024"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-R05",
+        "node": "handler_reentry",
+        "inputs": "handler(irq_d->parameter,regs) returns void",
+        "source_effect": "after handler call, code reads irq_d->controller again for ack",
+        "first_stop_gate": "No stable snapshot; callback changing descriptor changes ack selection conditionally",
+        "evidence_ids": [
+          "IR101-E026",
+          "IR101-E027"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-R06",
+        "node": "ack_argument",
+        "inputs": "local int irq_nr initialized zero in dispatcher",
+        "source_effect": "ack called with zero, not vec; edge implementation ignores its param, level implementation uses it",
+        "first_stop_gate": "Cannot declare the observed HPET/LVT ack wrong merely from zero argument",
+        "evidence_ids": [
+          "IR101-E026",
+          "IR101-E027",
+          "IR101-E038",
+          "IR101-E039",
+          "IR101-E040",
+          "IR101-E063",
+          "IR101-E074",
+          "IR101-E075"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "A-R07",
+        "node": "return_status",
+        "inputs": "register and unregister both return literal1",
+        "source_effect": "no aggregation of install, disable or uninstall outcome",
+        "first_stop_gate": "No device register state, no pending handler drain certified",
+        "evidence_ids": [
+          "IR101-E021",
+          "IR101-E023",
+          "IR101-E024",
+          "IR101-E025"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      }
+    ],
+    "vector_to_route_domain_matrix": [
+      {
+        "id": "B-V01",
+        "node": "vector_domain",
+        "inputs": "FIRST_EXTERNAL_VECTOR=0x20, NR_VECTORS=256",
+        "source_effect": "C descriptor indices 0..255 differ from 0x20..0xFF external IDT entries",
+        "first_stop_gate": "IDT gate existence != IOAPIC route initialization or device input",
+        "evidence_ids": [
+          "IR101-E030",
+          "IR101-E031",
+          "IR101-E096"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-V02",
+        "node": "vector_to_line",
+        "inputs": "VECTOR_IRQ(n) adds FIRST_EXTERNAL_VECTOR",
+        "source_effect": "HPET_TIMER0_IRQ=VECTOR_IRQ(2) gives math 0x22",
+        "first_stop_gate": "Valid field/route and device source require separate proof",
+        "evidence_ids": [
+          "IR101-E059",
+          "IR101-E060",
+          "IR101-E031",
+          "IR101-E070"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-V03",
+        "node": "lvt_is_separate",
+        "inputs": "LAPIC_LVT_TIMER_IRQ=VECTOR_IPI(2) and FIRST_SYSTEM_VECTOR=0xEC",
+        "source_effect": "math 0xEE, not one of 24 initialized IOAPIC inputs",
+        "first_stop_gate": "Actual LVT controller has install/enable null; do not route via IOAPIC arithmetic automatically",
+        "evidence_ids": [
+          "IR101-E062",
+          "IR101-E084",
+          "IR101-E085",
+          "IR101-E074",
+          "IR101-E075"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-V04",
+        "node": "rte_range",
+        "inputs": "IOAPIC_init i starts0x10 loops i<0x40 step2",
+        "source_effect": "24 RTE low indices 0x10..0x3E, vectors 0x20..0x37 in value expression",
+        "first_stop_gate": "Only if IOAPIC_init reaches all iterations and MMIO accepted writes",
+        "evidence_ids": [
+          "IR101-E052",
+          "IR101-E058",
+          "IR101-E031"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-V05",
+        "node": "rte_index",
+        "inputs": "IOAPIC_enable/disable/install/uninstall use (irq-FIRST)*2+0x10",
+        "source_effect": "unsigned-long arithmetic then u8 callee index conversion",
+        "first_stop_gate": "Unknown firmware route count; capacity inferred from init loop not total device capacity",
+        "evidence_ids": [
+          "IR101-E032",
+          "IR101-E033",
+          "IR101-E034",
+          "IR101-E035",
+          "IR101-E036",
+          "IR101-E037"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-V06",
+        "node": "high_vector",
+        "inputs": "external IDT contains gates up to vector255",
+        "source_effect": "large vectors may map to 8-bit register index after narrowing; collision conditional",
+        "first_stop_gate": "IDT slot != legal IOAPIC register; first invalid MMIO access stop",
+        "evidence_ids": [
+          "IR101-E030",
+          "IR101-E032",
+          "IR101-E036",
+          "IR101-E096"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-V07",
+        "node": "underflow",
+        "inputs": "IRQ vector less than0x20 passed to IOAPIC callback",
+        "source_effect": "unsigned long subtraction wraps under stated width; source has no local guard",
+        "first_stop_gate": "No actual caller known with lower vector or valid IOAPIC register",
+        "evidence_ids": [
+          "IR101-E031",
+          "IR101-E032",
+          "IR101-E034",
+          "IR101-E036"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-V08",
+        "node": "software_route",
+        "inputs": "register_irq receives full vector index and passes irq unchanged to install/enable",
+        "source_effect": "route converter uses difference and interspersed index calculations",
+        "first_stop_gate": "Do not confuse handler vector with physical input pin number",
+        "evidence_ids": [
+          "IR101-E017",
+          "IR101-E020",
+          "IR101-E032",
+          "IR101-E036"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      }
+    ],
+    "rte_representation_and_access_matrix": [
+      {
+        "id": "B-R01",
+        "node": "ioapic_retentry_T",
+        "inputs": "packed uint32 bitfield declaration and union of destination modes",
+        "source_effect": "C source specifies bit names/width; not portable 64-bit MMIO layout certificate",
+        "first_stop_gate": "Actual compiler ABI packing, aliases and size/alignment required",
+        "evidence_ids": [
+          "IR101-E053",
+          "IR101-E054",
+          "IR101-E055",
+          "IR101-E056",
+          "IR101-E057"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R02",
+        "node": "ioapic_map_s",
+        "inputs": "map holds phys_addr, uint8* index, uint32* data/EOI",
+        "source_effect": "IOAPIC_init maps constant phys base then sets pointers offset0x10,0x40",
+        "first_stop_gate": "Mapping validity and physical device presence unproved",
+        "evidence_ids": [
+          "IR101-E012",
+          "IR101-E048",
+          "IR101-E049",
+          "IR101-E058"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R03",
+        "node": "ioapic_rte_read",
+        "inputs": "uint8 index input",
+        "source_effect": "writes index+1 to selection port then reads high32 and shifts to upper half",
+        "first_stop_gate": "If index+1 overflows8-bit, selector may wrap; MMIO/mb behavior unverified",
+        "evidence_ids": [
+          "IR101-E041",
+          "IR101-E042"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R04",
+        "node": "ioapic_rte_read",
+        "inputs": "separate low-half selector and read",
+        "source_effect": "writes original index then OR low32 after memory barrier",
+        "first_stop_gate": "No atomic 64-bit snapshot; device value may change between accesses",
+        "evidence_ids": [
+          "IR101-E043"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R05",
+        "node": "ioapic_rte_write",
+        "inputs": "value uint64 and index uint8",
+        "source_effect": "writes low32 first, shifts value, writes high32 via index+1",
+        "first_stop_gate": "Two requests not atomic update; no locking/readback proof",
+        "evidence_ids": [
+          "IR101-E045",
+          "IR101-E046",
+          "IR101-E047"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R06",
+        "node": "ioapic_mask",
+        "inputs": "enable read/clears 0x10000 bit, disable read/sets bit",
+        "source_effect": "read-modify-write depends on valid device and contemporary status",
+        "first_stop_gate": "No synchronization between callers or hardware receipt",
+        "evidence_ids": [
+          "IR101-E032",
+          "IR101-E033",
+          "IR101-E034",
+          "IR101-E035"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R07",
+        "node": "ioapic_ack",
+        "inputs": "edge invokes apic_msr_write(APIC_EOI,0); level calls edge then *virt_EOI_addr=irq_nr",
+        "source_effect": "IRQ parameter matters to level MMIO path; edge ignores supplied number",
+        "first_stop_gate": "MSR wrapper's actual call is a request, not certified EOI delivery",
+        "evidence_ids": [
+          "IR101-E038",
+          "IR101-E039",
+          "IR101-E040",
+          "IR101-E044"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R08",
+        "node": "HPET_RTE",
+        "inputs": "myos_HPET_init constructs local ioapic_retentry_T with selected field writes",
+        "source_effect": "IOAPIC_install dereferences caller arg through unsigned long* and writes 64-bit value",
+        "first_stop_gate": "Unassigned fields, effective type, alignment and hardware byte layout need proof",
+        "evidence_ids": [
+          "IR101-E036",
+          "IR101-E053",
+          "IR101-E054",
+          "IR101-E055",
+          "IR101-E056",
+          "IR101-E057",
+          "IR101-E067",
+          "IR101-E068",
+          "IR101-E069",
+          "IR101-E070"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "B-R09",
+        "node": "IOAPIC_init",
+        "inputs": "local setup writes identification/version selectors then runs RTE loop",
+        "source_effect": "one source function invokes IOAPIC route initialization before HPET registration in called stage",
+        "first_stop_gate": "None of these statements constitutes hardware state observability",
+        "evidence_ids": [
+          "IR101-E048",
+          "IR101-E049",
+          "IR101-E050",
+          "IR101-E051",
+          "IR101-E052",
+          "IR101-E094",
+          "IR101-E095"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      }
+    ],
+    "startup_registration_and_dispatch_matrix": [
+      {
+        "id": "C-S01",
+        "node": "start_kernel",
+        "inputs": "active init_IRQ then later late_time_init and myos_init_percpu_intr",
+        "source_effect": "different C call sites executed only if predecessors normally return",
+        "first_stop_gate": "No real boot, firmware IDT/APIC success, or CPU online claim",
+        "evidence_ids": [
+          "IR101-E091",
+          "IR101-E092",
+          "IR101-E093"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S02",
+        "node": "init_IRQ",
+        "inputs": "calls idt_setup_apic_and_irq_gates then myos_init_bsp_intr",
+        "source_effect": "IDT gates initialized before IOAPIC_init requested by BSP wrapper",
+        "first_stop_gate": "Actual IDTR load/MMIO success unknown",
+        "evidence_ids": [
+          "IR101-E094",
+          "IR101-E095",
+          "IR101-E096",
+          "IR101-E097",
+          "IR101-E051"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S03",
+        "node": "idt_to_stubs",
+        "inputs": "IDT loop maps external vectors to irq_entries_start offset",
+        "source_effect": "ASM emits stubs pushing dummy error and vector, jump common entry",
+        "first_stop_gate": "ABI/real assembly/link and installed IDT not verified",
+        "evidence_ids": [
+          "IR101-E096",
+          "IR101-E098",
+          "IR101-E099"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S04",
+        "node": "asm_to_C",
+        "inputs": "sa_entintr_retp uses regs->frame pointer and calls excep_hwint_context",
+        "source_effect": "Common C branches vec below0x20 exception or >=0x20 handler",
+        "first_stop_gate": "PUSH_REGS/pt_regs layout and actual interrupt arrival unverified",
+        "evidence_ids": [
+          "IR101-E100",
+          "IR101-E101",
+          "IR101-E028",
+          "IR101-E029",
+          "IR101-E066"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S05",
+        "node": "HPET_time",
+        "inputs": "late_time_init calls hpet_time_init; that calls hpet_enable(NULL) before myos_HPET_init",
+        "source_effect": "hpet_enable result not consumed at this caller",
+        "first_stop_gate": "HPET readiness and MMIO timer config unverified",
+        "evidence_ids": [
+          "IR101-E103",
+          "IR101-E104",
+          "IR101-E067",
+          "IR101-E070"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S06",
+        "node": "HPET_registration",
+        "inputs": "HPET vector0x22 and controller IOAPIC callbacks, parameter0",
+        "source_effect": "register_irq saves handler/controller and requests IOAPIC_install then enable",
+        "first_stop_gate": "Actual RTE bits/byte object and installed route not certified",
+        "evidence_ids": [
+          "IR101-E059",
+          "IR101-E060",
+          "IR101-E063",
+          "IR101-E064",
+          "IR101-E067",
+          "IR101-E068",
+          "IR101-E069",
+          "IR101-E070",
+          "IR101-E019",
+          "IR101-E020"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S07",
+        "node": "LVT_registration",
+        "inputs": "myos_init_percpu_intr calls LVT_timer_init, vector0xEE",
+        "source_effect": "LVT controller install/enable/disable null and ack LVT_timer_ack",
+        "first_stop_gate": "No IOAPIC route required by this controller; real AP/LVT programming unverified",
+        "evidence_ids": [
+          "IR101-E074",
+          "IR101-E075",
+          "IR101-E078",
+          "IR101-E079",
+          "IR101-E080",
+          "IR101-E084",
+          "IR101-E085",
+          "IR101-E061"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S08",
+        "node": "preinit_ack",
+        "inputs": "LVT_timer_init invokes LVT_timer_ack(0) directly after register call",
+        "source_effect": "separate from dispatcher-initiated ack in future event",
+        "first_stop_gate": "No actual timer event implied by direct request",
+        "evidence_ids": [
+          "IR101-E078",
+          "IR101-E079",
+          "IR101-E080",
+          "IR101-E081",
+          "IR101-E082"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-S09",
+        "node": "time_relationship",
+        "inputs": "HPET_handler increments jiffies then calls do_timer(1)",
+        "source_effect": "Old time/HPET extra increment candidate remains historical; do_timer implementation not audited here",
+        "first_stop_gate": "No real tick period or actual double increment claimed",
+        "evidence_ids": [
+          "IR101-E065"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      }
+    ],
+    "handler_ack_and_return_matrix": [
+      {
+        "id": "C-R01",
+        "node": "dispatcher",
+        "inputs": "hwint_irq_handler computes vector, gets descriptor, calls handler if nonnull",
+        "source_effect": "handler must normally return for subsequent ack code to be reached",
+        "first_stop_gate": "No real IRQ/handler completion verified",
+        "evidence_ids": [
+          "IR101-E026",
+          "IR101-E027"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-R02",
+        "node": "ack_reread",
+        "inputs": "after handler invocation, controller pointer is read again from descriptor",
+        "source_effect": "changing registration in handler may change skip or ack callee",
+        "first_stop_gate": "Caller-supplied lifetime and concurrency unproven",
+        "evidence_ids": [
+          "IR101-E026",
+          "IR101-E027"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-R03",
+        "node": "HPET_edge",
+        "inputs": "HPET controller ack is IOAPIC_edge_ack",
+        "source_effect": "dispatcher sends local zero; edge ack ignores number and requests APIC_EOI=0",
+        "first_stop_gate": "Do not infer wrong physical IRQ from zero for this callback",
+        "evidence_ids": [
+          "IR101-E027",
+          "IR101-E040",
+          "IR101-E063",
+          "IR101-E064",
+          "IR101-E044"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-R04",
+        "node": "LVT_edge",
+        "inputs": "LVT controller ack is LVT_timer_ack, param passed through to edge ack",
+        "source_effect": "LVT_timer_ack writes timer initial count/LVTT/divide then invokes edge ack",
+        "first_stop_gate": "No actual EOI/success or frequency measurement",
+        "evidence_ids": [
+          "IR101-E027",
+          "IR101-E074",
+          "IR101-E075",
+          "IR101-E081",
+          "IR101-E082",
+          "IR101-E087",
+          "IR101-E088",
+          "IR101-E089",
+          "IR101-E090"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-R05",
+        "node": "level_ack_unused",
+        "inputs": "IOAPIC_level_ack writes EOI addr after edge ack using irq_nr",
+        "source_effect": "Read HPET/LVT controller instances do not bind level_ack",
+        "first_stop_gate": "If some other caller registers level ack, zero arg would matter; hypothetical only",
+        "evidence_ids": [
+          "IR101-E038",
+          "IR101-E039",
+          "IR101-E063",
+          "IR101-E064",
+          "IR101-E074",
+          "IR101-E075"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-R06",
+        "node": "schedule_gate",
+        "inputs": "excep_hwint_context after hw handler, checks !in_atomic then requests schedule",
+        "source_effect": "in_atomic macro based on preempt_count !=0",
+        "first_stop_gate": "No proof schedule actually switches tasks or returns; R65-S01 applies",
+        "evidence_ids": [
+          "IR101-E028",
+          "IR101-E029",
+          "IR101-E105"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-R07",
+        "node": "irq_return",
+        "inputs": "ASM common entry after C call has conditional swapgs, CLI, POP_REGS, stack adjustment, STI, iretq",
+        "source_effect": "return only if C and opaque schedule normal; separate entry frame/GS prerequisites",
+        "first_stop_gate": "No machine iret observed nor validated CPU frame",
+        "evidence_ids": [
+          "IR101-E100",
+          "IR101-E101",
+          "IR101-E102"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "C-R08",
+        "node": "LVT_count",
+        "inputs": "handler increments lvt_count and under modulo SCALE displays at count/SCALE",
+        "source_effect": "Not proof of real tick frequency or number of IRQ events",
+        "first_stop_gate": "real CPU/clock and display call behavior unknown",
+        "evidence_ids": [
+          "IR101-E076",
+          "IR101-E077",
+          "IR101-E083"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "node": "register_to_route",
+        "inputs": "register_irq publishes descriptor and invokes controller install/enable; HPET instance binds IOAPIC",
+        "source_effect": "Vector-to-register conversion and RTE identity remain separate from callback return",
+        "first_stop_gate": "Registration1 does not prove route installed",
+        "evidence_ids": [
+          "IR101-E018",
+          "IR101-E019",
+          "IR101-E020",
+          "IR101-E021",
+          "IR101-E036",
+          "IR101-E063",
+          "IR101-E070"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "ABC-02",
+        "node": "gate_to_dispatch",
+        "inputs": "init_IRQ and IDT stubs can route a number into excep_hwint_context",
+        "source_effect": "Only after real IDTR/CPU/stack assumptions would handler observe vector",
+        "first_stop_gate": "Avoid confusing vector register with IOAPIC input pin",
+        "evidence_ids": [
+          "IR101-E028",
+          "IR101-E029",
+          "IR101-E094",
+          "IR101-E095",
+          "IR101-E096",
+          "IR101-E098",
+          "IR101-E099",
+          "IR101-E100"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "ABC-03",
+        "node": "timer_binding",
+        "inputs": "HPET and LVT have distinct controller field instances, vectors and initialization paths",
+        "source_effect": "Do not apply IOAPIC route arithmetic to LVT vector solely from vector size",
+        "first_stop_gate": "Timer period/IRQ delivery and AP-specific initialization unproven",
+        "evidence_ids": [
+          "IR101-E063",
+          "IR101-E064",
+          "IR101-E074",
+          "IR101-E075",
+          "IR101-E084",
+          "IR101-E085",
+          "IR101-E091",
+          "IR101-E092",
+          "IR101-E093"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "ABC-04",
+        "node": "ack_and_schedule",
+        "inputs": "C handler precedes callback ack, then conditionally schedule and ASM return",
+        "source_effect": "Any missing prior normal return keeps all later effects unproved",
+        "first_stop_gate": "No real completed interrupt or context switch seen",
+        "evidence_ids": [
+          "IR101-E026",
+          "IR101-E027",
+          "IR101-E028",
+          "IR101-E029",
+          "IR101-E100",
+          "IR101-E101",
+          "IR101-E102"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      },
+      {
+        "id": "ABC-05",
+        "node": "retained_history",
+        "inputs": "R65 frame/GS and prior HPET/jiffies/CPU0/scheduler issues remain conditional",
+        "source_effect": "Not a new root defect merely because same source encountered",
+        "first_stop_gate": "Preserve historical qualified_ids and new gap rather than rename",
+        "evidence_ids": [
+          "IR101-E065",
+          "IR101-E066",
+          "IR101-E076",
+          "IR101-E077",
+          "IR101-E105"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_EXPLICIT_CONDITIONAL",
+        "runtime_evidence": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows": 55,
+  "matrix_rows_by_group": {
+    "descriptor_lifecycle_matrix": 9,
+    "callback_ownership_and_return_matrix": 7,
+    "vector_to_route_domain_matrix": 8,
+    "rte_representation_and_access_matrix": 9,
+    "startup_registration_and_dispatch_matrix": 9,
+    "handler_ack_and_return_matrix": 8,
+    "ABC_join_matrix": 5
+  },
+  "fact_to_evidence_id_index": {
+    "descriptor_lifecycle_matrix": [
+      "IR101-E011",
+      "IR101-E030",
+      "IR101-E017",
+      "IR101-E018",
+      "IR101-E015",
+      "IR101-E016",
+      "IR101-E019",
+      "IR101-E020",
+      "IR101-E021",
+      "IR101-E013",
+      "IR101-E014",
+      "IR101-E022",
+      "IR101-E023",
+      "IR101-E024",
+      "IR101-E025",
+      "IR101-E026",
+      "IR101-E027"
+    ],
+    "callback_ownership_and_return_matrix": [
+      "IR101-E013",
+      "IR101-E019",
+      "IR101-E020",
+      "IR101-E014",
+      "IR101-E022",
+      "IR101-E023",
+      "IR101-E017",
+      "IR101-E018",
+      "IR101-E036",
+      "IR101-E015",
+      "IR101-E016",
+      "IR101-E024",
+      "IR101-E026",
+      "IR101-E027",
+      "IR101-E038",
+      "IR101-E039",
+      "IR101-E040",
+      "IR101-E063",
+      "IR101-E074",
+      "IR101-E075",
+      "IR101-E021",
+      "IR101-E025"
+    ],
+    "vector_to_route_domain_matrix": [
+      "IR101-E030",
+      "IR101-E031",
+      "IR101-E096",
+      "IR101-E059",
+      "IR101-E060",
+      "IR101-E070",
+      "IR101-E062",
+      "IR101-E084",
+      "IR101-E085",
+      "IR101-E074",
+      "IR101-E075",
+      "IR101-E052",
+      "IR101-E058",
+      "IR101-E032",
+      "IR101-E033",
+      "IR101-E034",
+      "IR101-E035",
+      "IR101-E036",
+      "IR101-E037",
+      "IR101-E017",
+      "IR101-E020"
+    ],
+    "rte_representation_and_access_matrix": [
+      "IR101-E053",
+      "IR101-E054",
+      "IR101-E055",
+      "IR101-E056",
+      "IR101-E057",
+      "IR101-E012",
+      "IR101-E048",
+      "IR101-E049",
+      "IR101-E058",
+      "IR101-E041",
+      "IR101-E042",
+      "IR101-E043",
+      "IR101-E045",
+      "IR101-E046",
+      "IR101-E047",
+      "IR101-E032",
+      "IR101-E033",
+      "IR101-E034",
+      "IR101-E035",
+      "IR101-E038",
+      "IR101-E039",
+      "IR101-E040",
+      "IR101-E044",
+      "IR101-E036",
+      "IR101-E067",
+      "IR101-E068",
+      "IR101-E069",
+      "IR101-E070",
+      "IR101-E050",
+      "IR101-E051",
+      "IR101-E052",
+      "IR101-E094",
+      "IR101-E095"
+    ],
+    "startup_registration_and_dispatch_matrix": [
+      "IR101-E091",
+      "IR101-E092",
+      "IR101-E093",
+      "IR101-E094",
+      "IR101-E095",
+      "IR101-E096",
+      "IR101-E097",
+      "IR101-E051",
+      "IR101-E098",
+      "IR101-E099",
+      "IR101-E100",
+      "IR101-E101",
+      "IR101-E028",
+      "IR101-E029",
+      "IR101-E066",
+      "IR101-E103",
+      "IR101-E104",
+      "IR101-E067",
+      "IR101-E070",
+      "IR101-E059",
+      "IR101-E060",
+      "IR101-E063",
+      "IR101-E064",
+      "IR101-E068",
+      "IR101-E069",
+      "IR101-E019",
+      "IR101-E020",
+      "IR101-E074",
+      "IR101-E075",
+      "IR101-E078",
+      "IR101-E079",
+      "IR101-E080",
+      "IR101-E084",
+      "IR101-E085",
+      "IR101-E061",
+      "IR101-E081",
+      "IR101-E082",
+      "IR101-E065"
+    ],
+    "handler_ack_and_return_matrix": [
+      "IR101-E026",
+      "IR101-E027",
+      "IR101-E040",
+      "IR101-E063",
+      "IR101-E064",
+      "IR101-E044",
+      "IR101-E074",
+      "IR101-E075",
+      "IR101-E081",
+      "IR101-E082",
+      "IR101-E087",
+      "IR101-E088",
+      "IR101-E089",
+      "IR101-E090",
+      "IR101-E038",
+      "IR101-E039",
+      "IR101-E028",
+      "IR101-E029",
+      "IR101-E105",
+      "IR101-E100",
+      "IR101-E101",
+      "IR101-E102",
+      "IR101-E076",
+      "IR101-E077",
+      "IR101-E083"
+    ],
+    "ABC_join_matrix": [
+      "IR101-E018",
+      "IR101-E019",
+      "IR101-E020",
+      "IR101-E021",
+      "IR101-E036",
+      "IR101-E063",
+      "IR101-E070",
+      "IR101-E028",
+      "IR101-E029",
+      "IR101-E094",
+      "IR101-E095",
+      "IR101-E096",
+      "IR101-E098",
+      "IR101-E099",
+      "IR101-E100",
+      "IR101-E064",
+      "IR101-E074",
+      "IR101-E075",
+      "IR101-E084",
+      "IR101-E085",
+      "IR101-E091",
+      "IR101-E092",
+      "IR101-E093",
+      "IR101-E026",
+      "IR101-E027",
+      "IR101-E101",
+      "IR101-E102",
+      "IR101-E065",
+      "IR101-E066",
+      "IR101-E076",
+      "IR101-E077",
+      "IR101-E105"
+    ]
+  },
+  "finite_models": [
+    {
+      "id": "IR101-M01",
+      "topic": "A",
+      "inputs": [
+        "irq=0 and descriptor array length256, valid C pointer"
+      ],
+      "conditional_arithmetic_or_step": "index0 is nominally within 0..255 but excep_hwint_context routes vec0 below FIRST_EXTERNAL_VECTOR to exception_handler",
+      "first_unproven_gate": "No claim hardware IRQ registration or dispatch at vec0",
+      "evidence_ids": [
+        "IR101-E011",
+        "IR101-E017",
+        "IR101-E018",
+        "IR101-E028",
+        "IR101-E029",
+        "IR101-E030",
+        "IR101-E031"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M02",
+      "topic": "A",
+      "inputs": [
+        "irq=255 and descriptor array length256"
+      ],
+      "conditional_arithmetic_or_step": "last nominal descriptor index255 is representable",
+      "first_unproven_gate": "IOAPIC route index and real device support still not guaranteed",
+      "evidence_ids": [
+        "IR101-E011",
+        "IR101-E017",
+        "IR101-E018",
+        "IR101-E030"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M03",
+      "topic": "A",
+      "inputs": [
+        "irq=256 and descriptor array length256"
+      ],
+      "conditional_arithmetic_or_step": "&irq_descriptors[256] may form one-past address; subsequent p->controller member store lacks valid element",
+      "first_unproven_gate": "Stop at first invalid element member access; no asserted trap or follow-on state",
+      "evidence_ids": [
+        "IR101-E011",
+        "IR101-E017",
+        "IR101-E018",
+        "IR101-E030"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M04",
+      "topic": "A",
+      "inputs": [
+        "controller=NULL and handler nonnull with valid slot"
+      ],
+      "conditional_arithmetic_or_step": "fields published; install/enable branch skipped, register_irq returns1",
+      "first_unproven_gate": "No controller ack, no proven hardware route; later handler requires real IRQ",
+      "evidence_ids": [
+        "IR101-E018",
+        "IR101-E019",
+        "IR101-E020",
+        "IR101-E021",
+        "IR101-E026",
+        "IR101-E027"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M05",
+      "topic": "A",
+      "inputs": [
+        "controller.install returns0 normally, enable present, slot valid"
+      ],
+      "conditional_arithmetic_or_step": "its result discarded; enable still requested then literal1 returned if normal",
+      "first_unproven_gate": "Not install success or equipment ready",
+      "evidence_ids": [
+        "IR101-E013",
+        "IR101-E014",
+        "IR101-E019",
+        "IR101-E020",
+        "IR101-E021"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M06",
+      "topic": "A",
+      "inputs": [
+        "same vector registered twice sequentially, all pointers legal"
+      ],
+      "conditional_arithmetic_or_step": "second stores new fields before second controller.install/enable; no old disable in register body",
+      "first_unproven_gate": "No verified concurrent observation or actual routing transition",
+      "evidence_ids": [
+        "IR101-E018",
+        "IR101-E019",
+        "IR101-E020",
+        "IR101-E022",
+        "IR101-E023"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M07",
+      "topic": "A",
+      "inputs": [
+        "handler runs unregister_irq of same descriptor, returns normally"
+      ],
+      "conditional_arithmetic_or_step": "controller becomes0 before dispatcher rereads; ack branch may then be skipped",
+      "first_unproven_gate": "Data race, nested IRQ, callback actual behavior not observed",
+      "evidence_ids": [
+        "IR101-E023",
+        "IR101-E024",
+        "IR101-E026",
+        "IR101-E027"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M08",
+      "topic": "A",
+      "inputs": [
+        "handler changes descriptor.controller to other valid controller, stable legal state"
+      ],
+      "conditional_arithmetic_or_step": "ack second lookup may select new controller, not initial one",
+      "first_unproven_gate": "No guarantee real handler changes pointer; source has no snapshot",
+      "evidence_ids": [
+        "IR101-E026",
+        "IR101-E027"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M09",
+      "topic": "B",
+      "inputs": [
+        "IRQ vector0x20 and valid ulong arithmetic"
+      ],
+      "conditional_arithmetic_or_step": "0x10 + (0x20-0x20)*2 =0x10",
+      "first_unproven_gate": "Register validity and actual route configuration require hardware evidence",
+      "evidence_ids": [
+        "IR101-E031",
+        "IR101-E032",
+        "IR101-E036",
+        "IR101-E052"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M10",
+      "topic": "B",
+      "inputs": [
+        "HPET0 vector0x22 and valid ulong arithmetic"
+      ],
+      "conditional_arithmetic_or_step": "0x10 + (0x22-0x20)*2 =0x14",
+      "first_unproven_gate": "Only syntactic mapping to IOAPIC index, not delivery",
+      "evidence_ids": [
+        "IR101-E059",
+        "IR101-E060",
+        "IR101-E032",
+        "IR101-E067",
+        "IR101-E070"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M11",
+      "topic": "B",
+      "inputs": [
+        "IRQ vector0x37"
+      ],
+      "conditional_arithmetic_or_step": "route low-index0x3e, last index in visible init loop",
+      "first_unproven_gate": "Full 24 successful writes depend on MMIO prior success",
+      "evidence_ids": [
+        "IR101-E032",
+        "IR101-E051",
+        "IR101-E052"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M12",
+      "topic": "B",
+      "inputs": [
+        "IRQ vector0x38"
+      ],
+      "conditional_arithmetic_or_step": "route low-index0x40, beyond initialized 0x10..0x3e sequence but still fits uint8",
+      "first_unproven_gate": "No proof device has or lacks such an input; scope is initialization text",
+      "evidence_ids": [
+        "IR101-E032",
+        "IR101-E052"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M13",
+      "topic": "B",
+      "inputs": [
+        "IRQ vector0x97"
+      ],
+      "conditional_arithmetic_or_step": "route low-index0xfe; paired high index0xff representable in 8-bit request",
+      "first_unproven_gate": "Device validity unknown even without narrowing",
+      "evidence_ids": [
+        "IR101-E032",
+        "IR101-E041",
+        "IR101-E042"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M14",
+      "topic": "B",
+      "inputs": [
+        "IRQ vector0x98"
+      ],
+      "conditional_arithmetic_or_step": "route arithmetic low-index0x100; uint8 argument truncates to0x00; high selector1",
+      "first_unproven_gate": "Potential collision with non-RTE selector; not an observed device write",
+      "evidence_ids": [
+        "IR101-E032",
+        "IR101-E036",
+        "IR101-E041",
+        "IR101-E042"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M15",
+      "topic": "B",
+      "inputs": [
+        "IRQ vector0xa0"
+      ],
+      "conditional_arithmetic_or_step": "route arithmetic low-index0x110, uint8 argument0x10, numerically colliding with vector0x20 low-index",
+      "first_unproven_gate": "No evidence large vector passed into IOAPIC callback in real run",
+      "evidence_ids": [
+        "IR101-E031",
+        "IR101-E032",
+        "IR101-E036"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M16",
+      "topic": "B",
+      "inputs": [
+        "IRQ vector0x1f, unsigned long width at least32, defined modulo arithmetic"
+      ],
+      "conditional_arithmetic_or_step": "(0x1f-0x20)*2+0x10 modulo2^w =0x0e",
+      "first_unproven_gate": "Invalid external vector route input; source has no local gate and HW not observed",
+      "evidence_ids": [
+        "IR101-E031",
+        "IR101-E032",
+        "IR101-E036"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M17",
+      "topic": "B",
+      "inputs": [
+        "ioapic_rte_write index=255 and uint8 pointed selection port"
+      ],
+      "conditional_arithmetic_or_step": "index+1 integer value256 stored into uint8 selector becomes0",
+      "first_unproven_gate": "Actual MMIO address mapping/byte transfer not established",
+      "evidence_ids": [
+        "IR101-E045",
+        "IR101-E046",
+        "IR101-E047",
+        "IR101-E012"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M18",
+      "topic": "C",
+      "inputs": [
+        "HPET controller registered for vector0x22; local entry fields legal, IOAPIC callbacks valid"
+      ],
+      "conditional_arithmetic_or_step": "install reads local RTE through unsigned long then enable unmask request; no later retention of arg in software descriptor",
+      "first_unproven_gate": "Partial bitfield initialization, pointer reinterpret and MMIO success remain distinct gates",
+      "evidence_ids": [
+        "IR101-E063",
+        "IR101-E064",
+        "IR101-E067",
+        "IR101-E068",
+        "IR101-E069",
+        "IR101-E070",
+        "IR101-E036",
+        "IR101-E032",
+        "IR101-E033"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M19",
+      "topic": "C",
+      "inputs": [
+        "FIRST_SYSTEM_VECTOR0xec, VECTOR_IPI(2), source LVT controller"
+      ],
+      "conditional_arithmetic_or_step": "LVT vector0xee; install/enable fields null; LVT_timer_init calls direct LVT_timer_ack(0)",
+      "first_unproven_gate": "No IOAPIC install required by this particular callback instance; CPU LVT delivered/EOI unproved",
+      "evidence_ids": [
+        "IR101-E062",
+        "IR101-E084",
+        "IR101-E085",
+        "IR101-E074",
+        "IR101-E075",
+        "IR101-E078",
+        "IR101-E079",
+        "IR101-E080"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M20",
+      "topic": "C",
+      "inputs": [
+        "dispatcher irq_nr local0; active HPET edge or LVT ack controller"
+      ],
+      "conditional_arithmetic_or_step": "both named ack functions ignore IRQ parameter for EOI effect in their source; level_ack would use it",
+      "first_unproven_gate": "Do not report actual HPET/LVT ack defect from argument0 alone",
+      "evidence_ids": [
+        "IR101-E026",
+        "IR101-E027",
+        "IR101-E038",
+        "IR101-E039",
+        "IR101-E040",
+        "IR101-E063",
+        "IR101-E074",
+        "IR101-E075",
+        "IR101-E081",
+        "IR101-E082"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "IR101-M21",
+      "topic": "C",
+      "inputs": [
+        "handler and ack return normally, in_atomic() returns false"
+      ],
+      "conditional_arithmetic_or_step": "excep_hwint_context requests schedule after IRQ handler; ASM epilogue only if schedule returns",
+      "first_unproven_gate": "No certified context switch, register/GS restore or actual iretq",
+      "evidence_ids": [
+        "IR101-E028",
+        "IR101-E029",
+        "IR101-E100",
+        "IR101-E101",
+        "IR101-E102",
+        "IR101-E105"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 21,
+  "graph_alignment": {
+    "file": "irq-registration-dispatch-paths.dot",
+    "nodes": 99,
+    "edges": 124,
+    "dangling": 0,
+    "matrix_nodes": 55,
+    "actual_function_nodes_not_matrix_labels": true,
+    "edge_classes": "DIRECT_CALL_CALLBACK_BINDING_DATA_FLOW_CONDITIONAL_STEP_UNPROVEN_JOIN_SEPARATE",
+    "Graphviz": "NOT_RUN",
+    "full_CFG": false
+  },
+  "deferred_alignment": {
+    "file": "deferred-findings.yaml",
+    "new_conditional_candidates": 8,
+    "new_evidence_gaps": 9,
+    "runtime_confirmed": 0,
+    "unsupported_evidence_ref_count": 0,
+    "prior_findings_qualified_ids_preserved": true
+  },
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "G00": {
+    "status": "PASS_READ_ONLY",
+    "fixed_refs": {
+      "lead": "0cd745b92280",
+      "exec": "dd07c3b19fa1",
+      "time": "a039d9803ade",
+      "master": "e8e60cd19540"
+    },
+    "PR16": "OPEN_READY_UNMERGED",
+    "PR17": "OPEN_DRAFT_UNMERGED",
+    "open_prs": [
+      16,
+      17
+    ],
+    "new_101_path": "ABSENT",
+    "formal101_marker_count": 0,
+    "C07_contract_marker_id": 6974193742,
+    "owner_forward_received": true,
+    "canaries": "TIME_MASTER_DISTINCT",
+    "writes_before_G00": 0
+  },
+  "read_account": {
+    "new_full_this_turn": [
+      "144_contract_EOF",
+      "C07_101_checkpoint_EOF",
+      "100_review_EOF",
+      "143_03_confirmed_EOF",
+      "PR17_comments_6973355370_6971992040_6972606488_6974193742_full",
+      "63_79_110_124_v2_P1_to_P13_EOF",
+      "65_review_65_doc_closure_EOF",
+      "time_options_flags_EOF_and_master_canaries",
+      "time_interrupt_apic_LVT_hpet_key_functions",
+      "time_asm_IRQ_entry_IDT_legacy_types",
+      "R100_D00_two_true_list_command_and_true_CMake/linker_anchors",
+      "all_105_new_source_quotes_reopened_at_fixed_time"
+    ],
+    "same_EXEC14_previously_read_reused": [
+      "100_six_artifacts_own_previous_full_reads_and_blob_identity_6_6",
+      "R100_S01_S02_S03_current_fixed_review_read",
+      "prior_98_99_author_and_reviews_when_same_objects",
+      "nine_MyOS2_rules_and_project_Mnemosyne_applicable_guidance_only_when_own_previous_read_and_same_Git_objects"
+    ],
+    "targeted_only": [
+      "CORE-SCHED-INTEGRATION-03-review §2/§3/§5",
+      "CORE-CHECK-01-recheck-02-review HPET/IRQ references",
+      "asm/apic.h actual wrapper",
+      "asm/ptrace.h IRQ_NR",
+      "percpu_area.c whole file"
+    ],
+    "not_read_or_not_run": [
+      "Intel_AMD_vendor_manual_versioned_hardware_interpretation",
+      "full_external_timekeeping_and_do_timer_implementation",
+      "complete_all_drivers_and_other_IRQ_registrations",
+      "live_IOAPIC_or_LVT_register_values",
+      "actual_compiler_pragma_struct_layout",
+      "complete_local_P9",
+      "real_interrupt_hardware_or_scheduler"
+    ]
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/CMakeLists.txt",
+      "ids": [
+        "IR101-E001",
+        "IR101-E002",
+        "IR101-E003",
+        "IR101-E004"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ids": [
+        "IR101-E005"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "ids": [
+        "IR101-E006",
+        "IR101-E007"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/scripts/target_kernel.cmake",
+      "ids": [
+        "IR101-E008"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "ids": [
+        "IR101-E009"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "myloader/uefi/bootloader.c",
+      "ids": [
+        "IR101-E010"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "ids": [
+        "IR101-E011",
+        "IR101-E017",
+        "IR101-E018",
+        "IR101-E019",
+        "IR101-E020",
+        "IR101-E021",
+        "IR101-E022",
+        "IR101-E023",
+        "IR101-E024",
+        "IR101-E025",
+        "IR101-E026",
+        "IR101-E027",
+        "IR101-E028",
+        "IR101-E029",
+        "IR101-E051",
+        "IR101-E061"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "ids": [
+        "IR101-E012",
+        "IR101-E013",
+        "IR101-E014",
+        "IR101-E015",
+        "IR101-E016"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "ids": [
+        "IR101-E030",
+        "IR101-E031",
+        "IR101-E062"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/apic.c",
+      "ids": [
+        "IR101-E032",
+        "IR101-E033",
+        "IR101-E034",
+        "IR101-E035",
+        "IR101-E036",
+        "IR101-E037",
+        "IR101-E038",
+        "IR101-E039",
+        "IR101-E040",
+        "IR101-E041",
+        "IR101-E042",
+        "IR101-E043",
+        "IR101-E045",
+        "IR101-E046",
+        "IR101-E047",
+        "IR101-E048",
+        "IR101-E049",
+        "IR101-E050",
+        "IR101-E052"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/apic.h",
+      "ids": [
+        "IR101-E044"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/apicdef.h",
+      "ids": [
+        "IR101-E053",
+        "IR101-E054",
+        "IR101-E055",
+        "IR101-E056",
+        "IR101-E057",
+        "IR101-E058",
+        "IR101-E071",
+        "IR101-E072",
+        "IR101-E086",
+        "IR101-E087",
+        "IR101-E088",
+        "IR101-E089",
+        "IR101-E090"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "ids": [
+        "IR101-E059",
+        "IR101-E060",
+        "IR101-E084",
+        "IR101-E085"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "ids": [
+        "IR101-E063",
+        "IR101-E064",
+        "IR101-E065",
+        "IR101-E067",
+        "IR101-E068",
+        "IR101-E069",
+        "IR101-E070"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/ptrace.h",
+      "ids": [
+        "IR101-E066"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "ids": [
+        "IR101-E073",
+        "IR101-E074",
+        "IR101-E075",
+        "IR101-E076",
+        "IR101-E077",
+        "IR101-E078",
+        "IR101-E079",
+        "IR101-E080",
+        "IR101-E081",
+        "IR101-E082",
+        "IR101-E083"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "ids": [
+        "IR101-E091",
+        "IR101-E092",
+        "IR101-E093"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/irqinit.c",
+      "ids": [
+        "IR101-E094",
+        "IR101-E095"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/idt.c",
+      "ids": [
+        "IR101-E096",
+        "IR101-E097"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "ids": [
+        "IR101-E098",
+        "IR101-E099",
+        "IR101-E100",
+        "IR101-E101",
+        "IR101-E102"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/time.c",
+      "ids": [
+        "IR101-E103",
+        "IR101-E104"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/scheduler/preempt_macro.h",
+      "ids": [
+        "IR101-E105"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    }
+  ],
+  "compiler_preprocess_linker": "NOT_RUN",
+  "graphviz": "NOT_RUN",
+  "selfcheck_prepublication": {
+    "raw_six_labels_expected": 105,
+    "actual_source_quotes_checked": 105,
+    "previous_100_raw_labels_frozen": 101,
+    "previous_100_qualified_unit_total_withdrawn": true,
+    "complete_local_P9": "NOT_RUN"
+  },
+  "run_status": {
+    "full_local_P9": "NOT_RUN",
+    "configure": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "repository_scripts": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU_hardware": "NOT_RUN",
+    "real_MMIO_APIC_and_interrupt": "NOT_RUN"
+  }
+}

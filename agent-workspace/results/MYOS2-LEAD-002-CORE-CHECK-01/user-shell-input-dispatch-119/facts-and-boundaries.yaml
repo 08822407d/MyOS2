@@ -1,0 +1,763 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-INPUT-DISPATCH-119",
+  "record_type": "phase2_bounded_source_model_machine_facts",
+  "produced_by": "GPT-6（后端不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "date": "2026-11-21",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "pins_short12": {
+    "lead": "009d3ffdaa7d",
+    "execution_parent": "cb96288abb8b",
+    "time": "a039d9803ade",
+    "master": "e8e60cd19540"
+  },
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "reviewer_authority": "C08",
+    "original_statuses": {
+      "R117-02": "OPEN",
+      "R118-01": "OPEN",
+      "R118-02": "OPEN"
+    },
+    "previously_closed": {
+      "R115-03": "CLOSED_DOCUMENTATION_ONLY",
+      "R116-01": "CLOSED_DOCUMENTATION_ONLY",
+      "R117-01": "CLOSED_DOCUMENTATION_ONLY",
+      "R117-03": "CLOSED_DOCUMENTATION_ONLY"
+    },
+    "batch_statuses": {
+      "115": "PASS_PENDING_LOCAL",
+      "116": "PASS_PENDING_LOCAL",
+      "117": "RETURN",
+      "118": "RETURN"
+    },
+    "R117_02": {
+      "old_117": {
+        "pin": "52c51a3752d3",
+        "per_file": {
+          "MANIFEST.md": 1,
+          "shell-cat-file-display.md": 0,
+          "facts-and-boundaries.yaml": 0,
+          "shell-cat-file-display-paths.dot": 0,
+          "deferred-findings.yaml": 0,
+          "evidence.md": 88
+        },
+        "definition_windows": 88,
+        "formal_prefix_total": 89,
+        "extra": {
+          "file": "MANIFEST.md",
+          "line": 113,
+          "kind": "prose_not_quote"
+        }
+      },
+      "old_118": {
+        "pin": "cb96288abb8b",
+        "per_file": {
+          "MANIFEST.md": 0,
+          "shell-cwd-display.md": 0,
+          "facts-and-boundaries.yaml": 0,
+          "shell-cwd-display-paths.dot": 0,
+          "deferred-findings.yaml": 0,
+          "evidence.md": 92
+        },
+        "definition_windows": 91,
+        "formal_prefix_total": 92,
+        "extra": {
+          "file": "evidence.md",
+          "line": 3,
+          "kind": "prose_not_quote"
+        }
+      },
+      "new_119": {
+        "per_file": {
+          "MANIFEST.md": 0,
+          "shell-input-dispatch.md": 0,
+          "facts-and-boundaries.yaml": 0,
+          "shell-input-dispatch-paths.dot": 0,
+          "deferred-findings.yaml": 0,
+          "evidence.md": 46
+        },
+        "definition_windows": 46,
+        "formal_prefix_total": 46,
+        "extra": null
+      }
+    },
+    "R118_01": {
+      "ordinary_positions": [
+        {
+          "old_id": "CW118-E051",
+          "new_id": "IN119-P01",
+          "source": "myshell.c:59",
+          "classification": "file_scope_pointer_object_not_P2"
+        },
+        {
+          "old_id": "CW118-E052",
+          "new_id": "IN119-P02",
+          "source": "myshell.c:60",
+          "classification": "file_scope_array_object_not_P2"
+        }
+      ],
+      "consumer_anchors": {
+        "main": [
+          "IN119-E001",
+          "IN119-E002",
+          "IN119-E003"
+        ],
+        "cd": [
+          "IN119-E026",
+          "IN119-E028",
+          "IN119-E029"
+        ],
+        "pwd": [
+          "IN119-E030"
+        ],
+        "cat": [
+          "IN119-E031",
+          "IN119-E032"
+        ],
+        "lookup_flags": [
+          "IN119-E033"
+        ],
+        "kernel_pwd_root": [
+          "IN119-E036"
+        ],
+        "kernel_allocate": [
+          "IN119-E037"
+        ],
+        "kernel_prepend": [
+          "IN119-E038"
+        ],
+        "kernel_copy_return": [
+          "IN119-E039",
+          "IN119-E040",
+          "IN119-E041"
+        ],
+        "config": [
+          "IN119-E044",
+          "IN119-E045"
+        ]
+      },
+      "R60_S01_item3": "correct_home_for_pointer_to_long_to_int_and_copy_return_independence",
+      "R60_S02": "correct_home_for_graph_and_evidence_use"
+    },
+    "R118_02": {
+      "replacement_dot_clusters": [
+        "cluster_D00A",
+        "cluster_D00B",
+        "cluster_D00C"
+      ],
+      "replacements": [
+        {
+          "old": "a_loop->a_lf DIRECT_PRINTF_FIRST",
+          "new_direct": "a_main->a_lf DIRECT_CALL",
+          "new_noncall": "a_loop->a_lf CONTROL"
+        },
+        {
+          "old": "a_mzero->a_mgetcwd mixed_call",
+          "new_direct": "a_main->a_mzero and a_main->a_mgetcwd",
+          "new_noncall": "a_mzero->a_mgetcwd SEQUENCE"
+        },
+        {
+          "old": "b_cachezero->b_getcwd SEQUENCE_THEN_DIRECT_CALL",
+          "new_direct": "b_cd->b_cachezero and b_cd->b_getcwd",
+          "new_noncall": "b_cachezero->b_getcwd SEQUENCE"
+        },
+        {
+          "old": "c_pwd->c_alloc DATA_PWD_ROOT_FOR_PREPEND",
+          "new_direct": "c_kernelgetcwd->c_alloc",
+          "new_noncall": "c_pathmax->c_alloc DATA; c_pwd->c_prepend DATA"
+        },
+        {
+          "old": "c_alloc->c_prepend CALL_PREPEND_FUNCTIONS",
+          "new_direct": "c_kernelgetcwd->c_prepend",
+          "new_noncall": "c_alloc->c_prepend SEQUENCE"
+        },
+        {
+          "old": "c_usercopy->c_succret ambiguous",
+          "new_direct": "kernel getcwd owns copy and return",
+          "new_noncall": "copy effect and pointer-to-int return separate"
+        }
+      ]
+    }
+  },
+  "A_readline": {
+    "assumptions": {
+      "buffer_pre_zeroed_bytes": 4096,
+      "console_fd_valid": true,
+      "successful_reads_exactly_one_byte": true,
+      "normal_text_input_max_bytes": 32,
+      "no_actual_terminal_effect_certified": true
+    },
+    "examples": {
+      "type_pwd_with_typo_and_backspace": [
+        {
+          "key": "p",
+          "read_return": 1,
+          "count_before": 0,
+          "count_after": 1,
+          "buffer_mutations": [
+            {
+              "index": 0,
+              "byte_after": 112
+            }
+          ],
+          "write_request_bytes": [
+            8,
+            112,
+            95
+          ],
+          "action": "continue_loop",
+          "buf_cstring": "p"
+        },
+        {
+          "key": "x",
+          "read_return": 1,
+          "count_before": 1,
+          "count_after": 2,
+          "buffer_mutations": [
+            {
+              "index": 1,
+              "byte_after": 120
+            }
+          ],
+          "write_request_bytes": [
+            8,
+            120,
+            95
+          ],
+          "action": "continue_loop",
+          "buf_cstring": "px"
+        },
+        {
+          "key": "BS",
+          "read_return": 1,
+          "count_before": 2,
+          "count_after": 1,
+          "buffer_mutations": [
+            {
+              "index": 1,
+              "byte_after": 0
+            }
+          ],
+          "write_request_bytes": [
+            8,
+            8,
+            95
+          ],
+          "action": "continue_loop",
+          "buf_cstring": "p"
+        },
+        {
+          "key": "w",
+          "read_return": 1,
+          "count_before": 1,
+          "count_after": 2,
+          "buffer_mutations": [
+            {
+              "index": 1,
+              "byte_after": 119
+            }
+          ],
+          "write_request_bytes": [
+            8,
+            119,
+            95
+          ],
+          "action": "continue_loop",
+          "buf_cstring": "pw"
+        },
+        {
+          "key": "d",
+          "read_return": 1,
+          "count_before": 2,
+          "count_after": 3,
+          "buffer_mutations": [
+            {
+              "index": 2,
+              "byte_after": 100
+            }
+          ],
+          "write_request_bytes": [
+            8,
+            100,
+            95
+          ],
+          "action": "continue_loop",
+          "buf_cstring": "pwd"
+        },
+        {
+          "key": "LF",
+          "read_return": 1,
+          "count_before": 3,
+          "count_after": 3,
+          "buffer_mutations": [],
+          "write_request_bytes": [
+            8
+          ],
+          "action": "explicit_return_count",
+          "return_value": 3,
+          "buf_cstring": "pwd"
+        }
+      ],
+      "empty_line": [
+        {
+          "key": "LF",
+          "read_return": 1,
+          "count_before": 0,
+          "count_after": 0,
+          "buffer_mutations": [],
+          "write_request_bytes": [
+            8
+          ],
+          "action": "explicit_return_count",
+          "return_value": 0,
+          "buf_cstring": ""
+        }
+      ],
+      "backspace_at_count_zero": [
+        {
+          "key": "BS",
+          "read_return": 1,
+          "count_before": 0,
+          "count_after": 0,
+          "buffer_mutations": [],
+          "write_request_bytes": [
+            8,
+            95
+          ],
+          "action": "continue_loop",
+          "buf_cstring": ""
+        }
+      ],
+      "nul_at_count_zero": [
+        {
+          "key": "NUL",
+          "read_return": 1,
+          "count_before": 0,
+          "count_after": 0,
+          "buffer_mutations": [],
+          "write_request_bytes": [
+            8
+          ],
+          "action": "continue_skips_trailing_underscore",
+          "buf_cstring": ""
+        }
+      ],
+      "after_pwd_EOT": [
+        {
+          "key": "EOT",
+          "read_return": 1,
+          "count_before": 3,
+          "count_after": 3,
+          "buffer_mutations": [],
+          "write_request_bytes": [],
+          "action": "loop_condition_false_fallthrough_no_explicit_return",
+          "buf_cstring": "pwd"
+        }
+      ],
+      "after_pwd_read_zero": [
+        {
+          "key": "read_zero",
+          "read_return": 0,
+          "count_before": 3,
+          "count_after": 3,
+          "buffer_mutations": [],
+          "write_request_bytes": [],
+          "action": "loop_condition_false_fallthrough_no_explicit_return",
+          "buf_cstring": "pwd"
+        }
+      ]
+    },
+    "independent_main_requests": {
+      "after_read_line_printf_format": "\\n",
+      "error_case_format": "Input Error, No Command Found!\\n"
+    },
+    "readline_fallthrough_no_explicit_return": true,
+    "main_ignores_readline_return": true,
+    "source_anchor_ids": [
+      "IN119-E002",
+      "IN119-E003",
+      "IN119-E004",
+      "IN119-E006",
+      "IN119-E007",
+      "IN119-E008",
+      "IN119-E009",
+      "IN119-E010"
+    ]
+  },
+  "B_parse": {
+    "assumptions": {
+      "space_only": true,
+      "max_scan_index_exclusive": 256,
+      "input_under_32_bytes": true,
+      "buffer_pre_zeroed_bytes": 4096,
+      "allocation_success": true,
+      "pointer_size_model_bytes": 8,
+      "null_zero_representability_model": true
+    },
+    "cases": [
+      {
+        "input": "  cd  docs  ",
+        "initial_j": 2,
+        "word_tail_indices": [
+          3,
+          9
+        ],
+        "scan_break_index": 12,
+        "argc": 2,
+        "allocation": {
+          "expression": "sizeof(char **) * (*argc + 1)",
+          "pointer_size_model_bytes": 8,
+          "requested_model_bytes": 24,
+          "assume_malloc_success": true,
+          "zeroed_entire_allocation": true
+        },
+        "argv_ptr_buf_indices": [
+          2,
+          6
+        ],
+        "argv_words": [
+          "cd",
+          "docs"
+        ],
+        "overwritten_delimiter_locations": [
+          {
+            "index": 4,
+            "previous_byte": 32,
+            "new_byte": 0
+          },
+          {
+            "index": 10,
+            "previous_byte": 32,
+            "new_byte": 0
+          }
+        ],
+        "remaining_spaces": [
+          0,
+          1,
+          5,
+          11
+        ],
+        "skipped_space_indices": [
+          5,
+          11
+        ],
+        "final_cursor_j": 12,
+        "last_slot": "NULL_if_all_zero_pointer_represents_NULL",
+        "return_index": 0,
+        "strcmp_calls": 1
+      },
+      {
+        "input": "pwd",
+        "initial_j": 0,
+        "word_tail_indices": [
+          2
+        ],
+        "scan_break_index": 3,
+        "argc": 1,
+        "allocation": {
+          "expression": "sizeof(char **) * (*argc + 1)",
+          "pointer_size_model_bytes": 8,
+          "requested_model_bytes": 16,
+          "assume_malloc_success": true,
+          "zeroed_entire_allocation": true
+        },
+        "argv_ptr_buf_indices": [
+          0
+        ],
+        "argv_words": [
+          "pwd"
+        ],
+        "overwritten_delimiter_locations": [
+          {
+            "index": 3,
+            "previous_byte": 0,
+            "new_byte": 0
+          }
+        ],
+        "remaining_spaces": [],
+        "skipped_space_indices": [],
+        "final_cursor_j": 4,
+        "last_slot": "NULL_if_all_zero_pointer_represents_NULL",
+        "return_index": 2,
+        "strcmp_calls": 3
+      },
+      {
+        "input": "pwd   ",
+        "initial_j": 0,
+        "word_tail_indices": [
+          2
+        ],
+        "scan_break_index": 6,
+        "argc": 1,
+        "allocation": {
+          "expression": "sizeof(char **) * (*argc + 1)",
+          "pointer_size_model_bytes": 8,
+          "requested_model_bytes": 16,
+          "assume_malloc_success": true,
+          "zeroed_entire_allocation": true
+        },
+        "argv_ptr_buf_indices": [
+          0
+        ],
+        "argv_words": [
+          "pwd"
+        ],
+        "overwritten_delimiter_locations": [
+          {
+            "index": 3,
+            "previous_byte": 32,
+            "new_byte": 0
+          }
+        ],
+        "remaining_spaces": [
+          4,
+          5
+        ],
+        "skipped_space_indices": [
+          4,
+          5
+        ],
+        "final_cursor_j": 6,
+        "last_slot": "NULL_if_all_zero_pointer_represents_NULL",
+        "return_index": 2,
+        "strcmp_calls": 3
+      },
+      {
+        "input": "   ",
+        "initial_j": 3,
+        "word_tail_indices": [],
+        "scan_break_index": 3,
+        "argc": 0,
+        "allocation": null,
+        "argv_ptr_buf_indices": [],
+        "argv_words": [],
+        "overwritten_delimiter_locations": [],
+        "remaining_spaces": [
+          0,
+          1,
+          2
+        ],
+        "last_slot": "not_allocated",
+        "return_index": -1,
+        "strcmp_calls": 0
+      },
+      {
+        "input": "nope",
+        "initial_j": 0,
+        "word_tail_indices": [
+          3
+        ],
+        "scan_break_index": 4,
+        "argc": 1,
+        "allocation": {
+          "expression": "sizeof(char **) * (*argc + 1)",
+          "pointer_size_model_bytes": 8,
+          "requested_model_bytes": 16,
+          "assume_malloc_success": true,
+          "zeroed_entire_allocation": true
+        },
+        "argv_ptr_buf_indices": [
+          0
+        ],
+        "argv_words": [
+          "nope"
+        ],
+        "overwritten_delimiter_locations": [
+          {
+            "index": 4,
+            "previous_byte": 0,
+            "new_byte": 0
+          }
+        ],
+        "remaining_spaces": [],
+        "skipped_space_indices": [],
+        "final_cursor_j": 5,
+        "last_slot": "NULL_if_all_zero_pointer_represents_NULL",
+        "return_index": -1,
+        "strcmp_calls": 10
+      },
+      {
+        "input": "",
+        "initial_j": 0,
+        "word_tail_indices": [],
+        "scan_break_index": 0,
+        "argc": 0,
+        "allocation": null,
+        "argv_ptr_buf_indices": [],
+        "argv_words": [],
+        "overwritten_delimiter_locations": [],
+        "remaining_spaces": [],
+        "last_slot": "not_allocated",
+        "return_index": -1,
+        "strcmp_calls": 0
+      }
+    ],
+    "notes": {
+      "buffer_borrowed": true,
+      "argv_pointer_vector_separately_allocated": true,
+      "next_main_iteration_clears_same_buffer": true,
+      "no_explicit_free_in_examined_main_parse_run": true,
+      "no_global_leak_claim": true
+    },
+    "source_anchor_ids": [
+      "IN119-E011",
+      "IN119-E012",
+      "IN119-E013",
+      "IN119-E014",
+      "IN119-E015",
+      "IN119-E016"
+    ]
+  },
+  "C_dispatch": {
+    "table": [
+      {
+        "index": 0,
+        "name": "cd",
+        "callee": "cd_command"
+      },
+      {
+        "index": 1,
+        "name": "ls",
+        "callee": "ls_command"
+      },
+      {
+        "index": 2,
+        "name": "pwd",
+        "callee": "pwd_command"
+      },
+      {
+        "index": 3,
+        "name": "cat",
+        "callee": "cat_command"
+      },
+      {
+        "index": 4,
+        "name": "touch",
+        "callee": "touch_command"
+      },
+      {
+        "index": 5,
+        "name": "rm",
+        "callee": "rm_command"
+      },
+      {
+        "index": 6,
+        "name": "mkdir",
+        "callee": "mkdir_command"
+      },
+      {
+        "index": 7,
+        "name": "rmdir",
+        "callee": "rmdir_command"
+      },
+      {
+        "index": 8,
+        "name": "exec",
+        "callee": "exec_command"
+      },
+      {
+        "index": 9,
+        "name": "reboot",
+        "callee": "reboot_command"
+      }
+    ],
+    "case_ids": {
+      "cd docs": "IN119-C01",
+      "pwd": "IN119-C02",
+      "nope": "IN119-C03",
+      "": "IN119-C04",
+      "   ": "IN119-C05"
+    },
+    "cases": [
+      {
+        "input": "  cd  docs  ",
+        "argc": 2,
+        "argv0": "cd",
+        "strcmp_calls": 1,
+        "find_cmd_index": 0,
+        "direct_call": "main -> run_cmd",
+        "indirect_callee": "cd_command",
+        "main_error_printf_request": null,
+        "prior_independent_main_lf_request": "\n"
+      },
+      {
+        "input": "pwd",
+        "argc": 1,
+        "argv0": "pwd",
+        "strcmp_calls": 3,
+        "find_cmd_index": 2,
+        "direct_call": "main -> run_cmd",
+        "indirect_callee": "pwd_command",
+        "main_error_printf_request": null,
+        "prior_independent_main_lf_request": "\n"
+      },
+      {
+        "input": "   ",
+        "argc": 0,
+        "argv0": null,
+        "strcmp_calls": 0,
+        "find_cmd_index": -1,
+        "direct_call": "main -> run_cmd",
+        "indirect_callee": null,
+        "main_error_printf_request": "Input Error, No Command Found!\n",
+        "prior_independent_main_lf_request": "\n"
+      },
+      {
+        "input": "nope",
+        "argc": 1,
+        "argv0": "nope",
+        "strcmp_calls": 10,
+        "find_cmd_index": -1,
+        "direct_call": "main -> run_cmd",
+        "indirect_callee": null,
+        "main_error_printf_request": "Input Error, No Command Found!\n",
+        "prior_independent_main_lf_request": "\n"
+      },
+      {
+        "input": "",
+        "argc": 0,
+        "argv0": null,
+        "strcmp_calls": 0,
+        "find_cmd_index": -1,
+        "direct_call": "main -> run_cmd",
+        "indirect_callee": null,
+        "main_error_printf_request": "Input Error, No Command Found!\n",
+        "prior_independent_main_lf_request": "\n"
+      }
+    ],
+    "strcmp_case_sensitive": true,
+    "run_cmd_return_type": "void",
+    "builtin_return_ignored": true,
+    "source_anchor_ids": [
+      "IN119-E005",
+      "IN119-E017",
+      "IN119-E018",
+      "IN119-E019",
+      "IN119-E020",
+      "IN119-E021",
+      "IN119-E022",
+      "IN119-E023",
+      "IN119-E024",
+      "IN119-E025",
+      "IN119-E030"
+    ]
+  },
+  "limitations": {
+    "full_local_P9": "NOT_RUN",
+    "build_and_runtime": "NOT_RUN",
+    "preprocessing": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "terminal_effects": "NOT_CERTIFIED",
+    "future_owner_decision_required": false
+  },
+  "open_questions": []
+}

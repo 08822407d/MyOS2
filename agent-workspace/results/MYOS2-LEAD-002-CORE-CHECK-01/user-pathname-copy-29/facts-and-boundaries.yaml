@@ -1,0 +1,789 @@
+---
+# YAML 1.2-compatible JSON mapping; parsed via JS JSON.parse, NOT external YAML parser
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-PATHNAME-COPY-29",
+  "record_type": "bounded_filename_acquisition_copy_and_lifetime_facts",
+  "date": "2026-11-03",
+  "source_pin_short12": "a039d9803ade",
+  "resume_contract_short12": "2a0a66faa76d",
+  "original_contract_short12": "324927712a98",
+  "review28_short12": "0a94f32ad00e",
+  "results_base_short12": "427604c818a5",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "owner_model_per_owner": "GPT-6 / Extra",
+  "next_reviewer": "MYOS2-A-C04",
+  "phase": 2,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_quotes": "evidence.md (PN29-A001..PN29-A068)",
+  "types": {
+    "filename_object": "filename_s has const char* name, const char* uptr, int len; declared refcnt commented out",
+    "strlen_user_return": "long (signed); implemented via ulong strlen(src), then access_ok(src,size)",
+    "strncpy_from_user_return": "long (signed) with -EFAULT or provided unsigned long size; uses strncpy",
+    "getname_len": "size_t (__kernel_ulong_t => unsigned long)",
+    "getname_kernel_len": "size_t (unsigned long)",
+    "filename_len": "int, assigned only when length<=PAGE_SIZE; within 0..4096 model",
+    "strlen_return": "size_t excludes terminating NUL",
+    "strncpy_return": "char* dest (selected generic implementation, conditional !__HAVE_ARCH_STRNCPY)",
+    "PAGE_SIZE": 4096,
+    "MAX_ERRNO": 4095,
+    "selected_arch": "x86-64, native unsigned long/long 64-bit nominal; no compiled configuration proved",
+    "uaccess_selection": "arch/x86_64/include/asm/uaccess.h includes asm/uaccess_64.h before asm-generic/access_ok.h; arch defines __access_ok; access_ok macro uses that when selected",
+    "evidence": [
+      "PN29-A017",
+      "PN29-A018",
+      "PN29-A025",
+      "PN29-A026",
+      "PN29-A028",
+      "PN29-A030",
+      "PN29-A031",
+      "PN29-A036",
+      "PN29-A037",
+      "PN29-A067",
+      "PN29-A068"
+    ]
+  },
+  "objects": [
+    {
+      "id": "PN29-O01",
+      "name": "u_filename / syscall user char pointer",
+      "origin": "sys_open/sys_execve input (declared const char*), passed to getname",
+      "ownership": "source may be user-controlled; not allocated/freed by getname",
+      "evidence": [
+        "PN29-A045",
+        "PN29-A046",
+        "PN29-A003"
+      ]
+    },
+    {
+      "id": "PN29-O02",
+      "name": "k_filename / kernel string pointer",
+      "origin": "open_exec, kernel_execve or filp_open caller",
+      "ownership": "getname_kernel borrows; no ownership transfer of original source",
+      "evidence": [
+        "PN29-A009",
+        "PN29-A038",
+        "PN29-A057",
+        "PN29-A061"
+      ]
+    },
+    {
+      "id": "PN29-O03",
+      "name": "filename_s *name",
+      "origin": "__myos_getname => kmalloc(sizeof(filename_s),GFP_KERNEL)",
+      "ownership": "separate object; error on NULL via ERR_PTR(-ENOMEM), not NULL return",
+      "evidence": [
+        "PN29-A001",
+        "PN29-A002"
+      ]
+    },
+    {
+      "id": "PN29-O04",
+      "name": "name->name",
+      "origin": "getname: kzalloc(len+16); getname_kernel: kzalloc(len+1)",
+      "ownership": "separate char array, putname kfree this pointer",
+      "evidence": [
+        "PN29-A005",
+        "PN29-A011",
+        "PN29-A014"
+      ]
+    },
+    {
+      "id": "PN29-O05",
+      "name": "name->len",
+      "origin": "getname/getname_kernel write size_t len into int field after <=PAGE_SIZE gate",
+      "ownership": "metadata length excludes source terminal NUL in stable model, not necessarily copied count after re-observation",
+      "evidence": [
+        "PN29-A004",
+        "PN29-A010",
+        "PN29-A025"
+      ]
+    },
+    {
+      "id": "PN29-O06",
+      "name": "name->uptr",
+      "origin": "filename_s struct field, not assigned in selected two getname bodies",
+      "ownership": "unknown initial kmalloc bytes; not relied upon by selected consumer matrix",
+      "evidence": [
+        "PN29-A025",
+        "PN29-A001"
+      ],
+      "limit": "not a proven read or bug"
+    },
+    {
+      "id": "PN29-O07",
+      "name": "getname.len size_t",
+      "origin": "strlen_user returns long; implicit unsigned conversion",
+      "ownership": "gate len>PAGE_SIZE precedes first allocation; later assigned from strncpy_from_user long, then len<0 is unsatisfiable",
+      "evidence": [
+        "PN29-A003",
+        "PN29-A006",
+        "PN29-A067"
+      ]
+    },
+    {
+      "id": "PN29-O08",
+      "name": "getname_kernel.len size_t",
+      "origin": "strlen(k_filename)",
+      "ownership": "allocated filename_s before length gate, then copied length to int after gate",
+      "evidence": [
+        "PN29-A009",
+        "PN29-A010",
+        "PN29-A011"
+      ]
+    },
+    {
+      "id": "PN29-O09",
+      "name": "getname_kernel.dest char*",
+      "origin": "strncpy(name->name,k_filename,len)",
+      "ownership": "selected generic strncpy returns exact dest when completes normally",
+      "evidence": [
+        "PN29-A012",
+        "PN29-A020",
+        "PN29-A022"
+      ]
+    },
+    {
+      "id": "PN29-O10",
+      "name": "strlen_user result long",
+      "origin": "arch/x86_64/myos/utils.c strlen(src) then access_ok(src,size)",
+      "ownership": "not a stable user copy; access_ok does not prevent prior scan",
+      "evidence": [
+        "PN29-A017",
+        "PN29-A018"
+      ]
+    },
+    {
+      "id": "PN29-O11",
+      "name": "strncpy_from_user result long",
+      "origin": "access_ok(from,size) then strncpy(to,from,size), return size",
+      "ownership": "-EFAULT producer exists in helper only when its access_ok rejects, but after successful strlen_user same pointer/length and pure numeric range model, not demonstrated from selected getname route",
+      "evidence": [
+        "PN29-A015",
+        "PN29-A016",
+        "PN29-A006"
+      ]
+    },
+    {
+      "id": "PN29-O12",
+      "name": "do_sys_openat2.tmp",
+      "origin": "getname(filename)",
+      "ownership": "valid filename_s borrowed by do_filp_open then putname; ERR_PTR returned without putname",
+      "evidence": [
+        "PN29-A040",
+        "PN29-A041",
+        "PN29-A043"
+      ]
+    },
+    {
+      "id": "PN29-O13",
+      "name": "do_execveat_common.filename",
+      "origin": "getname in sys_execve via do_execve",
+      "ownership": "borrowed by alloc_bprm, putname after out_free/out_ret; ERR_PTR returns immediately without putname",
+      "evidence": [
+        "PN29-A046",
+        "PN29-A047",
+        "PN29-A048",
+        "PN29-A049",
+        "PN29-A050"
+      ]
+    },
+    {
+      "id": "PN29-O14",
+      "name": "bprm->filename",
+      "origin": "normally assigned pointer to filename->name; alternate fdpath created conditionally",
+      "ownership": "borrowed char pointer may have different owner in fdpath mode; free_bprm and putname separated",
+      "evidence": [
+        "PN29-A052",
+        "PN29-A053",
+        "PN29-A054",
+        "PN29-A055",
+        "PN29-A056"
+      ]
+    },
+    {
+      "id": "PN29-O15",
+      "name": "open_exec.filename",
+      "origin": "getname_kernel(path)",
+      "ownership": "after !IS_ERR passes do_open_execat then putname; file return separate",
+      "evidence": [
+        "PN29-A057",
+        "PN29-A058",
+        "PN29-A059",
+        "PN29-A060"
+      ]
+    },
+    {
+      "id": "PN29-O16",
+      "name": "filp_open.name/kernel_execve.filename",
+      "origin": "two additional kernel-string callers",
+      "ownership": "both check IS_ERR; putname on their normal/handled-error shared exit",
+      "evidence": [
+        "PN29-A038",
+        "PN29-A039",
+        "PN29-A061",
+        "PN29-A062",
+        "PN29-A063"
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "id": "PN29-S01",
+      "source": "sys_open/sys_execve",
+      "transition": "user pathname pointer -> getname -> strlen_user -> size_t length gate before filename object allocation",
+      "evidence": [
+        "PN29-A045",
+        "PN29-A046",
+        "PN29-A003"
+      ]
+    },
+    {
+      "id": "PN29-S02",
+      "source": "getname",
+      "transition": "__myos_getname kmalloc -> set int len -> kzalloc(len+16) -> strncpy_from_user -> return filename_s",
+      "evidence": [
+        "PN29-A004",
+        "PN29-A005",
+        "PN29-A006",
+        "PN29-A008"
+      ]
+    },
+    {
+      "id": "PN29-S03",
+      "source": "open_exec/kernel_execve/filp_open",
+      "transition": "kernel char* -> getname_kernel (__myos_getname before strlen) -> size_t gate -> kzalloc(len+1) -> strncpy",
+      "evidence": [
+        "PN29-A009",
+        "PN29-A010",
+        "PN29-A011",
+        "PN29-A012",
+        "PN29-A057",
+        "PN29-A061",
+        "PN29-A038"
+      ]
+    },
+    {
+      "id": "PN29-S04",
+      "source": "getname_kernel",
+      "transition": "strncpy normal return=dest; dest!=name->name not an established normal producer; success returns name",
+      "evidence": [
+        "PN29-A012",
+        "PN29-A013",
+        "PN29-A022"
+      ]
+    },
+    {
+      "id": "PN29-S05",
+      "source": "do_sys_openat2",
+      "transition": "IS_ERR/PTR_ERR on tmp -> get unused fd -> do_filp_open borrowed tmp -> putname on valid exits",
+      "evidence": [
+        "PN29-A040",
+        "PN29-A041",
+        "PN29-A042",
+        "PN29-A043",
+        "PN29-A064"
+      ]
+    },
+    {
+      "id": "PN29-S06",
+      "source": "do_execveat_common",
+      "transition": "IS_ERR/PTR_ERR -> alloc_bprm borrowed filename, may borrow name bytes -> free_bprm then putname",
+      "evidence": [
+        "PN29-A048",
+        "PN29-A049",
+        "PN29-A052",
+        "PN29-A050",
+        "PN29-A055",
+        "PN29-A056"
+      ]
+    },
+    {
+      "id": "PN29-S07",
+      "source": "open_exec",
+      "transition": "getname_kernel then check IS_ERR -> do_open_execat borrowed name -> putname after call",
+      "evidence": [
+        "PN29-A057",
+        "PN29-A058",
+        "PN29-A060"
+      ]
+    }
+  ],
+  "return_and_resource_matrix": [
+    {
+      "id": "PN29-M01",
+      "case": "user stable empty NUL string",
+      "origin": "getname",
+      "precondition": "strlen on readable ptr returns0, access_ok(ptr,0) true; allocator valid",
+      "return": "filename_s with len0; copy count0; destination at least 16 bytes zero-initialized by selected kzalloc",
+      "release": "caller putname on valid object",
+      "provenance": "conditional local model",
+      "evidence": [
+        "PN29-A003",
+        "PN29-A005",
+        "PN29-A016",
+        "PN29-A032",
+        "PN29-A033",
+        "PN29-A014"
+      ]
+    },
+    {
+      "id": "PN29-M02",
+      "case": "user stable path 'abc\\0'",
+      "origin": "getname",
+      "precondition": "strlen and access_ok valid; allocation success",
+      "return": "len3, request len+16=19, strncpy copy3 bytes; NUL at dst[3] from successful zero allocation",
+      "release": "caller putname on valid object",
+      "provenance": "conditional model",
+      "evidence": [
+        "PN29-A017",
+        "PN29-A005",
+        "PN29-A016",
+        "PN29-A032",
+        "PN29-A033"
+      ]
+    },
+    {
+      "id": "PN29-M03",
+      "case": "kernel stable path 'abc\\0'",
+      "origin": "getname_kernel",
+      "precondition": "strlen valid and allocations succeed",
+      "return": "len3, request len+1=4; strncpy copies3, zero at dst[3] from kzalloc",
+      "release": "caller putname on valid object",
+      "provenance": "conditional model",
+      "evidence": [
+        "PN29-A009",
+        "PN29-A011",
+        "PN29-A012",
+        "PN29-A032"
+      ]
+    },
+    {
+      "id": "PN29-M04",
+      "case": "user strlen_user returns -EFAULT",
+      "origin": "getname",
+      "precondition": "strlen itself completed; __access_ok rejects the numeric span",
+      "return": "long -EFAULT converted to unsigned size_t; len>PAGE_SIZE -> ERR_PTR(-ENAMETOOLONG), not original -EFAULT",
+      "release": "no filename allocation has occurred in getname",
+      "provenance": "conditional local error producer",
+      "evidence": [
+        "PN29-A018",
+        "PN29-A003",
+        "PN29-A067",
+        "PN29-A034"
+      ]
+    },
+    {
+      "id": "PN29-M05",
+      "case": "user source scan faults or never terminates before checks",
+      "origin": "strlen_user",
+      "precondition": "source pointer invalid/unmapped or no accessible NUL before unsafe dereference",
+      "return": "not established; cannot assert -EFAULT or normal cleanup",
+      "release": "getname not yet allocated filename",
+      "provenance": "conditional nonreturn / exception; no runtime evidence",
+      "evidence": [
+        "PN29-A017",
+        "PN29-A024"
+      ]
+    },
+    {
+      "id": "PN29-M06",
+      "case": "user length exactly PAGE_SIZE",
+      "origin": "getname",
+      "precondition": "all memory valid, terminal at src[4096]",
+      "return": "length gate passes; request 4112; copy 4096 excludes NUL; zeroed extra bytes can supply termination",
+      "release": "valid object putname after caller finishes",
+      "provenance": "numeric model",
+      "evidence": [
+        "PN29-A003",
+        "PN29-A005",
+        "PN29-A016",
+        "PN29-A024",
+        "PN29-A031"
+      ]
+    },
+    {
+      "id": "PN29-M07",
+      "case": "user length PAGE_SIZE+1",
+      "origin": "getname",
+      "precondition": "strlen_user returns4097 and access_ok succeeds",
+      "return": "ERR_PTR(-ENAMETOOLONG), before __myos_getname",
+      "release": "no filename body allocated",
+      "provenance": "conditional",
+      "evidence": [
+        "PN29-A003",
+        "PN29-A004"
+      ]
+    },
+    {
+      "id": "PN29-M08",
+      "case": "kernel length PAGE_SIZE",
+      "origin": "getname_kernel",
+      "precondition": "valid C string with 4096 chars then NUL",
+      "return": "gate > not triggered; requests4097 and copies4096; final NUL from successful kzalloc",
+      "release": "returned object putname",
+      "provenance": "conditional",
+      "evidence": [
+        "PN29-A009",
+        "PN29-A010",
+        "PN29-A011",
+        "PN29-A012"
+      ]
+    },
+    {
+      "id": "PN29-M09",
+      "case": "kernel length PAGE_SIZE+1",
+      "origin": "getname_kernel",
+      "precondition": "__myos_getname allocated normal object and strlen returns4097",
+      "return": "ERR_PTR(-ENAMETOOLONG) before name->name allocated",
+      "release": "selected branch contains no kfree(name) or putname(name); outstanding object at return",
+      "provenance": "local defined prefix, not full-system permanent leak proof",
+      "evidence": [
+        "PN29-A001",
+        "PN29-A009",
+        "PN29-A010"
+      ]
+    },
+    {
+      "id": "PN29-M10",
+      "case": "first filename_s kmalloc returns NULL",
+      "origin": "getname and getname_kernel",
+      "precondition": "__myos_getname returns ERR_PTR(-ENOMEM); prior length gate passes for getname",
+      "return": "next access to name->len or name->name is attempted without IS_ERR, no reliable normal return",
+      "release": "downstream putname cannot be presumed",
+      "provenance": "source conditional; existing EI28-F01 same root",
+      "evidence": [
+        "PN29-A001",
+        "PN29-A004",
+        "PN29-A009",
+        "PN29-A010"
+      ]
+    },
+    {
+      "id": "PN29-M11",
+      "case": "second kzalloc for user chars returns NULL",
+      "origin": "getname",
+      "precondition": "first filename_s allocation valid, len in 0..4096",
+      "return": "kfree(filename_s), ERR_PTR(-ENOMEM)",
+      "release": "no successful name->name allocation to release",
+      "provenance": "local conditional",
+      "evidence": [
+        "PN29-A005",
+        "PN29-A007"
+      ]
+    },
+    {
+      "id": "PN29-M12",
+      "case": "second kzalloc for kernel chars returns NULL",
+      "origin": "getname_kernel",
+      "precondition": "first filename_s valid, len<=4096",
+      "return": "kfree(filename_s), ERR_PTR(-ENOMEM)",
+      "release": "name char area wasn't allocated",
+      "provenance": "local conditional",
+      "evidence": [
+        "PN29-A011"
+      ]
+    },
+    {
+      "id": "PN29-M13",
+      "case": "strncpy_from_user returns negative",
+      "origin": "getname",
+      "precondition": "direct-helper model if !access_ok(from,size) in second check; not established for intact getname after successful strlen_user because same pointer/size already passed pure access_ok",
+      "return": "long negative cast to size_t; if (len<0) false; normal return code path conditional; no real producer from same stable getname path",
+      "release": "does not enter intended error release label",
+      "provenance": "helper model / not established at caller",
+      "evidence": [
+        "PN29-A015",
+        "PN29-A016",
+        "PN29-A006",
+        "PN29-A018",
+        "PN29-A028"
+      ]
+    },
+    {
+      "id": "PN29-M14",
+      "case": "kernel strncpy returns dest != name->name",
+      "origin": "getname_kernel",
+      "precondition": "alternative/undefined outcome, NOT produced by selected generic strncpy normal return",
+      "return": "ERR_PTR(len) is text in branch but not established normal failure; len is nonnegative <=PAGE_SIZE",
+      "release": "on hypothetical branch attempts two kfree",
+      "provenance": "no active producer confirmed",
+      "evidence": [
+        "PN29-A012",
+        "PN29-A013",
+        "PN29-A020",
+        "PN29-A022"
+      ]
+    },
+    {
+      "id": "PN29-M15",
+      "case": "user pathname bytes change between strlen_user and strncpy",
+      "origin": "getname",
+      "precondition": "another writer changes underlying chars; fixed source pointer and first measured len",
+      "return": "copy length uses old len; later copy may contain different bytes or be padded; no stable snapshot guarantee",
+      "release": "object normally returned and caller responsible",
+      "provenance": "conditional concurrent writer, not observed",
+      "evidence": [
+        "PN29-A003",
+        "PN29-A006",
+        "PN29-A016",
+        "PN29-A021"
+      ]
+    },
+    {
+      "id": "PN29-M16",
+      "case": "do_sys_openat2 getname returned ERR_PTR",
+      "origin": "open user caller",
+      "precondition": "getname normally returns encoded error",
+      "return": "PTR_ERR(tmp) direct without putname; no valid filename object returned",
+      "release": "none",
+      "provenance": "caller code",
+      "evidence": [
+        "PN29-A040",
+        "PN29-A035"
+      ]
+    },
+    {
+      "id": "PN29-M17",
+      "case": "do_sys_openat2 valid filename but fd allocation negative",
+      "origin": "open user caller",
+      "precondition": "getname returned valid filename_s; get_unused_fd_flags<0",
+      "return": "return fd after putname, do_filp_open skipped",
+      "release": "putname filename strings and object",
+      "provenance": "caller code",
+      "evidence": [
+        "PN29-A041",
+        "PN29-A043",
+        "PN29-A014"
+      ]
+    },
+    {
+      "id": "PN29-M18",
+      "case": "do_sys_openat2 valid filename, do_filp_open returns",
+      "origin": "open user caller",
+      "precondition": "fd>=0 and lower do_filp_open returns normally with file or encoded error",
+      "return": "IS_ERR(file)->PTR_ERR or fd_install branch; then putname",
+      "release": "filename freed by caller, file has separate ownership",
+      "provenance": "local caller conditional; 05::UV-04 may block reliable lower return",
+      "evidence": [
+        "PN29-A042",
+        "PN29-A043",
+        "PN29-A064"
+      ]
+    },
+    {
+      "id": "PN29-M19",
+      "case": "sys_execve/do_execveat_common getname returned ERR_PTR",
+      "origin": "exec user caller",
+      "precondition": "getname returns error before alloc_bprm",
+      "return": "PTR_ERR(filename) immediately; no putname on error pointer",
+      "release": "none",
+      "provenance": "caller code",
+      "evidence": [
+        "PN29-A046",
+        "PN29-A047",
+        "PN29-A048"
+      ]
+    },
+    {
+      "id": "PN29-M20",
+      "case": "valid exec filename and alloc_bprm returns ERR_PTR",
+      "origin": "exec user caller",
+      "precondition": "filename_s valid and alloc_bprm normally returns error",
+      "return": "retval=PTR_ERR(bprm), goto out_ret; putname(filename)",
+      "release": "original filename object and name bytes; no free_bprm on error-valued pointer",
+      "provenance": "caller code",
+      "evidence": [
+        "PN29-A049",
+        "PN29-A050"
+      ]
+    },
+    {
+      "id": "PN29-M21",
+      "case": "valid exec filename and bprm exists",
+      "origin": "exec user caller",
+      "precondition": "all prior preflight/successful returns to bprm_execve",
+      "return": "exec result then free_bprm(bprm), putname(filename), retval",
+      "release": "free_bprm uses separate fdpath and borrowed filename pointers; actual lower nonreturn not forced",
+      "provenance": "caller conditional",
+      "evidence": [
+        "PN29-A050",
+        "PN29-A052",
+        "PN29-A054",
+        "PN29-A056"
+      ]
+    },
+    {
+      "id": "PN29-M22",
+      "case": "open_exec getname_kernel normal error result",
+      "origin": "kernel caller",
+      "precondition": "getname_kernel safely returns ERR_PTR (e.g. length branch) and not invalid-member deref",
+      "return": "ERR_CAST(filename), skips do_open_execat and putname",
+      "release": "no filename object for usual allocation-failure; but name allocated then too-long branch leaks local ownership before this caller",
+      "provenance": "caller conditional",
+      "evidence": [
+        "PN29-A057",
+        "PN29-A058",
+        "PN29-A010",
+        "PN29-A035"
+      ]
+    },
+    {
+      "id": "PN29-M23",
+      "case": "open_exec valid filename",
+      "origin": "kernel caller",
+      "precondition": "getname_kernel allocated and copied, do_open_execat returns",
+      "return": "open file pointer/encoded error then putname(filename)",
+      "release": "filename object and char array, not result file object",
+      "provenance": "caller conditional",
+      "evidence": [
+        "PN29-A058",
+        "PN29-A060",
+        "PN29-A014"
+      ]
+    },
+    {
+      "id": "PN29-M24",
+      "case": "kernel_execve and filp_open",
+      "origin": "comparison-only kernel callers",
+      "precondition": "getname_kernel returns valid or encoded error",
+      "return": "each IS_ERR gate consumes before lower file activity; valid object putname at selected exit",
+      "release": "conditional local path only; no full VFS audit",
+      "provenance": "caller comparison",
+      "evidence": [
+        "PN29-A038",
+        "PN29-A039",
+        "PN29-A061",
+        "PN29-A063"
+      ]
+    }
+  ],
+  "paper_models": [
+    {
+      "id": "PN29-X01",
+      "input": "user bytes 'abc\\0'",
+      "measured_excluding_nul": 3,
+      "source_access_check_count": 3,
+      "copy_request": 3,
+      "destination_allocation": 19,
+      "first_nul_destination_offset": 3,
+      "source_nul_in_range_check": false,
+      "assumptions": [
+        "all source reads valid; kzalloc success and __GFP_ZERO path; generic strncpy selected"
+      ],
+      "outcome": "name->len=3; getname returns pointer to copy of chars plus zero initialization at dst[3]",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X02",
+      "input": "kernel bytes 'abc\\0'",
+      "measured_excluding_nul": 3,
+      "copy_request": 3,
+      "destination_allocation": 4,
+      "first_nul_destination_offset": 3,
+      "assumptions": [
+        "stable source, zero allocator and generic strncpy normally finish"
+      ],
+      "outcome": "getname_kernel returns name with len3",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X03",
+      "input": "empty user C string",
+      "measured_excluding_nul": 0,
+      "destination_allocation": 16,
+      "copy_request": 0,
+      "outcome": "if access_ok(ptr,0) true and allocations succeed, returns empty string object; no logical acceptance by VFS implied",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X04",
+      "input": "empty kernel C string",
+      "measured_excluding_nul": 0,
+      "destination_allocation": 1,
+      "copy_request": 0,
+      "outcome": "if allocation succeeds, name[0] zero due selected kzalloc",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X05",
+      "input": "user length exactly PAGE_SIZE",
+      "measured": 4096,
+      "source_nul_at": 4096,
+      "source_access_checked_span": "[0,4096)",
+      "source_nul_covered": false,
+      "destination_allocation": 4112,
+      "copy_request": 4096,
+      "outcome": "length gate >PAGE_SIZE false; destination NUL supplied by zero allocation, not copied source terminator",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X06",
+      "input": "kernel length exactly PAGE_SIZE",
+      "measured": 4096,
+      "source_nul_at": 4096,
+      "destination_allocation": 4097,
+      "copy_request": 4096,
+      "outcome": "length gate >PAGE_SIZE false, destination NUL at offset4096 from kzalloc",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X07",
+      "input": "user size=PAGE_SIZE+1",
+      "measured": 4097,
+      "allocation_filename_before_return": false,
+      "outcome": "ERR_PTR(-ENAMETOOLONG)",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X08",
+      "input": "kernel size=PAGE_SIZE+1",
+      "measured": 4097,
+      "allocation_filename_before_return": true,
+      "outcome": "ERR_PTR(-ENAMETOOLONG) without local kfree of already-allocated filename_s under normal first allocation",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X09",
+      "input": "strlen_user returns signed long -EFAULT (-14)",
+      "size_t_64bit_after_conversion": "18446744073709551602",
+      "cmp_gt_PAGE_SIZE": true,
+      "outcome": "getname returns ERR_PTR(-ENAMETOOLONG); no first filename allocation on this path",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PN29-X10",
+      "input": "direct strncpy_from_user negative -14 then assign to getname size_t",
+      "size_t_64bit_after_conversion": "18446744073709551602",
+      "test_len_lt_0": false,
+      "outcome": "hypothetical if source helper could reject after prior successful numeric check; not established for stable same getname pointer and length",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "historical_qualified_ids": [
+    "CORE-USER-ELF-INTERPRETER-28::EI28-F01",
+    "CORE-USER-ELF-INTERPRETER-28::EI28-F05",
+    "CORE-USER-VFS-BASELINE-05::UV-04",
+    "CORE-USER-ELF-INTERPRETER-28-REVIEW-001::R28-S01",
+    "CORE-USER-ELF-INTERPRETER-28-REVIEW-001::R28-S02",
+    "CORE-USER-ELF-INTERPRETER-28-REVIEW-001::R28-S03"
+  ],
+  "new_finding_ids": [
+    "PN29-F01",
+    "PN29-F02",
+    "PN29-F03",
+    "PN29-F04"
+  ],
+  "future_boundaries": [
+    "No entire user-access error table or CPU exception table verified",
+    "No caller success after existing missing-return VFS paths assumed",
+    "No whole-file-system path traversal or rights certification",
+    "No complete allocator error/ownership interleaving certification",
+    "No runtime user pointer or embedded NUL sample executed",
+    "No repository-wide duplicate search performed"
+  ],
+  "owner_decisions_requested_now": [],
+  "no_kernel_patch": true
+}

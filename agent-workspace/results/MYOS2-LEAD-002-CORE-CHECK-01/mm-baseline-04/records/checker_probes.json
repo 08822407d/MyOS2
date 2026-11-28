@@ -1,0 +1,107 @@
+{
+ "check": "MM_BASELINE_04_CHECKER_NEGATIVE_PROBES",
+ "purpose": "p0 为未修改的副本（对照，应通过）；p1–p10 每个只改坏 facts-and-dependencies.yaml 的一处（临时副本位于会话 scratch，未交付），确认 mm_facts_check.py 不会放过；这是一次性自检，不是测试框架",
+ "probes": [
+  {
+   "probe": "p0_unmodified_copy",
+   "returncode": 0,
+   "all_ok": true,
+   "anchors_ok": 80,
+   "structure_errors": 0,
+   "query_errors": 0,
+   "m00_ok": true
+  },
+  {
+   "probe": "p1_kind_in_body_to_comment",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 79,
+   "structure_errors": 0,
+   "query_errors": 0,
+   "m00_ok": true
+  },
+  {
+   "probe": "p2_shift_lines",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 79,
+   "structure_errors": 0,
+   "query_errors": 0,
+   "m00_ok": true
+  },
+  {
+   "probe": "p3_wrong_symbol",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 79,
+   "structure_errors": 0,
+   "query_errors": 0,
+   "m00_ok": true
+  },
+  {
+   "probe": "p4_drop_cpp_condition",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 79,
+   "structure_errors": 0,
+   "query_errors": 0,
+   "m00_ok": true
+  },
+  {
+   "probe": "p5_dangling_edge_anchor",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 80,
+   "structure_errors": 1,
+   "query_errors": 0,
+   "m00_ok": true
+  },
+  {
+   "probe": "p6_query_count",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 80,
+   "structure_errors": 0,
+   "query_errors": 1,
+   "m00_ok": true
+  },
+  {
+   "probe": "p7_m00_expected",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 80,
+   "structure_errors": 0,
+   "query_errors": 0,
+   "m00_ok": false
+  },
+  {
+   "probe": "p8_runtime_not_run",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 80,
+   "structure_errors": 1,
+   "query_errors": 0,
+   "m00_ok": true
+  },
+  {
+   "probe": "p9_edge_hit_wrong_line",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 80,
+   "structure_errors": 0,
+   "query_errors": 1,
+   "m00_ok": true
+  },
+  {
+   "probe": "p10_edge_not_listed_by_endpoint",
+   "returncode": 1,
+   "all_ok": false,
+   "anchors_ok": 80,
+   "structure_errors": 1,
+   "query_errors": 0,
+   "m00_ok": true
+  }
+ ],
+ "control_passed": true,
+ "all_mutations_rejected": true
+}

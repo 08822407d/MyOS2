@@ -1,0 +1,1886 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "executor_display_name": "MYOS2-A-C05c 代码分析执行",
+  "produced_by": "GPT-6 self-reported",
+  "model_per_owner": "GPT-6 + Extra next tier",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-12",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "89f84109b470",
+  "initial_execution_head_short12": "59733f24b6d3",
+  "lead_current_handoff": "MYOS2-A-C06",
+  "D00": "NOT_APPLICABLE",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/mm/page_alloc/mempolicy.c",
+      "blob_short12": "35021056a85f",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy.c",
+      "blob_short12": "629f998030e5",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy.h",
+      "blob_short12": "b97e1e86f23a",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/mmzone_const.h",
+      "blob_short12": "cbba3149ce6c",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/mmzone_types.h",
+      "blob_short12": "8572e503b8cf",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_init.c",
+      "blob_short12": "23c8934e03b5",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy_types.h",
+      "blob_short12": "0ec6d8f72503",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/page-flags.h",
+      "blob_short12": "2f2789b1eee8",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/page-flags_const.h",
+      "blob_short12": "a16c0843eac8",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/page-flags_macro.h",
+      "blob_short12": "c8d7612fdd55",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/highmem/highmem_macro.h",
+      "blob_short12": "12c0ea77419f",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/page.h",
+      "blob_short12": "5a70a70a720e",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub.c",
+      "blob_short12": "a2b4390f8f7b",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slab_common.c",
+      "blob_short12": "2ce4f5932db5",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "blob_short12": "6e3e1aa8e724",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/lib/list/double_list_types.h",
+      "blob_short12": "2ef93df3fe63",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "blob_short12": "b10e280f26f0",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/const.h",
+      "blob_short12": "d8bcaf7e3151",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy_const.h",
+      "blob_short12": "536bc906fc5e",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/page_alloc_api.h",
+      "blob_short12": "71b6fa981a46",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "blob_short12": "985a8262e578",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/getorder.h",
+      "blob_short12": "af126779d473",
+      "source_pin": "time@a039d9803ade",
+      "read_channel": "connector",
+      "scope": "core_or_nearest_bounded"
+    }
+  ],
+  "zone_attempt_matrix": [
+    {
+      "case": "ordinary",
+      "gfp": "without DMA/DMA32",
+      "start_idx": 0,
+      "preference_indices": [
+        0,
+        1,
+        2
+      ],
+      "zone_names": [
+        "ZONE_NORMAL",
+        "ZONE_DMA32",
+        "ZONE_DMA"
+      ],
+      "stop": "on first success return after prep; if all fail, first invalid read prefered_zone_list[3]",
+      "anchors": [
+        "A03",
+        "A05",
+        "A06",
+        "A07",
+        "A14",
+        "A15"
+      ]
+    },
+    {
+      "case": "DMA32",
+      "gfp": "GFP_DMA32 only",
+      "start_idx": 1,
+      "preference_indices": [
+        1,
+        2
+      ],
+      "zone_names": [
+        "ZONE_DMA32",
+        "ZONE_DMA"
+      ],
+      "stop": "if both fail, first invalid index3",
+      "anchors": [
+        "A03",
+        "A04",
+        "A37",
+        "A14"
+      ]
+    },
+    {
+      "case": "DMA",
+      "gfp": "GFP_DMA",
+      "start_idx": 2,
+      "preference_indices": [
+        2
+      ],
+      "zone_names": [
+        "ZONE_DMA"
+      ],
+      "stop": "if DMA fails, first invalid index3",
+      "anchors": [
+        "A03",
+        "A04",
+        "A36",
+        "A14"
+      ]
+    },
+    {
+      "case": "DMA|DMA32",
+      "gfp": "both bits",
+      "start_idx": 2,
+      "preference_indices": [
+        2
+      ],
+      "zone_names": [
+        "ZONE_DMA"
+      ],
+      "stop": "source else-if gives DMA priority",
+      "anchors": [
+        "A04",
+        "A36",
+        "A37"
+      ]
+    },
+    {
+      "case": "order too large",
+      "gfp": "any",
+      "order": "MAX_ORDER+1",
+      "start_idx": "not reached",
+      "stop": "returns NULL before zone list",
+      "anchors": [
+        "A02",
+        "A09"
+      ]
+    },
+    {
+      "case": "zone metadata unknown",
+      "gfp": "any",
+      "stop": "NODE_DATA(0).nr_zones live value not proven for all times; 5 is selected calculate_node_totalpages assignment",
+      "anchors": [
+        "A03",
+        "A12",
+        "A13"
+      ]
+    }
+  ],
+  "split_transition_matrix": [
+    {
+      "case": "matching order1",
+      "before": "valid free_area[1].count=1; order1 request",
+      "during": "remove_head->count0; subsequent delete_node not member; expand 0 iterations; page[0],page[1] refcount inc",
+      "after": "returned page; no extra decrement",
+      "anchors": [
+        "A17",
+        "A20",
+        "A22",
+        "A23",
+        "A24",
+        "A27",
+        "A31"
+      ],
+      "stop": "valid list and page metadata"
+    },
+    {
+      "case": "split order3 to order1",
+      "before": "valid order3 free block at PFN64, zone area[3].count=1",
+      "during": "remove_head count-- (once); second delete_node may return NULL; expand inserts free buddies order2 PFN68 and order1 PFN66; delivered two page refcount increments",
+      "after": "order3 count0, area2+1, area1+1 (if previous counts0), delivered pages PFN64..65",
+      "anchors": [
+        "A20",
+        "A22",
+        "A23",
+        "A24",
+        "A26",
+        "A27",
+        "A28",
+        "A29",
+        "A31"
+      ],
+      "stop": "same zone, alignment, representable pointer arithmetic, legitimate adds"
+    },
+    {
+      "case": "no free block in any scanned order",
+      "before": "valid zone and free_area",
+      "during": "__rmqueue_smallest checks each index < NR_PAGE_ORDERS",
+      "after": "returns NULL",
+      "anchors": [
+        "A17",
+        "A19"
+      ],
+      "stop": "does not bypass caller zone-preference OOB MC-04"
+    },
+    {
+      "case": "second deletion difference",
+      "before": "page node already list_del_init by remove_head",
+      "during": "list_header_delete_node tests contains, may return NULL and does not decrement count",
+      "after": "del_page_from_free_list still calls __ClearPageBuddy and resets private",
+      "anchors": [
+        "A20",
+        "A22",
+        "A23",
+        "A24",
+        "A25",
+        "A26"
+      ],
+      "stop": "if corrupted or concurrent list, no general correctness claim"
+    },
+    {
+      "case": "free block order metadata",
+      "before": "valid freed page & page_type",
+      "during": "set_buddy_order records page.private and requests PageBuddy; add_to_free_list adds head node",
+      "after": "free_area[order].count increments assuming well-formed insertion",
+      "anchors": [
+        "A29",
+        "A30",
+        "A32",
+        "C22",
+        "C23"
+      ],
+      "stop": "PageBuddy truth depends page_type high base"
+    }
+  ],
+  "zeroing_interval_matrix": [
+    {
+      "order": 0,
+      "PAGE_SIZE": 4096,
+      "loop_count": 1,
+      "start_byte_offsets": [
+        0
+      ],
+      "requested_union_half_open": [
+        0,
+        4096
+      ],
+      "capacity": 4096,
+      "not_targeted_by_this_hook": 0,
+      "anchors": [
+        "B01",
+        "B02",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "limit": "GNU void* byte arithmetic, valid memory, returning memset"
+    },
+    {
+      "order": 1,
+      "PAGE_SIZE": 4096,
+      "loop_count": 2,
+      "start_byte_offsets": [
+        0,
+        1
+      ],
+      "requested_union_half_open": [
+        0,
+        4097
+      ],
+      "capacity": 8192,
+      "not_targeted_by_this_hook": 4095,
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "B06"
+      ],
+      "limit": "overlap 4095 bytes; bytes not targeted here may nevertheless be zero from another source"
+    },
+    {
+      "order": 3,
+      "PAGE_SIZE": 4096,
+      "loop_count": 8,
+      "start_byte_offsets": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "requested_union_half_open": [
+        0,
+        4103
+      ],
+      "capacity": 32768,
+      "not_targeted_by_this_hook": 28665,
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "B06"
+      ],
+      "limit": "not proof actually uninitialized or nonzero"
+    },
+    {
+      "order": 3,
+      "ZERO": false,
+      "loop_count": 0,
+      "anchors": [
+        "B01",
+        "B35"
+      ],
+      "limit": "no local hook clear request, not physical content guarantee"
+    },
+    {
+      "case": "large kmalloc selected local memset",
+      "size": 4097,
+      "get_order": 1,
+      "page_alloc_success": true,
+      "local_memset_bytes": 4097,
+      "anchors": [
+        "B32"
+      ],
+      "limit": "distinct callee from post_alloc_hook; not 8192 local memset"
+    },
+    {
+      "case": "slab filtered GFP flags",
+      "source_request": "ZERO",
+      "producer_cache_allocflags": "0/COMP/DMA/reclaim per selected function",
+      "alloc_pages_ZERO_in_passed_mask": false,
+      "anchors": [
+        "B25",
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31"
+      ],
+      "limit": "selected source producers, not all cache writer effects"
+    }
+  ],
+  "compound_metadata_matrix": [
+    {
+      "case": "order3 with COMP",
+      "sequence": [
+        "post_alloc_hook",
+        "__SetPageHead",
+        "tail1..tail7 set_compound_head and private=0",
+        "prep_compound_head checks head then sets flags_1 low8=3",
+        "_folio_nr_pages=8; mapcounts/pincount"
+      ],
+      "anchors": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B16"
+      ],
+      "stop": "all pointer/folio metadata valid and no earlier callee failure"
+    },
+    {
+      "case": "order3 without COMP",
+      "sequence": [
+        "post_alloc_hook",
+        "skip prep_compound_page"
+      ],
+      "anchors": [
+        "B08"
+      ],
+      "stop": "does not assert prior flags never set"
+    },
+    {
+      "case": "order0 with COMP",
+      "sequence": [
+        "post_alloc_hook",
+        "skip prep_compound_page due false order"
+      ],
+      "anchors": [
+        "B08"
+      ],
+      "stop": "no universal metadata statement"
+    },
+    {
+      "case": "folio_order",
+      "sequence": [
+        "if !folio_test_large return0",
+        "else return _flags_1 & 0xff"
+      ],
+      "anchors": [
+        "B17",
+        "B19",
+        "B20"
+      ],
+      "stop": "valid folio and matching producer needed"
+    },
+    {
+      "case": "buddy private order distinct from compound order",
+      "sequence": [
+        "set_buddy_order writes page.private",
+        "prep_compound_head writes folio._flags_1"
+      ],
+      "anchors": [
+        "A30",
+        "B15",
+        "C21"
+      ],
+      "stop": "do not conflate free-block metadata with compound folio order"
+    }
+  ],
+  "allocator_consumer_matrix": [
+    {
+      "consumer": "mempolicy::alloc_pages",
+      "source": "__myos_alloc_pages",
+      "anchors": [
+        "A01"
+      ],
+      "limit": "policy comments not active path"
+    },
+    {
+      "consumer": "slub::alloc_slab",
+      "source": "prepare_alloc_flags -> alloc_pages(oo_order)",
+      "anchors": [
+        "B25",
+        "B31"
+      ],
+      "limit": "nonNULL and valid folio required, possible order0 PG_head spin from previous76"
+    },
+    {
+      "consumer": "slab_common::kmalloc_large",
+      "source": "alloc_pages(flags|__GFP_COMP,get_order(size)); if ZERO local memset(ptr,0,size)",
+      "anchors": [
+        "B32"
+      ],
+      "limit": "does not prove page alloc returns, or selected complete allocator safety"
+    },
+    {
+      "consumer": "slub::free_slab",
+      "source": "__free_pages(&folio->page,order) after mapping and flag changes",
+      "anchors": [
+        "B34",
+        "C42"
+      ],
+      "limit": "slab count/identity/MC-07 prior provenance conditions"
+    },
+    {
+      "consumer": "slab_common::free_large_kmalloc",
+      "source": "__free_pages(folio_page(folio,0),folio_order(folio))",
+      "anchors": [
+        "B33",
+        "C43"
+      ],
+      "limit": "order0 warning and valid pointer antecedents"
+    },
+    {
+      "consumer": "folio_put/put_page",
+      "source": "refcount decrement -> __folio_put only if zero; selected __folio_put has comments only",
+      "anchors": [
+        "C39",
+        "C40",
+        "C41"
+      ],
+      "limit": "old MC-05 & LB-01; does not close global leak"
+    },
+    {
+      "consumer": "memblock_free_pages",
+      "source": "set per-page refcount 0, managed_pages+=nr_pages; __free_pages_ok",
+      "anchors": [
+        "C36",
+        "C37",
+        "C38"
+      ],
+      "limit": "boot valid mem_map/zone assumptions"
+    }
+  ],
+  "release_transition_matrix": [
+    {
+      "stage": "__free_pages",
+      "operation": "calls __free_pages_ok directly, no active local reference gate",
+      "anchors": [
+        "C01"
+      ],
+      "stop": "must know allocated block and correct order"
+    },
+    {
+      "stage": "free_pages addr wrapper",
+      "operation": "addr!=0 -> virt_to_page -> __free_pages",
+      "anchors": [
+        "C02"
+      ],
+      "stop": "nonzero is not pointer validity"
+    },
+    {
+      "stage": "__free_pages_ok prefix",
+      "operation": "page_to_pfn then myos_page_zone then free_pages_prepare",
+      "anchors": [
+        "C03"
+      ],
+      "stop": "zone lookup can fall through; free_pages_prepare bool has no active return"
+    },
+    {
+      "stage": "free_pages_prepare",
+      "operation": "page->flags &= ~PAGE_FLAGS_CHECK_AT_PREP; return-based guard commented at caller",
+      "anchors": [
+        "C04",
+        "C05"
+      ],
+      "stop": "do not invent a bool accepted/rejected result"
+    },
+    {
+      "stage": "free lock",
+      "operation": "spin_lock_irqsave(zone.lock) -> __myos_free_one_page -> unlock",
+      "anchors": [
+        "C06",
+        "C07"
+      ],
+      "stop": "lock implementation/real concurrence untested"
+    },
+    {
+      "stage": "__myos_free_one_page",
+      "operation": "while order<MAX_ORDER find_buddy_page_pfn; if buddy==NULL break; else update pfn/page/order",
+      "anchors": [
+        "C12",
+        "C13"
+      ],
+      "stop": "new PA77-F01 lower buddy pointer arithmetic and old MC-01 merge unlink"
+    },
+    {
+      "stage": "final insertion",
+      "operation": "set_buddy_order -> add_to_free_list",
+      "anchors": [
+        "C14",
+        "C22",
+        "C23"
+      ],
+      "stop": "source request, no physical reclaim proof"
+    },
+    {
+      "stage": "memblock boot path",
+      "operation": "zero refcounts then call __free_pages_ok",
+      "anchors": [
+        "C36",
+        "C37",
+        "C38"
+      ],
+      "stop": "valid zone and source init conditions"
+    }
+  ],
+  "buddy_merge_matrix": [
+    {
+      "scenario": "initial zero page_type with selected setBuddy",
+      "page_type_before": 0,
+      "page_type_after": 0,
+      "PageBuddy_result": false,
+      "anchors": [
+        "C24",
+        "C25",
+        "C27",
+        "C28",
+        "C32"
+      ],
+      "limit": "only selected initial cleared state and no unseen writers; MR-02/GAP-M08"
+    },
+    {
+      "scenario": "hypothetical proper typed buddy",
+      "page_type_before": "0xf0000080",
+      "page_type_after_SetPageBuddy": "0xf0000000",
+      "PageBuddy_result": true,
+      "anchors": [
+        "C24",
+        "C25",
+        "C27",
+        "C28"
+      ],
+      "limit": "counterexample to global false; no demonstrated producer"
+    },
+    {
+      "scenario": "clear buddy",
+      "page_type_before": "0xf0000000",
+      "page_type_after_clearBuddy": "0xf0000080",
+      "PageBuddy_result": false,
+      "anchors": [
+        "C24",
+        "C26",
+        "C27",
+        "C28"
+      ]
+    },
+    {
+      "scenario": "higher buddy candidate",
+      "page_pfn": 8,
+      "order": 0,
+      "buddy_pfn": 9,
+      "difference": 1,
+      "anchors": [
+        "C15",
+        "C16"
+      ],
+      "limit": "valid page array and metadata required"
+    },
+    {
+      "scenario": "lower buddy candidate",
+      "page_pfn": 9,
+      "order": 0,
+      "buddy_pfn": 8,
+      "unsigned_long_diff": "2^64-1",
+      "anchors": [
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "limit": "PA77-F01: out-of-array pointer before PageBuddy; no machine output asserted"
+    },
+    {
+      "scenario": "valid merge branch",
+      "condition": "page_is_buddy true, matching order and zone",
+      "operation": "combine pfn, order++; no active unlink for old buddy before final list insertion",
+      "anchors": [
+        "C12",
+        "C13",
+        "C14"
+      ],
+      "limit": "old MC-01 conditional; no global duplicate allocation claim"
+    },
+    {
+      "scenario": "buddy missing",
+      "condition": "find_buddy_page_pfn returns NULL",
+      "operation": "break loop; original order insertion",
+      "anchors": [
+        "C12",
+        "C14"
+      ],
+      "limit": "not proof all freeing never merges"
+    },
+    {
+      "scenario": "out of zone",
+      "condition": "myos_page_zone loop finds none",
+      "operation": "falls through without valid return; later zone dereference cannot be certified",
+      "anchors": [
+        "C08",
+        "C09"
+      ],
+      "limit": "no claim invalid PFN reachable in normal owners"
+    }
+  ],
+  "ref_release_comparison": [
+    {
+      "path": "put_page->folio_put->empty __folio_put",
+      "count_action": "atomic_dec_and_test; on zero calls __folio_put",
+      "effect": "in selected __folio_put body all branches commented, no active __free_pages",
+      "anchors": [
+        "C40",
+        "C41",
+        "C39"
+      ],
+      "historic": "CORE-MM-BASELINE-04::MC-05 / LB-01",
+      "limit": "does not cover all release paths"
+    },
+    {
+      "path": "__free_pages directly",
+      "count_action": "no active per-page ref decrement in direct wrapper",
+      "effect": "__free_pages_ok called",
+      "anchors": [
+        "C01"
+      ],
+      "limit": "not necessarily last holder or correct pointer"
+    },
+    {
+      "path": "memblock_free_pages",
+      "count_action": "sets individual refcounts to zero, adds managed_pages",
+      "effect": "__free_pages_ok requested",
+      "anchors": [
+        "C36",
+        "C37",
+        "C38"
+      ],
+      "limit": "boot producer not generic folio_put"
+    },
+    {
+      "path": "slab/free_large direct",
+      "count_action": "separate caller-specific owner protocol",
+      "effect": "__free_pages requests",
+      "anchors": [
+        "C42",
+        "C43"
+      ],
+      "limit": "physical effects, MC07, identity unknown"
+    },
+    {
+      "path": "direct __free_pages then reallocate same page",
+      "count_action": "allocation increments page[i]._refcount; selected direct __free_pages→__free_pages_ok does not decrement it",
+      "effect": "conditional valid order0 model 0→1, direct free retains1, next allocation 1→2 without outside changes",
+      "anchors": [
+        "C36",
+        "A31",
+        "C01",
+        "C03",
+        "C04",
+        "C14"
+      ],
+      "limit": "new PA77-F02 conditional candidate; refcount holder contract and actual reuse not established"
+    }
+  ],
+  "lock_boundary_matrix": [
+    {
+      "path": "allocation",
+      "source": "__rmqueue_smallest takes list nodes/updates free area with no visible zone->lock request in selected function",
+      "anchors": [
+        "A17",
+        "A18",
+        "A20"
+      ],
+      "historic": "MC-02",
+      "limit": "not full-tree negative lock or real concurrent behavior"
+    },
+    {
+      "path": "release",
+      "source": "__free_pages_ok takes zone->lock around __myos_free_one_page",
+      "anchors": [
+        "C06",
+        "C07"
+      ],
+      "historic": "MC-02",
+      "limit": "spin_lock semantics not tested"
+    },
+    {
+      "path": "buddy merge",
+      "source": "find_buddy_page_pfn constructs pointer and calls page_is_buddy, which may use zone scan",
+      "anchors": [
+        "C16",
+        "C17",
+        "C18",
+        "C19"
+      ],
+      "limit": "zone span validity, memory holes, negative PFN and ref ownership unknown"
+    }
+  ],
+  "earliest_stop_matrix": [
+    {
+      "case": "order invalid",
+      "first_stop": "__myos_alloc_pages order>MAX_ORDER returns NULL before selecting zone",
+      "anchors": [
+        "A02",
+        "A09"
+      ]
+    },
+    {
+      "case": "all valid preferred zones miss",
+      "first_stop": "first prefered_zone_list[3] OOB; cannot use trailing return NULL",
+      "anchors": [
+        "A03",
+        "A14",
+        "A16"
+      ],
+      "historic": "MC-04"
+    },
+    {
+      "case": "invalid zone metadata",
+      "first_stop": "NODE_DATA(0) pointer/nr_zones and node_zones object must be valid before indexing",
+      "anchors": [
+        "A03",
+        "A11",
+        "A12"
+      ]
+    },
+    {
+      "case": "free list malformed",
+      "first_stop": "list_header_remove_head reads anchor and links; no safe removal certification",
+      "anchors": [
+        "A22",
+        "A23",
+        "A25"
+      ]
+    },
+    {
+      "case": "second delete returned NULL",
+      "first_stop": "only affects count if membership true; no second decrement under healthy detached list",
+      "anchors": [
+        "A23",
+        "A24",
+        "A26"
+      ]
+    },
+    {
+      "case": "split invalid pointer/count/order",
+      "first_stop": "page[size] or free_area[high] before successful add",
+      "anchors": [
+        "A27",
+        "A28",
+        "A29"
+      ]
+    },
+    {
+      "case": "invalid ZERO clear pointer/size",
+      "first_stop": "clear_page macro uses PAGE_SIZE memset; do not claim post hook normal completion",
+      "anchors": [
+        "B01",
+        "B02",
+        "B03"
+      ]
+    },
+    {
+      "case": "compound metadata invalid",
+      "first_stop": "page head/tail encoding, PG_head/flags_1 not certified",
+      "anchors": [
+        "B09",
+        "B11",
+        "B14",
+        "B15"
+      ]
+    },
+    {
+      "case": "free_pages_prepare bool without return",
+      "first_stop": "selected caller ignores return; cannot infer accept/reject boolean or rollback",
+      "anchors": [
+        "C04",
+        "C05"
+      ]
+    },
+    {
+      "case": "page has no zone",
+      "first_stop": "myos_page_zone falls out without return; stop before zone->lock",
+      "anchors": [
+        "C08",
+        "C09",
+        "C06"
+      ]
+    },
+    {
+      "case": "buddy lower PFN",
+      "first_stop": "unsigned buddy_pfn-pfn used in pointer expression before validation; no legal pointer result",
+      "anchors": [
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "finding": "PA77-F01"
+    },
+    {
+      "case": "buddy pointer candidate not in valid mem_map",
+      "first_stop": "page_is_buddy reads PageBuddy and private/zone only after pointer computed",
+      "anchors": [
+        "C16",
+        "C18",
+        "C19"
+      ]
+    },
+    {
+      "case": "PageBuddy flag from selected init zero",
+      "first_stop": "only conditional under no unseen writers; do not assert always false",
+      "anchors": [
+        "C24",
+        "C25",
+        "C27",
+        "C28",
+        "C32"
+      ],
+      "historic": "GAP-M08/MR-02"
+    },
+    {
+      "case": "merge member not unlinked",
+      "first_stop": "condition true but source no old buddy unlink; no physical duplicate demonstrated",
+      "anchors": [
+        "C12",
+        "C13",
+        "C14"
+      ],
+      "historic": "MC-01"
+    },
+    {
+      "case": "folio_put last reference",
+      "first_stop": "__folio_put selected body only comments; physical release not shown",
+      "anchors": [
+        "C39",
+        "C40"
+      ],
+      "historic": "MC-05/LB-01"
+    },
+    {
+      "case": "__free_pages boundary",
+      "first_stop": "actual buddy/list/physical correctness beyond requested direct body, not real execution",
+      "anchors": [
+        "C01",
+        "C07",
+        "C14"
+      ]
+    },
+    {
+      "case": "direct freed page refcount still positive",
+      "first_stop": "selected release body does not reduce _refcount; cannot certify holder count/last-release or same-page subsequent reuse without conditions",
+      "anchors": [
+        "A31",
+        "C01",
+        "C03",
+        "C04",
+        "C14"
+      ],
+      "finding": "PA77-F02"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "PA77-M01",
+      "kind": "zone_order_over_limit",
+      "input": {
+        "order": 11,
+        "MAX_ORDER": 10
+      },
+      "expected": {
+        "return": "NULL before scanning zones"
+      },
+      "anchors": [
+        "A02",
+        "A09"
+      ],
+      "limitations": "MAX_ORDER=10 only in displayed !CONFIG_FORCE_MAX_ZONEORDER macro branch"
+    },
+    {
+      "id": "PA77-M02",
+      "kind": "zone_normal_start",
+      "input": {
+        "flags": "GFP_KERNEL",
+        "nr_zones": 5
+      },
+      "expected": {
+        "start_index": 0,
+        "first_zone": "ZONE_NORMAL",
+        "next": "ZONE_DMA32,ZONE_DMA"
+      },
+      "anchors": [
+        "A03",
+        "A05",
+        "A06",
+        "A07"
+      ],
+      "limitations": "assume no overriding dma flags and valid zone data"
+    },
+    {
+      "id": "PA77-M03",
+      "kind": "zone_dma32_start",
+      "input": {
+        "flags": "GFP_DMA32",
+        "nr_zones": 5
+      },
+      "expected": {
+        "start_index": 1,
+        "visited": [
+          "ZONE_DMA32",
+          "ZONE_DMA"
+        ]
+      },
+      "anchors": [
+        "A03",
+        "A04",
+        "A37"
+      ],
+      "limitations": "stop before any preference index3 if none succeeded"
+    },
+    {
+      "id": "PA77-M04",
+      "kind": "zone_dma_start",
+      "input": {
+        "flags": "GFP_DMA",
+        "nr_zones": 5
+      },
+      "expected": {
+        "start_index": 2,
+        "visited": [
+          "ZONE_DMA"
+        ]
+      },
+      "anchors": [
+        "A03",
+        "A04",
+        "A36"
+      ],
+      "limitations": "stop before invalid next index3"
+    },
+    {
+      "id": "PA77-M05",
+      "kind": "zone_dual_flag_priority",
+      "input": {
+        "flags": "GFP_DMA|GFP_DMA32"
+      },
+      "expected": {
+        "start_index": 2,
+        "first_zone": "ZONE_DMA"
+      },
+      "anchors": [
+        "A04",
+        "A36",
+        "A37"
+      ],
+      "limitations": "selected if/else-if priority; not proof callers use combined flags"
+    },
+    {
+      "id": "PA77-M06",
+      "kind": "zone_exhausted",
+      "input": {
+        "start_index": 0,
+        "nr_zones": 5,
+        "preferences_count": 3,
+        "returned_page_for_i0_to_i2": false
+      },
+      "expected": {
+        "earliest_stop": "evaluate prefered_zone_list[3] outside its 3-element array; no defined NULL fallback established"
+      },
+      "anchors": [
+        "A03",
+        "A12",
+        "A13",
+        "A14",
+        "A16"
+      ],
+      "limitations": "historical MC-04, do not invent machine OOB value"
+    },
+    {
+      "id": "PA77-M07",
+      "kind": "zone_dma_exhausted",
+      "input": {
+        "start_index": 2,
+        "nr_zones": 5,
+        "first_attempt_returns": null
+      },
+      "expected": {
+        "earliest_stop": "i=3 would index 3-element preference array"
+      },
+      "anchors": [
+        "A03",
+        "A04",
+        "A14"
+      ],
+      "limitations": "not an observed crash"
+    },
+    {
+      "id": "PA77-M08",
+      "kind": "list_remove_once",
+      "input": {
+        "free_area_order3_count": 1,
+        "valid_intrusive_head": true
+      },
+      "expected": {
+        "after_get_page_count": 0,
+        "head_page_detached": true
+      },
+      "anchors": [
+        "A20",
+        "A22",
+        "A23"
+      ],
+      "limitations": "list_del_init and data structure validity assumed"
+    },
+    {
+      "id": "PA77-M09",
+      "kind": "second_deletion_after_remove",
+      "input": {
+        "free_area_count": 0,
+        "removed_page_no_longer_member": true
+      },
+      "expected": {
+        "list_header_delete_node": "NULL",
+        "additional_count_decrement": 0,
+        "buddy_flag_clear_requested": true
+      },
+      "anchors": [
+        "A24",
+        "A25",
+        "A26"
+      ],
+      "limitations": "normal sequential state only; corrupted list behavior not certified"
+    },
+    {
+      "id": "PA77-M10",
+      "kind": "split_order3_to1",
+      "input": {
+        "start_pfn": 64,
+        "available_order": 3,
+        "requested_order": 1,
+        "zone_valid": true
+      },
+      "expected": {
+        "delivered_pfn_base": 64,
+        "delivered_page_count": 2,
+        "freelist_order3_change": -1,
+        "new_free_blocks": [
+          {
+            "order": 2,
+            "pfn": 68
+          },
+          {
+            "order": 1,
+            "pfn": 66
+          }
+        ],
+        "delivered_ref_increments": 2
+      },
+      "anchors": [
+        "A18",
+        "A20",
+        "A27",
+        "A28",
+        "A31"
+      ],
+      "limitations": "all adds/removes valid; per-page preexisting refcounts not assumed"
+    },
+    {
+      "id": "PA77-M11",
+      "kind": "direct_order1_take",
+      "input": {
+        "available_order": 1,
+        "requested_order": 1,
+        "initial_count": 1
+      },
+      "expected": {
+        "initial_area_count_after_take": 0,
+        "split_iterations": 0,
+        "delivered_ref_increments": 2
+      },
+      "anchors": [
+        "A17",
+        "A20",
+        "A27",
+        "A31"
+      ],
+      "limitations": "no concurrent list operations"
+    },
+    {
+      "id": "PA77-M12",
+      "kind": "max_order_index",
+      "input": {
+        "MAX_ORDER": 10,
+        "NR_PAGE_ORDERS": 11,
+        "order": 10
+      },
+      "expected": {
+        "out_of_bound_gate": false,
+        "loop_indices": [
+          10
+        ]
+      },
+      "anchors": [
+        "A02",
+        "A09",
+        "A10",
+        "A17"
+      ],
+      "limitations": "conditional MAX_ORDER source branch only; allocator may still return NULL"
+    },
+    {
+      "id": "PA77-M13",
+      "kind": "zero_order0",
+      "input": {
+        "PAGE_SIZE": 4096,
+        "order": 0,
+        "ZERO": true
+      },
+      "expected": {
+        "clear_page_starts": [
+          0
+        ],
+        "requested_interval_half_open": [
+          0,
+          4096
+        ],
+        "allocated_capacity": 4096
+      },
+      "anchors": [
+        "B01",
+        "B02",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "limitations": "GNU C void* byte arithmetic model, valid memory and returning memset"
+    },
+    {
+      "id": "PA77-M14",
+      "kind": "zero_order1",
+      "input": {
+        "PAGE_SIZE": 4096,
+        "order": 1,
+        "ZERO": true
+      },
+      "expected": {
+        "clear_page_starts": [
+          0,
+          1
+        ],
+        "individual_ranges": [
+          [
+            0,
+            4096
+          ],
+          [
+            1,
+            4097
+          ]
+        ],
+        "union_half_open": [
+          0,
+          4097
+        ],
+        "allocated_capacity": 8192,
+        "bytes_not_targeted_by_this_hook": 4095
+      },
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "B06"
+      ],
+      "limitations": "not a claim final residual bytes nonzero"
+    },
+    {
+      "id": "PA77-M15",
+      "kind": "zero_order3",
+      "input": {
+        "PAGE_SIZE": 4096,
+        "order": 3,
+        "ZERO": true
+      },
+      "expected": {
+        "clear_page_starts": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "union_half_open": [
+          0,
+          4103
+        ],
+        "allocated_capacity": 32768,
+        "bytes_not_targeted_by_this_hook": 28665
+      },
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "B06"
+      ],
+      "limitations": "not proof actual page tail contains old data"
+    },
+    {
+      "id": "PA77-M16",
+      "kind": "no_zero_flag",
+      "input": {
+        "order": 3,
+        "ZERO": false
+      },
+      "expected": {
+        "post_alloc_hook_clear_page_requests": 0
+      },
+      "anchors": [
+        "B01",
+        "B35"
+      ],
+      "limitations": "does not prove page bytes necessarily nonzero"
+    },
+    {
+      "id": "PA77-M17",
+      "kind": "compound_order3_flagged",
+      "input": {
+        "order": 3,
+        "COMP": true,
+        "valid_head": true
+      },
+      "expected": {
+        "page_head_flag_requested": true,
+        "tail_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "head_order_low8": 3,
+        "folio_nr_pages": 8
+      },
+      "anchors": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B13",
+        "B15"
+      ],
+      "limitations": "head check, memory mapping and callee return assumed"
+    },
+    {
+      "id": "PA77-M18",
+      "kind": "compound_order3_unflagged",
+      "input": {
+        "order": 3,
+        "COMP": false
+      },
+      "expected": {
+        "prep_compound_page_called": false
+      },
+      "anchors": [
+        "B08",
+        "B36"
+      ],
+      "limitations": "does not imply no prior metadata, not a runtime proof"
+    },
+    {
+      "id": "PA77-M19",
+      "kind": "compound_order0_flagged",
+      "input": {
+        "order": 0,
+        "COMP": true
+      },
+      "expected": {
+        "prep_compound_page_called": false
+      },
+      "anchors": [
+        "B08"
+      ],
+      "limitations": "source order&&flag gate"
+    },
+    {
+      "id": "PA77-M20",
+      "kind": "slab_zero_filtered",
+      "input": {
+        "requested_flags": "__GFP_ZERO",
+        "cache_allocflags": "only 0 or __GFP_COMP and optional DMA/reclaim",
+        "gfp_allowed_mask_valid": true
+      },
+      "expected": {
+        "ZERO_in_prepare_alloc_flags_result": false,
+        "post_alloc_hook_receives_original_flags": true
+      },
+      "anchors": [
+        "B25",
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31"
+      ],
+      "limitations": "not a whole-program proof that s.allocflags never changes"
+    },
+    {
+      "id": "PA77-M21",
+      "kind": "large_zero_local",
+      "input": {
+        "request_size": 4097,
+        "order": 1,
+        "ZERO": true,
+        "page_success": true
+      },
+      "expected": {
+        "large_local_memset_length": 4097,
+        "order_capacity": 8192
+      },
+      "anchors": [
+        "B32",
+        "B02"
+      ],
+      "limitations": "post_alloc_hook separate; selected kmalloc_large local action not physical content certification"
+    },
+    {
+      "id": "PA77-M22",
+      "kind": "page_type_init_zero",
+      "input": {
+        "page_type": 0,
+        "PAGE_TYPE_BASE": "0xf0000000",
+        "PG_buddy": "0x80",
+        "setBuddy_clear_bit": true
+      },
+      "expected": {
+        "after_SetPageBuddy": 0,
+        "PageBuddy_result": false
+      },
+      "anchors": [
+        "C24",
+        "C25",
+        "C27",
+        "C28",
+        "C32"
+      ],
+      "limitations": "selected zeroed mem_map producer, no unseen writes; MR-02/GAP-M08 remains"
+    },
+    {
+      "id": "PA77-M23",
+      "kind": "page_type_flag_set",
+      "input": {
+        "page_type_before": "0xf0000080"
+      },
+      "expected": {
+        "after_SetPageBuddy": "0xf0000000",
+        "PageBuddy_result": true
+      },
+      "anchors": [
+        "C24",
+        "C25",
+        "C27",
+        "C28"
+      ],
+      "limitations": "hypothetical valid page type only, not generated from selected zero init"
+    },
+    {
+      "id": "PA77-M24",
+      "kind": "page_type_flag_cleared",
+      "input": {
+        "page_type_before": "0xf0000000"
+      },
+      "expected": {
+        "after_ClearPageBuddy": "0xf0000080",
+        "PageBuddy_result": false
+      },
+      "anchors": [
+        "C24",
+        "C26",
+        "C27",
+        "C28"
+      ],
+      "limitations": "hypothetical valid page type only"
+    },
+    {
+      "id": "PA77-M25",
+      "kind": "free_no_buddy",
+      "input": {
+        "pfn": 64,
+        "order": 1,
+        "buddy_result": null
+      },
+      "expected": {
+        "end_order": 1,
+        "set_buddy_order_requested": true,
+        "add_to_free_list_requested": true
+      },
+      "anchors": [
+        "C12",
+        "C14",
+        "C22",
+        "C23"
+      ],
+      "limitations": "valid page PFN/zone and helper no undefined effects"
+    },
+    {
+      "id": "PA77-M26",
+      "kind": "free_merge_higher_pfn",
+      "input": {
+        "pfn": 8,
+        "order": 0,
+        "buddy_pfn": 9,
+        "buddy_valid_same_zone": true
+      },
+      "expected": {
+        "combined_pfn": 8,
+        "new_order": 1,
+        "unlinked_buddy_still_listed_if_merge_conditional": true
+      },
+      "anchors": [
+        "C13",
+        "C15",
+        "C16",
+        "C18",
+        "C19"
+      ],
+      "limitations": "old MC-01, no automatic proof buddy condition true or physical reuse"
+    },
+    {
+      "id": "PA77-M27",
+      "kind": "free_lower_buddy_unsigned",
+      "input": {
+        "pfn": 9,
+        "order": 0,
+        "buddy_pfn": 8,
+        "unsigned_long_bits": 64
+      },
+      "expected": {
+        "unsigned_difference": "2^64-1",
+        "earliest_stop": "page + (buddy_pfn - pfn) before PageBuddy validation; legal pointer not established"
+      },
+      "anchors": [
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "limitations": "PA77-F01 conditional newly scoped root; implementation/UB outcome not certified"
+    },
+    {
+      "id": "PA77-M28",
+      "kind": "merge_missing_unlink",
+      "input": {
+        "buddy_valid": true,
+        "old_buddy_still_member_of_order0_list": true,
+        "merged_order": 1
+      },
+      "expected": {
+        "source_calls_remove_buddy_in_merge_loop": false,
+        "source_calls_add_combined_block": true
+      },
+      "anchors": [
+        "C12",
+        "C13",
+        "C14",
+        "C23"
+      ],
+      "limitations": "historical MC-01; excludes unsupported runtime duplicated allocation claims"
+    },
+    {
+      "id": "PA77-M29",
+      "kind": "zone_no_match",
+      "input": {
+        "pfn": "not in any zone span"
+      },
+      "expected": {
+        "myos_page_zone": "falls through no return",
+        "downstream_analysis": "STOP before dereferencing zone"
+      },
+      "anchors": [
+        "C08",
+        "C09",
+        "C10",
+        "C11"
+      ],
+      "limitations": "invalid PFN may itself be unproducible in normal runtime"
+    },
+    {
+      "id": "PA77-M30",
+      "kind": "direct_free_request",
+      "input": {
+        "valid_page": true,
+        "order": 1,
+        "reference_count": "unknown"
+      },
+      "expected": {
+        "selected___free_pages_action": "__free_pages_ok requested, no local reference decrement gate"
+      },
+      "anchors": [
+        "C01",
+        "C03",
+        "C07"
+      ],
+      "limitations": "liveness and provenance not audited; no physical release claim"
+    },
+    {
+      "id": "PA77-M31",
+      "kind": "folio_put_last",
+      "input": {
+        "valid_folio": true,
+        "refcount_before": 1
+      },
+      "expected": {
+        "atomic_dec_and_test": true,
+        "next": "__folio_put called; its selected body has no active free"
+      },
+      "anchors": [
+        "C40",
+        "C39"
+      ],
+      "limitations": "historical MC-05/LB-01 selected route only; no full-system leak proof"
+    },
+    {
+      "id": "PA77-M32",
+      "kind": "folio_put_not_last",
+      "input": {
+        "valid_folio": true,
+        "refcount_before": 2
+      },
+      "expected": {
+        "atomic_dec_and_test": false,
+        "next": "no __folio_put call in selected function"
+      },
+      "anchors": [
+        "C40"
+      ],
+      "limitations": "no concurrent refcount modification"
+    },
+    {
+      "id": "PA77-M33",
+      "kind": "free_pages_zero_addr",
+      "input": {
+        "addr": 0
+      },
+      "expected": {
+        "direct___free_pages_called": false
+      },
+      "anchors": [
+        "C02"
+      ],
+      "limitations": "only this wrapper, not arbitrary pointer helper"
+    },
+    {
+      "id": "PA77-M34",
+      "kind": "memblock_order1",
+      "input": {
+        "order": 1,
+        "valid_pages": 2,
+        "valid_zone": true
+      },
+      "expected": {
+        "refcounts_set_to_zero": 2,
+        "managed_pages_delta": 2,
+        "next": "__free_pages_ok"
+      },
+      "anchors": [
+        "C36",
+        "C37",
+        "C38"
+      ],
+      "limitations": "no proof every physical page onlines successfully"
+    },
+    {
+      "id": "PA77-M35",
+      "kind": "free_prepare_ignored",
+      "input": {
+        "valid_page": true,
+        "order": 1
+      },
+      "expected": {
+        "free_pages_prepare_called": true,
+        "its_return_used_in_active_if": false,
+        "free_one_page_requested_after_lock": true
+      },
+      "anchors": [
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "limitations": "free_pages_prepare is bool without active return; do not invent returned boolean"
+    },
+    {
+      "id": "PA77-M36",
+      "kind": "direct_free_reallocate_refcount_drift",
+      "input": {
+        "origin": "valid memblock_free_pages order0 leaves page._refcount 0",
+        "first_alloc": "__rmqueue_smallest returns same page and atomic_inc",
+        "direct_release": "__free_pages(page,0) with no external reference writes",
+        "next_alloc": "__rmqueue_smallest returns same page again"
+      },
+      "expected": {
+        "initial_refcount": 0,
+        "after_first_alloc": 1,
+        "after_direct_free_selected_path": 1,
+        "after_second_alloc": 2,
+        "net_refcount_increment_without_reset": 2
+      },
+      "anchors": [
+        "C36",
+        "A31",
+        "C01",
+        "C03",
+        "C04",
+        "C14"
+      ],
+      "limitations": "PA77-F02 conditional source count model; same page legally reselected, all helpers return, no other refcount writers or concurrent holders; NOT_RUN, no physical corruption proof"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-01",
+      "status": "static_concern_local_merge_unlink; reachability needs_evidence",
+      "disposition": "buddy missing unlink conditional; never merge global claim superseded by MR-02; PA77 does not duplicate"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-02",
+      "status": "static_concern",
+      "disposition": "allocation vs free lock asymmetry in selected source; no actual interleaving"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-03",
+      "status": "static_concern",
+      "disposition": "post_alloc_hook ZERO byte-offset overlap now sharpened, no new identical root"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-04",
+      "status": "static_concern",
+      "disposition": "3-element preference vs nr_zones5 first invalid index3; do not duplicate"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-05",
+      "status": "static_concern",
+      "disposition": "selected folio_put->empty __folio_put still no direct buddy free, no all-memory leak"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-01",
+      "status": "superseded_interpretation",
+      "disposition": "cannot assert global no merge or global duplicated free list, historical refutation limited"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::GAP-M08",
+      "status": "open",
+      "disposition": "external/alias page_type/_mapcount writers unexcluded"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-01",
+      "status": "path_local",
+      "disposition": "folio refcount zero no active handoff"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-08",
+      "status": "needs_evidence",
+      "disposition": "PageBuddy local init and limited writer scope only"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF",
+      "disposition": "conditional PageBuddy/merge narratives retained"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "static_concern",
+      "disposition": "slab page handoff may have live objects; not reexamined"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U07",
+      "status": "needs_evidence",
+      "disposition": "__free_pages now directly read, physical reclaim not certified"
+    },
+    {
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U09",
+      "status": "needs_evidence",
+      "disposition": "free_slab reaches __free_pages source, actual physical effect remains"
+    },
+    {
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76-REVIEW-001",
+      "status": "PASS_PENDING_LOCAL",
+      "disposition": "R76-S01/S02/S03 mandatory; no D00"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75-REVIEW-001",
+      "status": "PASS_PENDING_LOCAL",
+      "disposition": "R75-S01/S02/S03 mandatory"
+    }
+  ],
+  "new_conditional_findings_count": 2,
+  "new_evidence_gaps_count": 8,
+  "source_budget": {
+    "source_files": 22,
+    "soft_limit": 22,
+    "quoted_source_files": 19,
+    "canary_files_separate": 2
+  },
+  "methods": {
+    "fixed_git_object": "time@a039d9803ade",
+    "pin_source_anchors": 121,
+    "independent_source_literal_reconfirmations": 121,
+    "models": 36,
+    "full_local_P9": "NOT_RUN",
+    "graphviz": "NOT_RUN",
+    "preprocessor_compilation_kernel_runtime": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": []
+}

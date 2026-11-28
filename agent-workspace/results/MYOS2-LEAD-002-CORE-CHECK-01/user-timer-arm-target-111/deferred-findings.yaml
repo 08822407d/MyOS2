@@ -1,0 +1,281 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMER-ARM-TARGET-111",
+  "record_type": "conditional_findings_and_evidence_gaps",
+  "date": "2026-11-19",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "2735aa3116c3",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical": {
+    "R108_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R108_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch108_composite": "PASS_PENDING_LOCAL",
+    "R109_01": "OPEN",
+    "R109_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R110_01": "OPEN",
+    "R110_02": "OPEN",
+    "batch109": "RETURN",
+    "batch110": "RETURN"
+  },
+  "preserved_roots": [
+    {
+      "project_batch": "110",
+      "frozen": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-base-forwarding-110/deferred-findings.yaml@d7ebfb1d5e40",
+      "id_range": "TB110-F01..F08 TB110-U01..U08",
+      "disposition": "historical candidates/gaps unchanged; 223 document-window repairs do not certify runtime"
+    },
+    {
+      "project_batch": "109",
+      "frozen": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/deferred-findings.yaml@3b2efdee5d85",
+      "id_range": "TW109-F01..F07 TW109-U01..U07",
+      "disposition": "old bucket placement conditions retained"
+    },
+    {
+      "project_batch": "52",
+      "frozen": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-WAIT-WAKE-CONSISTENCY-52-review.md@2735aa3116c3",
+      "id_range": "historical waiting and cancellation boundaries",
+      "disposition": "no new re-review of wait/lock/callback"
+    }
+  ],
+  "conditional_candidates": [
+    {
+      "id": "AT111-F01",
+      "title": "Initializer does not assign timer.expires or entry.next",
+      "source_ids": [
+        "AT111-E012",
+        "AT111-E013",
+        "AT111-E014",
+        "AT111-E015",
+        "AT111-E016"
+      ],
+      "premise": "simple_init_timer_key complete inspected body only",
+      "conditional_implication": "Caller must provide valid expires before arm; entry.next other lifetime unknown",
+      "first_unverified_step": "Actual caller initialization and object memory",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "AT111-F02",
+      "title": "Invalid initial flags are masked before CPU OR",
+      "source_ids": [
+        "AT111-E001",
+        "AT111-E002",
+        "AT111-E003",
+        "AT111-E014",
+        "AT111-E015"
+      ],
+      "premise": "fixed CMake CONFIG_BUG and active macro source",
+      "conditional_implication": "TIMER_MIGRATING and other disallowed flags are filtered, not proof of an emitted warning",
+      "first_unverified_step": "Actual preprocessed compiler options and runtime",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "AT111-F03",
+      "title": "Pending gate occurs before add_timer_local/global PINNED mutation",
+      "source_ids": [
+        "AT111-E019",
+        "AT111-E021",
+        "AT111-E022",
+        "AT111-E024",
+        "AT111-E025"
+      ],
+      "premise": "timer_pending true and state stable",
+      "conditional_implication": "Wrapper returns without local field mutation or __mod_timer request",
+      "first_unverified_step": "Concurrent writers and actual pending node",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "AT111-F04",
+      "title": "add_timer_on can set PINNED before finding callback NULL",
+      "source_ids": [
+        "AT111-E037",
+        "AT111-E038",
+        "AT111-E039",
+        "AT111-E041"
+      ],
+      "premise": "pending false but timer.function=NULL",
+      "conditional_implication": "Flags changed to PINNED, then common unlock without forward/arm; ret void",
+      "first_unverified_step": "Concrete call conditions and effects of actual lock",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "AT111-F05",
+      "title": "Explicit CPU caller and old CPU flag need not identify same base",
+      "source_ids": [
+        "AT111-E034",
+        "AT111-E039",
+        "AT111-E040",
+        "AT111-E042"
+      ],
+      "premise": "old flags CPU5 and target CPU7, valid perCPU pointers",
+      "conditional_implication": "Pointer comparison can select migration path or not based on actual objects",
+      "first_unverified_step": "CPU IDs, base definitions, address/CPU mapping",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "AT111-F06",
+      "title": "add_timer_on migration writes explicit CPU operand, __mod_timer uses base.cpu",
+      "source_ids": [
+        "AT111-E044",
+        "AT111-E048",
+        "AT111-E009"
+      ],
+      "premise": "migration branch selected and bitfield types behave",
+      "conditional_implication": "The two superficially similar updates use different inputs, not interchangeable",
+      "first_unverified_step": "Actual base.cpu state and bitfield storage",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "AT111-F07",
+      "title": "All public add_timer entrypoints return void and discard underlying registration result",
+      "source_ids": [
+        "AT111-P02",
+        "AT111-P03",
+        "AT111-P04",
+        "AT111-P05",
+        "AT111-E020",
+        "AT111-E023",
+        "AT111-E026"
+      ],
+      "premise": "normal compiled signatures and selected paths",
+      "conditional_implication": "No caller-observable __mod_timer int return through these APIs; not proof of successful registration",
+      "first_unverified_step": "Actual pending/lock/timeout/callback path",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "AT111-F08",
+      "title": "PerCPU base object definition and enum values not proven from helper source",
+      "source_ids": [
+        "AT111-E032",
+        "AT111-E033",
+        "AT111-E050",
+        "AT111-E051",
+        "AT111-P06"
+      ],
+      "premise": "symbolic BASE_LOCAL/GLOBAL and timer_bases extern",
+      "conditional_implication": "Can compute selection expression but not verified runtime address or actual target base",
+      "first_unverified_step": "Linker, perCPU declarations and real CPU scheduling",
+      "observed_runtime_bug": false,
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "AT111-U01",
+      "topic": "Caller-provided expires",
+      "source_ids": [
+        "AT111-E012",
+        "AT111-E016",
+        "AT111-E020",
+        "AT111-E039"
+      ],
+      "needed": "Where prior setup consumer writes timer.expires and validates its absolute deadline",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    },
+    {
+      "id": "AT111-U02",
+      "topic": "Actual CPU ID and perCPU base objects",
+      "source_ids": [
+        "AT111-E015",
+        "AT111-E032",
+        "AT111-E033",
+        "AT111-E050",
+        "AT111-E051"
+      ],
+      "needed": "SMP processor ID, valid CPU5/7, BASE_LOCAL/GLOBAL enum and timer_bases definition/link",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    },
+    {
+      "id": "AT111-U03",
+      "topic": "Callback NULL and flag side effect under real lock",
+      "source_ids": [
+        "AT111-E038",
+        "AT111-E040",
+        "AT111-E041"
+      ],
+      "needed": "Actual spinlock behavior when PINNED was set before callback guard",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    },
+    {
+      "id": "AT111-U04",
+      "topic": "Pending state and hlist memory behavior",
+      "source_ids": [
+        "AT111-E012",
+        "AT111-E017",
+        "AT111-E018"
+      ],
+      "needed": "Real initialization/entry.pprev and concurrent timer_pending operations",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    },
+    {
+      "id": "AT111-U05",
+      "topic": "Explicit target CPU7 new_base pointer and migration",
+      "source_ids": [
+        "AT111-E039",
+        "AT111-E042",
+        "AT111-E043",
+        "AT111-E044"
+      ],
+      "needed": "Real perCPU pointers, locks, interrupts, migration flags and target addressing",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    },
+    {
+      "id": "AT111-U06",
+      "topic": "Actual registration success, wheel entry and callbacks",
+      "source_ids": [
+        "AT111-E020",
+        "AT111-E023",
+        "AT111-E026",
+        "AT111-E046"
+      ],
+      "needed": "Actual __mod_timer/internal_add_timer outcome, wheel traversals and callback scheduling",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    },
+    {
+      "id": "AT111-U07",
+      "topic": "Compile, P9, Graphviz and hardware verification",
+      "source_ids": [
+        "AT111-E001",
+        "AT111-E002",
+        "AT111-E046"
+      ],
+      "needed": "Preprocessor, C compiler, linker, full local P9, Graphviz, QEMU/physical CPU all not run",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    },
+    {
+      "id": "AT111-U08",
+      "topic": "Independent Pro closure of three D00 document issues",
+      "source_ids": [
+        "AT111-E050",
+        "AT111-E051",
+        "AT111-E044"
+      ],
+      "needed": "C07 to review all 223 map entries, R109-01 six locs, R110-02 edge and order corrections",
+      "status": "NOT_RUN_OR_PENDING_MAINLINE"
+    }
+  ],
+  "counts": {
+    "candidates": 8,
+    "gaps": 8
+  },
+  "execution": {
+    "static_source_and_paper_models": true,
+    "full_local_P9": "NOT_RUN",
+    "preprocess_compile_link": "NOT_RUN",
+    "repository_scripts_programs": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "kernel_QEMU_hardware": "NOT_RUN",
+    "concurrency_interrupt_and_callbacks": "NOT_RUN"
+  }
+}

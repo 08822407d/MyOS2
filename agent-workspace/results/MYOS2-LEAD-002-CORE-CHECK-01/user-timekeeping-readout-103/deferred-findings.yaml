@@ -1,0 +1,293 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMEKEEPING-READOUT-103",
+  "record_type": "bounded_static_deferred_findings_and_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-15",
+  "date": "2026-11-18",
+  "source_pin_short12": "a039d9803ade",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "R102_01": "OPEN",
+  "R102_02": "OPEN",
+  "R102_03": "OPEN",
+  "owner_decisions_requested_now": [],
+  "new_candidates": [
+    {
+      "id": "TK103-F01",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F01",
+      "title": "tk_set_wall_to_mono未活动保存所传wtm",
+      "kind": "STATIC_SOURCE_MISSING_ACTIVE_FIELD_ASSIGNMENT",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "timekeeping_init计算wall_to_mono并调用tk_set_wall_to_mono，但后者写wall_to_monotonic的行被注释",
+      "conditional_impact": "若无其它写者、实际读到此值，wall_to_monotonic可能保留静态初态；不能声明真实墙钟错误",
+      "evidence_ids": [
+        "TK103-E073",
+        "TK103-E076",
+        "TK103-E078",
+        "TK103-E081"
+      ],
+      "future_gate": "需要有限使用者读链与其它写入点、真实链接选择，不能为本批运行代码",
+      "hardware_or_runtime_observed": false
+    },
+    {
+      "id": "TK103-F02",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F02",
+      "title": "tk_setup非空旧clock时unsigned shift差值",
+      "kind": "STATIC_CONDITIONAL_C_INTEGER_CONVERSION",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "u32-u32先回绕后赋给int shift_change；负差在int转换环节可能是实现定义",
+      "conditional_impact": "若时钟被实际更换且shift相差，后续移位可能依赖未认证的实现行为",
+      "evidence_ids": [
+        "TK103-E065",
+        "TK103-E066",
+        "TK103-E067"
+      ],
+      "future_gate": "需要编译器/ABI及实际时钟切换入口，静态讨论不等于发生",
+      "hardware_or_runtime_observed": false
+    },
+    {
+      "id": "TK103-F03",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F03",
+      "title": "辅助换算helper的高字与shift33..63",
+      "kind": "STATIC_CONDITIONAL_INVALID_SHIFT",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "mul_u64_u32_add_u64_shr在ah!=0时执行 highproduct<<(32-shift)，shift>32形成无效移位数",
+      "conditional_impact": "在特定输入与safe分支可达前提下，于该表达式失去定义良好C语义",
+      "evidence_ids": [
+        "TK103-E103",
+        "TK103-E104",
+        "TK103-E105"
+      ],
+      "future_gate": "需要shift域的全部调用约束，不模拟内核也不宣称CPU已故障",
+      "hardware_or_runtime_observed": false
+    },
+    {
+      "id": "TK103-F04",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F04",
+      "title": "wall-clock默认基值字段、raw与mono的初始化覆盖不完整",
+      "kind": "STATIC_CONDITIONAL_ORIGIN_GAP",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "本轮所读初始化中未见对tkr_mono.base和raw.xtime_nsec的活动写入；timekeeper字段有独立类型和对象初态",
+      "conditional_impact": "在没有其它初始化/更新写者条件下可能读到先前/静态值；不能向全树否定写者",
+      "evidence_ids": [
+        "TK103-E069",
+        "TK103-E072",
+        "TK103-E078",
+        "TK103-E079",
+        "TK103-E109",
+        "TK103-E113"
+      ],
+      "future_gate": "以后选择真实写者链做独立有界审查",
+      "hardware_or_runtime_observed": false
+    },
+    {
+      "id": "TK103-F05",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F05",
+      "title": "ktime_get的有符号基值和无符号纳秒混合",
+      "kind": "STATIC_CONDITIONAL_RETURN_CONVERSION",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "ktime_add_ns(base_s64,nsecs_u64)使用通常算术转换产生u64表达式，返回存储为s64",
+      "conditional_impact": "超出s64的结果是实现定义转换，不应笼统归类为signed overflow",
+      "evidence_ids": [
+        "TK103-E091",
+        "TK103-E113",
+        "TK103-E114",
+        "TK103-E115"
+      ],
+      "future_gate": "无现场timekeeper数值；需类型/ABI和实际返回域再判影响",
+      "hardware_or_runtime_observed": false
+    },
+    {
+      "id": "TK103-F06",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F06",
+      "title": "负纳秒转换的INT64_MIN负号及余数指针类型",
+      "kind": "STATIC_CONDITIONAL_C_CONSTRAINTS",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "ns_to_timespec64负分支求 -nsec -1，INT64_MIN会先触发不可表示负号；局部s32 rem地址传给u32*参数",
+      "conditional_impact": "只有这些入参/代码分支实际使用才可能影响产品；不声称编译错误或运行异常",
+      "evidence_ids": [
+        "TK103-E123",
+        "TK103-E124",
+        "TK103-E125",
+        "TK103-E130"
+      ],
+      "future_gate": "独立类型/调用者范围检查或获授权编译诊断",
+      "hardware_or_runtime_observed": false
+    },
+    {
+      "id": "TK103-F07",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F07",
+      "title": "timespec64_add_ns超大商计数和混合无符号累计",
+      "kind": "STATIC_CONDITIONAL_NUMERIC_DOMAIN",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "__iter_div_u64_rem的商用u32 ret递增；tv_nsec+ns以u64域求和，tv_sec作有符号复合赋值",
+      "conditional_impact": "巨大数学入参可能导致商截断或中间量模域变化，规范余数不证明秒绝对准确",
+      "evidence_ids": [
+        "TK103-E116",
+        "TK103-E118",
+        "TK103-E127",
+        "TK103-E128",
+        "TK103-E129"
+      ],
+      "future_gate": "没有真实入参；千万不要执行数十亿次迭代",
+      "hardware_or_runtime_observed": false
+    },
+    {
+      "id": "TK103-F08",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F08",
+      "title": "双读接口缺少活动seqcount读重试",
+      "kind": "STATIC_CONDITIONAL_CONSISTENCY_RISK",
+      "status": "needs_evidence",
+      "source_ref": "MyOS2@a039d9803ade",
+      "source_statement": "两个读接口的seqcount retry均注释；READ_ONCE只抓取clock指针一次且其它字段可能另读",
+      "conditional_impact": "真实并发或更新时字段可能不在同一时刻，不能认定已发生竞态或错时",
+      "evidence_ids": [
+        "TK103-E093",
+        "TK103-E094",
+        "TK103-E108",
+        "TK103-E112",
+        "TK103-E113"
+      ],
+      "future_gate": "需真实更新者/并发进入路径和可运行授权",
+      "hardware_or_runtime_observed": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "TK103-U01",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U01",
+      "topic": "默认弱jiffies符号实际链接与初始对象",
+      "status": "needs_evidence",
+      "kind": "BOUND_SCOPE_EVIDENCE_GAP",
+      "missing_evidence": "无法仅从弱定义证明最终ELF无强定义覆盖；静态BSS/有效页表也需与程序加载分开",
+      "evidence_ids": [
+        "TK103-E069",
+        "TK103-E083",
+        "TK103-E086"
+      ],
+      "future_gate": "若以后需要精确链接状态，获取对应固定ELF/链接证据；当前NOT_RUN"
+    },
+    {
+      "id": "TK103-U02",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U02",
+      "topic": "opaque persistent RTC与local_clock输入域",
+      "status": "needs_evidence",
+      "kind": "BOUND_SCOPE_EVIDENCE_GAP",
+      "missing_evidence": "本批不读这两个完整实现；对返回值、有效性和同步不做猜测",
+      "evidence_ids": [
+        "TK103-E075",
+        "TK103-E076",
+        "TK103-E123"
+      ],
+      "future_gate": "以后有授权再按单独接口静态契约审查"
+    },
+    {
+      "id": "TK103-U03",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U03",
+      "topic": "完整timekeeper后继写者与通知/更新",
+      "status": "needs_evidence",
+      "kind": "BOUND_SCOPE_EVIDENCE_GAP",
+      "missing_evidence": "只在当前所读初始化和读取函数发现部分字段未写；全树其它写者未知",
+      "evidence_ids": [
+        "TK103-E071",
+        "TK103-E073",
+        "TK103-E078",
+        "TK103-E079",
+        "TK103-E109"
+      ],
+      "future_gate": "未来批次有界搜真实写入者和调用条件，不作全树不存在断言"
+    },
+    {
+      "id": "TK103-U04",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U04",
+      "topic": "编译器定义的unsigned→signed转换和builtin支持",
+      "status": "needs_evidence",
+      "kind": "BOUND_SCOPE_EVIDENCE_GAP",
+      "missing_evidence": "涉及u32差转int、u64返回转s64、__builtin_add_overflow；未取对应编译器一手行为/版本",
+      "evidence_ids": [
+        "TK103-E065",
+        "TK103-E091",
+        "TK103-E104",
+        "TK103-E114"
+      ],
+      "future_gate": "本地构建单独授权前保持条件/实现定义解释"
+    },
+    {
+      "id": "TK103-U05",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U05",
+      "topic": "READ_ONCE与读接口全字段并发一致性",
+      "status": "needs_evidence",
+      "kind": "BOUND_SCOPE_EVIDENCE_GAP",
+      "missing_evidence": "一处volatile指针读取和被注释seqcount不能说明完整clock/mask/shift/base一致",
+      "evidence_ids": [
+        "TK103-E093",
+        "TK103-E094",
+        "TK103-E095",
+        "TK103-E108",
+        "TK103-E112"
+      ],
+      "future_gate": "需并发更新协议、实际线程/IRQ可达和运行场景"
+    },
+    {
+      "id": "TK103-U06",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U06",
+      "topic": "旧HPET/IRQ与本timekeeper的真实桥接",
+      "status": "needs_evidence",
+      "kind": "BOUND_SCOPE_EVIDENCE_GAP",
+      "missing_evidence": "102已分清clocksource列表/curr_clocksource/timekeeper缓存，当前无新增真实HPET接管的证明",
+      "evidence_ids": [
+        "TK103-E077",
+        "TK103-E083",
+        "TK103-E093",
+        "TK103-E101"
+      ],
+      "future_gate": "保留旧101/102根，不重开CA-05/V14或编造新IRQ故障"
+    },
+    {
+      "id": "TK103-U07",
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U07",
+      "topic": "本次数学极值是否为可达实参",
+      "status": "needs_evidence",
+      "kind": "BOUND_SCOPE_EVIDENCE_GAP",
+      "missing_evidence": "23模型为声明值域静态推演，未证明系统可提供极值或实际执行非法位移",
+      "evidence_ids": [
+        "TK103-E097",
+        "TK103-E104",
+        "TK103-E114",
+        "TK103-E118",
+        "TK103-E125"
+      ],
+      "future_gate": "未来有独立路径前只能登记条件、边界、影响范围"
+    }
+  ],
+  "history": {
+    "batch102": "RETURN_R102_01_02_03_OPEN",
+    "batch101": "R101_01_CLOSED_DOCUMENTATION_ONLY_COMPOSITE_PASS_PENDING_LOCAL",
+    "batch100": "R100_01_CLOSED_DOCUMENTATION_ONLY_COMPOSITE_PASS_PENDING_LOCAL",
+    "old_roots_keep_identity": [
+      "MYOS2-LEAD-002::CA-05",
+      "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+      "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+      "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08",
+      "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F08",
+      "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U05"
+    ],
+    "not_a_new_root": "HC102-F06 follows older IR101-F08/U05 and stays historically distinct from new 103 readout candidates"
+  },
+  "counts": {
+    "conditional_candidates": 8,
+    "evidence_gaps": 7,
+    "measured_failures": 0
+  },
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN"
+}

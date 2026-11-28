@@ -1,0 +1,115 @@
+// task_id: MYOS2-LEAD-002-CORE-CHECK-01
+// track_id: MYOS2-LEAD-002
+// followup_id: CORE-USER-PERCPU-ALLOCATION-87
+// date: 2026-11-14
+// produced_by: GPT-6 (backend unknown); model_per_owner: GPT-6 + Extra
+// base_snapshot: time ; read_channel: connector
+// runtime_evidence: NOT_RUN
+// Conventions: solid blue = actual direct C call; solid black = source macro/data binding;
+// dotted = local source statement order (not a C call); dashed = conditional/hypothetical proof gate.
+// Graph not a full CFG, no Graphviz/compilation or kernel code execution.
+digraph PA87_PerCPU_Allocation {
+  graph [rankdir=LR, label="PA87 bounded perCPU allocator / workqueue consumer (source only)", labelloc=t, fontsize=16];
+  node [shape=box,fontsize=10];
+  edge [fontsize=9];
+  subgraph cluster_A {
+    label="G01/A | request, bitmask ALIGN, fit and area accounting";
+    caller [label="simple_pcpu_alloc_noprof\nsize_t size, align; bool reserved"];
+    fit [label="simple_pcpu_find_block_fit\nint size, size_t align"];
+    mask [label="ALIGN(x,a) -> __ALIGN_KERNEL_MASK\na valid positive power of two assumed"];
+    start [label="start=ALIGN(free_offset,align)\ngap=start-old_offset"];
+    need [label="need=start+size-old_offset\n=gap+size"];
+    check [label="if free_bytes < need\nreturn -ENOMEM"];
+    commit [label="simple_pcpu_alloc_area\nwhile(start<free_offset); (empty body)"];
+    update [label="free_offset=start+size\nfree_bytes-=size (not gap+size)"];
+    pad [label="Padded sequential calls\ncan overstate free_bytes\nM02-04",shape=note];
+    type [label="size_t -> int narrowing\nsigned arithmetic and invalid align gates",shape=note];
+    caller -> fit [color=blue,label="direct C call"];
+    fit -> mask [label="macro invocation"];
+    mask -> start [label="numeric source formula"];
+    start -> need [label="numeric source formula"];
+    need -> check [label="fit branch"];
+    check -> commit [style=dashed,label="only if fit>=0"];
+    caller -> commit [color=blue,label="direct C call after fit"];
+    commit -> update [style=dotted,label="same function source order"];
+    update -> pad [style=dashed,label="conditional arithmetic"];
+    type -> mask [style=dashed,label="must validate input"];
+  }
+  subgraph cluster_B {
+    label="G02/B | reserved, common list, late creation/restart";
+    reserved [label="if reserved && pcpu_reserved_chunk\nfit only reserved"];
+    fail [label="fail_unlock/fail -> NULL"];
+    scan [label="restart / for each chunk\npcpu_chunk_lists"];
+    listmacro [label="list_header_for_each_container\nlist_for_each_entry"];
+    early [label="first and early reserved chunks\nboth inserted into same list"];
+    growth [label="simple_pcpu_create_chunk(gfp)"];
+    meta [label="kzalloc metadata\nif NULL return NULL"];
+    data [label="kzalloc data N*chunk_size\nNO local data-null guard"];
+    encoded [label="chunk->base_addr = data - B\nGNU void* condition"];
+    publish [label="list_header_add_to_tail\nchunk returns, then goto restart"];
+    loop [label="request>C and new free=C\nfit can keep failing",shape=note];
+    lock [label="spin lock/unlock lines commented\nno global synchronization claim",shape=note];
+    caller -> reserved [style=dotted,label="branch on flags"];
+    reserved -> fit [color=blue,label="fit call if reserved exists"];
+    reserved -> fail [style=dotted,label="fit negative"];
+    caller -> scan [style=dotted,label="not reserved arm"];
+    scan -> listmacro [label="list traversal macro"];
+    early -> scan [label="shared list membership"];
+    scan -> fit [color=blue,label="fit per candidate"];
+    scan -> growth [color=blue,label="no existing fit"];
+    growth -> meta [color=blue,label="kzalloc metadata"];
+    meta -> data [style=dotted,label="if metadata valid"];
+    data -> encoded [style=dotted,label="next source line"];
+    encoded -> publish [style=dotted,label="next source line"];
+    publish -> scan [style=dotted,label="goto restart"];
+    growth -> fail [style=dotted,label="if metadata NULL"];
+    growth -> loop [style=dashed,label="repeated unsuitable new chunks"];
+    lock -> scan [style=dashed,label="concurrency not certified"];
+  }
+  subgraph cluster_C {
+    label="G03/C | encoded pointer, per_cpu_ptr decode, workqueue";
+    area [label="area_found\nptr=chunk->base_addr+off"];
+    normal [label="first: base_addr=0\nnew/reserved: data-B"];
+    offset [label="O_i = (B-T+i*S) mod 2^w\nR86-S01 qualified memory offset"];
+    decode [label="per_cpu_ptr(P,i)\nSHIFT_PERCPU_PTR via RELOC_HIDE"];
+    equation [label="A_i = (P+O_i) mod 2^w"];
+    gap [label="Under numeric model: decode\n= data+off-T+i*S\nmay differ from backing+off+i*S",shape=note];
+    allocmacro [label="alloc_percpu(pool_workqueue_s *)\nsizeof pointer, alignof pointer"];
+    linkpwq [label="simple_alloc_and_link_pwqs(wq)"];
+    slot [label="wq->cpu_pwq = perCPU encoded slot"];
+    object [label="each valid CPU slot gets\nkmem_cache_alloc(pwq_cache,GFP_KERNEL)"];
+    pwqlist [label="PWQ pool/wq metadata\nlist_header_add_to_tail(wq->pwqs)"];
+    cleanup [label="enomem: conditional kmem_cache_free\nfree_percpu commented; cpu_pwq=NULL"];
+    unbound [label="WQ_UNBOUND successful slot alloc\nreturn uninitialized local ret",shape=note];
+    outer [label="simple_alloc_workqueue\ninner return ignored"];
+    wqlist [label="list_header_add_to_tail(workqueues)\nthen return wq"];
+    earlywq [label="workqueue_init_early\nsource direct events / events_bh calls"];
+    work [label="__simple_queue_work uses\n*per_cpu_ptr(wq->cpu_pwq,cpu)\nnot execution certification"];
+    normal -> area [label="chunk base setup"];
+    commit -> area [style=dotted,label="on area_found branch"];
+    area -> decode [label="encoded P returned"];
+    offset -> decode [label="per_cpu_offset(i)"];
+    decode -> equation [label="integer addition"];
+    equation -> gap [style=dashed,label="if T nonzero and numeric assumptions"];
+    earlywq -> outer [color=blue,label="two direct calls in source"];
+    outer -> linkpwq [color=blue,label="actual call, result ignored"];
+    linkpwq -> allocmacro [label="typed source macro"];
+    allocmacro -> caller [color=blue,label="expands to alloc function call"];
+    area -> slot [style=dashed,label="only if allocation returns"];
+    slot -> decode [label="per_cpu_ptr in PWQ loop"];
+    decode -> object [style=dashed,label="valid slot access required"];
+    linkpwq -> object [color=blue,label="conditional kmem_cache_alloc"];
+    object -> pwqlist [style=dotted,label="if nonNULL"];
+    linkpwq -> cleanup [style=dotted,label="on allocation failure"];
+    linkpwq -> unbound [style=dashed,label="if WQ_UNBOUND"];
+    outer -> wqlist [style=dotted,label="after unchecked inner result"];
+    wqlist -> work [style=dashed,label="later consumer, not executed"];
+  }
+  subgraph cluster_D {
+    label="D00 | R86-01 document-only selfcheck correction";
+    old [label="86 six frozen originals\n77 real definition anchors\n+1 explanatory literal\n=78 raw prefixes",shape=note];
+    correction [label="D00 in 87 new six\ncorrection submitted\nC06 Pro closure PENDING",shape=note];
+    old -> correction [style=dotted,label="count mapping only; no edit"];
+  }
+}
+// All source and trace relations conditional; no hardware/build/runtime verification.

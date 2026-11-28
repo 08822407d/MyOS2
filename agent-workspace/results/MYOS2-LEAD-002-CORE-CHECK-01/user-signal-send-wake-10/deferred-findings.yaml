@@ -1,0 +1,164 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-SIGNAL-SEND-WAKE-10
+record_type: incremental_deferred_findings
+produced_by: "ChatGPT普通对话，Owner选择GPT-6 / Extra；backend未独立认证"
+date: "2026-10-31"
+base_snapshot: "time @ a039d9803ade；results_base=037b880e792b"
+read_channel: connector
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+findings_policy: "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md"
+scope: "新增本批源文/条件风险，不修改09旧项；只对直接kill链及唤醒接口有界核对"
+counts: {new_findings: 6, evidence_appends: 5, errata_candidates: 0}
+findings:
+  - qualified_id: CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F01
+    id: SW10-F01
+    title: "未初始化override_rlimit参与sigqueue分配条件"
+    kind: [source_fact, conditional_language_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade；逐字引文见本批facts-and-boundaries.yaml"
+    claim: "__send_signal_locked仅声明int override_rlimit，按SIGRTMIN赋值的分支被注释，却把该局部量传给__sigqueue_alloc；后者在if左操作数读取。非SIGKILL/非PF_KTHREAD的kill发送路径经过该调用，故不能从源文局部ret=0直接推导可靠排队或确定返回。"
+    premises:
+      - "pid>0查到目标，sig既非SIGKILL，目标非PF_KTHREAD"
+      - "控制确实走到分配器调用，且编译后路径未另行约束此变量"
+    counter_evidence:
+      - "sigpending局部值为0，右侧比较可能为真，但不能使左侧未初始化读取成为合法"
+      - "SIGKILL/PF_KTHREAD经goto out_set绕开该调用"
+    unknown:
+      - "实际编译或运行时未定义行为的具体表现，NOT_RUN"
+    evidence: [SW10-A15, SW10-A18, SW10-A19, SW10-A20, SW10-A21]
+    related: [CORE-USER-RETURN-SIGNAL-09::RS-03]
+    blocks: {static_work: false, runtime_or_fix: "separate gate required"}
+    reopen_condition: "仅在未来获准时针对实际C预处理/编译及受控运行核实；当前只冻结源码事实"
+    owner_action_now: none
+  - qualified_id: CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F02
+    id: SW10-F02
+    title: "sys_kill缺少sig=0/范围检查，sigaddset移位前提不满足"
+    kind: [source_fact, conditional_language_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade；逐字引文见本批facts-and-boundaries.yaml"
+    claim: "在读到的sys_kill→group_send_sig_info→__send_signal_locked中，权限/0号/范围检查均未作为活动门；sigaddset用ulong sig=_sig-1，并在一单词位图路径执行1UL<<sig。sig=0、负数或大于64破坏移位前提，INT_MIN的减法亦存在有符号溢出风险；不能固定报告崩溃、负errno或位图值。"
+    premises:
+      - "pid>0查到目标，控制在上述条件后实际到达out_set"
+      - "以time配置中的64位信号单词与_NSIG=64解释数值"
+    counter_evidence:
+      - "valid_signal(ulong)定义存在，但本路径未调用；不能因该函数存在而假定自动校验"
+      - "非正pid会先走while(1)，所以不会到该位移"
+    unknown:
+      - "外部构建与实际运行结果NOT_RUN，函数名之外的额外校验入口未穷尽"
+    evidence: [SW10-A07, SW10-A13, SW10-A25, SW10-A27, SW10-A28]
+    related: [CORE-USER-RETURN-SIGNAL-09::RS-04]
+    blocks: {static_work: false, runtime_or_fix: "separate gate required"}
+    reopen_condition: "保留为以后输入验证设计的候选，不生成补丁"
+    owner_action_now: none
+  - qualified_id: CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F03
+    id: SW10-F03
+    title: "正pid解析和目标写入的权限/同步保护缺口"
+    kind: [source_fact, conditional_concurrency_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade；逐字引文见本批facts-and-boundaries.yaml"
+    claim: "kill_proc_info调用find_vpid/pid_task前的rcu_read_lock已注释；group_send_sig_info内的check_kill_permission和lock_task_sighand及解锁也已注释；__send_signal_locked的lockdep_assert_held也是注释。目标任务与共享pending使用了目标指针，当前直接链没有可核的sender siglock持锁证据。不能推出所有目标权限合法、指针生存安全或真实竞态必然发生。"
+    premises:
+      - "存在并发的任务退出/信号消费或跨身份目标"
+      - "信号发送按本文直接kill链执行"
+    counter_evidence:
+      - "pid_task在pid=NULL时返回NULL；这只处理缺失目标，不解决并发保护"
+      - "09接收端会持siglock，但不代替发送方加锁"
+    unknown:
+      - "完整PID生命周期、任务与signal共享锁的全局时序及运行行为未审"
+    evidence: [SW10-A08, SW10-A09, SW10-A10, SW10-A11, SW10-A12, SW10-A13, SW10-A14]
+    related: [CORE-USER-RETURN-SIGNAL-09::RS-12, CORE-USER-VFS-BASELINE-05::UV-14]
+    blocks: {static_work: false, runtime_or_fix: "separate gate required"}
+    reopen_condition: "未来单独授权并发/PID审查后定位竞态，不直接修改内核"
+    owner_action_now: none
+  - qualified_id: CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F04
+    id: SW10-F04
+    title: "发送路径中complete_signal通知/唤醒调用被注释"
+    kind: [source_fact, delivery_liveness_gap]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade；逐字引文见本批facts-and-boundaries.yaml"
+    claim: "在本批固定__send_signal_locked的可见函数体中，complete_signal(sig,t,type)只有注释调用；虽然complete_signal中有signal_wake_up，当前kill链没有此活动调用边。因此pending置位或return0不能证明TIF_SIGPENDING标志已被此路径设置、目标被唤醒，或及时执行handler。"
+    premises:
+      - "以kill(62)当前直接调用链为边界"
+      - "未发现并行替代通知路径并不等于全树绝无间接唤醒"
+    counter_evidence:
+      - "09中指定syscall_exit_to_user_mode返回尾无条件调用get_signal：已经自然运行到返回尾的任务仍有机会扫描pending"
+      - "唤醒函数体存在不能证明发送方调用了它"
+    unknown:
+      - "目标是否由其他事件唤醒及其时延；外部或间接通知机制未穷尽"
+    evidence: [SW10-A25, SW10-A26, SW10-A34, SW10-A35, SW10-A36, SW10-A37]
+    related: [CORE-USER-RETURN-SIGNAL-09::RS-03, CORE-USER-RETURN-SIGNAL-09::RS-04]
+    blocks: {static_work: false, runtime_or_fix: "separate gate required"}
+    reopen_condition: "仅登记断点；不恢复已注释机制"
+    owner_action_now: none
+  - qualified_id: CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F05
+    id: SW10-F05
+    title: "未接入的complete_signal/调度唤醒接口含潜伏前提"
+    kind: [conditional_inference, evidence_gap]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade；逐字引文见本批facts-and-boundaries.yaml"
+    claim: "complete_signal的候选线程t在已读活动函数体中未赋值，末尾仍调用signal_wake_up(t,...)；但由于发送方调用被注释，该风险不在当前kill必经路径。进一步读到signal_wake_up_state→wake_up_state→try_to_wake_up；后者局部success初始化为0、队列入列调用被注释，kick_process的实际IPI调用也被注释。只能作为将来恢复连接前的潜伏风险与需要独立验证的接口，不宣告本次实际唤醒失败。"
+    premises:
+      - "未来有明确授权并实际恢复complete_signal的活动调用，或存在本批未确认的另一实际调用者"
+      - "若函数体、任务状态与调度入口均保持固定文本形态"
+    counter_evidence:
+      - "当前kill没有到complete_signal的活动边；调度器没有经过完整全局审查"
+    unknown:
+      - "其他调用者、任务状态/CPU处理、真实调度结果NOT_RUN"
+    evidence: [SW10-A34, SW10-A35, SW10-A36, SW10-A37, SW10-A38, SW10-A39, SW10-A40]
+    related: [CORE-USER-RETURN-SIGNAL-09::RS-04]
+    blocks: {static_work: false, runtime_or_fix: "separate gate required"}
+    reopen_condition: "后续需要独立任务与能力门，不作为本批必须修复项"
+    owner_action_now: none
+  - qualified_id: CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F06
+    id: SW10-F06
+    title: "普通/实时同号队列不去重，插入节点早于填充信息"
+    kind: [source_fact, conditional_concurrency_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade；逐字引文见本批facts-and-boundaries.yaml"
+    claim: "__send_signal_locked的legacy_queue检查、按SIGRTMIN分支与溢出-EAGAIN分支被注释。若分配q成功，先把q->list插入pending链，后才执行info指针分支填充q->info；且发送侧的持锁前提缺少活动证据。重复普通信号也可能产生多节点，而09的collect_signal据实际同号节点保留pending位；并不能根据Linux习惯假定普通信号自动合并为一个siginfo节点。"
+    premises:
+      - "信号非SIGKILL且目标非PF_KTHREAD"
+      - "未定义override_rlimit前提另行解决，q分配实际成功"
+      - "重复发送发生且接收线程与发送者访问相同队列"
+    counter_evidence:
+      - "分配q失败时只可能写pending位而不增加此次节点；节点数量取决于实际路径"
+      - "collect_signal有按同号节点辨别的逻辑，但不替发送端自动合并"
+    unknown:
+      - "并发下先插链后填info是否实际造成可见竞态，NOT_RUN"
+    evidence: [SW10-A17, SW10-A19, SW10-A20, SW10-A21, SW10-A22, SW10-A23, SW10-A24, SW10-A30, SW10-A31]
+    related: [CORE-USER-RETURN-SIGNAL-09::RS-03, CORE-USER-RETURN-SIGNAL-09::RS-14]
+    blocks: {static_work: false, runtime_or_fix: "separate gate required"}
+    reopen_condition: "先保留潜在语义/并发风险，需许可再复核"
+    owner_action_now: none
+evidence_appends:
+  - target: CORE-USER-RETURN-SIGNAL-09::RS-03
+    action: evidence_append_only
+    old_status_change: none
+    note: "kill的SIGKILL绕过siginfo节点分配，尝试置共享pending位；没有发送端唤醒边；09默认动作无退出机制的结论不变"
+    evidence: [SW10-A18, SW10-A25, SW10-A26]
+  - target: CORE-USER-RETURN-SIGNAL-09::RS-04
+    action: evidence_append_only
+    old_status_change: none
+    note: "signal_wake_up_state的TIF_SIGPENDING写入存在但current kill到complete_signal的调用注释；接收端返回尾无条件扫描的机制不因此关闭"
+    evidence: [SW10-A26, SW10-A36, SW10-A37]
+  - target: CORE-USER-RETURN-SIGNAL-09::RS-12
+    action: evidence_append_only
+    old_status_change: none
+    note: "目标PID解析及发送侧没有活动RCU/权限/siglock保护；与已知共享sighand/锁风险关联而非独立重签根因"
+    evidence: [SW10-A08, SW10-A12, SW10-A13]
+  - target: CORE-USER-RETURN-SIGNAL-09::RS-13
+    action: evidence_append_only
+    old_status_change: none
+    note: "当前kill以TGID写共享pending，不构成旧RS-13私有pending位图继承的当前活动产生路径"
+    evidence: [SW10-A16, SW10-A43]
+  - target: CORE-USER-RETURN-SIGNAL-09::RS-14
+    action: evidence_append_only
+    old_status_change: none
+    note: "当前kill走共享pending，prepare_kill_siginfo用SI_USER；不满足旧RS-14私有同步队列中si_code>SI_USER等前提"
+    evidence: [SW10-A05, SW10-A16, SW10-A33]
+errata_candidates: []
+errata_note: "本批没有证据要求改写09已审历史措辞；若主线认为有冲突，另签回执，不改原件"
+not_covered: ["全PID生命周期","所有跨线程信号产生者","完整调度器","全部C编译配置","用户程序libc","真实内核运行"]
+owner_decisions_requested_now: []

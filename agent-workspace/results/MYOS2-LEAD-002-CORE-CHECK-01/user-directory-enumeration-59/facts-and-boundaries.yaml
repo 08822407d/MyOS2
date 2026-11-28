@@ -1,0 +1,2151 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-DIRECTORY-ENUMERATION-59",
+  "record_type": "bounded_directory_enumeration_facts_and_prior58_correction",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "source_pin_short12": "a039d9803ade",
+  "fixed_task89_short12": "669231eb8e5e",
+  "execution_base_short12": "8de2a76f5f73",
+  "base_snapshot": "time",
+  "read_channel": "GitHub_connector",
+  "runtime_evidence": "NOT_RUN",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "source_ledger": [
+    {
+      "path": "mykernel/fs/vfs/readdir.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "89c17eb48a64",
+      "ranges": "1-169",
+      "category": "main_full",
+      "symbols": [
+        "getdents_cbk64_s",
+        "iterate_dir",
+        "verify_dirent_name",
+        "filldir64",
+        "MYOS_SYSCALL_DEFINE3(getdents64)"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "447307aaa4b1",
+      "ranges": "28-63; 311-364",
+      "category": "direct_FAT",
+      "symbols": [
+        "FAT32_ent_empty",
+        "FAT32_get_full_ent",
+        "FAT32_getdents64",
+        "FAT32_file_ops"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32_iobuf.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "f577b7f65786",
+      "ranges": "57-84; 115-125; 165-234; 236-269",
+      "category": "same_pin_direct_dependency",
+      "symbols": [
+        "FAT32_iobuf_init",
+        "FAT32_iobuf_iter_init",
+        "FAT32_iobuf_iter_next",
+        "FAT32_iobuf_readent",
+        "FAT32_iobuf_release"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_dir.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "a6ef65d326d2",
+      "ranges": "13-92",
+      "category": "same_pin_direct_dependency",
+      "symbols": [
+        "FAT32_parse_short",
+        "FAT32_parse_long"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/file.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "18d22c0c6f4d",
+      "ranges": "29-82",
+      "category": "extra_1",
+      "symbols": [
+        "fd_s",
+        "fdput_pos",
+        "fdput",
+        "FDPUT_FPUT"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/file.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0dd75836ead2",
+      "ranges": "197-203",
+      "category": "extra_2",
+      "symbols": [
+        "myos_fdget_pos"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "fe527991618b",
+      "ranges": "859-896; 1807-1815; 1858-1870",
+      "category": "extra_3",
+      "symbols": [
+        "file_s",
+        "dir_ctxt_s",
+        "filldir_t",
+        "file_ops_s"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/dirent.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "9e28646016a8",
+      "ranges": "7-13",
+      "category": "extra_4",
+      "symbols": [
+        "linux_dirent64_s"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/uaccess.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ab39e43ad2f7",
+      "ranges": "171-181; 196-205",
+      "category": "extra_5",
+      "symbols": [
+        "_inline_copy_to_user",
+        "copy_to_user"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/linux/limits.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "bddfd09e4be2",
+      "ranges": "13-13",
+      "category": "extra_6",
+      "symbols": [
+        "PATH_MAX"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/stddef.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "73e39f650fb0",
+      "ranges": "15-20",
+      "category": "extra_7",
+      "symbols": [
+        "offsetof"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/align.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ddd63ec4b93f",
+      "ranges": "7-11",
+      "category": "extra_8",
+      "symbols": [
+        "ALIGN"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/namei.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "42d98f742755",
+      "ranges": "51-52",
+      "category": "D00_fixed_source",
+      "symbols": [
+        "LOOKUP_CREATE",
+        "LOOKUP_EXCL"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/init.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "29996a104297",
+      "ranges": "113-125",
+      "category": "D00_fixed_source",
+      "symbols": [
+        "init_mkdir"
+      ]
+    }
+  ],
+  "prior58_disposition": {
+    "prior_batch": "CORE-USER-VFS-MUTATION-GATES-58",
+    "result_sha_short12": "8de2a76f5f73",
+    "review_pin_short12": "669231eb8e5e",
+    "original_mainline_verdict": "RETURN",
+    "original_return_kind": "DOCUMENTATION_ONLY",
+    "returned_items": [
+      "R58-01"
+    ],
+    "mandatory_supplements": [
+      "R58-S01",
+      "R58-S02"
+    ],
+    "correction_status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+    "mainline_closure_authority": "MYOS2-A-C05",
+    "old_files_modified": false,
+    "original_anchors": 87,
+    "replaced_anchors": [
+      {
+        "old_id": "B24",
+        "reason": "LOOKUP_CREATE label enclosed LOOKUP_EXCL separate macro",
+        "new_ids": [
+          "D01",
+          "D02"
+        ],
+        "replacement_kind": "split_two_independent_macro_definitions"
+      },
+      {
+        "old_id": "B25",
+        "reason": "not accepted as source-exact continuous <=5 physical lines by mainline",
+        "new_ids": [
+          "D03"
+        ],
+        "replacement_kind": "exact_5_lines_from_init_mkdir"
+      }
+    ],
+    "historical_remaining_unrechecked": 85,
+    "D00_new_verified_anchors": 3,
+    "batch59_new_verified_anchors": 69,
+    "all_new_59_labels": 72,
+    "technical_supplements": {
+      "R58_S01": [
+        {
+          "issue": "58 body foo. asserted 6→5",
+          "correction": "foo. is 4 chars, striptail removes trailing dot to 3; facts original 4/3 already correct"
+        },
+        {
+          "issue": "__lookup_hash miss callback NULL modeled as immutable d_inode=NULL",
+          "correction": "callback NULL does not preclude mutation/removal of input dentry before return; requires object remains valid and d_inode stays NULL or independent proof"
+        },
+        {
+          "issue": "NG58-F01 mixes upstream getname_kernel/__myos_getname failure with new consumer",
+          "correction": "upstream EI28-F01 and PN29-F01/F03/F04 preserved real status; NG58-F01 distinct new upper putname(ERR_PTR) consumer only; no double count"
+        }
+      ],
+      "R58_S02": [
+        {
+          "old_graph_edge": "last→parentat RETURN",
+          "correct_consumption": "last is data from path walker, not callable function return edge"
+        },
+        {
+          "old_graph_edge": "cachehit→hash",
+          "correct_consumption": "__lookup_hash return choice on cachehit, not new lookup"
+        },
+        {
+          "old_graph_edge": "alloc→callback CONTROL",
+          "correct_consumption": "control is in __lookup_hash after allocator returns; allocator does not call filesystem callback"
+        },
+        {
+          "old_graph_edge": "namebad→putname ANALYSIS_STOP",
+          "correct_consumption": "never draw execution continuing from first invalid access; safe control is caller→putname and then conditional stop at invalid field read"
+        }
+      ]
+    },
+    "prior_artifact_consumption": [
+      {
+        "source": "58/MANIFEST.md",
+        "original_problem": "87/87 blanket P2/P9 assertion",
+        "new_rule": "two historical anchors B24/B25 replaced; 85 others retain historical-only status, not newly all validated"
+      },
+      {
+        "source": "58/vfs-mutation-gates.md",
+        "original_problem": "B24 combined macro, B25 source inexact; foo. 6→5; HASH NULL assumption",
+        "new_rule": "D01/D02 and D03; foo. 4→3; callback may alter dentry"
+      },
+      {
+        "source": "58/facts-and-boundaries.yaml",
+        "original_problem": "model source declaration and graph mapping not sufficient for P2",
+        "new_rule": "D00 separate source identities, old statuses real and R58-S01 exact behavior qualifiers"
+      },
+      {
+        "source": "58/vfs-mutation-gates-paths.dot",
+        "original_problem": "last/parentat; alloc/callback; namebad sequencing",
+        "new_rule": "R58-S02 control vs data mapping only; old graph preserved, new59 graph independent"
+      },
+      {
+        "source": "58/deferred-findings.yaml",
+        "original_problem": "NG58-F01 may double count EI28/PN29",
+        "new_rule": "new consumer only, upstream old IDs stay their original source-field status and cannot be renumbered"
+      },
+      {
+        "source": "58/evidence.md",
+        "original_problem": "B24 cross-macro; B25 non-original contiguous block/overlong",
+        "new_rule": "replace old B24 by D01/D02 and B25 by D03, no editing old 87 labels"
+      },
+      {
+        "source": "PR17 comment 6720176655",
+        "original_problem": "author READY and 87/87 verification not independent PASS",
+        "new_rule": "keep comment; consume with 58 review RETURN and D00 append; no author self-closure"
+      }
+    ],
+    "old_findings_real_sources": [
+      {
+        "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F01",
+        "source_field": "status",
+        "source_value": "needs_evidence",
+        "consumption_notes": [
+          "getname_kernel uses erroneous __myos_getname result under allocation failure",
+          "not 58 new root"
+        ]
+      },
+      {
+        "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F01",
+        "source_field": "status",
+        "source_value": "needs_evidence",
+        "consumption_notes": [
+          "strlen_user negative→size_t classification",
+          "R58-S01"
+        ]
+      },
+      {
+        "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F03",
+        "source_field": "status",
+        "source_value": "needs_evidence",
+        "consumption_notes": [
+          "strlen_user precheck/terminator range",
+          "R58-S01"
+        ]
+      },
+      {
+        "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F04",
+        "source_field": "status",
+        "source_value": "deferred_owner_not_ready",
+        "consumption_notes": [
+          "two observations of user string",
+          "R58-S01"
+        ]
+      },
+      {
+        "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F01",
+        "source_field": "status",
+        "source_value": "needs_evidence",
+        "consumption_notes": [
+          "bounded upper putname(ERR_PTR) consumer, not EI28/PN29 root",
+          "R58-S01"
+        ]
+      }
+    ]
+  },
+  "dispatch_fd_return_matrix": [
+    {
+      "case": "slot NULL within valid array",
+      "slot": "NULL",
+      "method": "not reached",
+      "earliest": "syscall after myos_fdget_pos returns -EBADF, no fdput_pos",
+      "source": "A08 A14 A15"
+    },
+    {
+      "case": "fd outside valid array",
+      "slot": "out-of-range",
+      "method": "not applicable",
+      "earliest": "myos_fdget_pos read fd_array[fd] invalid before !f.file; no -EBADF guaranteed",
+      "source": "A14 A15"
+    },
+    {
+      "case": "valid file NULL f_op",
+      "slot": "valid",
+      "method": "no f_op",
+      "earliest": "direct f.file->f_op field read invalid; iterate_dir -ENOTDIR not inherited",
+      "source": "A09 A10 A21"
+    },
+    {
+      "case": "valid file, f_op valid, iterate_shared NULL",
+      "slot": "valid",
+      "method": "NULL",
+      "earliest": "direct indirect function call invalid, not safe -ENOTDIR",
+      "source": "A03 A10 A21"
+    },
+    {
+      "case": "valid FAT method, no actor safe EOF",
+      "slot": "valid",
+      "method": "returns0",
+      "earliest": "buf.error initial0, prev0 => 0; filepos=-1",
+      "source": "A07 A11 A13 B09"
+    },
+    {
+      "case": "valid method returns negative with no actor",
+      "slot": "valid",
+      "method": "-EIO",
+      "earliest": "error<0 retained; prev0 => -EIO; filepos assigned from ctx.pos",
+      "source": "A10 A11 A13"
+    },
+    {
+      "case": "valid method returns negative after accepted actor",
+      "slot": "valid",
+      "method": "-EINVAL",
+      "earliest": "prev>0 overrides negative error with counted bytes",
+      "source": "A11 A13 C10"
+    },
+    {
+      "case": "valid FAT method returns0 after records",
+      "slot": "valid",
+      "method": "0",
+      "earliest": "buf.error=-EINVAL since filldir sets it before success, but prev>0 overrides bytes",
+      "source": "A11 A13 C05 C10"
+    },
+    {
+      "case": "huge unsigned count > signed INT_MAX",
+      "slot": "valid",
+      "method": "valid",
+      "earliest": "assignment into int buf.count is implementation-defined; no universal signed value",
+      "source": "A02 A07 C22"
+    }
+  ],
+  "position_actor_traces": {
+    "single_calls": [
+      {
+        "case": "empty_dir",
+        "trace": {
+          "capacity": 128,
+          "start_f_pos": 0,
+          "entries": [],
+          "actorEvents": [],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 128,
+          "prev_reclen": 0,
+          "buf_error": 0,
+          "syscall_ret": 0,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "pos_minus1",
+        "trace": {
+          "capacity": 128,
+          "start_f_pos": -1,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [],
+          "stop": "FAT early pos=-1",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 128,
+          "prev_reclen": 0,
+          "buf_error": 0,
+          "syscall_ret": 0,
+          "visible_bytes": 0,
+          "assumptions": "valid fd/file and method; direct FAT selected; no invalid deref"
+        }
+      },
+      {
+        "case": "two_fit",
+        "trace": {
+          "capacity": 48,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 24,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            }
+          ],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 48,
+          "visible_bytes": 48,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "two_fit_larger",
+        "trace": {
+          "capacity": 80,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 56,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 32,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            }
+          ],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 32,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 48,
+          "visible_bytes": 48,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "one_fit_second_fails",
+        "trace": {
+          "capacity": 24,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "one_fit_second_fails_second_call",
+        "trace": {
+          "capacity": 24,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "first_too_small",
+        "trace": {
+          "capacity": 23,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 23
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 23,
+          "prev_reclen": 0,
+          "buf_error": -22,
+          "syscall_ret": -22,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "zero_count_first_entry",
+        "trace": {
+          "capacity": 0,
+          "start_f_pos": 0,
+          "entries": [
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 0,
+          "prev_reclen": 0,
+          "buf_error": -22,
+          "syscall_ret": -22,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "first_exact_fit",
+        "trace": {
+          "capacity": 24,
+          "start_f_pos": 0,
+          "entries": [
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            }
+          ],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "positive_fpos_two_fit",
+        "trace": {
+          "capacity": 80,
+          "start_f_pos": 64,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 56,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 32,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            }
+          ],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 32,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 48,
+          "visible_bytes": 48,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "positive_fpos_partial",
+        "trace": {
+          "capacity": 24,
+          "start_f_pos": 64,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 64,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "first_invalid_name_zero",
+        "trace": {
+          "capacity": 64,
+          "start_f_pos": 0,
+          "entries": [
+            0
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 0,
+              "result": "reject -EIO",
+              "r_computed_before_check": 24,
+              "buf_count": 64
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -5,
+          "ctx_pos_after": 0,
+          "remaining_count": 64,
+          "prev_reclen": 0,
+          "buf_error": -5,
+          "syscall_ret": -5,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "after_one_invalid_name",
+        "trace": {
+          "capacity": 64,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            0
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 40,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 0,
+              "result": "reject -EIO",
+              "r_computed_before_check": 24,
+              "buf_count": 40
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -5,
+          "ctx_pos_after": 0,
+          "remaining_count": 40,
+          "prev_reclen": 24,
+          "buf_error": -5,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "name_5_fits_32",
+        "trace": {
+          "capacity": 32,
+          "start_f_pos": 0,
+          "entries": [
+            5
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 5,
+              "result": "actor returned0",
+              "r": 32,
+              "remaining": 0,
+              "prev": 32,
+              "requested_copy": 5,
+              "actual_user_copy": "NOT_OBSERVED"
+            }
+          ],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 0,
+          "prev_reclen": 32,
+          "buf_error": -22,
+          "syscall_ret": 32,
+          "visible_bytes": 32,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      },
+      {
+        "case": "name_5_fails_31",
+        "trace": {
+          "capacity": 31,
+          "start_f_pos": 0,
+          "entries": [
+            5
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 5,
+              "result": "reject -EINVAL buffer",
+              "r": 32,
+              "buf_count": 31
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 31,
+          "prev_reclen": 0,
+          "buf_error": -22,
+          "syscall_ret": -22,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        }
+      }
+    ],
+    "two_call_sequences": [
+      {
+        "case": "full_48_then_next",
+        "first": {
+          "capacity": 48,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 24,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            }
+          ],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 48,
+          "visible_bytes": 48,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "second": {
+          "capacity": 48,
+          "start_f_pos": -1,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [],
+          "stop": "FAT early pos=-1",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 48,
+          "prev_reclen": 0,
+          "buf_error": 0,
+          "syscall_ret": 0,
+          "visible_bytes": 0,
+          "assumptions": "valid fd/file and method; direct FAT selected; no invalid deref"
+        },
+        "result": "first reported48; f_pos=-1; second0"
+      },
+      {
+        "case": "partial24_then_repeat",
+        "first": {
+          "capacity": 24,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "second": {
+          "capacity": 24,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "result": "first24 and f_pos stays0; second can return24 again for same modeled entries"
+      },
+      {
+        "case": "none23_then_repeat",
+        "first": {
+          "capacity": 23,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 23
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 23,
+          "prev_reclen": 0,
+          "buf_error": -22,
+          "syscall_ret": -22,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "second": {
+          "capacity": 23,
+          "start_f_pos": 0,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 23
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 0,
+          "remaining_count": 23,
+          "prev_reclen": 0,
+          "buf_error": -22,
+          "syscall_ret": -22,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "result": "first and second -EINVAL if same valid prefix; no accepted bytes"
+      },
+      {
+        "case": "pos64_partial_then_again",
+        "first": {
+          "capacity": 24,
+          "start_f_pos": 64,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 64,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "second": {
+          "capacity": 24,
+          "start_f_pos": 64,
+          "entries": [
+            1,
+            1
+          ],
+          "actorEvents": [
+            {
+              "index": 0,
+              "n": 1,
+              "result": "actor returned0",
+              "r": 24,
+              "remaining": 0,
+              "prev": 24,
+              "requested_copy": 1,
+              "actual_user_copy": "NOT_OBSERVED"
+            },
+            {
+              "index": 1,
+              "n": 1,
+              "result": "reject -EINVAL buffer",
+              "r": 24,
+              "buf_count": 0
+            }
+          ],
+          "stop": "actor returned nonzero",
+          "callee_ret": -22,
+          "ctx_pos_after": 64,
+          "remaining_count": 0,
+          "prev_reclen": 24,
+          "buf_error": -22,
+          "syscall_ret": 24,
+          "visible_bytes": 24,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "result": "positive initial f_pos ignored by FAT iter_init; repeated first accepted entry conditional"
+      },
+      {
+        "case": "empty_then_second",
+        "first": {
+          "capacity": 80,
+          "start_f_pos": 0,
+          "entries": [],
+          "actorEvents": [],
+          "stop": "assumed getter ends safely after modeled actor prefix",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 80,
+          "prev_reclen": 0,
+          "buf_error": 0,
+          "syscall_ret": 0,
+          "visible_bytes": 0,
+          "assumptions": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+        },
+        "second": {
+          "capacity": 80,
+          "start_f_pos": -1,
+          "entries": [],
+          "actorEvents": [],
+          "stop": "FAT early pos=-1",
+          "callee_ret": 0,
+          "ctx_pos_after": -1,
+          "remaining_count": 80,
+          "prev_reclen": 0,
+          "buf_error": 0,
+          "syscall_ret": 0,
+          "visible_bytes": 0,
+          "assumptions": "valid fd/file and method; direct FAT selected; no invalid deref"
+        },
+        "result": "first0 marks -1 on safe terminal, second early0"
+      }
+    ],
+    "conditions": [
+      "FAT selected by valid f_op only as a premise",
+      "each listed actor call reached with ordinary valid name and iobuf",
+      "getter safe EOF after modeled prefix, not automatically actual FAT end",
+      "failure while actor returned negative does not assign ctx.pos=-1",
+      "all C signed arithmetic, buffers and copy operations valid in model"
+    ],
+    "fat_iter_init_cursor": 0,
+    "callback_offset_ino_type": [
+      0,
+      0,
+      0
+    ]
+  },
+  "dirent_capacity_write_matrix": {
+    "layout": {
+      "reference": "linux_dirent64_s fields u64 d_ino, s64 d_off, ushort d_reclen, uchar d_type, char d_name[]",
+      "assumed_offsets_in_x86_64_ordinary_layout": {
+        "d_ino": 0,
+        "d_off": 8,
+        "d_reclen": 16,
+        "d_type": 18,
+        "d_name": 19
+      },
+      "compiled_layout": "NOT_MEASURED",
+      "read_context": "offsetof conditional macro + ALIGN macro (expands further through unexpanded __ALIGN_KERNEL)",
+      "size_model": "ALIGN_UP(19+namelen+1,8) only for ordinary valid nonoverflow model",
+      "last_offset": "first prev=current => d_off=actor offset; subsequent prev points previous; last d_off not explicitly finalized, syscall tail update commented",
+      "actor_FAT_metadata": {
+        "offset": 0,
+        "ino": 0,
+        "d_type": 0
+      }
+    },
+    "namelen_reclen": [
+      {
+        "namelen": -1,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": null,
+        "verify": "-EIO length gate if earlier reclen evaluation remains defined",
+        "record_size_valid_domain": false,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 0,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 24,
+        "verify": "-EIO length gate if earlier reclen evaluation remains defined",
+        "record_size_valid_domain": false,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 1,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 24,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 2,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 24,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 3,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 24,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 4,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 24,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 5,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 32,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 8,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 32,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 9,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 32,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 12,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 32,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 13,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 40,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 20,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 40,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 255,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 280,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 4095,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 4120,
+        "verify": "pass length gate, still check memchr slash",
+        "record_size_valid_domain": true,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      },
+      {
+        "namelen": 4096,
+        "model_offset": 19,
+        "model_align": 8,
+        "calculated_reclen": 4120,
+        "verify": "-EIO length gate if earlier reclen evaluation remains defined",
+        "record_size_valid_domain": false,
+        "scope": "LP64 structure offsets=19 and ALIGN_UP8 as explicit ABI/math model; no preprocessing/compiled sizeof"
+      }
+    ],
+    "counts": [
+      {
+        "request_count_uint": 0,
+        "model_signed_int32": 0,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 23,
+        "model_signed_int32": 23,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 24,
+        "model_signed_int32": 24,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 31,
+        "model_signed_int32": 31,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 32,
+        "model_signed_int32": 32,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 47,
+        "model_signed_int32": 47,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 48,
+        "model_signed_int32": 48,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 80,
+        "model_signed_int32": 80,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 2147483647,
+        "model_signed_int32": 2147483647,
+        "nonnegative_and_representable": true,
+        "interpretation": "same numeric count in signed int"
+      },
+      {
+        "request_count_uint": 2147483648,
+        "model_signed_int32": -2147483648,
+        "nonnegative_and_representable": false,
+        "interpretation": "C conversion implementation-defined when out of signed int range; signed32 two's-complement example only"
+      },
+      {
+        "request_count_uint": 4294967295,
+        "model_signed_int32": -1,
+        "nonnegative_and_representable": false,
+        "interpretation": "C conversion implementation-defined when out of signed int range; signed32 two's-complement example only"
+      }
+    ],
+    "write_sequence": [
+      {
+        "stage": 1,
+        "object": "prev->d_off",
+        "operation": "direct store",
+        "guard": "no access_ok in filldir64 prior to write",
+        "premise": "prev valid and writable"
+      },
+      {
+        "stage": 2,
+        "object": "dirent->d_ino",
+        "operation": "direct store0 for FAT actor",
+        "guard": "no direct user access check",
+        "premise": "dirent valid and writable"
+      },
+      {
+        "stage": 3,
+        "object": "dirent->d_reclen",
+        "operation": "direct store unsigned short reclen",
+        "guard": "only reclen > signed buf.count checked",
+        "premise": "reclen integer/representable"
+      },
+      {
+        "stage": 4,
+        "object": "dirent->d_type",
+        "operation": "direct store0 for FAT actor",
+        "guard": "no separate guard",
+        "premise": "valid pointer"
+      },
+      {
+        "stage": 5,
+        "object": "dirent->d_name",
+        "operation": "copy_to_user(name,namelen)",
+        "guard": "inline wrapper has access_ok and raw residue, cplen returned but not checked",
+        "premise": "name source readable and target appropriate"
+      },
+      {
+        "stage": 6,
+        "object": "dirent->d_name[namelen]",
+        "operation": "direct NUL store",
+        "guard": "no check of cplen and independent access_ok",
+        "premise": "direct target still writable"
+      },
+      {
+        "stage": 7,
+        "object": "buf->prev_reclen,current_dir,count",
+        "operation": "advance and count down",
+        "guard": "no cplen failure gate",
+        "premise": "all previous stages defined/return"
+      }
+    ],
+    "dual_record_models": [
+      {
+        "id": "full_48_then_next",
+        "first_reported": 48,
+        "second_reported": 0,
+        "remarks": "first reported48; f_pos=-1; second0"
+      },
+      {
+        "id": "partial24_then_repeat",
+        "first_reported": 24,
+        "second_reported": 24,
+        "remarks": "first24 and f_pos stays0; second can return24 again for same modeled entries"
+      },
+      {
+        "id": "none23_then_repeat",
+        "first_reported": -22,
+        "second_reported": -22,
+        "remarks": "first and second -EINVAL if same valid prefix; no accepted bytes"
+      },
+      {
+        "id": "pos64_partial_then_again",
+        "first_reported": 24,
+        "second_reported": 24,
+        "remarks": "positive initial f_pos ignored by FAT iter_init; repeated first accepted entry conditional"
+      },
+      {
+        "id": "empty_then_second",
+        "first_reported": 0,
+        "second_reported": 0,
+        "remarks": "first0 marks -1 on safe terminal, second early0"
+      }
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "id": "LEN0",
+      "group": "C",
+      "input": -1,
+      "result": null,
+      "branch": "-EIO length gate if earlier reclen evaluation remains defined"
+    },
+    {
+      "id": "LEN1",
+      "group": "C",
+      "input": 0,
+      "result": 24,
+      "branch": "-EIO length gate if earlier reclen evaluation remains defined"
+    },
+    {
+      "id": "LEN2",
+      "group": "C",
+      "input": 1,
+      "result": 24,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN3",
+      "group": "C",
+      "input": 2,
+      "result": 24,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN4",
+      "group": "C",
+      "input": 3,
+      "result": 24,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN5",
+      "group": "C",
+      "input": 4,
+      "result": 24,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN6",
+      "group": "C",
+      "input": 5,
+      "result": 32,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN7",
+      "group": "C",
+      "input": 8,
+      "result": 32,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN8",
+      "group": "C",
+      "input": 9,
+      "result": 32,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN9",
+      "group": "C",
+      "input": 12,
+      "result": 32,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN10",
+      "group": "C",
+      "input": 13,
+      "result": 40,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN11",
+      "group": "C",
+      "input": 20,
+      "result": 40,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN12",
+      "group": "C",
+      "input": 255,
+      "result": 280,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN13",
+      "group": "C",
+      "input": 4095,
+      "result": 4120,
+      "branch": "pass length gate, still check memchr slash"
+    },
+    {
+      "id": "LEN14",
+      "group": "C",
+      "input": 4096,
+      "result": 4120,
+      "branch": "-EIO length gate if earlier reclen evaluation remains defined"
+    },
+    {
+      "id": "COUNT0",
+      "group": "A/C",
+      "input": 0,
+      "result": 0,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT1",
+      "group": "A/C",
+      "input": 23,
+      "result": 23,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT2",
+      "group": "A/C",
+      "input": 24,
+      "result": 24,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT3",
+      "group": "A/C",
+      "input": 31,
+      "result": 31,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT4",
+      "group": "A/C",
+      "input": 32,
+      "result": 32,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT5",
+      "group": "A/C",
+      "input": 47,
+      "result": 47,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT6",
+      "group": "A/C",
+      "input": 48,
+      "result": 48,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT7",
+      "group": "A/C",
+      "input": 80,
+      "result": 80,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT8",
+      "group": "A/C",
+      "input": 2147483647,
+      "result": 2147483647,
+      "scope": "same numeric count in signed int"
+    },
+    {
+      "id": "COUNT9",
+      "group": "A/C",
+      "input": 2147483648,
+      "result": -2147483648,
+      "scope": "C conversion implementation-defined when out of signed int range; signed32 two's-complement example only"
+    },
+    {
+      "id": "COUNT10",
+      "group": "A/C",
+      "input": 4294967295,
+      "result": -1,
+      "scope": "C conversion implementation-defined when out of signed int range; signed32 two's-complement example only"
+    },
+    {
+      "id": "TRACE0",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 128,
+        "namelens": []
+      },
+      "result": {
+        "return": 0,
+        "new_pos": -1,
+        "emitted": 0,
+        "prev_reclen": 0
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE1",
+      "group": "A/B",
+      "input": {
+        "startPos": -1,
+        "count": 128,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": 0,
+        "new_pos": -1,
+        "emitted": 0,
+        "prev_reclen": 0
+      },
+      "premise": "valid fd/file and method; direct FAT selected; no invalid deref"
+    },
+    {
+      "id": "TRACE2",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 48,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": 48,
+        "new_pos": -1,
+        "emitted": 48,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE3",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 80,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": 48,
+        "new_pos": -1,
+        "emitted": 48,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE4",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 24,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": 24,
+        "new_pos": 0,
+        "emitted": 24,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE5",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 24,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": 24,
+        "new_pos": 0,
+        "emitted": 24,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE6",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 23,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": -22,
+        "new_pos": 0,
+        "emitted": 0,
+        "prev_reclen": 0
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE7",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 0,
+        "namelens": [
+          1
+        ]
+      },
+      "result": {
+        "return": -22,
+        "new_pos": 0,
+        "emitted": 0,
+        "prev_reclen": 0
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE8",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 24,
+        "namelens": [
+          1
+        ]
+      },
+      "result": {
+        "return": 24,
+        "new_pos": -1,
+        "emitted": 24,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE9",
+      "group": "A/B",
+      "input": {
+        "startPos": 64,
+        "count": 80,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": 48,
+        "new_pos": -1,
+        "emitted": 48,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE10",
+      "group": "A/B",
+      "input": {
+        "startPos": 64,
+        "count": 24,
+        "namelens": [
+          1,
+          1
+        ]
+      },
+      "result": {
+        "return": 24,
+        "new_pos": 64,
+        "emitted": 24,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE11",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 64,
+        "namelens": [
+          0
+        ]
+      },
+      "result": {
+        "return": -5,
+        "new_pos": 0,
+        "emitted": 0,
+        "prev_reclen": 0
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE12",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 64,
+        "namelens": [
+          1,
+          0
+        ]
+      },
+      "result": {
+        "return": 24,
+        "new_pos": 0,
+        "emitted": 24,
+        "prev_reclen": 24
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE13",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 32,
+        "namelens": [
+          5
+        ]
+      },
+      "result": {
+        "return": 32,
+        "new_pos": -1,
+        "emitted": 32,
+        "prev_reclen": 32
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TRACE14",
+      "group": "A/B",
+      "input": {
+        "startPos": 0,
+        "count": 31,
+        "namelens": [
+          5
+        ]
+      },
+      "result": {
+        "return": -22,
+        "new_pos": 0,
+        "emitted": 0,
+        "prev_reclen": 0
+      },
+      "premise": "selected valid fd/FAT op; each listed actor was reached; complete enumeration means a separate safe getter terminal; all writes/copy/math legal; no raw disk asserted"
+    },
+    {
+      "id": "TWOCALL0",
+      "group": "B",
+      "input": "full_48_then_next",
+      "result": {
+        "first_return": 48,
+        "second_return": 0,
+        "first_pos": -1,
+        "second_pos": -1
+      },
+      "premise": "two modeled invocations with same conditional actor sequence, no actual directory file used"
+    },
+    {
+      "id": "TWOCALL1",
+      "group": "B",
+      "input": "partial24_then_repeat",
+      "result": {
+        "first_return": 24,
+        "second_return": 24,
+        "first_pos": 0,
+        "second_pos": 0
+      },
+      "premise": "two modeled invocations with same conditional actor sequence, no actual directory file used"
+    },
+    {
+      "id": "TWOCALL2",
+      "group": "B",
+      "input": "none23_then_repeat",
+      "result": {
+        "first_return": -22,
+        "second_return": -22,
+        "first_pos": 0,
+        "second_pos": 0
+      },
+      "premise": "two modeled invocations with same conditional actor sequence, no actual directory file used"
+    },
+    {
+      "id": "TWOCALL3",
+      "group": "B",
+      "input": "pos64_partial_then_again",
+      "result": {
+        "first_return": 24,
+        "second_return": 24,
+        "first_pos": 64,
+        "second_pos": 64
+      },
+      "premise": "two modeled invocations with same conditional actor sequence, no actual directory file used"
+    },
+    {
+      "id": "TWOCALL4",
+      "group": "B",
+      "input": "empty_then_second",
+      "result": {
+        "first_return": 0,
+        "second_return": 0,
+        "first_pos": -1,
+        "second_pos": -1
+      },
+      "premise": "two modeled invocations with same conditional actor sequence, no actual directory file used"
+    }
+  ],
+  "finite_model_count": 46,
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": [
+        "R41-S01",
+        "R41-S02"
+      ],
+      "relation": "fget uses reference increment and NULL slot issue; myos_fdget_pos here different raw borrow; not same function"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F02",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": [
+        "R41-S01",
+        "R41-S02"
+      ],
+      "relation": "LP64 narrowing model reminder only, this batch unsigned fd to int is distinct conversion boundary"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R35-S01",
+        "R35-S02"
+      ],
+      "relation": "getter attr may consume ERR_PTR before caller IS_ERR; no safe EOF assumed"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R35-S01",
+        "R35-S02"
+      ],
+      "relation": "last valid entry may be masked; model actor prefix does not certify physical entries enumerated"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R58-S01",
+        "R58-S02"
+      ],
+      "relation": "D00 old source upper name ERR_PTR consumer identity, does not become enumeration finding"
+    },
+    {
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F04",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": [
+        "R58-S01"
+      ],
+      "relation": "D00 historical name source status kept"
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R58-S01"
+      ],
+      "relation": "D00 upstream name allocation failure not independently new"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F02",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": [
+        "R38-S01",
+        "R38-S02"
+      ],
+      "relation": "FAT outer inode object provenance condition"
+    }
+  ],
+  "scope_boundaries": {
+    "real_file_descriptor_lifetime": "NOT_RUN",
+    "real_FAT_bytes": "NOT_RUN",
+    "user_memory_faults": "NOT_RUN",
+    "C_preprocessor_ABI": "NOT_RUN",
+    "actual_struct_size": "NOT_MEASURED",
+    "real_disk_and_driver": "NOT_RUN",
+    "other_thread_concurrency": "NOT_RUN",
+    "pending_old_return": "R58-01"
+  },
+  "not_run": [
+    "kernel C/ASM/repository scripts",
+    "compiler/preprocessor/link",
+    "old test fixtures",
+    "QEMU/hardware",
+    "real media and VFS user paths",
+    "Graphviz full parse",
+    "full P9 local git gate"
+  ]
+}

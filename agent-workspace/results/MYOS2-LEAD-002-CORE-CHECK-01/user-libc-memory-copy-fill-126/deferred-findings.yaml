@@ -1,0 +1,146 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-MEMORY-COPY-FILL-126",
+  "record_type": "bounded_deferred_findings_and_D00",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 self-reported; backend model/effort UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra per 177",
+  "date": "2026-11-22",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "bd1372961eaa",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "R125_01": "OPEN pending independent C08",
+    "R125_02": "OPEN pending independent C08"
+  },
+  "inputs_read": [
+    "agent-workspace/lead/MYOS2-LEAD-002/177-user-libc-memory-copy-fill-contract.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-LIBC-STRING-COPY-APPEND-125-review.md",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/MANIFEST.md",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/facts-and-boundaries.yaml",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-copy-append-125/evidence.md",
+    "myinitramfs/mylib/myglibc/string/memcpy.c",
+    "myinitramfs/mylib/myglibc/string/memset.c",
+    "myinitramfs/mylib/myglibc/sysdeps/generic/memcopy.h",
+    "myinitramfs/myshell/myshell.c"
+  ],
+  "items": [
+    {
+      "id": "R125-01",
+      "kind": "AUTHOR_REPORT_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_ref": {
+        "commit_short12": "bd1372961eaa",
+        "file": "125/MANIFEST.md:35-37,100,105; 125/evidence.md:SC125-E022..029/E032..034"
+      },
+      "earliest_unknown": "C08 acceptance of 23/23/0 composite reading view",
+      "what_fixed": "Original literal 35 (manifest1/evidence34); structural 34; virtual 21 C plus2 time=23 after moving 11 build windows to ordinary source and eliminating accidental prefix",
+      "recover": "C08 compare 125 fixed blobs, virtual selectors and 126 D00 machine patch; close or RETURN",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "R125-02",
+      "kind": "AUTHOR_REPORT_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_ref": {
+        "commit_short12": "bd1372961eaa",
+        "file": "125/facts-and-boundaries.yaml:/C_cat_command/cases/0/stages/2/new_NUL_from_prior_memset_offset"
+      },
+      "earliest_unknown": "C08 acceptance of root field null and most-recent writer ledger",
+      "what_fixed": "C125-01 guard false, F[1] rewritten with 0 by first strcpy MEMCPY; two nonroot F[5] most recently from memset at separator checkpoint",
+      "recover": "C08 independently replay given source stores, verify correct case fields and no early closure",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC126-SH-REAL-LIBC",
+      "kind": "SOURCE_PROVENANCE",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "actual linked libc for installed sh and resolved source symbols",
+      "observed": [
+        "myglibc STATIC source target",
+        "initramfs CMake text with musl-gcc",
+        "sh add_executable"
+      ],
+      "limitation": "no permission to preprocess/build/link; conditional inrepo C model only",
+      "recover": "separately authorized effective compile/link map and binary provenance",
+      "owner_now": "NONE"
+    },
+    {
+      "id": "SC126-GENERIC-HEADER",
+      "kind": "COMPILE_TIME_CHOICE",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "actual included memcopy.h under effective include paths and PAGE_COPY_THRESHOLD during preprocessing",
+      "observed": [
+        "memcpy.c:20-21",
+        "sysdeps/generic/memcopy.h:42-44,63-67,192-199"
+      ],
+      "limitation": "this task chooses generic header, op_t=8, page macro empty as explicit model assumptions",
+      "recover": "future read-only effective include path/preprocessed translation unit if independently authorized"
+    },
+    {
+      "id": "SC126-WORDCOPY-HELPER",
+      "kind": "FUNCTION_BODY_BOUNDARY",
+      "status": "CONDITIONAL_ASSUMPTION",
+      "earliest_unknown": "linked _wordcopy_fwd_aligned body and actual copy behavior at 16-byte boundary",
+      "observed": [
+        "memcopy.h:119-131",
+        "memcpy.c:35-59"
+      ],
+      "limitation": "helper called with 2 words when aligned; normal completion and two 8-byte copies assumed, no helper assembly execution or implementation review",
+      "recover": "independently inspect effective helper definition, linked helper and ABI when authorized"
+    },
+    {
+      "id": "SC126-OBJECTS-AND-ALIGNMENT",
+      "kind": "MODEL_PRECONDITION",
+      "status": "CONDITIONAL_MODEL",
+      "earliest_unknown": "real user pointers, malloc alignment/capacity and memory readability",
+      "observed": [
+        "memset.c:22-83",
+        "memcpy.c:28-59",
+        "myshell.c:260-270"
+      ],
+      "limitation": "valid nonoverlapping allocated memory, enough source storage, 8-byte long assumed; invalid/short/overlap excluded",
+      "recover": "future separately authorized runtime or memory-safety evaluation"
+    },
+    {
+      "id": "SC126-WRITE-COUNTS",
+      "kind": "STATIC_VS_RUNTIME_BOUNDARY",
+      "status": "CONDITIONAL_MODEL",
+      "earliest_unknown": "actual optimized compiler/store instructions or observable memory bus transactions",
+      "observed": [
+        "memcpy.c:56-59",
+        "memcopy.h:78-90",
+        "memset.c:47-83"
+      ],
+      "limitation": "18/17/19 write width is abstract source-level write coverage, not machine instruction count or execution telemetry",
+      "recover": "target binary and isolated runtime instrumentation with separate approval"
+    },
+    {
+      "id": "SC126-CAT-VFS",
+      "kind": "RUNTIME_UNKNOWN",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "actual open result, path normalization, file identity and errno",
+      "observed": [
+        "myshell.c:260-270"
+      ],
+      "limitation": "stops at literal parameter bytes /readme, /bin/hi, /bin//hi, no real file access",
+      "recover": "C08 source-only interpretation or later separately approved live validation"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "full_local_P9": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "compile_link": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "hardware": "NOT_RUN",
+  "real_file_operations": "NOT_RUN"
+}

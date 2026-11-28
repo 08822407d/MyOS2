@@ -1,0 +1,953 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-VFS-BASELINE-05
+record_type: deferred_findings_increment
+produced_by: Claude Code cloud session (claude.ai/code)
+model: unknown_or_not_attestable
+date: '2026-10-02'
+policy_ref: agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）
+policy_status: ACTIVE_RECORD_FIRST_OWNER_REPAIR_DEFERRED
+owner_action_now: none
+owner_decisions_requested_now: []
+kernel_change_authorized: false
+candidate_A_adopted: false
+candidate_B_adopted: false
+scope: 只登记本批新增条目（UV-01…UV-16）、本批处置的两项文档勘误，以及对旧记录的状态变更与交叉链接；不复制历史问题全文，不重编号旧条目。
+empty_set_statement: 本批发现集合非空：16 项新条目、2 项文档勘误、10 项旧条目状态变更。检查范围见 facts-and-dependencies.yaml 的 chains 与 coverage_limits；没有登记的部分不等于已确认安全。
+kinds_allowed:
+- source_fact
+- conditional_inference
+- limited_host_observation
+- policy_proposal
+- evidence_gap
+- documentation_erratum
+statuses_allowed:
+- deferred_owner_not_ready
+- needs_evidence
+- superseded_interpretation
+resume_order:
+- agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）
+- 本轨道最新主线检查点与对应审查回执（agent/MYOS2-LEAD-002 的 reviews/）
+- 本包 user-vfs-baseline.md 与 facts-and-dependencies.yaml
+- 被选条目的 qualified_id（本文件）
+- 原证据（anchors/queries 所指 time 源码）与当时最新的 time
+counts:
+  findings: 16
+  errata: 2
+  status_changes: 10
+  cross_links: 13
+  findings_by_status:
+    deferred_owner_not_ready: 12
+    needs_evidence: 4
+findings:
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-01
+  id: UV-01
+  title: 首个程序启动链的失败边界
+  kind:
+  - source_fact
+  - conditional_inference
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-01
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - sched.forkexec.first_user_launch
+  - fs.vfs.root_switch
+  claim: kjmp_to_doexecve 丢弃 kernel_execve 的返回值，并无条件跳到 syscall_return_via_sysret；根切换中读盘结果不检查，MBR 类型不符时原地 while (1)，init_mount
+    的结果也不检查。
+  premises:
+  - kernel_init 走到 kjmp_to_doexecve（A-C1-03）
+  - exec 失败（文件缺失、格式不符、打开返回值异常等）
+  impact: exec 失败时，以内核线程的 pt_regs 进入用户态，结果未定义；根盘不可读或不是 GPT 时系统停在死循环，没有诊断出口。
+  counter_evidence:
+  - 正常镜像下 exec 成功，这些分支不走；kjmp 之后的 while (true) 在 asm jmp 之后，推断不可达。
+  unknown:
+  - syscall_return_via_sysret 与 pt_regs 的内容（GAP-U04）
+  - 找不到根分区时 set_init_mount 的行为（GAP-U03）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C1-05
+    - A-C1-07
+    - A-C1-10
+    - A-C1-11
+    queries:
+    - Q21
+    - Q37
+  related:
+  - CORE-USER-VFS-BASELINE-05::LBU-09
+  - CORE-USER-VFS-BASELINE-05::UV-02
+  - CORE-USER-VFS-BASELINE-05::UV-04
+  blocks:
+    static_work: false
+    future_runtime: 影响 NVU-4/NVU-5 的结果解释
+  future_verification:
+    candidates:
+    - NVU-5
+    authorization_needed:
+    - 完整内核构建授权（full_kernel_build_authorized）
+    - QEMU 运行授权
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 以后若修，先让 kjmp_to_doexecve 检查返回值并给出可见的失败出口；建议不等于决定。
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-02
+  id: UV-02
+  title: exec 越过不可返回点后失败只返回错误
+  kind:
+  - source_fact
+  - conditional_inference
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-02
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - sched.forkexec.exec_entry
+  - sched.forkexec.exec_mm_switch
+  - fs.vfs.elf_loader
+  claim: begin_new_exec 置 point_of_no_return 并换掉 mm 之后，后续失败（elf_load、create_elf_tables 等）只作为返回值上交；bprm_execve 中本应发出的 force_fatal_sig
+    被注释，sched/forkexec 中没有活动调用。
+  premises:
+  - exec 在 begin_new_exec 之后失败
+  impact: 用户 execve 的调用者会在已换掉的地址空间中收到错误返回，继续执行的结果未定义；对首个程序则叠加 UV-01。
+  counter_evidence:
+  - begin_new_exec 之前的失败（打开、格式校验）能正常返回错误。
+  unknown:
+  - 哪些后续失败在实际镜像下可达（例如 vm_mmap 失败）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C3-05
+    - A-C3-10
+    - A-C3-11
+    - A-C3-14
+    queries:
+    - Q13
+  related:
+  - CORE-USER-VFS-BASELINE-05::LBU-05
+  - CORE-MM-BASELINE-04::MC-11
+  - CORE-MM-BASELINE-04::MC-13
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates:
+    - NVU-5
+    authorization_needed:
+    - 完整内核构建授权（full_kernel_build_authorized）
+    - QEMU 运行授权
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 恢复不可返回点之后的致命信号路径需要信号子系统先就绪，属于跨子系统改动。
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-03
+  id: UV-03
+  title: 格式分派不提前返回（潜伏）
+  kind:
+  - source_fact
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-03
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - sched.forkexec.binfmt_dispatch
+  claim: search_binary_handler 中“遇到非 -ENOEXEC 就返回”的语句被注释，所有已注册格式都会被调用，最后一个返回值生效。
+  premises:
+  - 注册了两个及以上格式
+  impact: 本 pin 只有 elf_format 一处活动注册（Q01），目前等价于直接调用 load_elf_binary，没有可见影响；一旦增加第二个格式，前一个格式已经越过不可返回点的装载会被后一个格式再处理一次。
+  counter_evidence:
+  - Q01：register_binfmt 的活动调用者只有 init_elf_binfmt。
+  unknown:
+  - 是否有通过其他途径（模块、别名）注册的格式——本批只做了词法检索
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C3-06
+    - A-C3-07
+    - A-C3-09
+    queries:
+    - Q01
+  related: []
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates: []
+    authorization_needed: []
+  reopen_conditions: 新增可执行格式或恢复模块注册时重开。
+  ai_suggestion: 以后若新增格式，先恢复提前返回；建议不等于决定。
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-04
+  id: UV-04
+  title: 打开路径两层函数缺少 return，成败取决于未定义值
+  kind:
+  - source_fact
+  - evidence_gap
+  status: needs_evidence
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-04
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.path_open
+  claim: do_open 的函数体只有对 vfs_open 的调用，没有 return；myos_do_dentry_open 声明返回 int，也没有 return。path_openat 用 do_open 的“返回值”作为 error
+    判断打开成败（A-C4-07）。
+  premises:
+  - C 语义：函数无 return 而调用者使用其值属于未定义行为
+  - 所有经 do_filp_open 的打开都走这条路径，包括 exec 打开可执行文件（A-C3-03）
+  impact: 打开的成败与返回的 file 指针取决于编译器生成的代码（返回寄存器中残留的值），静态无法判定。若残留值非 0，正常打开会被当作失败；若残留值是小正数，ERR_PTR 不会被 IS_ERR 识别为错误。
+  counter_evidence:
+  - 项目可能在当前构建下“碰巧能用”：残留值可能来自 vfs_open/myos_do_dentry_open 的最后一次调用（FAT32_open 返回 1，见阅读记录）——这一点反而说明结果依赖代码生成。
+  unknown:
+  - 实际构建产物中三个函数的返回寄存器来源（GAP-U01）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C4-07
+    - A-C4-08
+    - A-C4-10
+    queries:
+    - Q33
+    structure_checks:
+    - SC-01
+    - SC-02
+  related:
+  - CORE-USER-VFS-BASELINE-05::UV-01
+  blocks:
+    static_work: false
+    future_runtime: 影响任何运行观察的解释（打开是否成功）
+  future_verification:
+    candidates:
+    - NVU-2
+    authorization_needed:
+    - 完整内核构建授权（full_kernel_build_authorized）
+  reopen_conditions: 取得授权构建产物后先做 NVU-2；或 Owner 开修复专项时重开。
+  ai_suggestion: 这是本批唯一影响所有打开路径的条目；以后若修，补上两处 return 即可，但要先按 NVU-2 确认现状。建议不等于决定。
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-05
+  id: UV-05
+  title: FAT32 普通文件 read()：读目标取自用户缓冲区的内容
+  kind:
+  - conditional_inference
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-05
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.read_syscall
+  - fs.vfs.pagecache_read
+  claim: vfs_read 在有 read_iter 时走 new_sync_read，用 iov_iter_ubuf 建 ITER_UBUF 迭代器，只写 ubuf 字段；FAT32 的 read_iter 是 generic_file_read_iter
+    → simple_filemap_read，后者从 iter->kvec->iov_base 与 iter->kvec->iov_len 取读目标与长度。kvec 与 ubuf 是同一个联合体成员，所以 iter->kvec 的值就是用户缓冲区地址，读目标与长度取自用户缓冲区前
+    16 字节的内容。
+  premises:
+  - 文件的 i_fop 为 FAT32_file_ops（A-C4-11、Q06）
+  - FAT32_file_ops 同时有 read 与 read_iter（Q07），vfs_read 优先 read_iter（A-C4-15）
+  - kvec_s 的前两个成员依次为 iov_base、iov_len（阅读记录；类型定义在 uio.h）
+  impact: 用户缓冲区全为 0 时 end == start，读返回 0，看起来像文件结束；缓冲区有残留数据时，内核会把文件内容写到由这些数据决定的地址和长度。内核态的 kernel_read 用 kvec 迭代器，不受影响（fs.vfs.kernel_read）。
+  counter_evidence:
+  - exec 的读路径不受影响（kvec）；缺页读走 ->read，不经 read_iter。
+  unknown:
+  - 用户程序实际怎样读文件（shell 是否读普通文件）
+  - copy 时没有 copy_to_user，内核直接 memcpy 到该地址的后果
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C4-15
+    - A-C4-16
+    - A-C4-19
+    - A-C4-20
+    - A-C4-21
+    - A-C4-11
+    queries:
+    - Q06
+    - Q07
+  related:
+  - CORE-USER-VFS-BASELINE-05::UV-06
+  - CORE-USER-VFS-BASELINE-05::LBU-06
+  blocks:
+    static_work: false
+    future_runtime: 无（宿主夹具即可验证）
+  future_verification:
+    candidates:
+    - NVU-1
+    authorization_needed:
+    - 宿主夹具执行授权（host_fixture_execution_authorized）
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 以后若修，可让 simple_filemap_read 按迭代器类型取目标，或改用 copy_to_iter；建议不等于决定。
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-06
+  id: UV-06
+  title: 页缓存读的长度、位置与文件尾语义
+  kind:
+  - source_fact
+  - conditional_inference
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-06
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.pagecache_read
+  - fs.vfs.kernel_read
+  - fs.vfs.read_syscall
+  claim: simple_filemap_read 不按 i_size 截短，不更新 ki_pos；最后一页的长度公式在 end 页对齐时得 0 或负数（VT-FR01：从 0 读 4096 字节得 0，从 100 读到 4096 得 -100，从
+    0 读 8192 字节得 4096）。
+  premises:
+  - 公式按源码转写（A-C4-22）
+  - kvec 迭代器（kernel_read）或 UV-05 之外的情形
+  impact: read() 的 f_pos 不前进（LBU-06），重复读同一处、读不到文件尾。end 页对齐时：若最后一页从页首开始，该页长度为 0，kernel_read 得到短读，elf_read 判为 -EIO；若起点落在最后一页页内，长度为负，作为
+    size_t 交给 memcpy（逐字节 while (count--)，Q41），拷贝越过页面，函数不会正常返回。
+  counter_evidence:
+  - exec 的 prepare_binprm 读 256 字节，elf_read 读 ELF 头与段表，一般不止于页边界。
+  unknown:
+  - 实际 ELF 段表的偏移与长度（取决于镜像）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C4-14
+    - A-C4-21
+    - A-C4-22
+    - A-C4-23
+    - A-C3-18
+    queries:
+    - Q41
+    structure_checks:
+    - SC-04
+    - SC-06
+    value_tables:
+    - VT-FR01
+  related:
+  - CORE-USER-VFS-BASELINE-05::UV-05
+  - CORE-USER-VFS-BASELINE-05::UV-07
+  - CORE-USER-VFS-BASELINE-05::LBU-06
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates:
+    - NVU-1
+    authorization_needed:
+    - 宿主夹具执行授权（host_fixture_execution_authorized）
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-07
+  id: UV-07
+  title: page_array 下标没有上界
+  kind:
+  - source_fact
+  - conditional_inference
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-07
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.path_open
+  - fs.vfs.pagecache_read
+  - fs.vfs.file_mmap_fault_read
+  claim: page_array 的长度在首次查找时按 i_size 定为 nrpages，页数为 0 时不分配（A-C4-05）；simple_filemap_read 与 simple_filemap_fault 都直接用页号下标，不与
+    nrpages 比较。
+  premises:
+  - 读区间越过文件尾（UV-06 不截短），或映射长度超过文件页数
+  - 文件之后变大（写路径未覆盖）
+  impact: 越界读写 page_array 之后的内核内存；空文件时 page_array 为 NULL。
+  counter_evidence:
+  - CORE-MM-BASELINE-04 的 mm.fault.file_backed failure_path 已对缺页路径作同样的阅读推断；本条补上长度来源与读路径。
+  unknown:
+  - ELF 段映射是否会超出文件页数（elf_map 按 p_filesz 页对齐，正常不超出）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C4-05
+    - A-C4-21
+    - A-C5-02
+    queries:
+    - Q25
+  related:
+  - CORE-MM-BASELINE-04 capability mm.fault.file_backed（failure_path）
+  - CORE-USER-VFS-BASELINE-05::UV-06
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates:
+    - NVU-1
+    authorization_needed:
+    - 宿主夹具执行授权（host_fixture_execution_authorized）
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-08
+  id: UV-08
+  title: 文件缺页读的失败对缺页者不可见
+  kind:
+  - source_fact
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-08
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.file_mmap_fault_read
+  claim: simple_filemap_fault 不检查 alloc_page 的结果，丢弃 f_op->read 的返回值；vm_file 与 f_mapping 有效时返回 0（二者为空或错误指针时返回 VM_FAULT_ERROR，槽位已有页时
+    BUG_ON）。下层 ATA 请求本身也不回传设备错误（LBU-07）。
+  premises:
+  - 文件缺页走 generic_file_vm_ops（FAT32 映射）
+  impact: 读盘失败或只读到部分数据时，进程照常映射一页全零或残缺的数据继续运行；内存不足时对空指针取虚拟地址。
+  counter_evidence:
+  - 正常读盘时不受影响。
+  unknown:
+  - alloc_page 在实际负载下失败的概率（未测量，不作判断）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C5-02
+    - A-C5-03
+    - A-C5-12
+    - A-C5-17
+    queries: []
+  related:
+  - CORE-MM-BASELINE-04::MC-23
+  - CORE-MM-BASELINE-04::LB-05
+  - CORE-USER-VFS-BASELINE-05::LBU-07
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates: []
+    authorization_needed: []
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-09
+  id: UV-09
+  title: fork 的文件表复制与跨 cache 释放
+  kind:
+  - source_fact
+  - conditional_inference
+  status: needs_evidence
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-09
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.fd_table
+  - fs.vfs.file_lifecycle
+  claim: dup_fd 对父表每个非空槽位 kzalloc 一个新 file 并按值复制（不加引用），父表空槽对应的新槽位不写；files_struct 不带 __GFP_ZERO 且 files_cache 没有构造函数。副本在子进程退出时经
+    put_files_struct → filp_close → fput；若副本的 f_count（按值复制自父进程）为 1，就以 kmem_cache_free(filp_cachep, …) 释放，而 kmem_cache_free
+    信任传入的 cache（cache_from_obj 被注释）。
+  premises:
+  - 子进程从继承了打开文件的父进程 fork 而来（例如 init 的 stdin/stdout/stderr 被 /boot/sh 继承）
+  - 子进程退出时走 exit_files
+  impact: 对象本身经 virt_to_slab 回到它所在的 kmalloc slab 的空闲链，但链表记账（节点链表、min_partial、free_slab）用的是 filp_cachep（Q42）：一个原本已满的 kmalloc
+    slab 可能被移到 filp_cachep 的 partial 链上，之后的分配与释放在两个 cache 之间交错。新文件表空槽位的内容取决于 slab 对象原有数据，fd 分配与关闭可能把残留指针当作 file。按值复制使父子各有独立的
+    f_pos，与 Linux 的共享 file 语义不同。
+  counter_evidence:
+  - kfree（sys_close 使用）按对象所在 slab 取 cache，不受这一问题影响。
+  unknown:
+  - 记账错位之后两个 cache 的后续分配会怎样交错（未逐行推演）
+  - slab 对象在分配时的实际内容
+  - fork 时父进程各 file 的 f_count 实际值
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C2-14
+    - A-C2-15
+    - A-C2-16
+    - A-C4-26
+    - A-C4-28
+    - A-C4-29
+    - A-C4-31
+    queries:
+    - Q42
+  related:
+  - CORE-MM-BASELINE-04::MC-07（slab_free 的另一处问题）
+  - CORE-USER-VFS-BASELINE-05::UV-10
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates:
+    - NVU-3
+    authorization_needed:
+    - 宿主夹具执行授权（host_fixture_execution_authorized）
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 以后若修，应同时决定 fork 后父子是共享 file 还是复制 file，这是语义选择，不是单纯的 bug 修复；建议不等于决定。
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-10
+  id: UV-10
+  title: close 与 fput 的引用语义
+  kind:
+  - source_fact
+  - conditional_inference
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-10
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.file_lifecycle
+  claim: sys_close 直接 kfree 并清空槽位，不看 f_count、不调 ->release；fput 归零只释放 file 对象，打开时 path_get 取得的路径引用从不归还；fs/vfs 中没有活动的 ->release
+    调用。
+  premises:
+  - 存在第二个持有同一 file 的引用（f_dupfd 的 get_file、fget）时，close 的直接释放才产生悬空指针
+  impact: dentry 与挂载点的引用只增不减（仅在所读范围）；若同一 file 有其他持有者，close 后它们持有已释放的对象。
+  counter_evidence:
+  - 本 pin 的 sys_dup 是空壳（阅读记录），dup 路径未必可达；f_dupfd 的调用者未追。
+  unknown:
+  - f_dupfd 与 fget 的实际调用者
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C4-09
+    - A-C4-25
+    - A-C4-28
+    queries:
+    - Q30
+    - Q40
+  related:
+  - CORE-USER-VFS-BASELINE-05::LBU-03
+  - CORE-USER-VFS-BASELINE-05::LBU-04
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates: []
+    authorization_needed: []
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-11
+  id: UV-11
+  title: fd 与读入口的边界检查
+  kind:
+  - source_fact
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-11
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - fs.vfs.fd_table
+  - fs.vfs.read_syscall
+  claim: alloc_fd 中 fd 只在找到空槽时赋值，表满时返回未赋值的 fd；myos_fdget_pos 直接用用户给的 fd 下标 fd_array（256 项），不检查上界；rw_verify_area 第一句就返回 0。
+  premises:
+  - 用户传入大 fd，或打开文件数达到 fd_count
+  impact: 越界读内核内存并当作 file 使用；表满时 open 返回不确定的 fd。
+  counter_evidence:
+  - close 与 lseek 检查了 fd < fd_count。
+  unknown:
+  - fd_count 在各路径上的实际值（init_files 为 0，dup_fd 设为 256）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C4-12
+    - A-C4-13
+    - A-C4-17
+    queries:
+    - Q38
+    structure_checks:
+    - SC-05
+  related: []
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates: []
+    authorization_needed: []
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-12
+  id: UV-12
+  title: FAT32_read 与 ATA 后端的局部错误处理
+  kind:
+  - source_fact
+  - conditional_inference
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-12
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - boundary.fs_fat.fat32_read
+  - boundary.block.ata_request
+  claim: FAT32_read 的簇缓冲 kmalloc 不检查，首簇为 0 时返回且缓冲泄漏；*position 等于 i_size 时 count 为 0，但仍读一次盘；ATA_disk_transfer 对读写命令总是返回 -ENOERR，FAT32_read
+    的 -EIO 分支在 ATA 配置下不会进入。
+  premises:
+  - 构建选项文本中 ROOTBLK_NVME 被注释（A-C5-09），走 ATA 分支
+  impact: 读盘错误无法上报；文件尾处多一次读盘；内存不足时空指针。
+  counter_evidence:
+  - NVMe 分支的返回值未追，结论只适用于 ATA 分支。
+  unknown:
+  - '*position 大于 i_size 时 count 变负后的循环行为（未推演）'
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C5-04
+    - A-C5-05
+    - A-C5-06
+    - A-C5-07
+    - A-C5-12
+    queries:
+    - Q08
+  related:
+  - CORE-USER-VFS-BASELINE-05::LBU-07
+  - CORE-USER-VFS-BASELINE-05::UV-08
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates: []
+    authorization_needed: []
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-13
+  id: UV-13
+  title: ATA 请求完成链的局部前提
+  kind:
+  - source_fact
+  - conditional_inference
+  status: needs_evidence
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-13
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - boundary.block.ata_request
+  claim: ATA_disk_handler 直接解引用 req_in_using，不检查是否为空；IDE_read_handler 遇到错误状态只打印、不读数据，但照样递减 count；守护线程从链表尾部取请求。
+  premises:
+  - 收到不对应任何在途请求的中断（例如共享中断或伪中断）
+  - 有多个并发请求者
+  impact: 空指针解引用发生在中断上下文；多请求者时后到先服务；出错的请求在缓冲区中留下未读取的数据并报告完成。
+  counter_evidence:
+  - 启动阶段只有单个请求者时，LIFO 与 FIFO 没有区别。
+  unknown:
+  - 伪中断在目标平台上是否出现
+  - IDE_cmd_out 与中断之间的时序
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C5-10
+    - A-C5-15
+    - A-C5-17
+    queries:
+    - Q29
+  related:
+  - CORE-USER-VFS-BASELINE-05::DRU-01
+  - CORE-USER-VFS-BASELINE-05::DRU-06
+  blocks:
+    static_work: false
+    future_runtime: 完成通知可靠性影响 NVU-4
+  future_verification:
+    candidates: []
+    authorization_needed:
+    - QEMU 运行授权
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-14
+  id: UV-14
+  title: fork 失败清理对共享 init_sighand 减引用
+  kind:
+  - conditional_inference
+  status: needs_evidence
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-14
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - sched.forkexec.copy_process_resources
+  claim: copy_sighand 不安装新对象，任务共用静态 init_sighand（初值计数 1），fork 也不为它加引用；copy_process 在 copy_sighand 之后的步骤失败时，经 bad_fork_cleanup_sighand
+    对 p->sighand 调 __cleanup_sighand，计数 1 → 0 时把静态对象交给 kmem_cache_free(sighand_cachep, …)。
+  premises:
+  - copy_signal、copy_mm、copy_namespaces、copy_thread 或 alloc_pid 中有一步失败
+  - init_sighand 的计数在此之前没有被其他路径增加（Q32：活动文本中带 CLONE_SIGHAND 的调用者只有 fork.c 内部的判断）
+  impact: 把静态数据当作 slab 对象释放：virt_to_slab 对非 slab 页返回 NULL（Q43），free_to_partial_list 随后读 slab->inuse（Q42），所以第一次 1 → 0 很可能就在持有
+    list_lock 时出错。copy_sighand 分配的对象同时泄漏（与 CORE-MM-BASELINE-04::DR-04 一致）。
+  counter_evidence:
+  - 正常 fork 不走这条清理路径。
+  unknown:
+  - 这些失败在实际运行中是否可达（分配失败的频率未测量，不作判断）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C2-08
+    - A-C2-11
+    - A-C2-12
+    - A-C2-13
+    queries:
+    - Q31
+    - Q32
+    - Q42
+    - Q43
+  related:
+  - CORE-MM-BASELINE-04::DR-04
+  - CORE-MM-BASELINE-04::RF-02
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates: []
+    authorization_needed:
+    - 宿主夹具执行授权（host_fixture_execution_authorized）
+    - QEMU 运行授权
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: ''
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-15
+  id: UV-15
+  title: 退出与回收的缺口
+  kind:
+  - source_fact
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-15
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - sched.forkexec.exit_path
+  - sched.forkexec.wait_reap
+  - sched.forkexec.mm_refcount_release
+  claim: do_exit 不处理 mm（exit_mm 被注释）；exit_notify 不设 ZOMBIE、不通知父任务，只把子任务挂到 1 号任务名下，摘到空节点时原地自旋；wait4 的函数体为空；finish_task_switch
+    的 TASK_DEAD 段被注释，release_task 只有声明，sched/ 中没有活动的 put_task_struct。
+  premises:
+  - 进程退出（init 的子进程 /boot/sh 退出时即走此路径）
+  impact: 父任务拿不到退出状态，wait4 返回未定义值；每个退出的进程都留下 task_struct、内核栈与整个地址空间（地址空间部分与 CORE-MM-BASELINE-04::LB-03 同一断点）。
+  counter_evidence:
+  - 本 pin 的 init 父进程从不调用 wait（Q16 只有 sched_yield 循环），wait4 的缺失暂时不会被它触及。
+  unknown:
+  - do_task_dead 之后该任务是否还会被选中（见 CORE-SCHED-INTEGRATION-03::SF-C3-37）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C6-03
+    - A-C6-07
+    - A-C6-08
+    - A-C6-09
+    - A-C6-10
+    - A-C6-11
+    - A-C6-14
+    queries:
+    - Q11
+    - Q12
+    - Q16
+    structure_checks:
+    - SC-03
+    - SC-07
+  related:
+  - CORE-MM-BASELINE-04::LB-03
+  - CORE-MM-BASELINE-04::MC-16
+  - CORE-SCHED-INTEGRATION-03::SF-C3-37
+  - CORE-USER-VFS-BASELINE-05::LBU-01
+  - CORE-USER-VFS-BASELINE-05::LBU-02
+  - CORE-USER-VFS-BASELINE-05::LBU-08
+  blocks:
+    static_work: false
+    future_runtime: 影响 NVU-6
+  future_verification:
+    candidates:
+    - NVU-6
+    authorization_needed:
+    - 完整内核构建授权（full_kernel_build_authorized）
+    - QEMU 运行授权
+    - 修改用户程序的授权
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 回收链涉及调度、MM 与信号三个子系统，以后宜作为一个专项整体处理；建议不等于决定。
+- qualified_id: CORE-USER-VFS-BASELINE-05::UV-16
+  id: UV-16
+  title: dup_task_struct 中被注释行吞掉的 if 体（潜伏）
+  kind:
+  - source_fact
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+    entry_id: UV-16
+    results_commit: 见 MANIFEST.md 的 results_commit_short12
+  capabilities:
+  - sched.forkexec.copy_process_resources
+  claim: dup_task_struct 中 `if (node == NUMA_NO_NODE)` 后面一行被注释，于是下一行 `tsk = alloc_task_struct_node(node);` 成了 if 的唯一语句：node
+    不等于 NUMA_NO_NODE 时 tsk 不赋值，随后的 `if (!tsk)` 读未初始化的局部变量。
+  premises:
+  - dup_task_struct 以 NUMA_NO_NODE 以外的 node 被调用
+  impact: 本 pin 唯一的调用点 copy_process 传入 kernel_clone 给的 NUMA_NO_NODE（A-C2-03、Q44），因此目前不触发；若将来传入具体 node，任务分配会读未初始化指针。
+  counter_evidence:
+  - Q44：活动调用点只有 copy_process 一处，传入的 node 来自 kernel_clone 的 NUMA_NO_NODE。
+  unknown:
+  - 是否有通过其他途径调用 dup_task_struct（本批只做了词法检索）
+  applicable_source: time a039d9803ade（mykernel/、myinitramfs/ 与宿主脚本文本，只读）
+  evidence:
+    anchors:
+    - A-C2-03
+    queries:
+    - Q44
+  related: []
+  blocks:
+    static_work: false
+    future_runtime: 无
+  future_verification:
+    candidates: []
+    authorization_needed: []
+  reopen_conditions: 引入 NUMA 节点选择或新的 dup_task_struct 调用者时重开。
+  ai_suggestion: 以后若修，把被注释的语句恢复或给 if 加上花括号；建议不等于决定。
+errata:
+- qualified_id: CORE-MM-BASELINE-04-REVIEW-001::MR-01
+  kind:
+  - documentation_erratum
+  status: superseded_interpretation
+  owner_action_now: none
+  source_ref:
+    review: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-MM-BASELINE-04-review.md（agent/MYOS2-LEAD-002）
+    old_text: mm-baseline-04/integration-03-disposition.md 第 162 行（de7c96ede546）
+  disposition_ref: mm-04-disposition.md §1 与 facts-and-dependencies.yaml 的 VT-MR01
+  summary: 键下限分支原句漏掉“自身键大于队首”的情形；已按大于、等于、小于与“无非 idle 队首”四种情形改写，“仍先运行一次”只在钳制后等于队首键、且下次选取前没有别的插入落在它之前时成立。
+  not_a_kernel_defect: true
+  affects_old_items:
+  - CORE-SCHED-INTEGRATION-03::OD-2（仅引用，不再提出选择）
+  reopen_conditions: 主线审查认为改写仍不准确时，由 AI 在授权写区再次追加。
+- qualified_id: CORE-MM-BASELINE-04-REVIEW-001::MR-02
+  kind:
+  - documentation_erratum
+  status: superseded_interpretation
+  owner_action_now: none
+  source_ref:
+    review: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-MM-BASELINE-04-review.md（agent/MYOS2-LEAD-002）
+    old_text: mm-baseline-04 的 MANIFEST.md、memory-baseline.md、evidence.md、facts-and-dependencies.yaml 中列于 mm-04-disposition.md
+      supersedes_scope 的各行（de7c96ede546）
+  disposition_ref: mm-04-disposition.md §2
+  summary: “永不合并”“PageBuddy 恒假”“本 pin 不可达”“用户内存只增不减”“先碎片化再耗尽”“大概率只占时间片”等总括已收窄为带检索范围与初值前提的条件推导，或改为所读路径上的断点；局部疑点保留。
+  not_a_kernel_defect: true
+  affects_old_items:
+  - CORE-MM-BASELINE-04::MC-01
+  - CORE-MM-BASELINE-04::RF-01
+  - CORE-MM-BASELINE-04::LB-08
+  - CORE-MM-BASELINE-04::MC-05
+  - CORE-MM-BASELINE-04::MC-16
+  - CORE-MM-BASELINE-04::MC-23
+  reopen_conditions: 主线审查认为仍有未收窄的总括时，由 AI 在授权写区再次追加。
+status_changes:
+- qualified_id: CORE-MM-BASELINE-04::MC-01
+  previous: static_concern（总括为“永远不会合并”“在本 pin 不可达”）
+  now: needs_evidence（“不合并”降为条件推导：在 mem_map 初值与 Q34 已查写入范围内成立）；合并循环缺“摘伙伴”步骤这一局部疑点保留为 static_concern
+  reason: CORE-MM-BASELINE-04::GAP-M08 仍开放：全树写入者、别名与共享存储没有排除
+  ref: mm-04-disposition.md §2
+- qualified_id: CORE-MM-BASELINE-04::RF-01
+  previous: verdict 本 pin 不可达
+  now: superseded_interpretation：只否定初稿“已证明全局重复分配”的说法；双链后果的可达性 needs_evidence
+  reason: 有限检索不能证明全局不可达
+  ref: mm-04-disposition.md §2
+- qualified_id: CORE-MM-BASELINE-04::LB-08
+  previous: 合并分支永不进入
+  now: needs_evidence：在已读初值与 Q34 范围内未见把 page_type 置为类型基值的写入
+  reason: 同 MC-01
+  ref: mm-04-disposition.md §2
+- qualified_id: CORE-MM-BASELINE-04::MC-05
+  previous: static_concern；效果写作“只增不减”
+  now: static_concern 不变；效果改写为“经 put_page/folio_put 释放的页在此路径上不回 buddy”，不再推广为全部用户内存
+  reason: MR-02
+  ref: mm-04-disposition.md §2
+- qualified_id: CORE-MM-BASELINE-04::MC-16
+  previous: static_concern；效果写作“只增不减”
+  now: static_concern 不变；效果改写为“munmap 与 __mmput 路径不拆页表、不释放页与 VMA”；本批为退出与 exec 补进程侧连接证据（LBU-08）
+  reason: MR-02；本批 C3/C6
+  ref: mm-04-disposition.md §2；facts-and-dependencies.yaml LBU-08
+- qualified_id: CORE-MM-BASELINE-04::MC-23
+  previous: 效果写作“持续占用 CPU 时间片”，正文另有“大概率只占时间片”
+  now: static_concern 不变；能否被换下取决于 DR-01/GAP-M05，不作概率判断
+  reason: MR-02
+  ref: mm-04-disposition.md §2
+- qualified_id: CORE-MM-BASELINE-04::DR-02
+  previous: endpoint_retained_not_traced
+  now: 在 ROOTBLK_NVME 未定义的构建文本前提下，已静态追到 FAT32_read → ATA_disk_transfer → wait_for_completion / complete；等待原语确定为 completion
+  reason: 本批 C5
+  ref: facts-and-dependencies.yaml C5、DRU-01
+- qualified_id: CORE-MM-BASELINE-04::LB-06
+  previous: f_op->read 端点保留，未追到具体后端
+  now: partially_connected：以构建选项文本为前提连到 ATA 提交、等待、完成三点；NVMe 分支与中断分发未追
+  reason: 本批 C5
+  ref: facts-and-dependencies.yaml C5
+- qualified_id: CORE-MM-BASELINE-04::GAP-M04
+  previous: open
+  now: narrowed：FAT32 与 ATA 两层已追；剩余部分并入 GAP-U07、GAP-U08
+  reason: 本批 C5
+  ref: facts-and-dependencies.yaml GAP-U07、GAP-U08
+- qualified_id: CORE-MM-BASELINE-04::GAP-M06
+  previous: open
+  now: open（仅补充：宿主构建文本 LINK_TYPE=static，镜像仍未核，见 GAP-U02）
+  reason: Q17
+  ref: facts-and-dependencies.yaml GAP-U02
+cross_links:
+- qualified_id: CORE-MM-BASELINE-04::LB-03
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::LBU-08
+  - CORE-USER-VFS-BASELINE-05::UV-15
+  change: 无，补进程侧连接证据
+- qualified_id: CORE-MM-BASELINE-04::MC-25
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::DRU-05
+  change: 无
+- qualified_id: CORE-MM-BASELINE-04::LB-09
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::DRU-05
+  change: 无
+- qualified_id: CORE-MM-BASELINE-04::DR-04
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::UV-14
+  change: 无；UV-14 是同一处注释在失败路径上的另一后果
+- qualified_id: CORE-MM-BASELINE-04::RF-02
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::UV-14
+  change: 无
+- qualified_id: CORE-MM-BASELINE-04::DR-01
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::DRU-02
+  change: 无
+- qualified_id: CORE-MM-BASELINE-04::MC-07
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::UV-09
+  change: 无
+- qualified_id: CORE-SCHED-INTEGRATION-03::SF-C3-37
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::UV-15
+  - CORE-USER-VFS-BASELINE-05::DRU-03
+  change: 无
+- qualified_id: CORE-SCHED-INTEGRATION-03::DV-19
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::DRU-01
+  change: 无
+- qualified_id: CORE-SCHED-INTEGRATION-03::OD-1
+  touched_by: []
+  change: 仅引用：仍是待以后处理的政策项，本批不提出选择
+- qualified_id: CORE-SCHED-INTEGRATION-03::OD-2
+  touched_by:
+  - CORE-MM-BASELINE-04-REVIEW-001::MR-01
+  change: 仅引用：MR-01 改写只涉及该分支的算术表述，不提出选择
+- qualified_id: CORE-SCHED-INTEGRATION-03 候选 A / 候选 B
+  touched_by:
+  - CORE-MM-BASELINE-04-REVIEW-001::MR-01
+  change: 仅引用：candidate_A_adopted=false，candidate_B_adopted=false
+- qualified_id: CORE-CHECK-01::V02 / V03 / V10 / V11
+  touched_by:
+  - CORE-USER-VFS-BASELINE-05::DRU-01
+  change: 无；消费时须一起读 recheck-02 审查

@@ -1,0 +1,99 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131",
+  "record_type": "phase2_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "conversation_display_name": "MYOS2-A-C08c 代码分析执行",
+  "produced_by": "GPT-6 (self-reported; backend UNATTESTED)",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-23",
+  "base_snapshot": "time（分支名）",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "items": [
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::R127-02",
+      "kind": "historical_graph_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "source": "128/129/130 frozen facts+DOT and 131 replay",
+      "correction": "six post129 B selectors rebased and six 129 B/C labels restored, three do0 retained; 81 nodes and 91 edges",
+      "next_actor": "C09 Pro independent mainline",
+      "blocks": "127 RETURN closure"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::R130-01",
+      "kind": "documentation_and_evidence_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "source": "130 E003/E014–017/E031, old MANIFEST and time definitions",
+      "correction": "six old evidence IDs mapped to new source anchors; bare prefix 45 vs 44 formal; virtual MANIFEST fields and P2 title",
+      "next_actor": "C09 Pro",
+      "blocks": "130 RETURN closure"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::R130-02",
+      "kind": "diagnostic_graph_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "source": "130 five ERR clusters + time printf/myshell",
+      "correction": "write result discarded; printf returns vsnprintf rv; command returns independent constant/err; argc gates and declarations",
+      "next_actor": "C09 Pro",
+      "blocks": "130 RETURN closure"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::INIT-EXEC-REALITY",
+      "kind": "runtime_evidence_gap",
+      "status": "UNKNOWN_NOT_RUN",
+      "source": "myinitramfs/myinit/initd.c",
+      "premise": "fixed source calls fork once and execve only if rv==0",
+      "unknown": "actual fork status, execve image replacement, entered /boot/sh or sh main, actual environment strings and user stack",
+      "next_evidence": "separate run/build/link authorization and controlled observation",
+      "blocks": "runtime boot claims; not static conditional replay"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::INIT-FALLTHROUGH",
+      "kind": "source_semantic_risk_conditional",
+      "status": "deferred_owner_not_ready",
+      "source": "normal_boot ends without explicit int return after child execve returns, main consumes result",
+      "premise": "only if execve returns to its callsite",
+      "effect": "undefined behavior at use of nonvoid function's missing return; do not guess exit code",
+      "repair": "NO_PERMISSION; record only",
+      "blocks": "predicting a concrete child exit value"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::YIELD-REAL-LINK",
+      "kind": "runtime_evidence_gap",
+      "status": "UNKNOWN",
+      "source": "myinitramfs/myinit/initd.c; mykernel/arch/x86_64/include/asm/unistd_64.h; syscall_64.c",
+      "unknown": "user musl sched_yield linkage to in-kernel dispatcher and actual syscall return",
+      "next_evidence": "link/binary/host evidence after separate authorization"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::YIELD-RQ-LOCK",
+      "kind": "source_semantic_boundary",
+      "status": "needs_evidence",
+      "source": "mykernel/sched/syscall.c::sched_yield",
+      "premise": "this_rq_lock_irq called; rq_unlock_irq line commented; preempt and schedule calls present",
+      "unknown": "actual lock/irq release and effects; real scheduling and fairness",
+      "next_evidence": "read exact rq/preempt/schedule implementations separately under authorizing contract; run only if separately approved",
+      "blocks": "claims of safe unlock, guaranteed task switch, child wakeup or fairness"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131::ENV-SEMANTICS",
+      "kind": "conditional_input_boundary",
+      "status": "needs_evidence",
+      "source": "myinitramfs/myinit/initd.c:27–28",
+      "premise": "envs strings lack '='",
+      "unknown": "target program handling and actual runtime environment",
+      "next_evidence": "library/ELF/stack program tracing under separately bounded contract"
+    }
+  ],
+  "historical_not_reopened": [
+    "R129-01 CLOSED_DOCUMENTATION_ONLY",
+    "R128-01 CLOSED_DOCUMENTATION_ONLY"
+  ],
+  "out_of_scope": [
+    "no kernel or user program patch",
+    "no old artifacts edits",
+    "no build, linker, QEMU, Graphviz or real user process / filesystem / scheduler run"
+  ],
+  "owner_decisions_requested_now": [],
+  "full_local_P9": "NOT_RUN"
+}

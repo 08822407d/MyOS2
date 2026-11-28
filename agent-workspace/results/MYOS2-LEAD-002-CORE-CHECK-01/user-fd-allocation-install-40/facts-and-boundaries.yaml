@@ -1,0 +1,639 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FD-ALLOCATION-INSTALL-40",
+  "record_type": "R39_documentation_correction_plus_independent_fd_state_matrix",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-05",
+  "source_pin_short12": "a039d9803ade",
+  "source_ref": "time",
+  "result_base_short12": "4ea455865a47",
+  "contract65_short12": "a70d22015ae5",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_items": [
+    {
+      "id": "R39-01",
+      "verdict": "RETURN",
+      "kind": "DOCUMENTATION_ONLY",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "closure": "PENDING_C04_REVIEW",
+      "legacy_bad_id": "OC39-A069",
+      "old_tag": "mykernel/include/uapi/asm-generic/errno-base.h::ENFILE",
+      "old_quote_actual": "EXDEV 18 at fixed line24",
+      "replacement_tag": "R39C-A001",
+      "replacement_actual": "mykernel/include/uapi/asm-generic/errno-base.h::ENFILE at fixed line29, value23",
+      "historical_EXDEV": "R39C-A002 identifies EXDEV 18 at line24",
+      "historical_others": "OC39-A001..OC39-A068 are historical, not independently rescanned in this batch",
+      "legacy_total": 69,
+      "legacy_identity_disproved": 1,
+      "legacy_historical_unrechecked": 68,
+      "new_correction_verified_quotes": 8,
+      "old_source_excerpt_bytes_may_match": true,
+      "all_old_quote_symbol_valid_claim_retracted": true,
+      "review_authority": "MYOS2-A-C04"
+    }
+  ],
+  "prior39_consumption": {
+    "manifest": "Do not consume verified_claims=69 / quotes_reconfirmed=69 as 69 correctly symbol-bound definitions; at most old 68 historical + one superseded mismatch; previous raw quote can match EXDEV text",
+    "body": "The branch fact alloc_empty_file returns __alloc_file before over:ERR_PTR(-ENFILE) remains; ENFILE value23 from new R39C-A001, not old A069",
+    "evidence": "OC39-A069 old ENFILE label wrong, exact excerpt EXDEV at line24; R39C-A001 single ENFILE definition replaces for ENFILE; R39C-A002 identifies original EXDEV",
+    "comment": "Original PR17 comment 6648914733 claims 69/69 direct source labels; must read with this correction: 69 excerpt text labels included one ENFILE/EXDEV identity mismatch, not 69 verified symbols; do not edit old comment",
+    "R39S01": "__FMODE_NONOTIFY bridge R39C-A003, OPEN_FMODE R39C-A004; O_TRUNC oct01000=dec512=hex0x200 and O_APPEND oct02000=dec1024=hex0x400; these are also FMODE_32BITHASH and FMODE_64BITHASH macro values, not invalid internal bits; valid OPEN_FMODE producer excludes them; f_mapping is pointer value copy not dereference",
+    "R39S02": "path/open missing return stops post-consumption; IS_ERR(NULL) false, no valid file proof; terminate_walk empty, no reference closure; do_sys_openat2 fd_install gate is fd>=0 and !IS_ERR(f) plus necessary object premises"
+  },
+  "object_identities": [
+    {
+      "id": "files",
+      "type": "files_struct_s*",
+      "producer": "current->files",
+      "consumer": "alloc_fd,fd_install,put_unused_fd",
+      "premise": "valid current->files; not automatically &init_files"
+    },
+    {
+      "id": "file_lock",
+      "type": "spinlock_t",
+      "producer": "files_struct_s member",
+      "consumer": "alloc_fd and put_unused_fd",
+      "premise": "initialized lock; no shared lock in selected fd_install"
+    },
+    {
+      "id": "fd_count",
+      "type": "unsigned long",
+      "producer": "init_files=0; dup_fd sets NR_OPEN_DEFAULT=256; other instance writers not exhaustively read",
+      "consumer": "get_unused_fd_flags passes to alloc_fd uint end",
+      "premise": "signed/width conversion and 0<=end<=capacity"
+    },
+    {
+      "id": "fd_array",
+      "type": "file_s* [NR_OPEN_DEFAULT=256]",
+      "producer": "files_struct_s inline member",
+      "consumer": "alloc_fd read,fd_install write",
+      "premise": "valid array slots 0..255"
+    },
+    {
+      "id": "i",
+      "type": "int",
+      "producer": "alloc_fd for initializer i=start (uint to int)",
+      "consumer": "scan i<end and fd_array[i]",
+      "premise": "valid representable start, valid index and no overflow"
+    },
+    {
+      "id": "start",
+      "type": "uint",
+      "producer": "get_unused_fd_flags uses 0; f_dupfd uses from",
+      "consumer": "alloc_fd scan lower bound",
+      "premise": "start<=INT_MAX for well-characterized signed loop"
+    },
+    {
+      "id": "end",
+      "type": "uint",
+      "producer": "get_unused_fd_flags converts files.fd_count; f_dupfd converts nofile",
+      "consumer": "alloc_fd scan upper bound",
+      "premise": "start<end and range within 256 for safe array accesses"
+    },
+    {
+      "id": "flags",
+      "type": "uint",
+      "producer": "get_unused_fd_flags caller how->flags; f_dupfd own flags",
+      "consumer": "alloc_fd formal argument",
+      "premise": "selected complete alloc_fd body never reads flags"
+    },
+    {
+      "id": "fd_local",
+      "type": "uint",
+      "producer": "alloc_fd uninitialized declaration; assigned fd=i only on first NULL",
+      "consumer": "return fd (uint to int via caller)",
+      "premise": "requires at least one valid empty entry; otherwise indeterminate"
+    },
+    {
+      "id": "fd_result",
+      "type": "int",
+      "producer": "get_unused_fd_flags return from alloc_fd declared int",
+      "consumer": "do_sys_openat2 fd>=0 and fd_install(fd,f)",
+      "premise": "defined result and nonnegative; mere returned integer not reservation"
+    },
+    {
+      "id": "fps",
+      "type": "file_s**",
+      "producer": "fd_install files->fd_array",
+      "consumer": "fps[fd] check and assignment",
+      "premise": "fd valid <256 before array deref; no local bounds check"
+    },
+    {
+      "id": "file",
+      "type": "file_s*",
+      "producer": "do_filp_open return, helper-only ordinary file example",
+      "consumer": "fd_install(fps[fd]=file)",
+      "premise": "may be NULL or ERR_PTR by type, but normal useful file must be valid; no extra reference acquired locally"
+    },
+    {
+      "id": "BUG_ON",
+      "type": "macro",
+      "producer": "asm-generic/bug.h conditional definition when no HAVE_ARCH_BUG_ON",
+      "consumer": "fd_install checks fps[fd]!=NULL",
+      "premise": "takes place only after indexed read; may invoke BUG/panic with selected macro binding, not evidence of real crash"
+    },
+    {
+      "id": "smp_rmb",
+      "type": "macro invocation",
+      "producer": "fd_install local call",
+      "consumer": "barrier before slot read",
+      "premise": "not an index guard or reservation/ownership operation"
+    },
+    {
+      "id": "init_files",
+      "type": "files_struct_s static aggregate",
+      "producer": "file.c global fd_count=0",
+      "consumer": "some task initializer if actually linked",
+      "premise": "cannot equate all current->files with init_files"
+    },
+    {
+      "id": "newf",
+      "type": "files_struct_s*",
+      "producer": "dup_fd kmem_cache_alloc",
+      "consumer": "newf fd_count256 and copy selected nonNULL entries",
+      "premise": "no deep fork/allocator audit; other slots not proven initialized"
+    },
+    {
+      "id": "oldf",
+      "type": "files_struct_s*",
+      "producer": "dup_fd input",
+      "consumer": "oldf->fd_array[i] for i<max_fds",
+      "premise": "max_fds must remain inside actual 256 capacity before deref"
+    },
+    {
+      "id": "op",
+      "type": "open_flags_s",
+      "producer": "build_open_flags helper",
+      "consumer": "do_sys_openat2 and do_filp_open",
+      "premise": "OF30-F01 helper validation return ignored in selected syscall"
+    },
+    {
+      "id": "tmp",
+      "type": "filename_s*",
+      "producer": "getname(filename)",
+      "consumer": "do_filp_open and putname",
+      "premise": "IS_ERR gives early PTR_ERR return"
+    },
+    {
+      "id": "f",
+      "type": "file_s*",
+      "producer": "do_filp_open(dfd,tmp,&op)",
+      "consumer": "do_sys_openat2 IS_ERR then fd_install",
+      "premise": "UV-04 missing int return prevents actual successful file proof"
+    },
+    {
+      "id": "fd_sys",
+      "type": "int",
+      "producer": "build_open_flags result then overwritten by get_unused_fd_flags and maybe PTR_ERR(f)",
+      "consumer": "do_sys_openat2 final return",
+      "premise": "do not confuse validation integer, selected fd index, and later error integer"
+    },
+    {
+      "id": "file.f_count",
+      "type": "atomic_long_t",
+      "producer": "__alloc_file sets 1; f_dupfd may call get_file",
+      "consumer": "fd_install does not locally increment/decrement",
+      "premise": "full ownership and refcount not audited"
+    }
+  ],
+  "local_state_transition_matrix": [
+    {
+      "step": "allocation/scan_entry",
+      "producer": "get_unused_fd_flags(flags)",
+      "read": "current->files and fd_count",
+      "write": "none",
+      "result": "alloc_fd(0,(uint)fd_count,flags)",
+      "gate": "valid files, representable bound and fd_count<=256"
+    },
+    {
+      "step": "scan_lock",
+      "producer": "alloc_fd",
+      "read": "files.file_lock",
+      "write": "spin_lock control state",
+      "result": "scan starts",
+      "gate": "lock valid and call returns"
+    },
+    {
+      "step": "scan_probe",
+      "producer": "alloc_fd",
+      "read": "fd_array[i]",
+      "write": "only local fd=i if NULL",
+      "result": "first free index if any",
+      "gate": "0<=i<end and i<256"
+    },
+    {
+      "step": "scan_unlock",
+      "producer": "alloc_fd",
+      "read": "none",
+      "write": "spin_unlock",
+      "result": "return local unsigned fd",
+      "gate": "if no match, fd never assigned"
+    },
+    {
+      "step": "selected_not_reserved",
+      "producer": "alloc_fd",
+      "read": "fd_array[i]==NULL",
+      "write": "NO fd_array slot write; NO bit set in complete body",
+      "result": "chosen number only",
+      "gate": "other writers can change slot later; not a live reservation"
+    },
+    {
+      "step": "fd_install_begin",
+      "producer": "fd_install",
+      "read": "current->files->fd_array",
+      "write": "smp_rmb memory barrier invocation",
+      "result": "begins indexed check",
+      "gate": "fd<256 extra premise, not source gate"
+    },
+    {
+      "step": "fd_install_check",
+      "producer": "fd_install",
+      "read": "fps[fd]",
+      "write": "conditional BUG_ON if nonNULL",
+      "result": "no normal continuation unless macro returns/condition false",
+      "gate": "valid index required before BUG_ON; conditional macro choice"
+    },
+    {
+      "step": "fd_install_assign",
+      "producer": "fd_install",
+      "read": "file pointer",
+      "write": "fps[fd]=file",
+      "result": "slot stores file pointer",
+      "gate": "valid index, previously empty, macro invocation returned normally"
+    },
+    {
+      "step": "put_unused",
+      "producer": "put_unused_fd",
+      "read": "current->files and lock",
+      "write": "spin_lock then spin_unlock only; no fd_array or bitmap mutation",
+      "result": "void return",
+      "gate": "not proved a reservation was ever held"
+    },
+    {
+      "step": "sys_getname",
+      "producer": "do_sys_openat2",
+      "read": "filename",
+      "write": "tmp=getname",
+      "result": "PTR_ERR(tmp) early on IS_ERR",
+      "gate": "no get_unused call on getname error"
+    },
+    {
+      "step": "sys_fd_pick",
+      "producer": "do_sys_openat2",
+      "read": "how->flags",
+      "write": "fd=get_unused_fd_flags",
+      "result": "fd>=0 branch can try do_filp_open",
+      "gate": "selected fd actually defined nonnegative required"
+    },
+    {
+      "step": "sys_filp_fail",
+      "producer": "do_sys_openat2",
+      "read": "IS_ERR(f)",
+      "write": "fd=PTR_ERR(f) if encoded error",
+      "result": "no fd_install and final return fd after putname",
+      "gate": "selected slot was NOT reserved by alloc_fd, no proof of leaked reservation"
+    },
+    {
+      "step": "sys_filp_normal",
+      "producer": "do_sys_openat2",
+      "read": "!IS_ERR(f)",
+      "write": "fd_install(fd,f)",
+      "result": "fd returned after putname if all normal",
+      "gate": "normal valid file pointer extra premise, NULL passes IS_ERR; UV-04 unclosed"
+    }
+  ],
+  "finite_cases": [
+    {
+      "id": "FD40-C01",
+      "class": "source_conditional",
+      "input": "valid files fd_count=0,start0,end0",
+      "scan": "no iteration",
+      "fd_value": "UNINITIALIZED",
+      "table": "unchanged",
+      "stop": "return fd reads indeterminate local; no specific integer result/errno"
+    },
+    {
+      "id": "FD40-C02",
+      "class": "source_conditional",
+      "input": "fd_count=1,slots[0]=NULL",
+      "scan": "i=0 found",
+      "fd_value": 0,
+      "table": "unchanged NULL",
+      "stop": "not a reservation"
+    },
+    {
+      "id": "FD40-C03",
+      "class": "source_conditional",
+      "input": "fd_count=1,slots[0]=nonNULL",
+      "scan": "test nonNULL; loop ends",
+      "fd_value": "UNINITIALIZED",
+      "table": "unchanged",
+      "stop": "return indeterminate fd"
+    },
+    {
+      "id": "FD40-C04",
+      "class": "source_conditional",
+      "input": "fd_count=3,slots occupied,NULL,occupied",
+      "scan": "first NULL at index1",
+      "fd_value": 1,
+      "table": "unchanged NULL",
+      "stop": "valid indices and objects"
+    },
+    {
+      "id": "FD40-C05",
+      "class": "source_conditional",
+      "input": "fd_count=256,0..254 occupied,255 NULL",
+      "scan": "last legal index selected",
+      "fd_value": 255,
+      "table": "still NULL at255",
+      "stop": "no reservation/bit writes"
+    },
+    {
+      "id": "FD40-C06",
+      "class": "source_conditional",
+      "input": "fd_count=256, all 256 occupied",
+      "scan": "no empty",
+      "fd_value": "UNINITIALIZED",
+      "table": "unchanged",
+      "stop": "no source -EMFILE/-ENFILE produced"
+    },
+    {
+      "id": "FD40-C07",
+      "class": "helper_only",
+      "input": "start=end=4, valid table",
+      "scan": "range empty",
+      "fd_value": "UNINITIALIZED",
+      "table": "unchanged",
+      "stop": "no defined valid returned fd"
+    },
+    {
+      "id": "FD40-C08",
+      "class": "helper_only",
+      "input": "fd_count/end=257, all 0..255 occupied",
+      "scan": "tries index256",
+      "fd_value": "NONE",
+      "table": "no proven write",
+      "stop": "at first out-of-bounds fd_array[256] read before any valid completion"
+    },
+    {
+      "id": "FD40-C09",
+      "class": "helper_only",
+      "input": "start=256,end=257, valid files array256",
+      "scan": "first read index256",
+      "fd_value": "NONE",
+      "table": "unproven",
+      "stop": "first invalid array access; US-02 related but not rerun"
+    },
+    {
+      "id": "FD40-C10",
+      "class": "source_conditional",
+      "input": "current.files actually init_files aggregate, fd_count initial0",
+      "scan": "get_unused_fd_flags(0,0,flags)",
+      "fd_value": "UNINITIALIZED",
+      "table": "no scan slot",
+      "stop": "does not prove current task uses global init_files"
+    },
+    {
+      "id": "FD40-C11",
+      "class": "source_conditional",
+      "input": "dup_fd valid outer allocation, fd_count set256, old slot0 nonNULL",
+      "scan": "copies only nonNULL entries",
+      "fd_value": "NA",
+      "table": "new slot0 receives separately copied file, other untouched slots not proven zero",
+      "stop": "not complete fork/copied reference audit"
+    },
+    {
+      "id": "FD40-C12",
+      "class": "source_conditional",
+      "input": "valid idx0 empty, valid ordinary file F; fd_install(0,F)",
+      "scan": "not in install",
+      "fd_value": 0,
+      "table": "fps[0]=F",
+      "stop": "no local refcount adjustment or lock acquisition"
+    },
+    {
+      "id": "FD40-C13",
+      "class": "source_conditional",
+      "input": "valid idx0 occupied by G, call fd_install(0,F)",
+      "scan": "not in install",
+      "fd_value": 0,
+      "table": "condition fps[0]!=NULL true",
+      "stop": "BUG_ON condition reached; outcome depends actual macro and no tested crash"
+    },
+    {
+      "id": "FD40-C14",
+      "class": "helper_only",
+      "input": "fd_install(fd=256,F), files array has256 slots",
+      "scan": "none",
+      "fd_value": 256,
+      "table": "unestablished",
+      "stop": "fps[fd] indexed read occurs BEFORE conditional BUG_ON; no bounds guard"
+    },
+    {
+      "id": "FD40-C15",
+      "class": "helper_only",
+      "input": "fd_install(0,NULL), slot0 initially NULL",
+      "scan": "none",
+      "fd_value": 0,
+      "table": "fps[0] remains NULL if function normal",
+      "stop": "IS_ERR(NULL)==false but no actual do_filp_open NULL producer"
+    },
+    {
+      "id": "FD40-C16",
+      "class": "two_call_interleaving",
+      "input": "A and B share SAME valid files table, index0 NULL, both scan before either install",
+      "scan": "A returns0; B returns0, neither scan writes",
+      "fd_value": "both0",
+      "table": "A install F => slot0 F; B later sees nonNULL BUG_ON condition",
+      "stop": "abstract interleaving only, no real concurrent runtime proof"
+    },
+    {
+      "id": "FD40-C17",
+      "class": "two_call_interleaving",
+      "input": "A selects 0 and installs before B next scan, slots0/1 initially NULL",
+      "scan": "B sees0 occupied, selects1",
+      "fd_value": "A0 B1",
+      "table": "A F at0, B may later install at1",
+      "stop": "valid indexes and no other writers"
+    },
+    {
+      "id": "FD40-C18",
+      "class": "source_conditional",
+      "input": "put_unused_fd(0), slot0 NULL, valid lock",
+      "scan": "none",
+      "fd_value": "void",
+      "table": "still NULL",
+      "stop": "function body no clear operation, only lock/unlock"
+    },
+    {
+      "id": "FD40-C19",
+      "class": "helper_only",
+      "input": "put_unused_fd(0), slot0 occupied, valid lock",
+      "scan": "none",
+      "fd_value": "void",
+      "table": "still occupied",
+      "stop": "not a removal/close implementation"
+    },
+    {
+      "id": "FD40-C20",
+      "class": "source_conditional",
+      "input": "do_sys_openat2 getname returns encoded error",
+      "scan": "get_unused not called",
+      "fd_value": "PTR_ERR(tmp)",
+      "table": "unchanged from this path",
+      "stop": "early return prior to fd selection"
+    },
+    {
+      "id": "FD40-C21",
+      "class": "source_conditional",
+      "input": "getname normal then fd selection has no valid result because full/zero range",
+      "scan": "allocation called",
+      "fd_value": "UNESTABLISHED",
+      "table": "scan no reservation",
+      "stop": "cannot decide fd>=0 or later branches"
+    },
+    {
+      "id": "FD40-C22",
+      "class": "helper_only",
+      "input": "selected fd=0 defined, do_filp_open returns ERR_PTR(-ENOENT)",
+      "scan": "slot initially empty",
+      "fd_value": "fd overwritten -ENOENT",
+      "table": "slot remains NULL assuming no other writer",
+      "stop": "put_unused_fd not called in selected syscall; no reserved slot to unreserve"
+    },
+    {
+      "id": "FD40-C23",
+      "class": "helper_only",
+      "input": "selected fd=0, do_filp_open returns valid ordinary file F",
+      "scan": "slot initially empty",
+      "fd_value": 0,
+      "table": "fd_install writes F if normal",
+      "stop": "actual user open producer blocked by prior UV-04/SB38; helper-only success"
+    },
+    {
+      "id": "FD40-C24",
+      "class": "helper_only",
+      "input": "selected fd=0 and do_filp_open returns NULL",
+      "scan": "slot empty",
+      "fd_value": 0,
+      "table": "IS_ERR(NULL) false; fd_install(0,NULL) leaves slot NULL",
+      "stop": "no actual selected NULL file producer shown"
+    },
+    {
+      "id": "FD40-C25",
+      "class": "source_conditional",
+      "input": "get_unused_fd_flags O_CLOEXEC, empty slot0",
+      "scan": "flags input unused; selection0",
+      "fd_value": 0,
+      "table": "no close_on_exec bit storage in selected scan",
+      "stop": "US-03 already records broader close-on-exec issue"
+    },
+    {
+      "id": "FD40-C26",
+      "class": "helper_only",
+      "input": "f_dupfd from=256,nofile>=257 and first read index256",
+      "scan": "forward to alloc_fd(256,nofile,flags)",
+      "fd_value": "NONE",
+      "table": "unestablished",
+      "stop": "US-02 already records possible bound beyond 256; no duplicated new ID"
+    }
+  ],
+  "return_and_failure_matrix": [
+    {
+      "function": "alloc_fd",
+      "signature": "static int alloc_fd(uint start,uint end,uint flags)",
+      "direct_returns": "return fd; local uint assigned only on a successful empty slot find",
+      "valid_return": "first empty index if in-bounds",
+      "negative_error": "NONE direct",
+      "unassigned": "empty scan or full scan => uninitialized local, no deterministic return"
+    },
+    {
+      "function": "get_unused_fd_flags",
+      "signature": "int get_unused_fd_flags(uint flags)",
+      "direct_returns": "return alloc_fd(0,current->files->fd_count,flags)",
+      "valid_return": "subject to bounded alloc_fd success and conversion",
+      "negative_error": "no new error producer",
+      "unassigned": "inherits alloc_fd nondefined branch"
+    },
+    {
+      "function": "fd_install",
+      "signature": "void fd_install(uint fd,file_s *file)",
+      "direct_returns": "void normal completion after fps[fd]=file",
+      "valid_return": "no int status",
+      "negative_error": "none",
+      "unassigned": "index out of bounds/BUG_ON early stop first"
+    },
+    {
+      "function": "put_unused_fd",
+      "signature": "void put_unused_fd(uint fd)",
+      "direct_returns": "void after spin unlock",
+      "valid_return": "no return code",
+      "negative_error": "none",
+      "unassigned": "no slot/bitmap mutation despite comment"
+    },
+    {
+      "function": "do_sys_openat2",
+      "signature": "static long do_sys_openat2(...)",
+      "direct_returns": "early PTR_ERR(tmp) or final fd after putname",
+      "valid_return": "requires valid fd selection and normal file to install",
+      "negative_error": "IS_ERR(f) branch fd=PTR_ERR(f)",
+      "unassigned": "may consume uninitialized fd from alloc_fd; OF30-F01 invalid op upstream"
+    },
+    {
+      "function": "f_dupfd",
+      "signature": "int f_dupfd(uint from,file_s*file,uint flags)",
+      "direct_returns": "negative -EINVAL if start>=nofile else alloc_fd result",
+      "valid_return": "if err>=0 then get_file,fd_install",
+      "negative_error": "source -EINVAL at front gate; NOT a source of -EMFILE from alloc_fd",
+      "unassigned": "out-of-range scan is old US-02; do not expand full dup"
+    },
+    {
+      "function": "dup_fd",
+      "signature": "files_struct_s* dup_fd(...)",
+      "direct_returns": "newf on success or NULL on kmem_cache_alloc failure",
+      "valid_return": "sets newf.fd_count=256 then copies selected nonNULL old entries",
+      "negative_error": "*errorp=-ENOMEM on initial failure",
+      "unassigned": "no certification all untouched newf slots zero"
+    },
+    {
+      "function": "__alloc_file",
+      "signature": "file_s* __alloc_file(int flags)",
+      "direct_returns": "ERR_PTR(-ENOMEM) on cache allocation NULL else valid f",
+      "valid_return": "f_count initialized1",
+      "negative_error": "-ENOMEM only scoped",
+      "unassigned": "not a -ENFILE source in selected alloc_empty_file path"
+    }
+  ],
+  "arithmetic_and_capacity": {
+    "NR_OPEN_DEFAULT": 256,
+    "NR_OPEN_MAX": 256,
+    "init_files_fd_count": 0,
+    "dup_fd_fd_count": 256,
+    "ENFILE": 23,
+    "EXDEV": 18,
+    "EMFILE": 24,
+    "ENOMEM": 12,
+    "EINVAL": 22,
+    "O_CLOEXEC": "02000000 octal from selected uapi macro",
+    "fd_uint": "unsigned",
+    "loop_index": "int",
+    "end_uint": "uint",
+    "fd_count_type": "unsigned long",
+    "range_gate": "i<end only, not i<NR_OPEN_DEFAULT",
+    "index_gate_install": "none before fps[fd]",
+    "linux_rlimit_value": "historical US-02 only, not independently reproduced"
+  },
+  "scope_limits": [
+    "only selected open/fd entry, not all task.files creation paths",
+    "max_fds parameter and full dup_fd copy semantics only one-level provenance",
+    "BUG_ON definition conditioned by HAVE_ARCH_BUG_ON and source configuration; do not assert CPU panic",
+    "smp_rmb not lock, no ownership/reservation certification",
+    "no actual multithread collision or user fd allocation success established",
+    "R39-01 remains RETURN until C04 closes",
+    "actual GitHub remote write to be handled independently of typed evidence"
+  ]
+}

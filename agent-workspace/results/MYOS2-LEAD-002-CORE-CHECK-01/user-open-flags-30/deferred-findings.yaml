@@ -1,0 +1,218 @@
+---
+# YAML 1.2-compatible JSON mapping; conditional entries only, no prior records modified
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-OPEN-FLAGS-30",
+  "record_type": "bounded_deferred_findings_and_historical_links",
+  "date": "2026-11-03",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "239e2f8efc45",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "mainline": "MYOS2-A-C04",
+  "stage": 2,
+  "status": "deferred_owner_not_ready",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "new_findings": [
+    {
+      "id": "OF30-F01",
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "status": "needs_evidence",
+      "kind": "unconsumed_helper_validation_return_in_sys_open",
+      "title": "do_sys_openat2没有保存或拒绝build_open_flags的错误，后续fd分配覆盖局部返回",
+      "source_fact": "int fd=build_open_flags(how,&op)，未检查fd是否为负便执行getname；路径getname成功后fd=get_unused_fd_flags(how->flags)覆盖旧值，若fd>=0调用do_filp_open(dfd,tmp,&op)",
+      "actual_error_producers": [
+        "legacy sys_open输入__O_TMPFILE却未带O_DIRECTORY，在helper的组合门-EINVAL",
+        "legacy sys_open输入O_TMPFILE|O_RDONLY，在helper的MAY_WRITE门-EINVAL"
+      ],
+      "premises": [
+        "sys_open/do_sys_open通过build_open_how且保留这些valid flag位",
+        "getname取得了有效filename_s并正常返回；原入口若getname出错则先返回该错误而不会到fd覆盖",
+        "get_unused_fd_flags正常返回非负，才到do_filp_open",
+        "这时op只写mode而其lookup_flags等仍不确定，不能跨越读取未初始化值推断实际文件状态"
+      ],
+      "possible_impact": "已产生的校验错误被覆盖，且有一条向do_filp_open传部分初始化op的条件调用；第一层立即读取op->lookup_flags，C对未初始化值的消费不能当已确定有效查找标志",
+      "counterevidence": [
+        "调用不等于实际打开成功、权限绕过或文件已被修改；下层文件获取还有旧UV-04缺return和未审条件",
+        "若getname返回ERR_PTR或后续fd分配负值，根本不会尝试该下游调用",
+        "helper-only的invalid resolve、invalid mode和CACHED错误不能作为当前sys_open的实际错误生产者"
+      ],
+      "anchors": [
+        "OF30-A012",
+        "OF30-A030",
+        "OF30-A031",
+        "OF30-A032",
+        "OF30-A069",
+        "OF30-A071",
+        "OF30-A051",
+        "OF30-A065"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "后续授权修复/构建或独立错误传播专项才评估实际影响"
+    },
+    {
+      "id": "OF30-F02",
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F02",
+      "status": "needs_evidence",
+      "kind": "snapshot_field_vs_local_flag_divergence",
+      "title": "O_CREAT|O_EXCL的O_NOFOLLOW只加到后续局部flags，未反映进已保存的op.open_flag",
+      "source_fact": "build_open_flags在op.open_flag=flags赋值后，若flags含O_CREAT和O_EXCL则设置op.intent的LOOKUP_EXCL并执行flags|=O_NOFOLLOW；后续lookup_flags的FOLLOW判定使用新flags",
+      "premises": [
+        "O_CREAT|O_EXCL且原输入未另带O_NOFOLLOW",
+        "走过前置错误门到成功op.open_flag赋值及后继intent分支",
+        "需要下游确实依赖op.open_flag的O_NOFOLLOW语义才构成行为差异"
+      ],
+      "possible_impact": "同一open_flags对象可能同时保存原始缺NOFOLLOW的open_flag与后续无FOLLOW的lookup_flags；不能把两者当同一变量的同步视图",
+      "counterevidence": [
+        "创建独占语义可能有意只通过lookup_flags表达；不能由字段差异单独认定错误",
+        "do_filp_open第一层传递两者给path_openat，但完整路径遍历和符号链接的执行约束未审",
+        "未验证实际创建成功或路径跳转"
+      ],
+      "anchors": [
+        "OF30-A014",
+        "OF30-A018",
+        "OF30-A019",
+        "OF30-A020",
+        "OF30-A069",
+        "OF30-A071"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来精确审下游哪一字段控制独占/符号链接时再判断"
+    },
+    {
+      "id": "OF30-F03",
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F03",
+      "status": "needs_evidence",
+      "kind": "cached_guard_compound_alias_overlap",
+      "title": "RESOLVE_CACHED门的O_TMPFILE复合掩码包含O_DIRECTORY，目录标志也能触发-EAGAIN",
+      "source_fact": "O_TMPFILE=(__O_TMPFILE|O_DIRECTORY)，在RESOLVE_CACHED分支使用flags & (O_TRUNC|O_CREAT|O_TMPFILE)，所以即使只带O_DIRECTORY而不带__O_TMPFILE，也会命中-EAGAIN",
+      "premises": [
+        "helper的how.resolve明确带RESOLVE_CACHED",
+        "flags包含O_DIRECTORY且过前面的校验",
+        "当前旧sys_open的build_open_how省略resolve，其值为0；因此这是raw helper-only而非已证明sys_open可达"
+      ],
+      "possible_impact": "若将来有非零resolve调用者，目录缓存查询可能被这一检查提前拒绝，与注释的仅create/truncate/tmpfile拒绝范围不同",
+      "counterevidence": [
+        "当前真实sys_open入口不产生RESOLVE_CACHED，不是已观察的用户拒绝结果",
+        "位掩码过宽是否违反实际openat2协议，需要未来独立规范和下游场景",
+        "错误返回此时op的mode/open_flag/acc_mode/intent已写，lookup_flags尚未赋；属于同一F01调用者错误消费的其它用例，不重复判为另一个已发生绕过"
+      ],
+      "anchors": [
+        "OF30-A024",
+        "OF30-A025",
+        "OF30-A051",
+        "OF30-A053",
+        "OF30-A035",
+        "OF30-A005"
+      ],
+      "related": [
+        "CORE-USER-SYSCALL-STDIO-08::US-03"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "仅有新的有效resolve调用者/标准兼容性需求时重开"
+    },
+    {
+      "id": "OF30-F04",
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+      "status": "needs_evidence",
+      "kind": "resolve_to_lookup_enforcement_not_established",
+      "title": "RESOLVE_*只被转换为lookup_flags，所选调用前缀不能证明各限制在真正路径遍历时被执行",
+      "source_fact": "build_open_flags在RESOLVE有效范围内对NO_XDEV/NO_MAGICLINKS/NO_SYMLINKS/BENEATH/IN_ROOT/CACHED分别置lookup_flags，do_filp_open第一层仅读取op->lookup_flags并传给path_openat",
+      "premises": [
+        "raw helper输入含对应RESOLVE位且成功返回0，或者未来新增真正openat2入口",
+        "下游收到有效open_flags对象并正常继续"
+      ],
+      "possible_impact": "定义和意图转换为LOOKUP标志是确证；各路径跳转/禁止解析是否实现仍依赖未审的namei/权限路径，不能声称所有Linux openat2功能可用",
+      "counterevidence": [
+        "LOOKUP_*宏/方法存在并不等于这些功能不存在；本批没有审遍历链",
+        "现有sys_open只给how.resolve=0，不能把resolve映射直接当用户已可调用特性",
+        "这一项为边界/证据缺口，未证明具体缺陷或实际权限绕过"
+      ],
+      "anchors": [
+        "OF30-A041",
+        "OF30-A053",
+        "OF30-A021",
+        "OF30-A022",
+        "OF30-A023",
+        "OF30-A025",
+        "OF30-A069",
+        "OF30-A070"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "下一项经授权的namei路径范围项目或openat2入口检查"
+    }
+  ],
+  "historical_only": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "status_change": false,
+      "kind": "same_boundary",
+      "note": "旧缺return实际涉及do_open与myos_do_dentry_open，不是do_filp_open缺return；本批只在do_filp_open读取lookup_flags与path_openat读取open_flag止步",
+      "anchors": [
+        "OF30-A069",
+        "OF30-A070",
+        "OF30-A071",
+        "OF30-A073"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-03",
+      "status_change": false,
+      "kind": "evidence_append_only",
+      "note": "O_CLOEXEC在build_open_flags被strip，不进op.open_flag，但how.flags另交get_unused_fd_flags；不能凭此宣称close-on-exec成功，旧08已记录整体生命周期限制。",
+      "anchors": [
+        "OF30-A007",
+        "OF30-A032",
+        "OF30-A048"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S01",
+      "status_change": false,
+      "kind": "review_boundary",
+      "note": "请求位/数值门与实际运行是不同层，直接helper测试向后传播必须有真实生产者",
+      "anchors": [
+        "OF30-A008",
+        "OF30-A012"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S02",
+      "status_change": false,
+      "kind": "review_boundary",
+      "note": "getname错误、fd覆写及历史VFS缺return分开，不能跨过非正常前缀宣告已打开",
+      "anchors": [
+        "OF30-A031",
+        "OF30-A032",
+        "OF30-A073"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S03",
+      "status_change": false,
+      "kind": "review_boundary",
+      "note": "规范MANIFEST键及包含赋值/返回的真实短引文，不用声明/注释冒充函数执行体",
+      "anchors": [
+        "OF30-A030",
+        "OF30-A032",
+        "OF30-A037",
+        "OF30-A065"
+      ]
+    }
+  ],
+  "new_count": 4,
+  "old_count": 5,
+  "full_repository_dedup": "NOT_PERFORMED",
+  "runtime": "NOT_RUN",
+  "kernel_patch": false
+}

@@ -1,0 +1,320 @@
+{
+  "check": "STATIC",
+  "time_short12": "a039d9803ade",
+  "files_scanned": 843,
+  "V05": {
+    "ttwu_doc_contract": [
+      {
+        "line": 297,
+        "text": "* Conceptually does:"
+      },
+      {
+        "line": 299,
+        "text": "*   If (@state & @p->state) @p->state = TASK_RUNNING."
+      },
+      {
+        "line": 325,
+        "text": "* Return: %true if @p->state changes (an actual wakeup was done),"
+      }
+    ],
+    "sched_fork_contract": [
+      {
+        "line": 623,
+        "text": "* We mark the process as NEW here. This guarantees that"
+      },
+      {
+        "line": 624,
+        "text": "* nobody will actually run it, and a signal or other external"
+      },
+      {
+        "line": 625,
+        "text": "* event cannot wake it up and insert it on the runqueue either."
+      }
+    ],
+    "ttwu_state_match_active_calls": []
+  },
+  "V07": {
+    "active___set_task_cpu": [],
+    "active_thread_info_cpu_writes": [],
+    "wake_up_new_task_rq_line": [
+      {
+        "line": 688,
+        "text": "rq_s *rq = &(per_cpu(runqueues, 0));"
+      }
+    ],
+    "ttwu_select_line": [
+      {
+        "line": 462,
+        "text": "cpu = select_task_rq(p, cpu, wake_flags | WF_TTWU);"
+      }
+    ]
+  },
+  "V08": {
+    "active_running_lhdr_sites": [
+      {
+        "path": "mykernel/sched/runqueue/runqueue_types.h",
+        "line": 195,
+        "text": "List_hdr_s\t\trunning_lhdr;"
+      },
+      {
+        "path": "mykernel/sched/scheduler/myos_rt.c",
+        "line": 18,
+        "text": "myos_rq->running_lhdr.count > 0)"
+      },
+      {
+        "path": "mykernel/sched/scheduler/myos_rt.c",
+        "line": 21,
+        "text": "myos_rq->running_lhdr.count <= 0);"
+      },
+      {
+        "path": "mykernel/sched/scheduler/myos_rt.c",
+        "line": 24,
+        "text": "List_s * next_lp = list_header_remove_head(&myos_rq->running_lhdr);"
+      },
+      {
+        "path": "mykernel/sched/scheduler/myos_rt.c",
+        "line": 33,
+        "text": "list_header_add_to_tail(&myos_rq->running_lhdr, &rt->run_list);"
+      },
+      {
+        "path": "mykernel/sched/scheduler/myos_rt.c",
+        "line": 37,
+        "text": "List_s * tmp_list = myos_rq->running_lhdr.anchor.next;"
+      },
+      {
+        "path": "mykernel/sched/scheduler/myos_rt.c",
+        "line": 40,
+        "text": "tmp_list != &myos_rq->running_lhdr.anchor)"
+      },
+      {
+        "path": "mykernel/sched/scheduler/myos_rt.c",
+        "line": 45,
+        "text": "myos_rq->running_lhdr.count++;"
+      },
+      {
+        "path": "mykernel/sched/scheduler/scheduler_core.c",
+        "line": 179,
+        "text": "if (!list_header_contains(&target_rq->myos.running_lhdr, &p->rt.run_list))"
+      },
+      {
+        "path": "mykernel/sched/scheduler/scheduler_core.c",
+        "line": 180,
+        "text": "list_header_add_to_head(&target_rq->myos.running_lhdr, &p->rt.run_list);"
+      },
+      {
+        "path": "mykernel/sched/scheduler/scheduler_core.c",
+        "line": 721,
+        "text": "list_header_add_to_head(&rq->myos.running_lhdr, &p->rt.run_list);"
+      },
+      {
+        "path": "mykernel/sched/scheduler/scheduler_core.c",
+        "line": 1458,
+        "text": "INIT_LIST_HEADER_S(&rq->myos.running_lhdr);"
+      }
+    ],
+    "active_rq_idle_assignments": [
+      {
+        "path": "mykernel/sched/scheduler/scheduler_core.c",
+        "line": 1436,
+        "text": "rq->idle = idle;"
+      }
+    ],
+    "init_task_state_initializer": [
+      {
+        "path": "mykernel/init/init_task.c",
+        "line": 76,
+        "text": ".__state\t\t\t= TASK_RUNNING,"
+      }
+    ],
+    "schedule_idle_expects_running": [
+      {
+        "line": 1236,
+        "text": "WARN_ON_ONCE(current->__state);"
+      }
+    ],
+    "rest_init_state_changes": [],
+    "active_idle_state_writers": []
+  },
+  "V09": {
+    "finite_path_lines": [
+      {
+        "line": 797,
+        "text": "__mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);"
+      },
+      {
+        "line": 798,
+        "text": "// schedule();"
+      },
+      {
+        "line": 799,
+        "text": "del_timer_sync(&timer.timer);"
+      },
+      {
+        "line": 805,
+        "text": "return timeout < 0 ? 0 : timeout;"
+      }
+    ],
+    "active_process_timeout_references": [
+      {
+        "path": "mykernel/time/timer/timer.c",
+        "line": 42,
+        "text": "process_timeout(timer_list_s *t) {"
+      },
+      {
+        "path": "mykernel/time/timer/timer.c",
+        "line": 796,
+        "text": "timer_setup_on_stack(&timer.timer, process_timeout, 0);"
+      }
+    ],
+    "active_msleep_references_outside_timer_c": [
+      {
+        "path": "mykernel/time/timer/timer_api.h",
+        "line": 30,
+        "text": "void msleep(uint msecs);"
+      }
+    ],
+    "active_timer_expiry_dispatch_candidates": [],
+    "active_schedule_timeout_family_references_outside_timer_c": [
+      {
+        "path": "mykernel/kactive/completion/completion.h",
+        "line": 76,
+        "text": "timeout = do_wait_for_common(x, schedule_timeout, timeout, state);"
+      },
+      {
+        "path": "mykernel/lock_IPC/semaphore/semaphore.h",
+        "line": 57,
+        "text": "timeout = schedule_timeout(timeout);"
+      },
+      {
+        "path": "mykernel/sched/scheduler/scheduler_api.h",
+        "line": 35,
+        "text": "extern long schedule_timeout(long timeout);"
+      },
+      {
+        "path": "mykernel/time/timer/timer_api.h",
+        "line": 24,
+        "text": "long schedule_timeout(long timeout);"
+      },
+      {
+        "path": "mykernel/time/timer/timer_api.h",
+        "line": 25,
+        "text": "long schedule_timeout_interruptible(long timeout);"
+      },
+      {
+        "path": "mykernel/time/timer/timer_api.h",
+        "line": 26,
+        "text": "long schedule_timeout_killable(long timeout);"
+      },
+      {
+        "path": "mykernel/time/timer/timer_api.h",
+        "line": 27,
+        "text": "long schedule_timeout_uninterruptible(long timeout);"
+      },
+      {
+        "path": "mykernel/time/timer/timer_api.h",
+        "line": 28,
+        "text": "long schedule_timeout_idle(long timeout);"
+      }
+    ]
+  },
+  "V14": {
+    "lds_alias": [
+      {
+        "line": 17,
+        "text": "jiffies = jiffies_64;"
+      }
+    ],
+    "target_link_options": [
+      {
+        "line": 7,
+        "text": "-T ${PROJECT_SOURCE_DIR}/arch/${ARCH}/kernel.lds"
+      }
+    ],
+    "arch_default": [
+      {
+        "line": 8,
+        "text": "set(ARCH x86_64)"
+      }
+    ],
+    "active_c_definitions_of_jiffies": [],
+    "active_c_definitions_of_jiffies_64": [
+      {
+        "path": "mykernel/time/timer/timer.c",
+        "line": 38,
+        "text": "__visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;"
+      }
+    ],
+    "late_time_init_callers": [
+      {
+        "path": "mykernel/arch/x86_64/kernel/time.c",
+        "line": 42,
+        "text": "void late_time_init(void)"
+      },
+      {
+        "path": "mykernel/include/linux/init/init.h",
+        "line": 169,
+        "text": "extern void late_time_init(void);"
+      },
+      {
+        "path": "mykernel/init/main.c",
+        "line": 177,
+        "text": "late_time_init();"
+      }
+    ],
+    "active_extern_jiffies_declarations": [
+      {
+        "path": "mykernel/lock_IPC/semaphore/semaphore_api.h",
+        "line": 12,
+        "text": "extern int __must_check down_timeout(sema_t *sem, long jiffies);"
+      },
+      {
+        "path": "mykernel/time/misc/time_misc_api.h",
+        "line": 12,
+        "text": "extern void jiffies_to_timespec64(const ulong jiffies, timespec64_s *value);"
+      },
+      {
+        "path": "mykernel/time/systick/systick_api.h",
+        "line": 25,
+        "text": "extern ulong volatile __cacheline_aligned_in_smp __jiffy_arch_data jiffies;"
+      }
+    ],
+    "hpet_registration": [
+      {
+        "path": "mykernel/arch/x86_64/include/asm/time.h",
+        "line": 8,
+        "text": "extern void hpet_time_init(void);"
+      },
+      {
+        "path": "mykernel/arch/x86_64/kernel/hpet.c",
+        "line": 539,
+        "text": "void myos_HPET_init()"
+      },
+      {
+        "path": "mykernel/arch/x86_64/kernel/hpet.c",
+        "line": 553,
+        "text": "0, &HPET_int_controller, &HPET_handler);"
+      },
+      {
+        "path": "mykernel/arch/x86_64/kernel/time.c",
+        "line": 31,
+        "text": "void __init hpet_time_init(void)"
+      },
+      {
+        "path": "mykernel/arch/x86_64/kernel/time.c",
+        "line": 37,
+        "text": "extern void myos_HPET_init(void);"
+      },
+      {
+        "path": "mykernel/arch/x86_64/kernel/time.c",
+        "line": 38,
+        "text": "myos_HPET_init();"
+      },
+      {
+        "path": "mykernel/arch/x86_64/kernel/time.c",
+        "line": 51,
+        "text": "hpet_time_init(); /* == x86_init.timers.timer_init() */"
+      }
+    ],
+    "elf_files_in_time_tree": []
+  }
+}

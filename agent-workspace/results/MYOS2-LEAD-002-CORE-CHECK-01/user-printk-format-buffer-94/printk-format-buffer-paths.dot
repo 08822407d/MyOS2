@@ -1,0 +1,88 @@
+// MYOS2-LEAD-002-CHAT-EXEC-12 / CORE-USER-PRINTK-FORMAT-BUFFER-94
+// Static conditional graph fixed time@a039d9803ade, NOT a full CFG.
+// blue solid: real active CALL; green dashed: MACRO_EXPANSION (not CALL)
+// black solid: DATA dependency; violet dotted: RETURN_FLOW or OUT_PARAM
+// gray dotted: local SOURCE_ORDER; red dashed: HYPOTHETICAL / first STOP gate.
+// All runtime, compilation and Graphviz NOT_RUN.
+digraph PK94_Printk {
+ graph [rankdir=LR,labelloc=t,label="PK94 printk: once and format -> 1024B -> ring cursor -> console handoff"];
+ node [shape=box,fontsize=10]; edge [fontsize=9];
+
+ subgraph cluster_A {
+   label="A: macro / once / va_list / real formatter";
+   source [label="create_worker error source:\n%pe or supported literal (different branches)"];
+   onceMacro [label="pr_err_once: KERN_ERR + pr_fmt\nMACRO to printk_once"];
+   mark [label="printk_once static bool __print_once\nif false: SET TRUE BEFORE call\nno atomic guarantee"];
+   printfn [label="printk(fmt,...)\nva_start -> vprintk -> va_end\nreturn r"];
+   vf [label="vprintk(fmt,args)\ninitial state and output counter"];
+   vsc [label="vscnprintf(buf,remaining,fmt,args)\nreturn written chars"];
+   vsn [label="vsnprintf\n%s/%c/literal normal; PTR on %pe"];
+   ptr [shape=octagon,label="SP93-F01 FIRST STOP:\nptr formatter char* body\nhas no active return;\ncaller consumes"];
+   fmt [label="fmt and args DATA\nKERN_ERR prefix <3>\nordinary text can bypass PTR"];
+   source -> onceMacro [style=dashed,color=green,label="MACRO use"];
+   onceMacro -> mark [style=dashed,color=green,label="MACRO_EXPANSION"];
+   mark -> printfn [style=dotted,label="SOURCE_ORDER: mark=true then call"];
+   printfn -> vf [color=blue,label="CALL"];
+   vf -> vsc [color=blue,label="CALL"];
+   vsc -> vsn [color=blue,label="CALL"];
+   vsn -> ptr [style=dashed,color=red,label="only if actual %p token"];
+   fmt -> vsn [label="format/va_list DATA"];
+ }
+ subgraph cluster_B {
+   label="B: temp buffer, prefix, timestamp, scanned bytes and return";
+   buf [label="static printk_buf[1024]\nrecursion prefix may use head"];
+   written [label="printed_len += vscnprintf\nretained chars != scanned chars"];
+   lprefix [label="log_prefix(p, &level, &special)\nthree-byte or multi-digit parse"];
+   parse [label="simple_strtoul -> simple_strtoull\n-> simple_strntoull -> _parse_integer_limit"];
+   tag [label="prefix out params:\nlevel / special, returned plen\nnot printf return"];
+   scan [label="for (; *p; p++)\nstop at FIRST NUL"];
+   stamp [label="local_clock, do_div,\nsprintf(tbuf[50],...,INT_MAX internal)\nC pointer gate before trusted timestamp"];
+   count [label="printed_len adds prefix bytes\nand tlen independently\nvprintk RETURN"];
+   emit [label="emit_log_char(c)\none ring byte per invocation"];
+   vf -> buf [label="DATA static object"];
+   buf -> vsc [label="DATA destination/remaining capacity"];
+   vsc -> written [style=dotted,color=purple,label="RETURN_FLOW written length"];
+   written -> lprefix [style=dotted,label="SOURCE_ORDER after formatter"];
+   vf -> lprefix [color=blue,label="CALL (linear printk_buf)"];
+   lprefix -> parse [color=blue,label="CALL if multi-digit"];
+   lprefix -> tag [style=dotted,color=purple,label="OUT_PARAM(level,special) + plen return"];
+   lprefix -> scan [style=dotted,label="SOURCE_ORDER after p+=plen"];
+   scan -> stamp [style=dotted,label="on new_text_line"];
+   vf -> stamp [color=blue,label="CALL local_clock / sprintf"];
+   scan -> emit [color=blue,label="CALL for retained nonNUL bytes"];
+   stamp -> emit [color=blue,label="CALL to append timestamp bytes"];
+   tag -> emit [style=dashed,label="conditional original/synthetic prefix"];
+   emit -> count [style=dotted,label="return-count calculation not ring write count"];
+   count -> printfn [style=dotted,color=purple,label="RETURN_FLOW vprintk -> printk"];
+ }
+ subgraph cluster_C {
+   label="C: array mask, logical cursor, line-oriented console handoff";
+   cfg [label="CONFIG_LOG_BUF_SHIFT=23\n__LOG_BUF_LEN=2^23\nLOG_BUF_MASK=len-1"];
+   ring [label="LOG_BUF(log_end)=c\nlog_end++ ; log_start/con_start caps\nlogged_chars saturates"];
+   tryCon [label="console_trylock_for_printk\nretval=1 if list count>0\nactual lock call commented"];
+   flush [label="console_unlock:\nsnapshot old con_start/end\ncon_start=log_end BEFORE call"];
+   scanRing [label="call_console_drivers:\nLOG_BUF(cur_index) per byte\nlog_prefix(&LOG_BUF(cur_index))\nrequires contiguous input"];
+   line [label="only when LF:\n_call_console_drivers(start_print,cur_index)"];
+   wrap [label="_call_console_drivers:\nif mask_start>mask_end split;\nelse pass original start/end"];
+   cb [label="__call_console_drivers\nfor_each_console -> con->write\nptr=&LOG_BUF(start), count=end-start"];
+   tail [shape=note,label="No LF: source tail _call is COMMENTED\nbut con_start already advanced"];
+   ub1 [shape=octagon,label="C boundary: ring-tail p[1]/p[2]\nfrom &LOG_BUF(last) may exit array"];
+   ub2 [shape=octagon,label="C boundary: full span N with\nstartmask==endmask passed contiguous"];
+   emit -> ring [color=blue,label="CALL emit updates ring"];
+   cfg -> ring [label="DATA+MACRO physical slot"];
+   vf -> tryCon [color=blue,label="CALL"];
+   tryCon -> flush [style=dashed,label="if retval (not proven lock)"];
+   flush -> scanRing [color=blue,label="CALL after con_start advance"];
+   ring -> scanRing [label="DATA logical cursor and array"];
+   scanRing -> line [style=dotted,label="SOURCE_ORDER when LF"];
+   line -> wrap [color=blue,label="CALL"];
+   wrap -> cb [color=blue,label="CALL one/two intervals"];
+   scanRing -> tail [style=dotted,label="no LF normal source exit"];
+   scanRing -> ub1 [style=dashed,color=red,label="ring-start near last slot"];
+   wrap -> ub2 [style=dashed,color=red,label="equal masks N-span"];
+ }
+ notes [shape=note,label="94 D00 NOT_REQUIRED; 93 PASS_PENDING_LOCAL with R93-S01/S02/S03\nR92-S01/S02/S03, R91-S01/S02/S03, R90C-S01 retained\nFULL P9, compiler, QEMU, Graphviz, hardware, real concurrency NOT_RUN"];
+ ptr -> notes [style=dashed,color=red,label="cannot claim formatted %pe ring write"];
+ ub1 -> notes [style=dashed,color=red,label="not runtime proof"];
+ ub2 -> notes [style=dashed,color=red,label="not runtime proof"];
+}

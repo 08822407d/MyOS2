@@ -1,0 +1,58 @@
+// task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+// batch_id: "CORE-USER-BRK-RANGE-ACCOUNTING-154"
+// conversation_display_name: "MYOS2-A-C11a 代码分析执行"
+// execution_identity: "MYOS2-LEAD-002-CHAT-EXEC-25"
+// produced_by: "GPT-6.2（系统标识；界面实际名称不可独立读取）"
+// model_per_owner: "GPT-6.2 Sol＋Extra／高推理（Owner指定）"
+// actual_backend_model: UNATTESTED
+// actual_reasoning_effort: UNATTESTED
+// Graphviz NOT_RUN; facts.graph attributes identical
+digraph brk_range_accounting_154 {
+  "A_CROSS_TASK_ENTRY" [kind="given_entry", label="A_CROSS_TASK", source="syscall.c:39"];
+  "A_CROSS_TASK_AREA" [kind="source_call", label="align / do_brk_flags / __get_unmapped_area", source="syscall.c:62–103; mmap.c:1193–1208"];
+  "A_CROSS_TASK_END" [kind="analysis_stop", label="ANALYSIS_STOP_BEFORE_UNEXPANDED_CALLEE", source="mmap.c:1212 before call"];
+  "A_ALIGN_WRAP_ENTRY" [kind="given_entry", label="A_ALIGN_WRAP", source="syscall.c:39"];
+  "A_ALIGN_WRAP_AREA" [kind="source_call", label="align / do_brk_flags / __get_unmapped_area", source="syscall.c:62–103; mmap.c:1193–1208"];
+  "A_ALIGN_WRAP_END" [kind="conditional_return", label="CONDITIONAL_NORMAL_RETURN", source="syscall.c:122–124"];
+  "B_NEW_FRAME" [kind="given_observation_frame", label="B_NEW", source="mmap.c:1226 before call"];
+  "B_NEW_SUFFIX" [kind="source_order_stage", label="allocate N / fields / link / ledger", source="mmap.c:1220–1246"];
+  "B_NEW_CALLER" [kind="conditional_return", label="GIVEN caller consumes modeled return", source="syscall.c:103–124"];
+  "B_MERGE_LOCKED_FRAME" [kind="given_observation_frame", label="B_MERGE_LOCKED", source="1219 returned M, before 1220"];
+  "B_MERGE_LOCKED_SUFFIX" [kind="source_order_stage", label="consume GIVEN M / locked ledger", source="mmap.c:1220–1246"];
+  "B_MERGE_LOCKED_CALLER" [kind="conditional_return", label="GIVEN caller consumes modeled return", source="syscall.c:103–124"];
+  "B_ALLOC_FAIL_FRAME" [kind="given_observation_frame", label="B_ALLOC_FAIL", source="1226"];
+  "B_ALLOC_FAIL_SUFFIX" [kind="source_order_stage", label="GIVEN alloc NULL / -ENOMEM", source="mmap.c:1220–1246"];
+  "B_ALLOC_FAIL_CALLER" [kind="conditional_return", label="GIVEN caller consumes modeled return", source="syscall.c:103–124"];
+  "B_NEW_DONE" [kind="data_snapshot", label="complete tracked B_NEW data", source="B_NEW after caller return"];
+  "C_REMOVE_WHOLE_CLONE" [kind="independent_data_clone", label="C_REMOVE_WHOLE", source="B_NEW_DONE clone"];
+  "C_REMOVE_WHOLE_PREWRITE" [kind="source_order_stage", label="new GIVEN caller: break prewrite", source="syscall.c:47–83"];
+  "C_REMOVE_WHOLE_OBS" [kind="given_observation_frame", label="query return GIVEN", source="before mmap.c:1148"];
+  "C_REMOVE_WHOLE_SUFFIX" [kind="source_order_stage", label="detach N / two counts / no ledger decrement", source="mmap.c:1092–1167"];
+  "C_REMOVE_WHOLE_END" [kind="conditional_return", label="return X", source="syscall.c:83–124"];
+  "C_FIRST_SPLIT_FAIL_CLONE" [kind="independent_data_clone", label="C_FIRST_SPLIT_FAIL", source="B_NEW_DONE clone"];
+  "C_FIRST_SPLIT_FAIL_PREWRITE" [kind="source_order_stage", label="new GIVEN caller: break prewrite", source="syscall.c:47–83"];
+  "C_FIRST_SPLIT_FAIL_OBS" [kind="given_observation_frame", label="query return GIVEN", source="before mmap.c:1139"];
+  "C_FIRST_SPLIT_FAIL_SUFFIX" [kind="source_order_stage", label="first split dup NULL / -12", source="mmap.c:1092–1167"];
+  "C_FIRST_SPLIT_FAIL_END" [kind="conditional_return", label="restore X+L and return origbrk", source="syscall.c:83–124"];
+  "A_CROSS_TASK_ENTRY" -> "A_CROSS_TASK_AREA" [kind="source_order", label="actual selected prefix"];
+  "A_CROSS_TASK_AREA" -> "A_CROSS_TASK_END" [kind="source_order", label="fixed addr / nonerror, stop before cleanup"];
+  "A_ALIGN_WRAP_ENTRY" -> "A_ALIGN_WRAP_AREA" [kind="source_order", label="actual selected prefix"];
+  "A_ALIGN_WRAP_AREA" -> "A_ALIGN_WRAP_END" [kind="source_order", label="length reject / -12 / out"];
+  "B_NEW_FRAME" -> "B_NEW_SUFFIX" [kind="source_order", label="suffix only"];
+  "B_NEW_SUFFIX" -> "B_NEW_CALLER" [kind="given_caller_return_consumption", label="caller frame GIVEN, not proof of production"];
+  "B_MERGE_LOCKED_FRAME" -> "B_MERGE_LOCKED_SUFFIX" [kind="source_order", label="suffix only"];
+  "B_MERGE_LOCKED_SUFFIX" -> "B_MERGE_LOCKED_CALLER" [kind="given_caller_return_consumption", label="caller frame GIVEN, not proof of production"];
+  "B_ALLOC_FAIL_FRAME" -> "B_ALLOC_FAIL_SUFFIX" [kind="source_order", label="suffix only"];
+  "B_ALLOC_FAIL_SUFFIX" -> "B_ALLOC_FAIL_CALLER" [kind="given_caller_return_consumption", label="caller frame GIVEN, not proof of production"];
+  "B_NEW_CALLER" -> "B_NEW_DONE" [kind="observation_only", label="data snapshot; not execution successor"];
+  "B_NEW_DONE" -> "C_REMOVE_WHOLE_CLONE" [kind="snapshot_import", label="independent data copy only"];
+  "C_REMOVE_WHOLE_CLONE" -> "C_REMOVE_WHOLE_PREWRITE" [kind="source_order", label="new caller prefix"];
+  "C_REMOVE_WHOLE_PREWRITE" -> "C_REMOVE_WHOLE_OBS" [kind="given_boundary", label="specified return and state, not actual query reachability"];
+  "C_REMOVE_WHOLE_OBS" -> "C_REMOVE_WHOLE_SUFFIX" [kind="source_order", label="modeled suffix"];
+  "C_REMOVE_WHOLE_SUFFIX" -> "C_REMOVE_WHOLE_END" [kind="given_caller_return_consumption", label="caller frame return consumption"];
+  "B_NEW_DONE" -> "C_FIRST_SPLIT_FAIL_CLONE" [kind="snapshot_import", label="independent data copy only"];
+  "C_FIRST_SPLIT_FAIL_CLONE" -> "C_FIRST_SPLIT_FAIL_PREWRITE" [kind="source_order", label="new caller prefix"];
+  "C_FIRST_SPLIT_FAIL_PREWRITE" -> "C_FIRST_SPLIT_FAIL_OBS" [kind="given_boundary", label="specified return and state, not actual query reachability"];
+  "C_FIRST_SPLIT_FAIL_OBS" -> "C_FIRST_SPLIT_FAIL_SUFFIX" [kind="source_order", label="modeled suffix"];
+  "C_FIRST_SPLIT_FAIL_SUFFIX" -> "C_FIRST_SPLIT_FAIL_END" [kind="given_caller_return_consumption", label="caller frame return consumption"];
+}

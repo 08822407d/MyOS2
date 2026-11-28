@@ -1,0 +1,60 @@
+{
+ "record": "USER_BOUNDARIES_07_CHECK_RUN",
+ "cwd": "<clone 根> = /home/cheyh/projs/myos2-handoff06-local/MyOS2",
+ "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B -P agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/scripts/ub_check.py /home/cheyh/projs/myos2-handoff06-local/MyOS2 check agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07 agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/records/ub_check.json",
+ "returncode": 0,
+ "started_utc": "2026-10-28T04:23:00+00:00",
+ "finished_utc": "2026-10-28T04:23:01+00:00",
+ "stdout_summary": {
+  "anchors": [
+   70,
+   70
+  ],
+  "markdown_tags": [
+   22,
+   22
+  ],
+  "queries": [
+   70,
+   0
+  ],
+  "hit_refs": 42,
+  "structure_checks": [
+   20,
+   20
+  ],
+  "value_tables_ok": true,
+  "structure_errors": 0,
+  "deferred_findings_errors": 0,
+  "hex40_in_package": 0,
+  "all_ok": true
+ },
+ "stderr": [
+  "{\"scan_index_repo_frozen\": \"/home/user/MyOS2\", \"scan_index_repo_rebound\": \"/home/cheyh/projs/myos2-handoff06-local/MyOS2\", \"pin\": \"a039d9803ade\"}"
+ ],
+ "outputs": [
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/records/ub_check.json",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/records/queries.json"
+ ],
+ "pin_time": "a039d9803ade",
+ "base_execution_head": "b12572f14eae",
+ "tools": {
+  "git": "git version 2.53.0",
+  "python": "Python 3.14.4",
+  "pyyaml": "6.0.3"
+ },
+ "input_sha256": {
+  "facts-and-boundaries.yaml": "3a39b8ee8fc740bef6af13b617acb769f7f97ca5a80482e25eaeeccad5f52870",
+  "deferred-findings.yaml": "6ca827038157f3a2120dc99dca54cb642feeb13d46c731fc64bcfc5d5f7a47b9",
+  "user-entry-console.md": "fa1fe54983e48c937ef697a3be1e850a11028da6cb145bf9868fb07bbce3106c",
+  "scripts/ub_check.py": "2d497c8571ab4cc598e634b0661cc578fb28f0f34655fbe693d78ce6982fb29f"
+ },
+ "reused_module": {
+  "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py",
+  "sha256": "468fd2d538f0862c1f00de7e8d8147352c6fbfd7ec0e39ce597b32df8cc60efc",
+  "use": "import 读取原语（show/analyse），REPO 重绑到 clone 根；文件本身未改"
+ },
+ "pycache_before": [],
+ "pycache_after": [],
+ "not_run": "没有编译或运行 C/ASM、cmake、内核、QEMU、宿主安装/挂盘脚本或仓库原有脚本"
+}

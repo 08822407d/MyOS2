@@ -1,0 +1,244 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FAT-DIR-ITERATOR-35",
+  "record_type": "bounded_conditional_iterator_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "mainline_owner": "MYOS2-A-C04",
+  "date": "2026-11-04",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "bce8404efe6a",
+  "fixed_task59_short12": "98608f6c58df",
+  "mandatory_prior_supplements": [
+    "R34-S01",
+    "R34-S02"
+  ],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "not_vulnerability_count": true,
+  "new_findings": [
+    {
+      "id": "IT35-F01",
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F01",
+      "kind": "getter_dereferences_unchecked_error_pointer",
+      "status": "needs_evidence",
+      "fact": "readent can return ERR_PTR(-ENOENT) for out-of-range start or ERR_PTR(-ENOMEM) on buffer allocation fail; next returns ret_val without guard; get_full_ent reads ret_val->attr or name[0] before IS_ERR",
+      "premises": [
+        "selected get_full_ent calls actual bound next",
+        "readent returns encoded error",
+        "valid iobuf until deref"
+      ],
+      "counterevidence": [
+        "when readent returns ordinary valid entry, attr access is defined under input conditions",
+        "no actual bad disk/zero-count user path reproduced",
+        "cannot assert error will be propagated or CPU will deterministically fault"
+      ],
+      "anchors": [
+        "IT35-A007",
+        "IT35-A010",
+        "IT35-A012",
+        "IT35-A028",
+        "IT35-A029"
+      ],
+      "possible_impact": "bounded invalid pointer consumption before getter’s terminal/error conversion; no safe return category beyond point",
+      "resume_conditions": [
+        "trace real nr_clus and buffer failure producers",
+        "authorized runtime or isolated proof of caller inputs"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IT35-F02",
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02",
+      "kind": "terminal_entry_overwritten_by_end_flag",
+      "status": "needs_evidence",
+      "fact": "iter_next reads an entry then sets iter_reach_end when post-increment cursor>=bufend; get_full_ent overwrites ret_val=ERR_PTR(-ENOENT) on that flag even if entry is ordinary and readable",
+      "premises": [
+        "last valid full entry at bufend-sizeof(msdos_dirent_s)",
+        "next read returns ordinary pointer and getter attribute checks complete",
+        "end initially false and normal state progression"
+      ],
+      "counterevidence": [
+        "no real directory contents tested",
+        "some valid records are skipped as long/empty even earlier",
+        "no evidence that every possible directory reaches same last-record condition"
+      ],
+      "anchors": [
+        "IT35-A012",
+        "IT35-A013",
+        "IT35-A029",
+        "IT35-A030"
+      ],
+      "possible_impact": "source-level conditional final-entry omission / early ENOENT to FAT32_lookup",
+      "resume_conditions": [
+        "prove real directory layout/bufend relation without exceeding scope",
+        "authorized runtime trace if later approved"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IT35-F03",
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F03",
+      "kind": "cluster_chain_ERR_PTR_NULL_check_mismatch",
+      "status": "needs_evidence",
+      "fact": "get_cluster_chain returns ERR_PTR(-ENOMEM) and ERR_PTR(-EIO) on selected failures, but iobuf_init checks only clus_lhdrp == NULL before dereferencing clus_lhdrp->count",
+      "premises": [
+        "valid inputs reach one of encoded failure returns",
+        "iobuf_init receives result without extra wrapper",
+        "selected error-pointer representation"
+      ],
+      "counterevidence": [
+        "no runtime allocation failure or bad cluster reported",
+        "valid list pointer normal path remains possible",
+        "cannot infer actual CPU state after error pointer use"
+      ],
+      "anchors": [
+        "IT35-A001",
+        "IT35-A002",
+        "IT35-A004",
+        "IT35-A015"
+      ],
+      "possible_impact": "earliest invalid list-count access prevents asserting normal error propagation",
+      "resume_conditions": [
+        "validated failure input source and allocator behavior"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IT35-F04",
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F04",
+      "kind": "readent_buffer_index_vs_cluster_index",
+      "status": "needs_evidence",
+      "fact": "readent selects buffers[bufidx] using off/bufsize but disk read argument unconditionally references clusters[0] rather than clusters[bufidx]",
+      "premises": [
+        "bufidx>0 valid",
+        "cache entry missing so ROOTBLK_TRANSFER call executes",
+        "clusters arrays and fsbi valid"
+      ],
+      "counterevidence": [
+        "bufidx0 uses expected same index",
+        "read request implementation and actual sector data not audited",
+        "no erroneous disk contents reproduced"
+      ],
+      "anchors": [
+        "IT35-A008",
+        "IT35-A010",
+        "IT35-A011"
+      ],
+      "possible_impact": "conditional mismatch between buffer slot and selected read cluster; no actual corruption proof",
+      "resume_conditions": [
+        "establish real multi-cluster iobuf and sector address mapping"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IT35-F05",
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F05",
+      "kind": "readent_transfer_result_and_full_extent_not_checked",
+      "status": "needs_evidence",
+      "fact": "readent checks only off>=bufend or off<0 and tests kmalloc; it ignores ROOTBLK_TRANSFER return and returns buffers[bufidx]+bufoff without verifying off+sizeof(msdos_dirent_s) fits this buffer",
+      "premises": [
+        "valid iobuf arrays",
+        "partial-record offset or transfer failure must be produced separately",
+        "selected transfer macro may report failure but consumer has no explicit check"
+      ],
+      "counterevidence": [
+        "iterator increments by sizeof entry from zero; normal well-aligned cluster sizes may avoid crossing",
+        "unknown ROOTBLK_TRANSFER return contract/side effects",
+        "no actual transfer failure or partial entry observed"
+      ],
+      "anchors": [
+        "IT35-A007",
+        "IT35-A009",
+        "IT35-A010",
+        "IT35-A011"
+      ],
+      "possible_impact": "conditional stale/unverified buffer data or partial-record pointer with no full-read proof",
+      "resume_conditions": [
+        "validate byte geometry and macro interface without driver expansion",
+        "owner-authorized runtime only if later granted"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IT35-F06",
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F06",
+      "kind": "iobuf_array_capacity_and_zero_count_preconditions",
+      "status": "needs_evidence",
+      "fact": "iobuf_init sets nr_clus=count; arrays are allocated for max_nr=FAT32_MAX_FILE_SIZE/bufsize only if count>0; no local explicit count<=max_nr comparison, and count0 still initializes iterator and returns object with zero bufend",
+      "premises": [
+        "count>max_nr or count0 reaches selected branch",
+        "list count and sizes are valid",
+        "subsequent consumer enters getter"
+      ],
+      "counterevidence": [
+        "real cluster-chain count vs limit not demonstrated",
+        "zero count cannot be assumed as actual FAT parent",
+        "kzalloc's zeroing and allocator semantics not fully audited"
+      ],
+      "anchors": [
+        "IT35-A014",
+        "IT35-A017",
+        "IT35-A018",
+        "IT35-A021",
+        "IT35-A023"
+      ],
+      "possible_impact": "capacity/empty-iterator boundary; no verified out-of-range write or runtime failure",
+      "resume_conditions": [
+        "establish real parent cluster-chain counts and buffer geometry"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F01",
+      "disposition": "narrowed_by_iterator_end_source",
+      "note": "normal getter ENOENT at iter_reach_end often terminates lookup before callback FAT_MAX_DIR_SIZE; bound-stale-pointer branch remains conditional when bound reached first"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F02",
+      "disposition": "actual_getter_ENOENT_producer",
+      "note": "getter sets ERR_PTR(-ENOENT) if iterator end reached and earlier pointer accesses defined; lower read errors may not reach that return"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F03",
+      "disposition": "input_precondition_refined",
+      "note": "get_cluster_chain ERR_PTR and readent ERR_PTR sources identified; getter preguard issue limits safe propagation"
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "disposition": "retained",
+      "note": "FAT32 callback success side effects still require valid inode and previous field writes"
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F04",
+      "disposition": "retained",
+      "note": "callback NULL and upper dentry free remain separate resource ownership boundary"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "disposition": "retained",
+      "note": "upper slow lookup has no defined normal NULL return; callback NULL maps to encoded -ENOENT"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "retained",
+      "note": "do_open missing nonvoid return persists independently"
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "disposition": "retained",
+      "note": "DOC-FIX-01 required, no guessed uninitialized flag value"
+    }
+  ],
+  "limitations": [
+    "five/six candidate ID count is not confirmed independent vulnerability count",
+    "no full FAT/drive/interrupt scheduling/lock/refcount audit",
+    "no update to historical artifacts or mainline verdict",
+    "ordinary repair decisions deferred to Owner under work-order 18"
+  ]
+}

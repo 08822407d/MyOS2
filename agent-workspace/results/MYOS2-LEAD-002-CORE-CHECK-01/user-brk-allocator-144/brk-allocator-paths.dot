@@ -1,0 +1,114 @@
+/*
+task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+track_id: "MYOS2-LEAD-002"
+followup_id: "CORE-USER-BRK-ALLOCATOR-144"
+executor_identity: "MYOS2-LEAD-002-CHAT-EXEC-22"
+conversation_display_name: "MYOS2-A-C10a 代码分析执行"
+produced_by: "GPT-6.2（系统模型族；界面具体型号及实际后台未独立核实）"
+model_per_owner: "次一档GPT-6.2 Sol及高推理强度"
+actual_effort: "UNATTESTED"
+date: "2026-11-24"
+phase: 2
+base_snapshot: "time（分支名）"
+source_pin_short12: "a039d9803ade"
+read_channel: "connector"
+status: "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04"
+mainline_acceptance: "PENDING"
+full_local_P9: "NOT_RUN"
+inputs_read: [{"path":"mykernel/scripts/options_flags.cmake","ref":"a039d9803ade","blob":"6019436417ad","LF":84,"CRLF":0,"physical_lines":85},{"path":"mykernel/arch/x86_64/myos/syscall.c","ref":"a039d9803ade","blob":"8ed3c9a1e018","LF":223,"CRLF":0,"physical_lines":223},{"path":"mykernel/mm/vm_map/mmap.c","ref":"a039d9803ade","blob":"69000768d94b","LF":1356,"CRLF":0,"physical_lines":1357},{"path":"mykernel/mm/misc/mm_misc_types.h","ref":"a039d9803ade","blob":"b9d93f504756","LF":188,"CRLF":0,"physical_lines":188},{"path":"mykernel/mm/page_alloc/buddy_const.h","ref":"a039d9803ade","blob":"536bc906fc5e","LF":410,"CRLF":0,"physical_lines":411},{"path":"mykernel/include/linux/kernel/align.h","ref":"a039d9803ade","blob":"ddd63ec4b93f","LF":14,"CRLF":0,"physical_lines":15},{"path":"mykernel/include/uapi/linux/const.h","ref":"a039d9803ade","blob":"d8bcaf7e3151","LF":38,"CRLF":0,"physical_lines":39},{"path":"mykernel/arch/x86_64/mm/page/page_const_arch.h","ref":"a039d9803ade","blob":"b10e280f26f0","LF":104,"CRLF":0,"physical_lines":105},{"path":"mykernel/include/linux/kernel/types.h","ref":"a039d9803ade","blob":"ef531baa8317","LF":240,"CRLF":0,"physical_lines":241},{"path":"mykernel/arch/x86_64/include/asm/unistd_64.h","ref":"a039d9803ade","blob":"3b54c09e5d3a","LF":447,"CRLF":0,"physical_lines":447},{"path":"mykernel/arch/x86_64/include/asm/syscalls_64.h","ref":"a039d9803ade","blob":"544cfdb93d7e","LF":79,"CRLF":0,"physical_lines":80},{"path":"mykernel/arch/x86_64/entry/syscall_64.c","ref":"a039d9803ade","blob":"a21461322a9f","LF":32,"CRLF":0,"physical_lines":33},{"path":"mykernel/include/linux/kernel/syscalls.h","ref":"a039d9803ade","blob":"6cc2f85fec90","LF":1399,"CRLF":0,"physical_lines":1399},{"path":"mykernel/arch/x86_64/include/asm/syscall_wrapper.h","ref":"a039d9803ade","blob":"4224440c2c48","LF":254,"CRLF":0,"physical_lines":254},{"path":"myinitramfs/CMakeLists.txt","ref":"a039d9803ade","blob":"6757d21bc64c","LF":50,"CRLF":0,"physical_lines":51},{"path":"myinitramfs/mylib/CMakeLists.txt","ref":"a039d9803ade","blob":"8f6abc24095a","LF":2,"CRLF":0,"physical_lines":3},{"path":"myinitramfs/mylib/myglibc/CMakeLists.txt","ref":"a039d9803ade","blob":"b956957a602a","LF":29,"CRLF":0,"physical_lines":29},{"path":"myinitramfs/mylib/myglibc/malloc/CMakeLists.txt","ref":"a039d9803ade","blob":"3b9f22dd9ab9","LF":2,"CRLF":0,"physical_lines":3},{"path":"myinitramfs/mylib/myglibc/syscall/CMakeLists.txt","ref":"a039d9803ade","blob":"22503b9bff44","LF":6,"CRLF":0,"physical_lines":7},{"path":"myinitramfs/mylib/util/CMakeLists.txt","ref":"a039d9803ade","blob":"5fd782a35629","LF":2,"CRLF":0,"physical_lines":3},{"path":"myinitramfs/mylib/myglibc/include/unistd.h","ref":"a039d9803ade","blob":"bdb6ffa91612","LF":177,"CRLF":0,"physical_lines":177},{"path":"myinitramfs/mylib/myglibc/syscall/syscall.c","ref":"a039d9803ade","blob":"847cd015da2b","LF":89,"CRLF":0,"physical_lines":89},{"path":"myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/brk.c","ref":"a039d9803ade","blob":"6bd7a1079152","LF":48,"CRLF":0,"physical_lines":48},{"path":"myinitramfs/mylib/myglibc/malloc/malloc.c","ref":"a039d9803ade","blob":"44db9ea9d7f7","LF":390,"CRLF":390,"physical_lines":391},{"path":"myinitramfs/mylib/myglibc/malloc/_malloc.h","ref":"a039d9803ade","blob":"2dea1f8fc05c","LF":56,"CRLF":0,"physical_lines":57},{"path":"myinitramfs/mylib/util/list.c","ref":"a039d9803ade","blob":"24f7a214a288","LF":127,"CRLF":0,"physical_lines":127},{"path":"myinitramfs/mylib/include/utils.h","ref":"a039d9803ade","blob":"4e3e8910ac00","LF":62,"CRLF":0,"physical_lines":63}]
+open_questions: ["实际sh链接、实际预处理/编译、C指针与对象、真实VMA/页和堆操作未证"]
+record_type: "phase2_brk_allocator_graph"
+*/
+digraph brk_allocator_144 {
+  rankdir=LR;
+  K_BRK [kind="source", label="generated __do_sys_brk: min, align, same, shrink, grow, out", scenario="source"];
+  K_MUNMAP [kind="source", label="simple_do_vma_munmap(mm,start,end)", scenario="source"];
+  K_GROW [kind="source", label="do_brk_flags(addr,len,flags)", scenario="source"];
+  K_BIND [kind="binding", label="__NR_brk=12; __SYSCALL mapping; active switch; generated stub/se/do", scenario="source"];
+  U_WRAP [kind="binding", label="candidate SYSFUNC_DEF(brk), shared LABEL_SYSCALL_RET; raw result conditional", scenario="source"];
+  U_BUILD [kind="boundary", label="candidate mylibc; actual_linked_to_sh UNKNOWN", scenario="source"];
+  U_INIT [kind="source", label="init_uslab: query, 16 rounds, chain assignment, add free tail, upage_alloc", scenario="source"];
+  U_REUSE [kind="source", label="nonempty: remove free head, used head", scenario="source"];
+  U_DYN [kind="source", label="post-malloc fragment: raw != NULL, independent +=H, used tail", scenario="source"];
+  U_LIST [kind="source", label="list headers, count +/-1, node insert/remove", scenario="source"];
+  UNKNOWN_MAPPING [kind="boundary", label="actual mapped memory, object validity and execution not established", scenario="source"];
+  A_QUERY [kind="scenario", label="A_QUERY q=0x0 ret=0x401234 final=0x401234", scenario="A_QUERY"];
+  A_SAME [kind="scenario", label="A_SAME q=0x401ff0 ret=0x401ff0 final=0x401ff0", scenario="A_SAME"];
+  A_SHRINK_OK [kind="scenario", label="A_SHRINK_OK q=0x400ff0 ret=0x400ff0 final=0x400ff0", scenario="A_SHRINK_OK"];
+  A_SHRINK_FAIL [kind="scenario", label="A_SHRINK_FAIL q=0x400ff0 ret=0x401234 final=0x401234", scenario="A_SHRINK_FAIL"];
+  A_GROW_OK [kind="scenario", label="A_GROW_OK q=0x403001 ret=0x403001 final=0x403001", scenario="A_GROW_OK"];
+  A_GROW_FAIL [kind="scenario", label="A_GROW_FAIL q=0x403001 ret=0x401234 final=0x401234", scenario="A_GROW_FAIL"];
+  B_OK [kind="scenario", label="B_OK final=0x42000000 distinct=16 used=16", scenario="B_OK"];
+  B_OK_ROUNDS [kind="parameterized_loop", label="B_OK i=0..15; see facts.B round table, free 0->1->0, used i->i+1", scenario="B_OK"];
+  B_REFUSE_I1 [kind="scenario", label="B_REFUSE_I1 final=0x41e00000 distinct=15 used=16", scenario="B_REFUSE_I1"];
+  B_REFUSE_I1_ROUNDS [kind="parameterized_loop", label="B_REFUSE_I1 i=0..15; see facts.B round table, free 0->1->0, used i->i+1", scenario="B_REFUSE_I1"];
+  C_REUSE [kind="scenario", label="C_REUSE return Q kernel=0x50000000 user=0x50000000", scenario="C_REUSE"];
+  C_REUSE_T01 [kind="observation", label="entry, free count>0 k=0x50000000 u=0x50000000 v=0x4fe00000 free=1 used=2", scenario="C_REUSE"];
+  C_REUSE_T02 [kind="observation", label="remove same free head; return member node, count-- k=0x50000000 u=0x50000000 v=0x4fe00000 free=0 used=2", scenario="C_REUSE"];
+  C_REUSE_T03 [kind="observation", label="container_of and add Q to used head k=0x50000000 u=0x50000000 v=0x4fe00000 free=0 used=3", scenario="C_REUSE"];
+  C_REUSE_T04 [kind="observation", label="return same Q k=0x50000000 u=0x50000000 v=0x4fe00000 free=0 used=3", scenario="C_REUSE"];
+  C_GROW_OK [kind="scenario", label="C_GROW_OK return M kernel=0x50200000 user=0x50200000", scenario="C_GROW_OK"];
+  C_GROW_OK_T01 [kind="observation", label="given normal malloc return M; observation begins before brk k=0x50000000 u=0x50000000 v=NOT_STIPULATED free=0 used=2", scenario="C_GROW_OK"];
+  C_GROW_OK_T02 [kind="observation", label="request U0+H; given kernel helper return then raw brk return k=0x50200000 u=0x50000000 v=NOT_STIPULATED free=0 used=2", scenario="C_GROW_OK"];
+  C_GROW_OK_T03 [kind="observation", label="pg_vaddr != NULL true k=0x50200000 u=0x50000000 v=NOT_STIPULATED free=0 used=2", scenario="C_GROW_OK"];
+  C_GROW_OK_T04 [kind="observation", label="independent brk_end += H then M.vaddr=pg_vaddr k=0x50200000 u=0x50200000 v=0x50200000 free=0 used=2", scenario="C_GROW_OK"];
+  C_GROW_OK_T05 [kind="observation", label="initialize M list node and insert used tail k=0x50200000 u=0x50200000 v=0x50200000 free=0 used=3", scenario="C_GROW_OK"];
+  C_GROW_OK_T06 [kind="observation", label="return same M; free(M) skipped k=0x50200000 u=0x50200000 v=0x50200000 free=0 used=3", scenario="C_GROW_OK"];
+  C_GROW_REFUSED [kind="scenario", label="C_GROW_REFUSED return M kernel=0x50000000 user=0x50200000", scenario="C_GROW_REFUSED"];
+  C_GROW_REFUSED_T01 [kind="observation", label="given normal malloc return M; observation begins before brk k=0x50000000 u=0x50000000 v=NOT_STIPULATED free=0 used=2", scenario="C_GROW_REFUSED"];
+  C_GROW_REFUSED_T02 [kind="observation", label="request U0+H; given kernel helper return then raw brk return k=0x50000000 u=0x50000000 v=NOT_STIPULATED free=0 used=2", scenario="C_GROW_REFUSED"];
+  C_GROW_REFUSED_T03 [kind="observation", label="pg_vaddr != NULL true k=0x50000000 u=0x50000000 v=NOT_STIPULATED free=0 used=2", scenario="C_GROW_REFUSED"];
+  C_GROW_REFUSED_T04 [kind="observation", label="independent brk_end += H then M.vaddr=pg_vaddr k=0x50000000 u=0x50200000 v=0x50000000 free=0 used=2", scenario="C_GROW_REFUSED"];
+  C_GROW_REFUSED_T05 [kind="observation", label="initialize M list node and insert used tail k=0x50000000 u=0x50200000 v=0x50000000 free=0 used=3", scenario="C_GROW_REFUSED"];
+  C_GROW_REFUSED_T06 [kind="observation", label="return same M; free(M) skipped k=0x50000000 u=0x50200000 v=0x50000000 free=0 used=3", scenario="C_GROW_REFUSED"];
+  K_BIND -> K_BRK [kind="SOURCE_BINDING", label="generated symbols, C source relation only"];
+  K_BRK -> K_MUNMAP [kind="CONDITIONAL_SOURCE_CALL", label="shrink after mm.brk write"];
+  K_BRK -> K_GROW [kind="CONDITIONAL_SOURCE_CALL", label="grow before mm.brk write"];
+  K_BRK -> U_WRAP [kind="CONDITIONAL_RETURN_CONSUMPTION", label="given raw value returned normally, not proved actual CPU binding"];
+  U_BUILD -> U_WRAP [kind="CANDIDATE_SCOPE", label="not actual linkage"];
+  U_INIT -> U_REUSE [kind="CONDITIONAL_SOURCE_CALL", label="given nonempty free after inserting current node"];
+  U_REUSE -> U_LIST [kind="SOURCE_HELPER_RELATION", label="remove head then insert used head"];
+  U_DYN -> U_LIST [kind="SOURCE_HELPER_RELATION", label="init and insert used tail"];
+  U_WRAP -> UNKNOWN_MAPPING [kind="ANALYSIS_BOUNDARY", label="raw return is not mapping proof"];
+  K_BRK -> A_QUERY [kind="INDEPENDENT_MODEL", label="reset entry each example"];
+  U_WRAP -> A_QUERY [kind="CONDITIONAL_RETURN_CONSUMPTION", label="same given raw numeric value"];
+  K_BRK -> A_SAME [kind="INDEPENDENT_MODEL", label="reset entry each example"];
+  U_WRAP -> A_SAME [kind="CONDITIONAL_RETURN_CONSUMPTION", label="same given raw numeric value"];
+  K_BRK -> A_SHRINK_OK [kind="INDEPENDENT_MODEL", label="reset entry each example"];
+  U_WRAP -> A_SHRINK_OK [kind="CONDITIONAL_RETURN_CONSUMPTION", label="same given raw numeric value"];
+  K_BRK -> A_SHRINK_FAIL [kind="INDEPENDENT_MODEL", label="reset entry each example"];
+  U_WRAP -> A_SHRINK_FAIL [kind="CONDITIONAL_RETURN_CONSUMPTION", label="same given raw numeric value"];
+  K_BRK -> A_GROW_OK [kind="INDEPENDENT_MODEL", label="reset entry each example"];
+  U_WRAP -> A_GROW_OK [kind="CONDITIONAL_RETURN_CONSUMPTION", label="same given raw numeric value"];
+  K_BRK -> A_GROW_FAIL [kind="INDEPENDENT_MODEL", label="reset entry each example"];
+  U_WRAP -> A_GROW_FAIL [kind="CONDITIONAL_RETURN_CONSUMPTION", label="same given raw numeric value"];
+  U_INIT -> B_OK [kind="INDEPENDENT_MODEL", label="query and 16 given extensions"];
+  B_OK -> B_OK_ROUNDS [kind="CONDITIONAL_MODEL_OBSERVATION", label="32 total rows in facts.B; no separate scenario per round"];
+  U_REUSE -> B_OK_ROUNDS [kind="MODEL_BRANCH_SELECTION", label="each round same just-inserted node"];
+  U_WRAP -> B_OK_ROUNDS [kind="CONDITIONAL_RETURN_CONSUMPTION", label="chain assignment raw to both values"];
+  U_INIT -> B_REFUSE_I1 [kind="INDEPENDENT_MODEL", label="query and 16 given extensions"];
+  B_REFUSE_I1 -> B_REFUSE_I1_ROUNDS [kind="CONDITIONAL_MODEL_OBSERVATION", label="32 total rows in facts.B; no separate scenario per round"];
+  U_REUSE -> B_REFUSE_I1_ROUNDS [kind="MODEL_BRANCH_SELECTION", label="each round same just-inserted node"];
+  U_WRAP -> B_REFUSE_I1_ROUNDS [kind="CONDITIONAL_RETURN_CONSUMPTION", label="chain assignment raw to both values"];
+  U_REUSE -> C_REUSE [kind="INDEPENDENT_MODEL", label="given free count=1"];
+  C_REUSE -> C_REUSE_T01 [kind="GIVEN_MODEL_ENTRY", label="conditional effects, not actual execution"];
+  C_REUSE_T01 -> C_REUSE_T02 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_REUSE_T02 -> C_REUSE_T03 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_REUSE_T03 -> C_REUSE_T04 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  U_DYN -> C_GROW_OK [kind="INDEPENDENT_MODEL", label="given post-malloc valid M; not a recursive chain"];
+  U_WRAP -> C_GROW_OK [kind="CONDITIONAL_RETURN_CONSUMPTION", label="raw value tested nonNULL"];
+  C_GROW_OK -> C_GROW_OK_T01 [kind="GIVEN_MODEL_ENTRY", label="conditional effects, not actual execution"];
+  C_GROW_OK_T01 -> C_GROW_OK_T02 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_OK_T02 -> C_GROW_OK_T03 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_OK_T03 -> C_GROW_OK_T04 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_OK_T04 -> C_GROW_OK_T05 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_OK_T05 -> C_GROW_OK_T06 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  U_DYN -> C_GROW_REFUSED [kind="INDEPENDENT_MODEL", label="given post-malloc valid M; not a recursive chain"];
+  U_WRAP -> C_GROW_REFUSED [kind="CONDITIONAL_RETURN_CONSUMPTION", label="raw value tested nonNULL"];
+  C_GROW_REFUSED -> C_GROW_REFUSED_T01 [kind="GIVEN_MODEL_ENTRY", label="conditional effects, not actual execution"];
+  C_GROW_REFUSED_T01 -> C_GROW_REFUSED_T02 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_REFUSED_T02 -> C_GROW_REFUSED_T03 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_REFUSED_T03 -> C_GROW_REFUSED_T04 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_REFUSED_T04 -> C_GROW_REFUSED_T05 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+  C_GROW_REFUSED_T05 -> C_GROW_REFUSED_T06 [kind="MODEL_OBSERVATION_ORDER", label="conditional effects, not actual execution"];
+}

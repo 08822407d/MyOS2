@@ -1,0 +1,1194 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-STRING-COPY-APPEND-125",
+  "record_type": "conditional_case_facts_and_boundaries",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 (self-described), backend/effort UNATTESTED",
+  "date": "2026-11-22",
+  "date_timezone": "Asia/Shanghai",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "00c0228c52b8",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "assigned": false,
+    "correction": "NONE",
+    "R123_01": "CLOSED_DOCUMENTATION_ONLY_BY_C08"
+  },
+  "storage_model": {
+    "char_bytes": 1,
+    "ascii_for_given_literals": true,
+    "strlen_word_bytes": 8,
+    "word_model": "64-bit unsigned long, little-endian; any load stays within 16-byte or sufficiently large readable object",
+    "source_and_dest": "valid non-overlapping; source pointers aligned 8 when scanning",
+    "malloc_success_assumed_only_for_cat": true,
+    "filesystem_effects": "NOT_RUN"
+  },
+  "A_strcpy": {
+    "cases": [
+      {
+        "case_id": "A125-01",
+        "kind": "empty_source",
+        "source": "",
+        "dest_capacity": 8,
+        "dest_offset": 0,
+        "source_data": {
+          "logical_string": "",
+          "logical_bytes_with_first_NUL": "00",
+          "first_NUL": 0,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "destination_before": "23 23 23 23 23 23 23 23",
+        "destination_after": "00 23 23 23 23 23 23 23",
+        "strlen_return": 0,
+        "requested_memcpy_length": 1,
+        "write_half_open": [
+          0,
+          1
+        ],
+        "written_hex": "00",
+        "outside_write_unchanged": true,
+        "return_pointer": "D",
+        "return_equal_argument_dest": true,
+        "source_src_address": "S (8-aligned, independent storage)",
+        "destination_arg": "D",
+        "memcmp_note": "",
+        "call_ledger": [
+          {
+            "owner": "STRCPY",
+            "callee": "STRLEN",
+            "site": "strcpy.c:31",
+            "arg": "src",
+            "return": 0
+          },
+          {
+            "owner": "STRCPY",
+            "callee": "MEMCPY",
+            "site": "strcpy.c:31",
+            "arg": [
+              "dest",
+              "src",
+              1
+            ],
+            "return": "D"
+          }
+        ]
+      },
+      {
+        "case_id": "A125-02",
+        "kind": "short_source_cat",
+        "source": "cat",
+        "dest_capacity": 8,
+        "dest_offset": 0,
+        "source_data": {
+          "logical_string": "cat",
+          "logical_bytes_with_first_NUL": "63 61 74 00",
+          "first_NUL": 3,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "63 61 74 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "destination_before": "23 23 23 23 23 23 23 23",
+        "destination_after": "63 61 74 00 23 23 23 23",
+        "strlen_return": 3,
+        "requested_memcpy_length": 4,
+        "write_half_open": [
+          0,
+          4
+        ],
+        "written_hex": "63 61 74 00",
+        "outside_write_unchanged": true,
+        "return_pointer": "D",
+        "return_equal_argument_dest": true,
+        "source_src_address": "S (8-aligned, independent storage)",
+        "destination_arg": "D",
+        "memcmp_note": "against prior C124-03 strncpy(cat,3): 3 bytes, no NUL written",
+        "call_ledger": [
+          {
+            "owner": "STRCPY",
+            "callee": "STRLEN",
+            "site": "strcpy.c:31",
+            "arg": "src",
+            "return": 3
+          },
+          {
+            "owner": "STRCPY",
+            "callee": "MEMCPY",
+            "site": "strcpy.c:31",
+            "arg": [
+              "dest",
+              "src",
+              4
+            ],
+            "return": "D"
+          }
+        ]
+      },
+      {
+        "case_id": "A125-03",
+        "kind": "interior_destination_pointer",
+        "source": "hi",
+        "dest_capacity": 10,
+        "dest_offset": 2,
+        "source_data": {
+          "logical_string": "hi",
+          "logical_bytes_with_first_NUL": "68 69 00",
+          "first_NUL": 2,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "68 69 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "destination_before": "23 23 23 23 23 23 23 23 23 23",
+        "destination_after": "23 23 68 69 00 23 23 23 23 23",
+        "strlen_return": 2,
+        "requested_memcpy_length": 3,
+        "write_half_open": [
+          2,
+          5
+        ],
+        "written_hex": "68 69 00",
+        "outside_write_unchanged": true,
+        "return_pointer": "D+2",
+        "return_equal_argument_dest": true,
+        "source_src_address": "S (8-aligned, independent storage)",
+        "destination_arg": "D+2 (inside larger D)",
+        "memcmp_note": "",
+        "call_ledger": [
+          {
+            "owner": "STRCPY",
+            "callee": "STRLEN",
+            "site": "strcpy.c:31",
+            "arg": "src",
+            "return": 2
+          },
+          {
+            "owner": "STRCPY",
+            "callee": "MEMCPY",
+            "site": "strcpy.c:31",
+            "arg": [
+              "dest",
+              "src",
+              3
+            ],
+            "return": "D+2"
+          }
+        ]
+      }
+    ],
+    "prior_comparison": {
+      "case_id": "C124-03",
+      "source": "cat",
+      "n": 3,
+      "size": 3,
+      "memcpy_length": 3,
+      "NUL_written": false,
+      "reference": "124 C08 review"
+    },
+    "semantics": "strlen(src)+1 includes first NUL; memcpy returns original dest argument"
+  },
+  "B_strcat": {
+    "cases": [
+      {
+        "case_id": "B125-01",
+        "dest_before_str": "",
+        "source": "xy",
+        "cap": 8,
+        "dest_start": "D",
+        "source_start": "S",
+        "source_data": {
+          "logical_string": "xy",
+          "logical_bytes_with_first_NUL": "78 79 00",
+          "first_NUL": 2,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "78 79 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "dest_before_hex": "00 23 23 23 23 23 23 23",
+        "dest_after_hex": "78 79 00 23 23 23 23 23",
+        "d": 0,
+        "s": 2,
+        "old_NUL_offset": 0,
+        "inner_strcpy_dest_offset": 0,
+        "inner_strcpy_dest_pointer": "D",
+        "copy_half_open": [
+          0,
+          3
+        ],
+        "copied_hex": "78 79 00",
+        "new_NUL_offset": 2,
+        "inner_strcpy_return_pointer": "D",
+        "outer_strcat_return_pointer": "D",
+        "return_pointer_difference_bytes": 0,
+        "first_NUL_after": 2,
+        "preserved_outside_write": true,
+        "call_ledger": [
+          {
+            "owner": "STRCAT",
+            "callee": "STRLEN",
+            "arg": "dest",
+            "return": 0,
+            "source_line": 30
+          },
+          {
+            "owner": "STRCAT",
+            "callee": "STRCPY",
+            "arg": [
+              "D+0",
+              "S"
+            ],
+            "returns": "D+0",
+            "source_line": 30
+          },
+          {
+            "owner": "STRCPY nested in STRCAT",
+            "callee": "STRLEN",
+            "arg": "src",
+            "return": 2,
+            "source_line": 31
+          },
+          {
+            "owner": "STRCPY nested in STRCAT",
+            "callee": "MEMCPY",
+            "arg": [
+              "D+0",
+              "S",
+              3
+            ],
+            "return": "D+0",
+            "source_line": 31
+          }
+        ]
+      },
+      {
+        "case_id": "B125-02",
+        "dest_before_str": "ab",
+        "source": "",
+        "cap": 8,
+        "dest_start": "D",
+        "source_start": "S",
+        "source_data": {
+          "logical_string": "",
+          "logical_bytes_with_first_NUL": "00",
+          "first_NUL": 0,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "dest_before_hex": "61 62 00 23 23 23 23 23",
+        "dest_after_hex": "61 62 00 23 23 23 23 23",
+        "d": 2,
+        "s": 0,
+        "old_NUL_offset": 2,
+        "inner_strcpy_dest_offset": 2,
+        "inner_strcpy_dest_pointer": "D+2",
+        "copy_half_open": [
+          2,
+          3
+        ],
+        "copied_hex": "00",
+        "new_NUL_offset": 2,
+        "inner_strcpy_return_pointer": "D+2",
+        "outer_strcat_return_pointer": "D",
+        "return_pointer_difference_bytes": 2,
+        "first_NUL_after": 2,
+        "preserved_outside_write": true,
+        "call_ledger": [
+          {
+            "owner": "STRCAT",
+            "callee": "STRLEN",
+            "arg": "dest",
+            "return": 2,
+            "source_line": 30
+          },
+          {
+            "owner": "STRCAT",
+            "callee": "STRCPY",
+            "arg": [
+              "D+2",
+              "S"
+            ],
+            "returns": "D+2",
+            "source_line": 30
+          },
+          {
+            "owner": "STRCPY nested in STRCAT",
+            "callee": "STRLEN",
+            "arg": "src",
+            "return": 0,
+            "source_line": 31
+          },
+          {
+            "owner": "STRCPY nested in STRCAT",
+            "callee": "MEMCPY",
+            "arg": [
+              "D+2",
+              "S",
+              1
+            ],
+            "return": "D+2",
+            "source_line": 31
+          }
+        ]
+      },
+      {
+        "case_id": "B125-03",
+        "dest_before_str": "ab",
+        "source": "cd",
+        "cap": 8,
+        "dest_start": "D",
+        "source_start": "S",
+        "source_data": {
+          "logical_string": "cd",
+          "logical_bytes_with_first_NUL": "63 64 00",
+          "first_NUL": 2,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "63 64 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "dest_before_hex": "61 62 00 23 23 23 23 23",
+        "dest_after_hex": "61 62 63 64 00 23 23 23",
+        "d": 2,
+        "s": 2,
+        "old_NUL_offset": 2,
+        "inner_strcpy_dest_offset": 2,
+        "inner_strcpy_dest_pointer": "D+2",
+        "copy_half_open": [
+          2,
+          5
+        ],
+        "copied_hex": "63 64 00",
+        "new_NUL_offset": 4,
+        "inner_strcpy_return_pointer": "D+2",
+        "outer_strcat_return_pointer": "D",
+        "return_pointer_difference_bytes": 2,
+        "first_NUL_after": 4,
+        "preserved_outside_write": true,
+        "call_ledger": [
+          {
+            "owner": "STRCAT",
+            "callee": "STRLEN",
+            "arg": "dest",
+            "return": 2,
+            "source_line": 30
+          },
+          {
+            "owner": "STRCAT",
+            "callee": "STRCPY",
+            "arg": [
+              "D+2",
+              "S"
+            ],
+            "returns": "D+2",
+            "source_line": 30
+          },
+          {
+            "owner": "STRCPY nested in STRCAT",
+            "callee": "STRLEN",
+            "arg": "src",
+            "return": 2,
+            "source_line": 31
+          },
+          {
+            "owner": "STRCPY nested in STRCAT",
+            "callee": "MEMCPY",
+            "arg": [
+              "D+2",
+              "S",
+              3
+            ],
+            "return": "D+2",
+            "source_line": 31
+          }
+        ]
+      }
+    ],
+    "semantics": "inner strcpy returns dest+d; outer STRCAT ignores it then returns dest; when d=0 addresses coincide"
+  },
+  "C_cat_command": {
+    "cases": [
+      {
+        "case_id": "C125-01",
+        "current_dir": "/",
+        "argv1": "readme",
+        "assumptions": {
+          "argc": 2,
+          "current_dir_valid": true,
+          "argv1_valid": true,
+          "len_and_i_fit_signed_int": true,
+          "malloc_succeeds": true,
+          "F_8byte_aligned": true,
+          "all_src_strlen_wordloads_in_readable_source": true
+        },
+        "cwd_source": {
+          "logical_string": "/",
+          "logical_bytes_with_first_NUL": "2f 00",
+          "first_NUL": 1,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "2f 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "argv_source": {
+          "logical_string": "readme",
+          "logical_bytes_with_first_NUL": "72 65 61 64 6d 65 00",
+          "first_NUL": 6,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "72 65 61 64 6d 65 00 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "cwd_len": 1,
+        "argv_len": 6,
+        "shell_len": 1,
+        "shell_i": 7,
+        "requested_allocation_capacity": 9,
+        "requested_memset_length": 9,
+        "filename_pointer": "F",
+        "filename_at_malloc": "UNINITIALIZED_UNKNOWN",
+        "stages": [
+          {
+            "step": "after_memset",
+            "first_NUL_offset": 0,
+            "capacity_bytes_hex": "00 00 00 00 00 00 00 00 00",
+            "writes": [
+              [
+                0,
+                9
+              ]
+            ],
+            "label": "all reserved bytes zero"
+          },
+          {
+            "step": "after_initial_strcpy",
+            "first_NUL_offset": 1,
+            "capacity_bytes_hex": "2f 00 00 00 00 00 00 00 00",
+            "writes": [
+              [
+                0,
+                2
+              ]
+            ],
+            "copy_byte_count": 2,
+            "return_pointer": "F"
+          },
+          {
+            "step": "after_optional_separator",
+            "guard": "len > 1",
+            "guard_value": false,
+            "first_NUL_offset": 1,
+            "capacity_bytes_hex": "2f 00 00 00 00 00 00 00 00",
+            "writes": [],
+            "old_NUL_overwritten": false,
+            "old_NUL_offset": 1,
+            "new_NUL_from_prior_memset_offset": 1
+          },
+          {
+            "step": "after_strcat",
+            "first_NUL_offset": 7,
+            "capacity_bytes_hex": "2f 72 65 61 64 6d 65 00 00",
+            "writes": [
+              [
+                1,
+                8
+              ]
+            ],
+            "copy_byte_count": 7,
+            "inner_return": "F+1",
+            "outer_return": "F"
+          }
+        ],
+        "strcat_dest_old_NUL_offset": 1,
+        "append_half_open": [
+          1,
+          8
+        ],
+        "inner_strcpy_pointer": "F+1",
+        "inner_strcpy_return": "F+1",
+        "outer_strcat_return": "F",
+        "output_path_utf8": "/readme",
+        "output_path_hex": "2f 72 65 61 64 6d 65 00",
+        "output_string_length": 7,
+        "unused_zero_bytes_after_terminal": 1,
+        "open_call": {
+          "owner": "cat_command",
+          "line": 270,
+          "args": [
+            "F",
+            "O_RDONLY",
+            0
+          ],
+          "first_argument_filename_path": "/readme",
+          "actual_result": "UNKNOWN"
+        },
+        "calls": {
+          "shell_direct": [
+            {
+              "call": "strlen",
+              "arg": "current_dir",
+              "line": 260,
+              "ret": 1
+            },
+            {
+              "call": "strlen",
+              "arg": "argv[1]",
+              "line": 261,
+              "ret": 6
+            },
+            {
+              "call": "malloc",
+              "arg": 9,
+              "line": 262,
+              "ret": "F (given successful)"
+            },
+            {
+              "call": "memset",
+              "arg": [
+                "F",
+                0,
+                9
+              ],
+              "line": 263,
+              "ret": "F (given)"
+            },
+            {
+              "call": "strcpy",
+              "arg": [
+                "F",
+                "current_dir"
+              ],
+              "line": 264,
+              "ret": "F (not used by shell)"
+            },
+            {
+              "call": "strcat",
+              "arg": [
+                "F",
+                "argv[1]"
+              ],
+              "line": 267,
+              "ret": "F (not used by shell)"
+            },
+            {
+              "call": "open",
+              "arg": [
+                "F",
+                "O_RDONLY",
+                0
+              ],
+              "line": 270,
+              "ret": "UNKNOWN (stop here)"
+            }
+          ],
+          "shell_first_strcpy_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCPY#1",
+              "arg": "current_dir",
+              "ret": 1,
+              "definition": "strcpy.c:31"
+            },
+            {
+              "call": "memcpy",
+              "owner": "STRCPY#1",
+              "arg": [
+                "F",
+                "current_dir",
+                2
+              ],
+              "ret": "F",
+              "definition": "strcpy.c:31"
+            }
+          ],
+          "strcat_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCAT",
+              "arg": "F (now terminated at index 1)",
+              "ret": 1,
+              "definition": "strcat.c:30"
+            },
+            {
+              "call": "strcpy",
+              "owner": "STRCAT",
+              "arg": [
+                "F+1",
+                "argv[1]"
+              ],
+              "ret": "F+1",
+              "definition": "strcat.c:30"
+            }
+          ],
+          "strcat_inner_strcpy_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCPY#2",
+              "arg": "argv[1]",
+              "ret": 6,
+              "definition": "strcpy.c:31"
+            },
+            {
+              "call": "memcpy",
+              "owner": "STRCPY#2",
+              "arg": [
+                "F+1",
+                "argv[1]",
+                7
+              ],
+              "ret": "F+1",
+              "definition": "strcpy.c:31"
+            }
+          ]
+        },
+        "call_count": {
+          "shell_direct_strlen": 2,
+          "nested_strlen": 3,
+          "overall_strlen_if_inrepo_functions_selected": 5,
+          "shell_direct_strcpy": 1,
+          "strcat_direct_nested_strcpy": 1,
+          "all_strcpy": 2,
+          "memcpy_nested": 2,
+          "outer_shell_direct_strcat": 1,
+          "actual_shell_direct_open": 1
+        },
+        "first_unknown": "real runtime malloc/ABI/library linking/open result"
+      },
+      {
+        "case_id": "C125-02",
+        "current_dir": "/bin",
+        "argv1": "hi",
+        "assumptions": {
+          "argc": 2,
+          "current_dir_valid": true,
+          "argv1_valid": true,
+          "len_and_i_fit_signed_int": true,
+          "malloc_succeeds": true,
+          "F_8byte_aligned": true,
+          "all_src_strlen_wordloads_in_readable_source": true
+        },
+        "cwd_source": {
+          "logical_string": "/bin",
+          "logical_bytes_with_first_NUL": "2f 62 69 6e 00",
+          "first_NUL": 4,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "2f 62 69 6e 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "argv_source": {
+          "logical_string": "hi",
+          "logical_bytes_with_first_NUL": "68 69 00",
+          "first_NUL": 2,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "68 69 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "cwd_len": 4,
+        "argv_len": 2,
+        "shell_len": 4,
+        "shell_i": 6,
+        "requested_allocation_capacity": 8,
+        "requested_memset_length": 8,
+        "filename_pointer": "F",
+        "filename_at_malloc": "UNINITIALIZED_UNKNOWN",
+        "stages": [
+          {
+            "step": "after_memset",
+            "first_NUL_offset": 0,
+            "capacity_bytes_hex": "00 00 00 00 00 00 00 00",
+            "writes": [
+              [
+                0,
+                8
+              ]
+            ],
+            "label": "all reserved bytes zero"
+          },
+          {
+            "step": "after_initial_strcpy",
+            "first_NUL_offset": 4,
+            "capacity_bytes_hex": "2f 62 69 6e 00 00 00 00",
+            "writes": [
+              [
+                0,
+                5
+              ]
+            ],
+            "copy_byte_count": 5,
+            "return_pointer": "F"
+          },
+          {
+            "step": "after_optional_separator",
+            "guard": "len > 1",
+            "guard_value": true,
+            "first_NUL_offset": 5,
+            "capacity_bytes_hex": "2f 62 69 6e 2f 00 00 00",
+            "writes": [
+              [
+                4,
+                5
+              ]
+            ],
+            "old_NUL_overwritten": true,
+            "old_NUL_offset": 4,
+            "new_NUL_from_prior_memset_offset": 5
+          },
+          {
+            "step": "after_strcat",
+            "first_NUL_offset": 7,
+            "capacity_bytes_hex": "2f 62 69 6e 2f 68 69 00",
+            "writes": [
+              [
+                5,
+                8
+              ]
+            ],
+            "copy_byte_count": 3,
+            "inner_return": "F+5",
+            "outer_return": "F"
+          }
+        ],
+        "strcat_dest_old_NUL_offset": 5,
+        "append_half_open": [
+          5,
+          8
+        ],
+        "inner_strcpy_pointer": "F+5",
+        "inner_strcpy_return": "F+5",
+        "outer_strcat_return": "F",
+        "output_path_utf8": "/bin/hi",
+        "output_path_hex": "2f 62 69 6e 2f 68 69 00",
+        "output_string_length": 7,
+        "unused_zero_bytes_after_terminal": 0,
+        "open_call": {
+          "owner": "cat_command",
+          "line": 270,
+          "args": [
+            "F",
+            "O_RDONLY",
+            0
+          ],
+          "first_argument_filename_path": "/bin/hi",
+          "actual_result": "UNKNOWN"
+        },
+        "calls": {
+          "shell_direct": [
+            {
+              "call": "strlen",
+              "arg": "current_dir",
+              "line": 260,
+              "ret": 4
+            },
+            {
+              "call": "strlen",
+              "arg": "argv[1]",
+              "line": 261,
+              "ret": 2
+            },
+            {
+              "call": "malloc",
+              "arg": 8,
+              "line": 262,
+              "ret": "F (given successful)"
+            },
+            {
+              "call": "memset",
+              "arg": [
+                "F",
+                0,
+                8
+              ],
+              "line": 263,
+              "ret": "F (given)"
+            },
+            {
+              "call": "strcpy",
+              "arg": [
+                "F",
+                "current_dir"
+              ],
+              "line": 264,
+              "ret": "F (not used by shell)"
+            },
+            {
+              "call": "strcat",
+              "arg": [
+                "F",
+                "argv[1]"
+              ],
+              "line": 267,
+              "ret": "F (not used by shell)"
+            },
+            {
+              "call": "open",
+              "arg": [
+                "F",
+                "O_RDONLY",
+                0
+              ],
+              "line": 270,
+              "ret": "UNKNOWN (stop here)"
+            }
+          ],
+          "shell_first_strcpy_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCPY#1",
+              "arg": "current_dir",
+              "ret": 4,
+              "definition": "strcpy.c:31"
+            },
+            {
+              "call": "memcpy",
+              "owner": "STRCPY#1",
+              "arg": [
+                "F",
+                "current_dir",
+                5
+              ],
+              "ret": "F",
+              "definition": "strcpy.c:31"
+            }
+          ],
+          "strcat_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCAT",
+              "arg": "F (now terminated at index 5)",
+              "ret": 5,
+              "definition": "strcat.c:30"
+            },
+            {
+              "call": "strcpy",
+              "owner": "STRCAT",
+              "arg": [
+                "F+5",
+                "argv[1]"
+              ],
+              "ret": "F+5",
+              "definition": "strcat.c:30"
+            }
+          ],
+          "strcat_inner_strcpy_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCPY#2",
+              "arg": "argv[1]",
+              "ret": 2,
+              "definition": "strcpy.c:31"
+            },
+            {
+              "call": "memcpy",
+              "owner": "STRCPY#2",
+              "arg": [
+                "F+5",
+                "argv[1]",
+                3
+              ],
+              "ret": "F+5",
+              "definition": "strcpy.c:31"
+            }
+          ]
+        },
+        "call_count": {
+          "shell_direct_strlen": 2,
+          "nested_strlen": 3,
+          "overall_strlen_if_inrepo_functions_selected": 5,
+          "shell_direct_strcpy": 1,
+          "strcat_direct_nested_strcpy": 1,
+          "all_strcpy": 2,
+          "memcpy_nested": 2,
+          "outer_shell_direct_strcat": 1,
+          "actual_shell_direct_open": 1
+        },
+        "first_unknown": "real runtime malloc/ABI/library linking/open result"
+      },
+      {
+        "case_id": "C125-03",
+        "current_dir": "/bin",
+        "argv1": "/hi",
+        "assumptions": {
+          "argc": 2,
+          "current_dir_valid": true,
+          "argv1_valid": true,
+          "len_and_i_fit_signed_int": true,
+          "malloc_succeeds": true,
+          "F_8byte_aligned": true,
+          "all_src_strlen_wordloads_in_readable_source": true
+        },
+        "cwd_source": {
+          "logical_string": "/bin",
+          "logical_bytes_with_first_NUL": "2f 62 69 6e 00",
+          "first_NUL": 4,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "2f 62 69 6e 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "argv_source": {
+          "logical_string": "/hi",
+          "logical_bytes_with_first_NUL": "2f 68 69 00",
+          "first_NUL": 3,
+          "aligned_on_8": true,
+          "readable_object_size": 16,
+          "readable_backing_hex": "2f 68 69 00 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e 7e",
+          "source_distinct_from_destination": true
+        },
+        "cwd_len": 4,
+        "argv_len": 3,
+        "shell_len": 4,
+        "shell_i": 7,
+        "requested_allocation_capacity": 9,
+        "requested_memset_length": 9,
+        "filename_pointer": "F",
+        "filename_at_malloc": "UNINITIALIZED_UNKNOWN",
+        "stages": [
+          {
+            "step": "after_memset",
+            "first_NUL_offset": 0,
+            "capacity_bytes_hex": "00 00 00 00 00 00 00 00 00",
+            "writes": [
+              [
+                0,
+                9
+              ]
+            ],
+            "label": "all reserved bytes zero"
+          },
+          {
+            "step": "after_initial_strcpy",
+            "first_NUL_offset": 4,
+            "capacity_bytes_hex": "2f 62 69 6e 00 00 00 00 00",
+            "writes": [
+              [
+                0,
+                5
+              ]
+            ],
+            "copy_byte_count": 5,
+            "return_pointer": "F"
+          },
+          {
+            "step": "after_optional_separator",
+            "guard": "len > 1",
+            "guard_value": true,
+            "first_NUL_offset": 5,
+            "capacity_bytes_hex": "2f 62 69 6e 2f 00 00 00 00",
+            "writes": [
+              [
+                4,
+                5
+              ]
+            ],
+            "old_NUL_overwritten": true,
+            "old_NUL_offset": 4,
+            "new_NUL_from_prior_memset_offset": 5
+          },
+          {
+            "step": "after_strcat",
+            "first_NUL_offset": 8,
+            "capacity_bytes_hex": "2f 62 69 6e 2f 2f 68 69 00",
+            "writes": [
+              [
+                5,
+                9
+              ]
+            ],
+            "copy_byte_count": 4,
+            "inner_return": "F+5",
+            "outer_return": "F"
+          }
+        ],
+        "strcat_dest_old_NUL_offset": 5,
+        "append_half_open": [
+          5,
+          9
+        ],
+        "inner_strcpy_pointer": "F+5",
+        "inner_strcpy_return": "F+5",
+        "outer_strcat_return": "F",
+        "output_path_utf8": "/bin//hi",
+        "output_path_hex": "2f 62 69 6e 2f 2f 68 69 00",
+        "output_string_length": 8,
+        "unused_zero_bytes_after_terminal": 0,
+        "open_call": {
+          "owner": "cat_command",
+          "line": 270,
+          "args": [
+            "F",
+            "O_RDONLY",
+            0
+          ],
+          "first_argument_filename_path": "/bin//hi",
+          "actual_result": "UNKNOWN"
+        },
+        "calls": {
+          "shell_direct": [
+            {
+              "call": "strlen",
+              "arg": "current_dir",
+              "line": 260,
+              "ret": 4
+            },
+            {
+              "call": "strlen",
+              "arg": "argv[1]",
+              "line": 261,
+              "ret": 3
+            },
+            {
+              "call": "malloc",
+              "arg": 9,
+              "line": 262,
+              "ret": "F (given successful)"
+            },
+            {
+              "call": "memset",
+              "arg": [
+                "F",
+                0,
+                9
+              ],
+              "line": 263,
+              "ret": "F (given)"
+            },
+            {
+              "call": "strcpy",
+              "arg": [
+                "F",
+                "current_dir"
+              ],
+              "line": 264,
+              "ret": "F (not used by shell)"
+            },
+            {
+              "call": "strcat",
+              "arg": [
+                "F",
+                "argv[1]"
+              ],
+              "line": 267,
+              "ret": "F (not used by shell)"
+            },
+            {
+              "call": "open",
+              "arg": [
+                "F",
+                "O_RDONLY",
+                0
+              ],
+              "line": 270,
+              "ret": "UNKNOWN (stop here)"
+            }
+          ],
+          "shell_first_strcpy_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCPY#1",
+              "arg": "current_dir",
+              "ret": 4,
+              "definition": "strcpy.c:31"
+            },
+            {
+              "call": "memcpy",
+              "owner": "STRCPY#1",
+              "arg": [
+                "F",
+                "current_dir",
+                5
+              ],
+              "ret": "F",
+              "definition": "strcpy.c:31"
+            }
+          ],
+          "strcat_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCAT",
+              "arg": "F (now terminated at index 5)",
+              "ret": 5,
+              "definition": "strcat.c:30"
+            },
+            {
+              "call": "strcpy",
+              "owner": "STRCAT",
+              "arg": [
+                "F+5",
+                "argv[1]"
+              ],
+              "ret": "F+5",
+              "definition": "strcat.c:30"
+            }
+          ],
+          "strcat_inner_strcpy_nested": [
+            {
+              "call": "strlen",
+              "owner": "STRCPY#2",
+              "arg": "argv[1]",
+              "ret": 3,
+              "definition": "strcpy.c:31"
+            },
+            {
+              "call": "memcpy",
+              "owner": "STRCPY#2",
+              "arg": [
+                "F+5",
+                "argv[1]",
+                4
+              ],
+              "ret": "F+5",
+              "definition": "strcpy.c:31"
+            }
+          ]
+        },
+        "call_count": {
+          "shell_direct_strlen": 2,
+          "nested_strlen": 3,
+          "overall_strlen_if_inrepo_functions_selected": 5,
+          "shell_direct_strcpy": 1,
+          "strcat_direct_nested_strcpy": 1,
+          "all_strcpy": 2,
+          "memcpy_nested": 2,
+          "outer_shell_direct_strcat": 1,
+          "actual_shell_direct_open": 1
+        },
+        "first_unknown": "real runtime malloc/ABI/library linking/open result"
+      }
+    ],
+    "source_sites": "myshell.c:260-270",
+    "known_conditions": "argc=2, valid pointers, capacity sufficient, allocation successful",
+    "actual_sh_linked_libc": "UNKNOWN",
+    "actual_open_result": "UNKNOWN",
+    "stop_at": "open invocation at 270"
+  },
+  "source_provenance": {
+    "strcpy": "strcpy.c:29-32",
+    "strcat": "strcat.c:28-32",
+    "strlen": "strlen.c:29-104",
+    "memcpy": "memcpy.c:28-60",
+    "shell": "myshell.c:252-270",
+    "myglibc_target": "STATIC",
+    "shell_build": "myshell/CMakeLists",
+    "effective_link_map": "UNKNOWN"
+  },
+  "runtime_status": {
+    "full_local_P9": "NOT_RUN",
+    "C_preprocess": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_operations": "NOT_RUN"
+  }
+}

@@ -1,0 +1,125 @@
+{
+ "check": "SCHED_ORDER_02_CONTROLS",
+ "input": "runs.json scenarios.W03 (real record; copies only)",
+ "controls": {
+  "C1_complete_W03": {
+   "transformation": null,
+   "result": {
+    "evidence_status": "VALID",
+    "evidence_reasons": [],
+    "P_final": {
+     "P_nonidle": "HOLDS",
+     "descending_pairs": [],
+     "idle_tail": "HOLDS"
+    },
+    "lead_derivation": {
+     "selected": [
+      [
+       3
+      ],
+      [
+       3
+      ],
+      "AGREES"
+     ],
+     "final_order": [
+      [
+       2,
+       4,
+       5,
+       0
+      ],
+      [
+       2,
+       4,
+       5,
+       0
+      ],
+      "AGREES"
+     ],
+     "P_nonidle": [
+      "HOLDS",
+      "HOLDS",
+      "AGREES"
+     ],
+     "a_final": [
+      15,
+      15,
+      "AGREES"
+     ]
+    },
+    "lead_derivation_all_agree": true
+   },
+   "met": true
+  },
+  "C2_after_snapshot_removed": {
+   "transformation": "HARNESS_META_TEST: the snap/after/1 line removed from both runs' stdout",
+   "result": {
+    "evidence_status": "INCOMPLETE_EVIDENCE",
+    "evidence_reasons": [
+     "missing events ['snap:after:1']"
+    ],
+    "P_final": null,
+    "lead_derivation": null,
+    "lead_derivation_all_agree": null
+   },
+   "met": true
+  },
+  "C3_complete_but_different": {
+   "transformation": "HARNESS_META_TEST: in both runs the snap/after/1 queue reordered to C20,A15,D30,I (same members, count, keys)",
+   "result": {
+    "evidence_status": "VALID",
+    "evidence_reasons": [],
+    "P_final": {
+     "P_nonidle": "VIOLATED",
+     "descending_pairs": [
+      [
+       20,
+       15
+      ]
+     ],
+     "idle_tail": "HOLDS"
+    },
+    "lead_derivation": {
+     "selected": [
+      [
+       3
+      ],
+      [
+       3
+      ],
+      "AGREES"
+     ],
+     "final_order": [
+      [
+       4,
+       2,
+       5,
+       0
+      ],
+      [
+       2,
+       4,
+       5,
+       0
+      ],
+      "DIFFERS"
+     ],
+     "P_nonidle": [
+      "VIOLATED",
+      "HOLDS",
+      "DIFFERS"
+     ],
+     "a_final": [
+      15,
+      15,
+      "AGREES"
+     ]
+    },
+    "lead_derivation_all_agree": false
+   },
+   "met": true
+  }
+ },
+ "all_met": true
+}

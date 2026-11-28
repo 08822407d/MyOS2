@@ -1,0 +1,1356 @@
+{
+  "task_id": "CORE-USER-PAGE-REF-LIFETIME-18",
+  "track_id": "MYOS2-LEAD-002",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "model_effort_per_owner": "Extra",
+  "date": "2026-11-01",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_initial_head_short12": "b7f89a7bc5c0",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "record_type": "facts_and_boundaries",
+  "node_count": 44,
+  "edge_count": 50,
+  "scenario_count": 13,
+  "effect_count": 16,
+  "nodes": [
+    {
+      "id": "PL18-N01",
+      "name": "memmap_init",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N02",
+      "name": "__init_single_page",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N03",
+      "name": "init_page_count",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N04",
+      "name": "set_page_count",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N05",
+      "name": "memblock_free_all",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N06",
+      "name": "memblock_free_pages",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N07",
+      "name": "__free_pages_ok",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N08",
+      "name": "free_pages_prepare",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N09",
+      "name": "__myos_free_one_page",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N10",
+      "name": "find_buddy_page_pfn",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N11",
+      "name": "page_is_buddy",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N12",
+      "name": "PageBuddy",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N13",
+      "name": "set_buddy_order",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N14",
+      "name": "add_to_free_list",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N15",
+      "name": "list_header_add_to_head",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N16",
+      "name": "alloc_pages",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N17",
+      "name": "__myos_alloc_pages",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N18",
+      "name": "__rmqueue_smallest",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N19",
+      "name": "get_page_from_free_area",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N20",
+      "name": "list_header_remove_head",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N21",
+      "name": "del_page_from_free_list",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N22",
+      "name": "list_header_delete_node",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N23",
+      "name": "list_header_contains",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N24",
+      "name": "expand",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N25",
+      "name": "folio_alloc_noprof",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N26",
+      "name": "alloc_page",
+      "kind": "macro"
+    },
+    {
+      "id": "PL18-N27",
+      "name": "get_page",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N28",
+      "name": "folio_get",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N29",
+      "name": "folio_ref_inc",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N30",
+      "name": "page_ref_inc",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N31",
+      "name": "put_page",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N32",
+      "name": "folio_put",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N33",
+      "name": "atomic_dec_and_test",
+      "kind": "macro"
+    },
+    {
+      "id": "PL18-N34",
+      "name": "__folio_put",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N35",
+      "name": "__free_pages",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N36",
+      "name": "free_pages",
+      "kind": "function"
+    },
+    {
+      "id": "PL18-N37",
+      "name": "page_descriptor",
+      "kind": "data"
+    },
+    {
+      "id": "PL18-N38",
+      "name": "folio_descriptor",
+      "kind": "data"
+    },
+    {
+      "id": "PL18-N39",
+      "name": "page_refcount",
+      "kind": "data"
+    },
+    {
+      "id": "PL18-N40",
+      "name": "page_type_mapcount_union",
+      "kind": "data"
+    },
+    {
+      "id": "PL18-N41",
+      "name": "free_area_header",
+      "kind": "data"
+    },
+    {
+      "id": "PL18-N42",
+      "name": "buddy_list_node",
+      "kind": "data"
+    },
+    {
+      "id": "PL18-N43",
+      "name": "private_order",
+      "kind": "data"
+    },
+    {
+      "id": "PL18-N44",
+      "name": "physical_page_bytes",
+      "kind": "data"
+    }
+  ],
+  "edges": [
+    {
+      "id": "PL18-E01",
+      "from": "PL18-N01",
+      "to": "PL18-N02",
+      "kind": "call",
+      "meaning": "initialize each PFN descriptor",
+      "when": "range iteration",
+      "anchors": [
+        "PL18-A13"
+      ]
+    },
+    {
+      "id": "PL18-E02",
+      "from": "PL18-N02",
+      "to": "PL18-N03",
+      "kind": "call",
+      "meaning": "set initial ref to one",
+      "when": "valid descriptor",
+      "anchors": [
+        "PL18-A10",
+        "PL18-A15"
+      ]
+    },
+    {
+      "id": "PL18-E03",
+      "from": "PL18-N03",
+      "to": "PL18-N04",
+      "kind": "call",
+      "meaning": "set_page_count(page,1)",
+      "when": "entered",
+      "anchors": [
+        "PL18-A14",
+        "PL18-A15"
+      ]
+    },
+    {
+      "id": "PL18-E04",
+      "from": "PL18-N05",
+      "to": "PL18-N06",
+      "kind": "call",
+      "meaning": "send selected free PFN block to initial pool",
+      "when": "selected range and order",
+      "anchors": [
+        "PL18-A16",
+        "PL18-A17"
+      ]
+    },
+    {
+      "id": "PL18-E05",
+      "from": "PL18-N06",
+      "to": "PL18-N04",
+      "kind": "call",
+      "meaning": "zero ref for each page in block",
+      "when": "valid page array",
+      "anchors": [
+        "PL18-A19"
+      ]
+    },
+    {
+      "id": "PL18-E06",
+      "from": "PL18-N06",
+      "to": "PL18-N07",
+      "kind": "call",
+      "meaning": "initial free-list handoff",
+      "when": "after zero-ref loop",
+      "anchors": [
+        "PL18-A21"
+      ]
+    },
+    {
+      "id": "PL18-E07",
+      "from": "PL18-N07",
+      "to": "PL18-N08",
+      "kind": "call",
+      "meaning": "prepare free page",
+      "when": "valid page/zone",
+      "anchors": [
+        "PL18-A22",
+        "PL18-A25"
+      ]
+    },
+    {
+      "id": "PL18-E08",
+      "from": "PL18-N07",
+      "to": "PL18-N09",
+      "kind": "call",
+      "meaning": "insert while zone.lock held",
+      "when": "free function reaches inner call",
+      "anchors": [
+        "PL18-A23",
+        "PL18-A24"
+      ]
+    },
+    {
+      "id": "PL18-E09",
+      "from": "PL18-N09",
+      "to": "PL18-N10",
+      "kind": "call",
+      "meaning": "query buddy at current order",
+      "when": "order<MAX_ORDER",
+      "anchors": [
+        "PL18-A26",
+        "PL18-A29",
+        "PL18-A30"
+      ]
+    },
+    {
+      "id": "PL18-E10",
+      "from": "PL18-N10",
+      "to": "PL18-N11",
+      "kind": "call",
+      "meaning": "validate buddy identity",
+      "when": "valid candidate",
+      "anchors": [
+        "PL18-A30",
+        "PL18-A31"
+      ]
+    },
+    {
+      "id": "PL18-E11",
+      "from": "PL18-N11",
+      "to": "PL18-N12",
+      "kind": "call",
+      "meaning": "test free buddy state",
+      "when": "!page_is_guard",
+      "anchors": [
+        "PL18-A32",
+        "PL18-A35"
+      ]
+    },
+    {
+      "id": "PL18-E12",
+      "from": "PL18-N11",
+      "to": "PL18-N40",
+      "kind": "data",
+      "meaning": "read page_type union through PageBuddy",
+      "when": "valid descriptor",
+      "anchors": [
+        "PL18-A04",
+        "PL18-A35"
+      ]
+    },
+    {
+      "id": "PL18-E13",
+      "from": "PL18-N09",
+      "to": "PL18-N13",
+      "kind": "call",
+      "meaning": "record resulting order/typed free mark",
+      "when": "loop exits",
+      "anchors": [
+        "PL18-A28",
+        "PL18-A38"
+      ]
+    },
+    {
+      "id": "PL18-E14",
+      "from": "PL18-N09",
+      "to": "PL18-N14",
+      "kind": "call",
+      "meaning": "enqueue page in zone.free_area",
+      "when": "valid zone/order",
+      "anchors": [
+        "PL18-A28",
+        "PL18-A39"
+      ]
+    },
+    {
+      "id": "PL18-E15",
+      "from": "PL18-N14",
+      "to": "PL18-N15",
+      "kind": "call",
+      "meaning": "link node and increment list count",
+      "when": "list valid",
+      "anchors": [
+        "PL18-A39"
+      ]
+    },
+    {
+      "id": "PL18-E16",
+      "from": "PL18-N04",
+      "to": "PL18-N39",
+      "kind": "effect",
+      "meaning": "atomic_set ref to 1 or 0",
+      "when": "caller-specified value",
+      "anchors": [
+        "PL18-A14",
+        "PL18-A15",
+        "PL18-A19"
+      ]
+    },
+    {
+      "id": "PL18-E17",
+      "from": "PL18-N13",
+      "to": "PL18-N43",
+      "kind": "effect",
+      "meaning": "private=order",
+      "when": "called",
+      "anchors": [
+        "PL18-A38"
+      ]
+    },
+    {
+      "id": "PL18-E18",
+      "from": "PL18-N13",
+      "to": "PL18-N40",
+      "kind": "effect",
+      "meaning": "clear PG_buddy bit, not PAGE_TYPE_BASE initialization",
+      "when": "called",
+      "anchors": [
+        "PL18-A34",
+        "PL18-A36",
+        "PL18-A38"
+      ]
+    },
+    {
+      "id": "PL18-E19",
+      "from": "PL18-N14",
+      "to": "PL18-N41",
+      "kind": "effect",
+      "meaning": "new block becomes free-list member",
+      "when": "valid node/header",
+      "anchors": [
+        "PL18-A28",
+        "PL18-A39"
+      ]
+    },
+    {
+      "id": "PL18-E20",
+      "from": "PL18-N16",
+      "to": "PL18-N17",
+      "kind": "call",
+      "meaning": "propagate actual gfp/order",
+      "when": "normal public wrapper",
+      "anchors": [
+        "PL18-A58"
+      ]
+    },
+    {
+      "id": "PL18-E21",
+      "from": "PL18-N25",
+      "to": "PL18-N26",
+      "kind": "call",
+      "meaning": "use constant GFP_HIGHUSER_MOVABLE and implicit order0",
+      "when": "wrapper called",
+      "anchors": [
+        "PL18-A59",
+        "PL18-A60"
+      ]
+    },
+    {
+      "id": "PL18-E22",
+      "from": "PL18-N26",
+      "to": "PL18-N16",
+      "kind": "call",
+      "meaning": "macro expands to alloc_pages(gfp,0)",
+      "when": "macro binding",
+      "anchors": [
+        "PL18-A60"
+      ]
+    },
+    {
+      "id": "PL18-E23",
+      "from": "PL18-N17",
+      "to": "PL18-N18",
+      "kind": "call",
+      "meaning": "try zone's available orders",
+      "when": "each zone attempt",
+      "anchors": [
+        "PL18-A55",
+        "PL18-A56"
+      ]
+    },
+    {
+      "id": "PL18-E24",
+      "from": "PL18-N18",
+      "to": "PL18-N19",
+      "kind": "call",
+      "meaning": "remove candidate head",
+      "when": "current_order in range",
+      "anchors": [
+        "PL18-A40",
+        "PL18-A50"
+      ]
+    },
+    {
+      "id": "PL18-E25",
+      "from": "PL18-N19",
+      "to": "PL18-N20",
+      "kind": "call",
+      "meaning": "unlinks once and count--",
+      "when": "nonempty list",
+      "anchors": [
+        "PL18-A40",
+        "PL18-A41"
+      ]
+    },
+    {
+      "id": "PL18-E26",
+      "from": "PL18-N20",
+      "to": "PL18-N42",
+      "kind": "effect",
+      "meaning": "list_del_init detached node",
+      "when": "nonempty list",
+      "anchors": [
+        "PL18-A41",
+        "PL18-A42"
+      ]
+    },
+    {
+      "id": "PL18-E27",
+      "from": "PL18-N20",
+      "to": "PL18-N41",
+      "kind": "effect",
+      "meaning": "header count decrement once",
+      "when": "nonempty list",
+      "anchors": [
+        "PL18-A41",
+        "PL18-A42"
+      ]
+    },
+    {
+      "id": "PL18-E28",
+      "from": "PL18-N18",
+      "to": "PL18-N21",
+      "kind": "call",
+      "meaning": "second guarded deletion helper after removal",
+      "when": "candidate obtained",
+      "anchors": [
+        "PL18-A43",
+        "PL18-A51"
+      ]
+    },
+    {
+      "id": "PL18-E29",
+      "from": "PL18-N21",
+      "to": "PL18-N22",
+      "kind": "call",
+      "meaning": "calls contains-guarded delete",
+      "when": "candidate obtained",
+      "anchors": [
+        "PL18-A43",
+        "PL18-A44"
+      ]
+    },
+    {
+      "id": "PL18-E30",
+      "from": "PL18-N22",
+      "to": "PL18-N23",
+      "kind": "call",
+      "meaning": "checks live membership",
+      "when": "called",
+      "anchors": [
+        "PL18-A44",
+        "PL18-A46"
+      ]
+    },
+    {
+      "id": "PL18-E31",
+      "from": "PL18-N21",
+      "to": "PL18-N40",
+      "kind": "effect",
+      "meaning": "__ClearPageBuddy adds bit only",
+      "when": "after pop",
+      "anchors": [
+        "PL18-A37",
+        "PL18-A43"
+      ]
+    },
+    {
+      "id": "PL18-E32",
+      "from": "PL18-N21",
+      "to": "PL18-N43",
+      "kind": "effect",
+      "meaning": "reset private=0",
+      "when": "after pop",
+      "anchors": [
+        "PL18-A43"
+      ]
+    },
+    {
+      "id": "PL18-E33",
+      "from": "PL18-N18",
+      "to": "PL18-N24",
+      "kind": "call",
+      "meaning": "split higher-order allocation into remainder blocks",
+      "when": "current_order>requested",
+      "anchors": [
+        "PL18-A48",
+        "PL18-A49",
+        "PL18-A51"
+      ]
+    },
+    {
+      "id": "PL18-E34",
+      "from": "PL18-N18",
+      "to": "PL18-N39",
+      "kind": "effect",
+      "meaning": "atomic_inc each selected page",
+      "when": "valid obtained block",
+      "anchors": [
+        "PL18-A51"
+      ]
+    },
+    {
+      "id": "PL18-E35",
+      "from": "PL18-N18",
+      "to": "PL18-N41",
+      "kind": "data",
+      "meaning": "reads the current order free_area",
+      "when": "valid zone/index",
+      "anchors": [
+        "PL18-A50"
+      ]
+    },
+    {
+      "id": "PL18-E36",
+      "from": "PL18-N25",
+      "to": "PL18-N38",
+      "kind": "data",
+      "meaning": "page_folio converts returned page",
+      "when": "nonnull and valid order0",
+      "anchors": [
+        "PL18-A59",
+        "PL18-A61",
+        "PL18-A62"
+      ]
+    },
+    {
+      "id": "PL18-E37",
+      "from": "PL18-N27",
+      "to": "PL18-N28",
+      "kind": "call_path",
+      "meaning": "get_page -> page_folio -> folio_get",
+      "when": "valid page",
+      "anchors": [
+        "PL18-A68",
+        "PL18-A61",
+        "PL18-A66"
+      ]
+    },
+    {
+      "id": "PL18-E38",
+      "from": "PL18-N28",
+      "to": "PL18-N29",
+      "kind": "call",
+      "meaning": "increase folio reference",
+      "when": "valid already-held folio",
+      "anchors": [
+        "PL18-A66",
+        "PL18-A65"
+      ]
+    },
+    {
+      "id": "PL18-E39",
+      "from": "PL18-N29",
+      "to": "PL18-N30",
+      "kind": "call",
+      "meaning": "increment page refcount",
+      "when": "folio valid",
+      "anchors": [
+        "PL18-A65",
+        "PL18-A63"
+      ]
+    },
+    {
+      "id": "PL18-E40",
+      "from": "PL18-N30",
+      "to": "PL18-N39",
+      "kind": "effect",
+      "meaning": "atomic_inc",
+      "when": "valid page",
+      "anchors": [
+        "PL18-A63"
+      ]
+    },
+    {
+      "id": "PL18-E41",
+      "from": "PL18-N31",
+      "to": "PL18-N32",
+      "kind": "call_path",
+      "meaning": "put_page -> page_folio -> folio_put",
+      "when": "valid page",
+      "anchors": [
+        "PL18-A69",
+        "PL18-A61",
+        "PL18-A67"
+      ]
+    },
+    {
+      "id": "PL18-E42",
+      "from": "PL18-N32",
+      "to": "PL18-N33",
+      "kind": "call",
+      "meaning": "decrement and test zero",
+      "when": "valid folio",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A70",
+        "PL18-A71",
+        "PL18-A72"
+      ]
+    },
+    {
+      "id": "PL18-E43",
+      "from": "PL18-N33",
+      "to": "PL18-N39",
+      "kind": "effect",
+      "meaning": "decrement once, test zero",
+      "when": "valid atomic storage",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A72",
+        "PL18-A73"
+      ]
+    },
+    {
+      "id": "PL18-E44",
+      "from": "PL18-N32",
+      "to": "PL18-N34",
+      "kind": "call",
+      "meaning": "zero result only",
+      "when": "new ref equals 0",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A74",
+        "PL18-A75"
+      ]
+    },
+    {
+      "id": "PL18-E45",
+      "from": "PL18-N35",
+      "to": "PL18-N07",
+      "kind": "call",
+      "meaning": "direct enqueue path with no local refcount guard",
+      "when": "valid page/order",
+      "anchors": [
+        "PL18-A76"
+      ]
+    },
+    {
+      "id": "PL18-E46",
+      "from": "PL18-N36",
+      "to": "PL18-N35",
+      "kind": "call",
+      "meaning": "virt_to_page for nonzero address",
+      "when": "addr!=0",
+      "anchors": [
+        "PL18-A77"
+      ]
+    },
+    {
+      "id": "PL18-E47",
+      "from": "PL18-N37",
+      "to": "PL18-N40",
+      "kind": "data",
+      "meaning": "field storage union",
+      "when": "layout from same descriptor",
+      "anchors": [
+        "PL18-A04",
+        "PL18-A05"
+      ]
+    },
+    {
+      "id": "PL18-E48",
+      "from": "PL18-N37",
+      "to": "PL18-N42",
+      "kind": "data",
+      "meaning": "overlapping lru and buddy_list nodes",
+      "when": "layout from same descriptor",
+      "anchors": [
+        "PL18-A01",
+        "PL18-A02"
+      ]
+    },
+    {
+      "id": "PL18-E49",
+      "from": "PL18-N38",
+      "to": "PL18-N37",
+      "kind": "data",
+      "meaning": "folio.page identity alias",
+      "when": "valid order0 folio",
+      "anchors": [
+        "PL18-A06",
+        "PL18-A61"
+      ]
+    },
+    {
+      "id": "PL18-E50",
+      "from": "PL18-N08",
+      "to": "PL18-N37",
+      "kind": "effect",
+      "meaning": "clear PAGE_FLAGS_CHECK_AT_PREP flag",
+      "when": "valid pointer",
+      "anchors": [
+        "PL18-A25"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "PL18-X01",
+      "target": "mem_map descriptor bytes",
+      "action": "memset(0)",
+      "when": "alloc_node_mem_map",
+      "anchors": [
+        "PL18-A07",
+        "PL18-A08"
+      ]
+    },
+    {
+      "id": "PL18-X02",
+      "target": "page._refcount",
+      "action": "set 1",
+      "when": "__init_single_page",
+      "anchors": [
+        "PL18-A10",
+        "PL18-A14",
+        "PL18-A15"
+      ]
+    },
+    {
+      "id": "PL18-X03",
+      "target": "page._refcount",
+      "action": "set 0",
+      "when": "memblock_free_pages",
+      "anchors": [
+        "PL18-A19"
+      ]
+    },
+    {
+      "id": "PL18-X04",
+      "target": "page.page_type / private",
+      "action": "clear PG_buddy, store order",
+      "when": "set_buddy_order",
+      "anchors": [
+        "PL18-A34",
+        "PL18-A36",
+        "PL18-A38"
+      ]
+    },
+    {
+      "id": "PL18-X05",
+      "target": "free_area.header",
+      "action": "count+1 and insertion",
+      "when": "add_to_free_list",
+      "anchors": [
+        "PL18-A39"
+      ]
+    },
+    {
+      "id": "PL18-X06",
+      "target": "free_area.header / buddy_list",
+      "action": "count-1 and del_init",
+      "when": "list_header_remove_head",
+      "anchors": [
+        "PL18-A40",
+        "PL18-A41",
+        "PL18-A42"
+      ]
+    },
+    {
+      "id": "PL18-X07",
+      "target": "free_area.header",
+      "action": "no second deletion if contains false",
+      "when": "list_header_delete_node after remove_head",
+      "anchors": [
+        "PL18-A43",
+        "PL18-A44",
+        "PL18-A45",
+        "PL18-A46",
+        "PL18-A47"
+      ]
+    },
+    {
+      "id": "PL18-X08",
+      "target": "page.page_type/private",
+      "action": "set PG_buddy bit, private=0",
+      "when": "del_page_from_free_list",
+      "anchors": [
+        "PL18-A37",
+        "PL18-A43"
+      ]
+    },
+    {
+      "id": "PL18-X09",
+      "target": "page._refcount",
+      "action": "+1",
+      "when": "__rmqueue_smallest on obtained page",
+      "anchors": [
+        "PL18-A51"
+      ]
+    },
+    {
+      "id": "PL18-X10",
+      "target": "page._refcount",
+      "action": "+1",
+      "when": "folio_get",
+      "anchors": [
+        "PL18-A63",
+        "PL18-A65",
+        "PL18-A66"
+      ]
+    },
+    {
+      "id": "PL18-X11",
+      "target": "page._refcount",
+      "action": "-1, zero-test",
+      "when": "folio_put",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A70",
+        "PL18-A72",
+        "PL18-A73"
+      ]
+    },
+    {
+      "id": "PL18-X12",
+      "target": "physical return",
+      "action": "no active free",
+      "when": "__folio_put on zero",
+      "anchors": [
+        "PL18-A74",
+        "PL18-A75"
+      ]
+    },
+    {
+      "id": "PL18-X13",
+      "target": "free_area versus refcount",
+      "action": "direct free queues with no refcount decrement/check",
+      "when": "__free_pages",
+      "anchors": [
+        "PL18-A22",
+        "PL18-A24",
+        "PL18-A28",
+        "PL18-A76"
+      ]
+    },
+    {
+      "id": "PL18-X14",
+      "target": "buddy old node",
+      "action": "no unlink in merge branch",
+      "when": "recognized buddy",
+      "anchors": [
+        "PL18-A26",
+        "PL18-A27",
+        "PL18-A28",
+        "PL18-A83"
+      ]
+    },
+    {
+      "id": "PL18-X15",
+      "target": "bytes not refcount",
+      "action": "conditional __GFP_ZERO clear",
+      "when": "post_alloc_hook",
+      "anchors": [
+        "PL18-A78"
+      ]
+    },
+    {
+      "id": "PL18-X16",
+      "target": "zone.lock",
+      "action": "direct free locks, selected alloc not locally locked",
+      "when": "free/alloc paths",
+      "anchors": [
+        "PL18-A23",
+        "PL18-A24",
+        "PL18-A50",
+        "PL18-A51"
+      ]
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "PL18-M01",
+      "scenario": "initial memmap descriptor",
+      "premises": "map zeroed; __init_single_page reached",
+      "ref_before": "0 (selected memset only)",
+      "ref_after": "1",
+      "page_type_mapcount": "page_type/_mapcount union=0; reset commented",
+      "free_list": "not yet in free_area",
+      "locks": "no active zone lock in init",
+      "return_or_effect": "void",
+      "limits": "only selected PFN/bootstrap path",
+      "anchors": [
+        "PL18-A04",
+        "PL18-A08",
+        "PL18-A10",
+        "PL18-A11",
+        "PL18-A15"
+      ]
+    },
+    {
+      "id": "PL18-M02",
+      "scenario": "first pool insertion order0",
+      "premises": "memblock_free_pages called on valid order0 page",
+      "ref_before": "1 if from M01",
+      "ref_after": "0",
+      "page_type_mapcount": "__SetPageBuddy clears bit, BASE still conditional",
+      "free_list": "enqueues; header count+1",
+      "locks": "zone lock in __free_pages_ok",
+      "return_or_effect": "void",
+      "limits": "PageBuddy may remain false for zero-initialized type",
+      "anchors": [
+        "PL18-A17",
+        "PL18-A19",
+        "PL18-A21",
+        "PL18-A23",
+        "PL18-A28",
+        "PL18-A34",
+        "PL18-A35",
+        "PL18-A36"
+      ]
+    },
+    {
+      "id": "PL18-M03",
+      "scenario": "first allocation from known zero-ref pool",
+      "premises": "valid header and consistent links",
+      "ref_before": "0",
+      "ref_after": "1",
+      "page_type_mapcount": "PageBuddy cleared and private reset; no mapcount reset",
+      "free_list": "remove_head unlinks once, subsequent delete contains false",
+      "locks": "no local zone lock in __rmqueue_smallest",
+      "return_or_effect": "page pointer",
+      "limits": "does not certify full allocator concurrency",
+      "anchors": [
+        "PL18-A40",
+        "PL18-A41",
+        "PL18-A43",
+        "PL18-A45",
+        "PL18-A50",
+        "PL18-A51"
+      ]
+    },
+    {
+      "id": "PL18-M04",
+      "scenario": "reuse with unknown previous reference",
+      "premises": "valid listed block, unknown n",
+      "ref_before": "n",
+      "ref_after": "n+1",
+      "page_type_mapcount": "page_type and mapcount alias provenance unknown",
+      "free_list": "unlinks from free_area",
+      "locks": "allocator lock not established",
+      "return_or_effect": "page pointer",
+      "limits": "atomic_inc does not imply set ref=1",
+      "anchors": [
+        "PL18-A50",
+        "PL18-A51"
+      ]
+    },
+    {
+      "id": "PL18-M05",
+      "scenario": "all candidate free lists empty",
+      "premises": "no successful zone/page",
+      "ref_before": "n/a",
+      "ref_after": "n/a",
+      "page_type_mapcount": "n/a",
+      "free_list": "unchanged",
+      "locks": "not acquired by read __myos_alloc_pages",
+      "return_or_effect": "NULL; wrapper may page_folio(NULL)",
+      "limits": "cannot promise safe OOM propagation",
+      "anchors": [
+        "PL18-A52",
+        "PL18-A57",
+        "PL18-A59",
+        "PL18-A61",
+        "PL18-A62"
+      ]
+    },
+    {
+      "id": "PL18-M06",
+      "scenario": "get_page or folio_get valid held reference",
+      "premises": "valid order0 folio; reference n>=1",
+      "ref_before": "n",
+      "ref_after": "n+1",
+      "page_type_mapcount": "unchanged by this helper",
+      "free_list": "no list action",
+      "locks": "atomic increment",
+      "return_or_effect": "void",
+      "limits": "get must not invent new mapping reference",
+      "anchors": [
+        "PL18-A63",
+        "PL18-A65",
+        "PL18-A66",
+        "PL18-A68"
+      ]
+    },
+    {
+      "id": "PL18-M07",
+      "scenario": "put_page nonlast reference",
+      "premises": "valid order0; n>1",
+      "ref_before": "n",
+      "ref_after": "n-1>0",
+      "page_type_mapcount": "unchanged",
+      "free_list": "no list action",
+      "locks": "atomic decrement/zero test",
+      "return_or_effect": "void; __folio_put skipped",
+      "limits": "does not return physical page",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A69",
+        "PL18-A70",
+        "PL18-A72",
+        "PL18-A73"
+      ]
+    },
+    {
+      "id": "PL18-M08",
+      "scenario": "put_page last reference",
+      "premises": "valid order0; n=1",
+      "ref_before": "1",
+      "ref_after": "0",
+      "page_type_mapcount": "unchanged",
+      "free_list": "not re-enqueued by empty __folio_put",
+      "locks": "no zone lock in selected put backend",
+      "return_or_effect": "__folio_put called, returns",
+      "limits": "count zero ≠ free/reuse",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A74",
+        "PL18-A75"
+      ]
+    },
+    {
+      "id": "PL18-M09",
+      "scenario": "put_page with missing or invalid hold",
+      "premises": "n=0 or invalid alias",
+      "ref_before": "0 or unknown",
+      "ref_after": "-1 if valid atomic n=0; otherwise unknown",
+      "page_type_mapcount": "unknown",
+      "free_list": "not established",
+      "locks": "unknown",
+      "return_or_effect": "not guaranteed",
+      "limits": "no claim of actual underflow/UAF",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A72",
+        "PL18-A73"
+      ]
+    },
+    {
+      "id": "PL18-M10",
+      "scenario": "direct free with positive ref",
+      "premises": "caller supplies valid page/order but retains n>0",
+      "ref_before": "n>0",
+      "ref_after": "n unchanged locally",
+      "page_type_mapcount": "flag/order mutated",
+      "free_list": "can be enqueued under valid branch",
+      "locks": "zone.lock in direct free",
+      "return_or_effect": "void conditional",
+      "limits": "premise of caller misuse not proven",
+      "anchors": [
+        "PL18-A22",
+        "PL18-A24",
+        "PL18-A25",
+        "PL18-A28",
+        "PL18-A76"
+      ]
+    },
+    {
+      "id": "PL18-M11",
+      "scenario": "direct free with ref zero",
+      "premises": "valid page/order not already linked",
+      "ref_before": "0",
+      "ref_after": "0 until next allocation",
+      "page_type_mapcount": "type bit set with BASE precondition",
+      "free_list": "enqueues; possible future 0→1",
+      "locks": "zone.lock in direct free",
+      "return_or_effect": "void conditional",
+      "limits": "not proof of safe global reuse",
+      "anchors": [
+        "PL18-A28",
+        "PL18-A34",
+        "PL18-A35",
+        "PL18-A51",
+        "PL18-A76"
+      ]
+    },
+    {
+      "id": "PL18-M12",
+      "scenario": "recognized buddy and merge",
+      "premises": "PageBuddy true, same order and zone, valid pointers",
+      "ref_before": "n",
+      "ref_after": "n (no ref op in loop)",
+      "page_type_mapcount": "page/private metadata updated on combined head",
+      "free_list": "old buddy not unlinked in selected loop; new block enqueued",
+      "locks": "direct free zone lock",
+      "return_or_effect": "void conditional",
+      "limits": "overlapping list candidate needs proof, no physical observation",
+      "anchors": [
+        "PL18-A26",
+        "PL18-A27",
+        "PL18-A28",
+        "PL18-A32",
+        "PL18-A33",
+        "PL18-A83"
+      ]
+    },
+    {
+      "id": "PL18-M13",
+      "scenario": "bad PFN/zone/order/compound alias",
+      "premises": "validity assumptions fail",
+      "ref_before": "unknown",
+      "ref_after": "unknown",
+      "page_type_mapcount": "unknown",
+      "free_list": "unknown",
+      "locks": "unknown",
+      "return_or_effect": "undefined/not guaranteed",
+      "limits": "do not claim deterministic runtime outcome",
+      "anchors": [
+        "PL18-A03",
+        "PL18-A30",
+        "PL18-A53"
+      ]
+    }
+  ],
+  "object_ledger": [
+    {
+      "object": "page_s",
+      "identity": "descriptor not physical contents",
+      "fields": "lru/buddy_list union; compound_head first word overlay; page_type/_mapcount union; _refcount separate",
+      "anchors": [
+        "PL18-A01",
+        "PL18-A02",
+        "PL18-A03",
+        "PL18-A04",
+        "PL18-A05",
+        "PL18-A06"
+      ]
+    },
+    {
+      "object": "folio_s",
+      "identity": "folio.page union with page_s",
+      "fields": "page_folio valid only for appropriate nonnull head",
+      "anchors": [
+        "PL18-A59",
+        "PL18-A61",
+        "PL18-A62"
+      ]
+    },
+    {
+      "object": "zone.free_area",
+      "identity": "list header of a given order",
+      "fields": "list header count versus PageBuddy flag separately observed",
+      "anchors": [
+        "PL18-A12",
+        "PL18-A39",
+        "PL18-A41",
+        "PL18-A35"
+      ]
+    },
+    {
+      "object": "physical bytes",
+      "identity": "separate from page descriptor",
+      "fields": "post_alloc_hook clear_page only if GFP_ZERO",
+      "anchors": [
+        "PL18-A78"
+      ]
+    }
+  ],
+  "arithmetic": [
+    {
+      "case": "selected first page",
+      "premise": "source memset→single init→memblock free→alloc→get→put→put, no races",
+      "steps": [
+        "0",
+        "1",
+        "0",
+        "1",
+        "2",
+        "1",
+        "0"
+      ],
+      "end": "off-list after last put; __folio_put no active enqueue"
+    },
+    {
+      "case": "unknown reused page",
+      "premise": "listed with ref n",
+      "steps": [
+        "n",
+        "n+1"
+      ],
+      "end": "cannot presume n=0"
+    },
+    {
+      "case": "old COW17 folio",
+      "premise": "initial n and old valid, same PTE, two puts",
+      "steps": [
+        "n",
+        "n+1",
+        "n",
+        "n-1"
+      ],
+      "end": "mapping ref not proved by fork, not certified balanced"
+    },
+    {
+      "case": "COW17 mismatch",
+      "premise": "temporary old get and one cleanup put",
+      "steps": [
+        "n",
+        "n+1",
+        "n"
+      ],
+      "end": "new allocation separately put; zero backend empty"
+    }
+  ],
+  "scope_limits": [
+    "R17-S01/S02/S03 mandatory; no re-review of page copy or permission",
+    "MR-02 via 04/05 prevents global PageBuddy always false, global never merge assertions",
+    "source is fixed time, not master",
+    "no kernel/code changes, build, runtime, QEMU, CPU memory observation",
+    "negative claims scoped to named functions, no complete all-writers or all-locks audit"
+  ]
+}

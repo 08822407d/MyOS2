@@ -1,0 +1,389 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-BOUNDARIES-07
+record_type: deferred_findings_increment
+produced_by: Claude Code desktop app (Code tab), local session f464c1b9-9b25-4af2-8f2d-d419b3b601fd (MYOS2-A-CC02 内核分析本地执行)
+model: unknown_or_not_attestable
+model_declared_by_runtime: claude-opus-5-5
+date: '2026-10-28'
+base_snapshot: kernel=time a039d9803ade；执行分支起点 b12572f14eae（短 SHA）
+policy_ref: agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）
+policy_status: ACTIVE_RECORD_FIRST_OWNER_REPAIR_DEFERRED
+owner_action_now: none
+owner_decisions_requested_now: []
+kernel_change_authorized: false
+candidate_A_adopted: false
+candidate_B_adopted: false
+scope: 只登记本批新增条目（UB-01…UB-14）、一项文档勘误（ER-01）以及对 05 旧条目的证据追加；不复制旧问题全文，不改旧条目与 05 原文件，不重编号。
+id_convention: related、target、qualified_id 一律写全名；正文中出现的旧条目同样写全名。UB-xx、ER-xx 指本文件，AB/QB/SB/VT 编号指本包 facts-and-boundaries.yaml，NVB-x 指其 next_validation_candidates。
+empty_set_statement: 本批发现集合非空：14 项新条目、2 项证据追加、1 项文档勘误。检查范围限于 facts-and-boundaries.yaml 中三个主题实际读到的源码；没有登记的部分不等于已确认安全。
+errata_scope_statement: 本批核对的 05、06 既有文档中只发现一处需要更正的表述（CORE-USER-VFS-BASELINE-05::DRU-06 中 fs 的一半），作为 ER-01 追加，05 原文件不改；05 中“未读/未追”的说法属于覆盖状态，已在 facts-and-boundaries.yaml 的 gap_status 中更新，不算勘误。
+kinds_allowed: [source_fact, conditional_inference, limited_host_observation, policy_proposal, evidence_gap, documentation_erratum]
+statuses_allowed: [deferred_owner_not_ready, needs_evidence, superseded_interpretation]
+resume_order: [agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）, 本轨道最新主线检查点与对应审查回执（agent/MYOS2-LEAD-002 的 reviews/）, 本包 user-entry-console.md 与 facts-and-boundaries.yaml, 被选条目的 qualified_id（本文件）, 原证据（anchors/queries 所指 time 源码）与当时最新的 time]
+counts:
+  findings: 14
+  evidence_appends: 2
+  errata: 1
+  findings_by_status: {deferred_owner_not_ready: 11, needs_evidence: 3, superseded_interpretation: 0}
+findings:
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-01
+  id: UB-01
+  title: write(2) 在 vfs_write 的 FMODE_CAN_WRITE 检查处返回，静态上到不了任何文件的 ->write
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-01, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [fs.vfs.write_dispatch, drivers.char.console_write]
+  claim: vfs_write 在调用 ->write 之前要求 f_mode 含 FMODE_CAN_WRITE，否则返回 -EINVAL；在 mykernel/ 中这个位只有定义和两处活动检查（另一处在 __kernel_write_iter）。f_mode 的活动赋值只有 file_table.c 中的 OPEN_FMODE(flags) 与块设备 open 中追加的其他位；OPEN_FMODE 只产生访问位（FMODE_READ/FMODE_WRITE）与 __FMODE_NONOTIFY。
+  premises: [所读快照中没有以其他写法（例如整体结构复制以外的位运算宏）设置 FMODE_CAN_WRITE 的活动代码；检索范围见 QB-23、QB-24]
+  impact: 用户 write(2) 对以写方式打开的任何文件都返回 -EINVAL（未以写方式打开的先因缺 FMODE_WRITE 返回 -EBADF），到不了 ->write；console 输出只能经 writev(2) 到达 myos_tty_write；内核内部的 kernel_write 同样被拦截。
+  counter_evidence: [writev 路径没有这项检查（SB-07），可以到达 ->write, dup_fd 按值复制 file 时会复制 f_mode，但复制不到本来就没有的位]
+  unknown: [检索无法排除通过函数指针或宏拼接设置该位的写法]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence: [AB3-19, QB-23, QB-24, SB-09, VT-FLAGS]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U06']
+  blocks: {static_work: false, future_runtime: 影响 NVB-1 中 console 输出的观察方式}
+  future_verification:
+    candidates: [NVB-1]
+    authorization_needed: [完整内核构建授权, QEMU 运行授权]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 time 源码是否仍与本条证据一致。
+  ai_suggestion: 以后处理时可对照 Linux 在打开文件时按 f_op 设置 FMODE_CAN_READ/FMODE_CAN_WRITE 的做法；建议不等于决定。
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-02
+  id: UB-02
+  title: devtmpfs 请求在完成通知后被工作线程释放，提交方随后仍写其完成量并读取 err
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-02, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [drivers.base.devtmpfs_node_create]
+  claim: devtmpfs_create_node 以 kzalloc 分配请求（QB-55）；工作线程写 req->err、complete(&req->done) 后立即 kfree(req)。提交方在 wait_for_completion 返回之前还要对 req->done 加锁、摘下等待项并把 done 减一（QB-56），返回后再执行 return req->err。devtmpfs_delete_node 用栈上的 req 走同一条队列（QB-55），工作线程同样会对它 kfree（该函数目前没有活动调用者）。
+  premises: [工作线程的 kfree(req) 先于提交方在 wait_for_completion 中对 req->done 的后续访问（两线程的实际交错未知）]
+  impact: 若前提成立，提交方对已释放内存既写（锁字、等待队列链表、done 计数）又读（err）；写入可能破坏随后分配到这块内存的对象。唯一的活动调用者 device_add 不使用返回值，这只免除读取 err 的后果，不免除对完成量的写入。
+  counter_evidence: [唯一的活动调用者 device_add 忽略返回值（AB3-06、SB-10），但只涉及读取 err 这一半]
+  unknown: [运行时的实际交错与 slab 重用情况, kfree 是否在空闲对象内写分配器信息（未追）]
+  applicable_source: time a039d9803ade（mykernel/drivers/base/devtmpfs.c，只读）
+  evidence: [AB3-07, AB3-08, QB-14, QB-55, QB-56]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U05']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: &id001 [完整内核构建授权, QEMU 运行授权]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核源码。
+  ai_suggestion: 请求对象的释放责任应只在一方；建议不等于决定。
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-03
+  id: UB-03
+  title: kernel_init（exec 后即 pid 1）、kthreadd 与 kthread 共享 init_fs，根切换时直接改写且绕过引用计数
+  kind: [source_fact, conditional_inference]
+  status: needs_evidence
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-03, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [sched.misc.init_fs_sharing, drivers.base.devtmpfs_setup, drivers.base.devtmpfs_node_create, fs.vfs.init_mount_path]
+  claim: kernel_init 由 kernel_thread(…, CLONE_FS) 建立，kernel_thread 只在调用方 flags 上加 CLONE_VM 与 CLONE_UNTRACED（QB-64）；copy_process 把 clone_flags 交给 copy_fs，CLONE_FS 时只把 fs->users 加一（QB-63）。kthreadd（CLONE_FS|CLONE_FILES）与 create_kthread 建的线程（CLONE_FS|CLONE_FILES|SIGCHLD）同样共用 init_task 的 init_fs。exec 对 fs 只清 in_exec（QB-57），不拆分（QB-67），所以进入用户态的 init（pid 1）继续使用这份共享结构。kdevtmpfs 的 chdir/chroot 改写它；set_init_taskfs 直接对其 root/pwd 赋值，不取新引用也不放旧引用。根切换之后 kdevtmpfs 的 cwd 也是 FAT32 根，FAT32 目录操作中没有 mknod。
+  premises: [影响一：根切换之后仍有设备注册经 devtmpfs_create_node 建节点（本批没有找到这样的调用）, 影响二：pid 1 在用户态调用 chdir（initd.c 中没有，QB-70；pid 1 以后若 exec 其他程序则未查）]
+  impact: 影响一成立时，后注册设备的节点会尝试建在 FAT32 根下，并因 vfs_mknod 找不到 ->mknod 而失败。影响二成立时，chdir 经 curr->fs->pwd = path 直接改写共享结构（QB-68），kdevtmpfs 等内核线程的当前目录随之改变，之后按相对路径建节点的起点也变了。
+  counter_evidence: [本批读到的 console、tty、mem 设备都在根切换之前登记, 用户态 fork 不带 CLONE_FS（05 已读），pid 1 之后的用户进程得到 fs 副本, initd.c 中没有 chdir/chroot 调用（QB-70）]
+  unknown: [根切换之后是否还有 device_add（本批未穷尽）, 引用计数偏差的后果（path_get/path_put 的 mntget/mntput 也被注释）, pid 1 以后 exec 的程序是否调用 chdir]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence: [AB1-02, AB1-16, AB1-21, QB-05, QB-06, QB-07, QB-48, QB-57, QB-63, QB-64, QB-67, QB-68, QB-70]
+  related: ['CORE-USER-VFS-BASELINE-05::UV-01', 'CORE-USER-VFS-BASELINE-05::DRU-06', 'CORE-USER-BOUNDARIES-07::ER-01']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: *id001
+  reopen_conditions: 发现根切换后的设备注册，或 Owner 准备处理任务 fs 共享时。
+  ai_suggestion: 可对照 Linux devtmpfsd 先 ksys_unshare(CLONE_NEWNS) 再挂载的做法；建议不等于决定。
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-04
+  id: UB-04
+  title: device_add 不会返回 0，myos_device_create 总是返回错误指针
+  kind: [source_fact]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-04, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [drivers.char.console_cdev_registration]
+  claim: device_add 的 error 初值为 -EINVAL，函数中没有把它置 0 的活动语句，唯一的 return 返回 error；myos_device_create 因而在请求建节点之后返回 ERR_PTR(-EINVAL)。
+  premises: [无额外前提：依据是所读快照中的源码文本]
+  impact: 调用者若检查返回值会把成功当失败；tty_init、chr_dev_init 目前不检查，节点照常建立。
+  counter_evidence: [节点请求发生在返回之前（device_add 第 108 行）]
+  unknown: []
+  applicable_source: time a039d9803ade（mykernel/drivers/base/core.c，只读）
+  evidence: [AB3-06, SB-10, SB-11, QB-13]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U05']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: *id001
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-05
+  id: UB-05
+  title: console 的 open 回调返回 1，chrdev_open 按错误出口返回 1 但已换好 f_op
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-05, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [drivers.char.chrdev_open_dispatch, drivers.char.console_read]
+  claim: myos_tty_open 固定返回 1；chrdev_open 先把 filp->f_op 换成 console_fops，再调 open，对非零返回值走 out_cdev_put 并返回该值。它的调用者 myos_do_dentry_open 把结果存进局部变量后没有 return，再上一层的 do_open 同样没有 return（CORE-USER-VFS-BASELINE-05::UV-04）。
+  premises: [打开 /dev/console 走到 chrdev_open]
+  impact: 打开结果在 C 语义下取决于 CORE-USER-VFS-BASELINE-05::UV-04；若将来按 Linux 约定补上 return，console 打开会以正值 1 上交，调用链需要另行判断它是成功还是失败。
+  counter_evidence: [f_op 在调用 open 之前已经换好，换表本身不受返回值影响]
+  unknown: ['编译产物中 do_open/myos_do_dentry_open 的返回值（CORE-USER-VFS-BASELINE-05::UV-04）']
+  applicable_source: time a039d9803ade（mykernel/drivers/char/，只读）
+  evidence: [AB3-13, AB3-14, SB-17]
+  related: ['CORE-USER-VFS-BASELINE-05::UV-04']
+  blocks: {static_work: false, future_runtime: 影响 NVB-1 的结果解释}
+  future_verification:
+    candidates: [NVB-1]
+    authorization_needed: [完整内核构建授权, QEMU 运行授权]
+  reopen_conditions: CORE-USER-VFS-BASELINE-05::UV-04 进入专项处理时一并重核。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-06
+  id: UB-06
+  title: 内核线程函数若返回，会被 C 与汇编各调用一次，然后原地跳转
+  kind: [source_fact, conditional_inference]
+  status: needs_evidence
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-06, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [sched.forkexec.fork_child_return]
+  claim: ret_from_fork（C）对 fn 非空的任务调用 fn(fn_arg)，返回后置 regs->ax=0 并 syscall_exit_to_user_mode，再回到 ret_from_fork_asm；后者因 rbx 非 0 跳到 1:，以 r12 为参数再 callq *%rbx，之后 jmp .。
+  premises: [某个内核线程函数会返回（kernel_init 不返回）]
+  impact: 该函数会被执行两次，第二次返回后线程停在 jmp .，不会退出。
+  counter_evidence: [kernel_init 以 kjmp_to_doexecve 跳走，不返回, create_kthread 建的线程以 kthread() 为线程函数，其结尾调用 kthread_exit(ret)（QB-62），kthread_exit 声明为 __noreturn（内部未追），所以这类线程不经 fn 返回]
+  unknown: [除 kernel_init 与 kthread() 外，直接经 kernel_thread 建立的线程函数（如 kthreadd）是否会返回（未穷尽）, 'fn 返回后 syscall_exit_to_user_mode 处理的是 copy_thread 清零的帧，经 exit_to_user_mode_loop(regs, 0) 进入信号处理（QB-65），信号处理对零帧的行为未追']
+  applicable_source: time a039d9803ade（mykernel/arch/x86_64/，只读）
+  evidence: [AB2-10, AB2-11, SB-03, SB-20, QB-62, QB-65]
+  related: ['CORE-SCHED-INTEGRATION-03::SF-C5-26']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: *id001
+  reopen_conditions: 找到会返回的内核线程函数，或 Owner 准备处理线程退出时。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-07
+  id: UB-07
+  title: console 写与 writev 直接解引用用户指针
+  kind: [source_fact]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-07, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [drivers.char.console_write, fs.vfs.write_dispatch]
+  claim: vfs_writev 直接读用户传入的 vec[i]（不经 import_iovec），把 iov_base 原样交给 ->write；myos_tty_write_color 逐字节读 buf（不经 copy_from_user）。
+  premises: [无额外前提：依据是所读快照中的源码文本]
+  impact: 用户给出的地址未经检查即在内核态读取；页不在或地址非法时的行为取决于缺页处理（未追）。
+  counter_evidence: []
+  unknown: [内核态访问用户地址出错时的处理路径]
+  applicable_source: time a039d9803ade（mykernel/，只读）
+  evidence: [AB3-20, AB3-21, AB3-23, SB-08, SB-18]
+  related: ['CORE-USER-VFS-BASELINE-05::UV-05']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: *id001
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-08
+  id: UB-08
+  title: console 读必须攒满 count 个非零键值才返回，分配与复制结果不检查
+  kind: [source_fact]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-08, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [drivers.char.console_read]
+  claim: myos_tty_read 循环调用 kbd_parse_scancode，只把非零键值计数，直到计数等于 count；中间没有按换行或无数据返回，临时缓冲 kzalloc 与 copy_to_user 的结果都不检查。
+  premises: [无额外前提：依据是所读快照中的源码文本]
+  impact: 以较大缓冲读 stdin 的程序会一直等到敲满对应数量的键；与 TTY 规范模式不同。
+  counter_evidence: []
+  unknown: ['libc 读 stdin 时请求的长度（CORE-USER-VFS-BASELINE-05::GAP-U10）']
+  applicable_source: time a039d9803ade（mykernel/drivers/char/myos_tty.c，只读）
+  evidence: [AB3-15, SB-19]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U10']
+  blocks: {static_work: false, future_runtime: 影响 NVB-1 中读行为的观察}
+  future_verification:
+    candidates: [NVB-1]
+    authorization_needed: [完整内核构建授权, QEMU 运行授权]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-09
+  id: UB-09
+  title: 系统调用分派的三个边角：表内缺项原地循环、越界号返回原值、SYSRET 判断不被使用
+  kind: [source_fact]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-09, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [entry.syscall_frame_return, user.initramfs.init_console_reopen]
+  claim: 号小于 __NR_syscalls（453）但表中没有的系统调用（例如 openat 257、dup3 292）经 x64_sys_call 的 default 落到 __x64_sys_ni_syscall，打印后 while (1)；号不小于 453 时 regs->ax 不被写，返回的是原 rax（即系统调用号）；do_syscall_64 计算的 SYSRET 适用性 bool 没有被入口汇编检查，返回一律走 sysretq。
+  premises: [无额外前提：依据是所读快照中的源码文本]
+  impact: 号小于 453 且表中没有的系统调用（例如 openat、dup3）使所在任务停在内核循环中；号不小于 453 时不进循环，用户得到原系统调用号作为返回值。SYSRET 不适用时也没有 IRET 后备路径。用户程序与 libc 是否发出这些调用取决于 CORE-USER-VFS-BASELINE-05::GAP-U10。
+  counter_evidence: []
+  unknown: [SYSRET 不适用条件成立时的硬件行为（外部语义）]
+  applicable_source: time a039d9803ade（mykernel/arch/x86_64/，只读）
+  evidence: [AB2-14, AB3-24, QB-27, QB-28, QB-29, SB-01, SB-16]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U10']
+  blocks: {static_work: false, future_runtime: 影响 NVB-1 的结果解释}
+  future_verification:
+    candidates: [NVB-2, NVB-4]
+    authorization_needed: [读取仓库外目录的许可, 外部资料研究授权]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-10
+  id: UB-10
+  title: dup 与 dup2 是没有返回语句的空实现
+  kind: [source_fact]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-10, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [user.initramfs.init_console_reopen]
+  claim: sys_dup 与 sys_dup2 只有 ALERT_DUMMY_SYSCALL（提示开关为 0），其余正文被注释，函数体内没有活动 return。
+  premises: [无额外前提：依据是所读快照中的源码文本]
+  impact: 不复制文件描述符，返回值在 C 语义下未定义；若 libc 的 freopen 依赖 dup2/dup3 把新描述符放到 0/1/2，内核侧不会完成这一步。
+  counter_evidence: []
+  unknown: ['libc 是否使用 dup2（CORE-USER-VFS-BASELINE-05::GAP-U10）']
+  applicable_source: time a039d9803ade（mykernel/fs/syscall.c，只读）
+  evidence: [QB-40, SB-05, SB-06]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U10']
+  blocks: {static_work: false, future_runtime: 影响 NVB-1 的结果解释}
+  future_verification:
+    candidates: [NVB-2]
+    authorization_needed: [读取仓库外目录的许可]
+  reopen_conditions: CORE-USER-VFS-BASELINE-05::GAP-U10 得到 libc 证据后重核。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-11
+  id: UB-11
+  title: __d_lookup 只比较查询名长度的前缀
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-11, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [fs.vfs.init_mount_path]
+  claim: __d_lookup 以 strncmp(name->name, dir_p->d_name.name, name->len) 匹配子项，不比较缓存名是否同样长；查询名是某个已缓存兄弟名的前缀时会返回那个兄弟。
+  premises: [同一目录先缓存了更长的同前缀名字]
+  impact: 例如先缓存 console 再查 con 会得到 console；/dev 下本批读到的节点名（null、zero、full、tty、console）之间没有这种前缀关系。
+  counter_evidence: [对本批涉及的 dev、console 解析，现有名字不触发]
+  unknown: [镜像中其他目录的命名情况]
+  applicable_source: time a039d9803ade（mykernel/fs/vfs/dcache.c，只读）
+  evidence: [QB-41]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U05']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: *id001
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-12
+  id: UB-12
+  title: GPT 表项的复制长度与遍历上界都不受表项数和读缓冲约束
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-12, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [fs.vfs.init_root_assign]
+  claim: myos_switch_to_root_disk 按盘上 GPT 头的 NumberOfPartitionEntries 分配 gpt_pes（AB1-03），再从 5 页读缓冲偏移 2 个扇区处复制“表项数 × 表项大小”字节（AB1-29），复制长度不与缓冲剩余大小比较；遍历只在遇到类型 GUID 首字为 0 的表项时结束（QB-04），不以表项数为上界。
+  premises: [盘上表项数 × 表项大小超过 5 页减 2 个扇区，或复制到的表项类型全部非 0]
+  impact: 前一种情况下 memcpy 越过读缓冲末尾读取；后一种情况下遍历越过 gpt_pes 数组末尾读取。gpt_pes 按表项数分配，复制本身不会写出界。两者都只在盘上 GPT 头或表项异常时出现。
+  counter_evidence: [常见 GPT 布局会有类型为 0 的空表项结束遍历]
+  unknown: ['实际镜像的 GPT 头字段（CORE-USER-VFS-BASELINE-05::GAP-U02）']
+  applicable_source: time a039d9803ade（mykernel/fs/vfs/myos_vfs.c，只读）
+  evidence: [AB1-03, AB1-29, QB-04]
+  related: ['CORE-USER-VFS-BASELINE-05::UV-01', 'CORE-USER-VFS-BASELINE-05::GAP-U02']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: [完整内核构建授权, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-13
+  id: UB-13
+  title: mem 设备把循环内局部副本的 cdev 地址登记进 cdev_map
+  kind: [source_fact, conditional_inference]
+  status: needs_evidence
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-13, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [drivers.char.console_cdev_registration]
+  claim: chr_dev_init 每轮把 devlist[minor] 复制到局部变量 memdev（QB-42），再对 &memdev.cdev 调 cdev_init/cdev_add；kobj_map 原样保存调用方给的 data 指针（QB-60），所以 cdev_map 中保存的是这块栈上存储的地址。console 与 tty 用的是静态 cdev，不受影响。
+  premises: [之后有人打开 /dev/null、/dev/zero 或 /dev/full，chrdev_open 经 kobj_lookup 取回该地址]
+  impact: kobj_lookup 取回的 cdev 位于已经结束的栈帧上。首次打开时 chrdev_open 还会把它存进 inode->i_cdev，并对其 list 做链表插入（QB-61），即向该栈地址写入；随后从中读取 ops 换表，读到的内容不确定。
+  counter_evidence: [本批读到的 init 只打开 /dev/console]
+  unknown: [用户程序是否打开 mem 设备, 该栈地址届时被什么数据覆盖（未追）]
+  applicable_source: time a039d9803ade（mykernel/drivers/char/mem.c，只读）
+  evidence: [AB3-25, QB-42, QB-60, QB-61]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U05']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 本批四个 NOT_RUN 候选都不覆盖本条；以后验证需另行立项
+    authorization_needed: *id001
+  reopen_conditions: 读到 kobj_map 内部或出现打开 mem 设备的用户程序时。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-BOUNDARIES-07::UB-14
+  id: UB-14
+  title: open 的 O_CREAT 判断检查的是查找标志，打开不存在的文件不会创建
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml, entry_id: UB-14, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [user.initramfs.init_console_reopen]
+  claim: do_filp_open 把 op->lookup_flags 原样交给 path_openat（QB-52），后者再交给 open_last_lookups，那里用 open_flag & O_CREAT 选择分支（QB-32）。O_CREAT 与 LOOKUP_RCU 同为 64（VT-FLAGS），build_open_flags 设置的查找标志里没有 LOOKUP_RCU（QB-51），所以总走只查找分支；创建分支（lookup_open）整段被注释。不存在的最后一段由 __lookup_slow 返回 ERR_PTR(-ENOENT)，经 link_path_walk 开头的 IS_ERR 检查（AB1-23）成为 path_openat 的错误返回。若将来该位能为 1，由于创建分支被注释，dentry 未赋值就进入 step_into。
+  premises: [用户以含 O_CREAT 的标志打开尚不存在的文件（例如 fopen 的 "w" 模式通常带 O_CREAT）]
+  impact: open/fopen 无法新建文件，返回 -ENOENT。已存在的文件（包括 /dev/console）不受影响：init 以 "w" 模式 freopen /dev/console 时，只查找分支照样能找到节点。新建文件只能经 creat(2) 的 do_creatat。
+  counter_evidence: [creat(2) 有独立入口 do_creatat，经父目录 ->create 建文件（QB-69；->create 的实现未追）]
+  unknown: ['libc 打开文件时实际传的标志（CORE-USER-VFS-BASELINE-05::GAP-U10）', build_open_flags 之外是否还有路径给 op->lookup_flags 加上 LOOKUP_RCU（QB-51 只覆盖 open.c 中 lookup_flags |= 的写法）]
+  applicable_source: time a039d9803ade（mykernel/fs/vfs/，只读）
+  evidence: [QB-32, QB-51, QB-52, QB-69, AB1-23, VT-FLAGS]
+  related: ['CORE-USER-VFS-BASELINE-05::fs.vfs.path_open', 'CORE-USER-VFS-BASELINE-05::GAP-U06']
+  blocks: {static_work: false, future_runtime: 影响 NVB-1 中对不存在文件 open(O_CREAT) 的观察}
+  future_verification:
+    candidates: [NVB-1]
+    authorization_needed: [完整内核构建授权, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 namei.c 与 open.c。
+  ai_suggestion: 可对照 Linux 中 open_last_lookups 取 op->open_flag 而不是查找标志的写法；建议不等于决定。
+evidence_appends:
+- target: CORE-USER-VFS-BASELINE-05::UV-01
+  status_change: none
+  note: 只追加证据，原条目与状态不改。CORE-USER-VFS-BASELINE-05::UV-01 的两项 unknown 分别对应 CORE-USER-VFS-BASELINE-05::GAP-U03 与 CORE-USER-VFS-BASELINE-05::GAP-U04：前者的静态部分本批补齐（closed_static），后者只收窄（narrowed），生成偏移数值与硬件语义仍未核。
+  added_facts: [找不到根分区时 myos_root_sb 保持 NULL（mount_fs 找不到类型时也返回 0），set_init_mount 不加判断地读取其 s_root；读超级块时若 alloc_super 失败，得到的是 ERR_PTR(-ENOMEM)，同样被当作指针读取（读超级块中的其他分配与 BPB 字段校验未核）。静态推导到此停止。, exec 失败而跳到 syscall_return_via_sysret 时，所用帧是 copy_thread 在创建 kernel_init 时清零的 pt_regs：只要 exec 没有走到 START_THREAD，ip、sp、flags 都是 0。]
+  evidence: [AB1-01, AB1-04, AB1-06, AB1-07, SB-13, AB2-01, AB2-05, AB2-15, QB-36, QB-37]
+- target: CORE-USER-VFS-BASELINE-05::UV-04
+  status_change: none
+  note: 只追加证据，原条目与状态不改。
+  added_facts: [打开 /dev/console 时 myos_do_dentry_open 调到的是 chrdev_open，它从 console 的 open 得到 1 并原样返回；这个值随后落进没有 return 的 myos_do_dentry_open，再到同样没有 return 的 do_open（见 UB-05）。]
+  evidence: [AB3-13, AB3-14, SB-17]
+errata:
+- qualified_id: CORE-USER-BOUNDARIES-07::ER-01
+  id: ER-01
+  title: CORE-USER-VFS-BASELINE-05::DRU-06 中“共享 fs 不会经用户态出现”不成立：pid 1 带着与内核线程共享的 init_fs 进入用户态
+  kind: [documentation_erratum]
+  status: superseded_interpretation
+  owner_action_now: none
+  target: CORE-USER-VFS-BASELINE-05::DRU-06
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    results_commit: b12572f14eae（05 原件，未改）
+    paths: [agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml, agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md]
+    entry_id: DRU-06
+  original_locations:
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml, locator: dependency_risks 中 id 为 DRU-06 的 what, text: 用户态没有 clone 入口（Q04），共享文件表与 fs 不会经用户态出现。}
+  - {path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md, locator: C2 的覆盖限制一句, text: 用户态没有 clone 入口，共享文件表与 fs 不会经用户态出现（DRU-06）}
+  correction: 共享 fs 会经用户态出现：kernel_init 以 CLONE_FS 建立（QB-05、QB-64），与 init_task、kthreadd、kdevtmpfs 等共用 init_fs（QB-63）；exec 只清 fs->in_exec、不拆分 fs（QB-57、QB-67），所以 init（pid 1）在用户态仍使用这份共享结构，其 chdir 会直接改写它（QB-68）。
+  unchanged_parts: [“用户态没有 clone 入口（Q04）”不变, 共享文件表一半不变：kernel_init 建立时不带 CLONE_FILES，pid 1 的文件表是副本, 用户态 fork 不带 CLONE_FS，到不了 copy_fs 的共享分支；05 facts 中 sched.forkexec.copy_process_resources 的 concurrency_evidence 说的就是这一点，仍成立, 'CORE-USER-VFS-BASELINE-05::DRU-06 的其余内容（alloc_fd/fd_install、formats 链表、IDE 请求链表）不受影响']
+  claim: 05 把“用户态没有 clone 入口”推到“共享 fs 不会经用户态出现”，漏了 pid 1 从内核侧建立时就带着的共享 fs。
+  premises: [无额外前提：依据是所读快照中的源码文本与 05 原文]
+  impact: 消费 05 时，CORE-USER-VFS-BASELINE-05::DRU-06 中 fs 的一半以本条为准：pid 1 与内核线程共用 cwd/root，kdevtmpfs 的 chdir/chroot、set_init_taskfs 的赋值与 pid 1 的 chdir 改写的是同一份结构，彼此可见。并发前提是否成立仍按 CORE-USER-VFS-BASELINE-05::DRU-06 未定。
+  counter_evidence: [pid 1 之后的用户进程（经用户态 fork）得到 fs 副本，不共享]
+  unknown: ['内核线程与 pid 1 对共享 fs 的实际并发访问（并发前提本身仍按 CORE-USER-VFS-BASELINE-05::DRU-06 未定）']
+  applicable_source: time a039d9803ade（mykernel/，只读）；05 原件 b12572f14eae
+  evidence: [QB-05, QB-57, QB-63, QB-64, QB-67, QB-68, AB1-21]
+  related: ['CORE-USER-BOUNDARIES-07::UB-03', 'CORE-USER-VFS-BASELINE-05::C2']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: []
+    note: 勘误不需要运行验证；以后重核 time 源码即可
+    authorization_needed: []
+  reopen_conditions: time 中 kernel_init 的建立 flags、exec 对 fs 的处理或 copy_fs 改变时重核。
+  ai_suggestion: 无
+  note: 05 原文件不改；本条只在本批写区追加。

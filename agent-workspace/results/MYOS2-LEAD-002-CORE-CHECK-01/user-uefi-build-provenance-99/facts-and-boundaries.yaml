@@ -1,0 +1,2579 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99",
+  "record_type": "declarative_module_external_dependency_install_provenance_static_matrices",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "produced_by": "GPT-6（visible family; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-18",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "lead_fixed_short12": "896f19a08088",
+  "execution_parent_short12": "39b28e36e8f6",
+  "source_pin_short12": "a039d9803ade",
+  "master_direct_short12": "e8e60cd19540",
+  "D00": "NOT_REQUIRED",
+  "batch96": "PASS_PENDING_LOCAL_DOCUMENTARY_CLOSED",
+  "batch97": "PASS_PENDING_LOCAL_R97_S01_S02_S03",
+  "batch98": "PASS_PENDING_LOCAL_R98_S01_S02_S03",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "G00": {
+    "status": "PASS_READ_ONLY",
+    "refs": {
+      "lead": "896f19a08088",
+      "exec": "39b28e36e8f6",
+      "master": "e8e60cd19540",
+      "time": "a039d9803ade"
+    },
+    "PR16": "OPEN_UNMERGED",
+    "PR17": "OPEN_DRAFT_UNMERGED",
+    "new99_dir": "ABSENT",
+    "formal99_markers": 0,
+    "time_master_canaries": "MATCH_DISTINCT",
+    "write_before_G00": 0
+  },
+  "source_quote_index": [
+    {
+      "id": "UB99-E001",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Defines].MODULE_TYPE",
+      "language": "ini",
+      "claim_class": "INF_FIELD",
+      "topic": "A",
+      "line_start": 5,
+      "line_end": 5
+    },
+    {
+      "id": "UB99-E002",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Defines].ENTRY_POINT",
+      "language": "ini",
+      "claim_class": "INF_FIELD",
+      "topic": "A",
+      "line_start": 7,
+      "line_end": 7
+    },
+    {
+      "id": "UB99-E003",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Defines].BASE_NAME",
+      "language": "ini",
+      "claim_class": "INF_FIELD",
+      "topic": "A",
+      "line_start": 3,
+      "line_end": 3
+    },
+    {
+      "id": "UB99-E004",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Defines].FILE_GUID",
+      "language": "ini",
+      "claim_class": "INF_FIELD",
+      "topic": "A",
+      "line_start": 4,
+      "line_end": 4
+    },
+    {
+      "id": "UB99-E005",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Sources]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 10,
+      "line_end": 14
+    },
+    {
+      "id": "UB99-E006",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Sources]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 15,
+      "line_end": 19
+    },
+    {
+      "id": "UB99-E007",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Sources]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 20,
+      "line_end": 24
+    },
+    {
+      "id": "UB99-E008",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Packages]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 27,
+      "line_end": 30
+    },
+    {
+      "id": "UB99-E009",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[LibraryClasses]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 33,
+      "line_end": 37
+    },
+    {
+      "id": "UB99-E010",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[LibraryClasses]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 38,
+      "line_end": 42
+    },
+    {
+      "id": "UB99-E011",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Protocols]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 45,
+      "line_end": 49
+    },
+    {
+      "id": "UB99-E012",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Ppis]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 51,
+      "line_end": 52
+    },
+    {
+      "id": "UB99-E013",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Pcd]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 54,
+      "line_end": 56
+    },
+    {
+      "id": "UB99-E014",
+      "source_path": "myloader/uefi/bootloader.inf",
+      "definition": "[Guids]",
+      "language": "ini",
+      "claim_class": "INF_SECTION",
+      "topic": "A",
+      "line_start": 58,
+      "line_end": 60
+    },
+    {
+      "id": "UB99-E015",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 27,
+      "line_end": 29
+    },
+    {
+      "id": "UB99-E016",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 34,
+      "line_end": 34
+    },
+    {
+      "id": "UB99-E017",
+      "source_path": "myloader/CMakeLists.txt",
+      "definition": "project(MyOS2_BootLoader)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "A",
+      "line_start": 3,
+      "line_end": 3
+    },
+    {
+      "id": "UB99-E018",
+      "source_path": "myloader/CMakeLists.txt",
+      "definition": "install(PROGRAMS BOOTX64.EFI)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "A",
+      "line_start": 5,
+      "line_end": 5
+    },
+    {
+      "id": "UB99-E019",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "include(Uefi.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 4,
+      "line_end": 4
+    },
+    {
+      "id": "UB99-E020",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "include(UefiBootServicesTableLib.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 6,
+      "line_end": 6
+    },
+    {
+      "id": "UB99-E021",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "include(BaseMemoryLib.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 8,
+      "line_end": 8
+    },
+    {
+      "id": "UB99-E022",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "include(SimpleFileSystem.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 9,
+      "line_end": 9
+    },
+    {
+      "id": "UB99-E023",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "include(LoadedImage.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 10,
+      "line_end": 10
+    },
+    {
+      "id": "UB99-E024",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "include(ElfLib.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 12,
+      "line_end": 12
+    },
+    {
+      "id": "UB99-E025",
+      "source_path": "myloader/uefi/bootloader.h",
+      "definition": "include(PiDxeCis.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 11,
+      "line_end": 11
+    },
+    {
+      "id": "UB99-E026",
+      "source_path": "myloader/uefi/bootloader.h",
+      "definition": "include(MpService.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 12,
+      "line_end": 12
+    },
+    {
+      "id": "UB99-E027",
+      "source_path": "myloader/uefi/bootloader.h",
+      "definition": "include(multiboot2.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 15,
+      "line_end": 15
+    },
+    {
+      "id": "UB99-E028",
+      "source_path": "myloader/uefi/ElfLib.h",
+      "definition": "include(PiPei.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 12,
+      "line_end": 12
+    },
+    {
+      "id": "UB99-E029",
+      "source_path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+      "definition": "include(BaseLib.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 12,
+      "line_end": 12
+    },
+    {
+      "id": "UB99-E030",
+      "source_path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+      "definition": "include(DebugLib.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 13,
+      "line_end": 13
+    },
+    {
+      "id": "UB99-E031",
+      "source_path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+      "definition": "include(BaseMemoryLib.h)",
+      "language": "c",
+      "claim_class": "HEADER_INCLUDE_DIRECTIVE",
+      "topic": "B",
+      "line_start": 14,
+      "line_end": 14
+    },
+    {
+      "id": "UB99-E032",
+      "source_path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+      "definition": "ELF_NEXT_ENTRY",
+      "language": "c",
+      "claim_class": "MACRO_SINGLE",
+      "topic": "B",
+      "line_start": 20,
+      "line_end": 21
+    },
+    {
+      "id": "UB99-E033",
+      "source_path": "myloader/uefi/ElfLib.h",
+      "definition": "ELF_IMAGE_CONTEXT",
+      "language": "c",
+      "claim_class": "ANONYMOUS_TYPEDEF_STRUCT",
+      "topic": "B",
+      "line_start": 19,
+      "line_end": 23
+    },
+    {
+      "id": "UB99-E034",
+      "source_path": "myloader/uefi/ElfLib.h",
+      "definition": "ELF_IMAGE_CONTEXT",
+      "language": "c",
+      "claim_class": "ANONYMOUS_TYPEDEF_STRUCT",
+      "topic": "B",
+      "line_start": 24,
+      "line_end": 28
+    },
+    {
+      "id": "UB99-E035",
+      "source_path": "myloader/uefi/ElfLib.h",
+      "definition": "ELF_IMAGE_CONTEXT",
+      "language": "c",
+      "claim_class": "ANONYMOUS_TYPEDEF_STRUCT",
+      "topic": "B",
+      "line_start": 29,
+      "line_end": 33
+    },
+    {
+      "id": "UB99-E036",
+      "source_path": "myloader/uefi/ElfLib/Elf64.h",
+      "definition": "Elf64_Half",
+      "language": "c",
+      "claim_class": "TYPEDEF",
+      "topic": "B",
+      "line_start": 44,
+      "line_end": 44
+    },
+    {
+      "id": "UB99-E037",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_uint32_t",
+      "language": "c",
+      "claim_class": "TYPEDEF_IN_UEFI_CONDITIONAL",
+      "topic": "B",
+      "line_start": 99,
+      "line_end": 99
+    },
+    {
+      "id": "UB99-E038",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_uint32_t",
+      "language": "c",
+      "claim_class": "TYPEDEF_IN_NON_UEFI_CONDITIONAL",
+      "topic": "B",
+      "line_start": 104,
+      "line_end": 104
+    },
+    {
+      "id": "UB99-E039",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "PAGE_SHIFT",
+      "language": "c",
+      "claim_class": "MACRO_SINGLE",
+      "topic": "B",
+      "line_start": 14,
+      "line_end": 14
+    },
+    {
+      "id": "UB99-E040",
+      "source_path": "myloader/uefi/utils.h",
+      "definition": "PAGE_SIZE",
+      "language": "c",
+      "claim_class": "MACRO_SINGLE",
+      "topic": "B",
+      "line_start": 15,
+      "line_end": 15
+    },
+    {
+      "id": "UB99-E041",
+      "source_path": "myloader/uefi/bootloader.h",
+      "definition": "load_elf_kernel",
+      "language": "c",
+      "claim_class": "FUNCTION_DECLARATION",
+      "topic": "B",
+      "line_start": 73,
+      "line_end": 74
+    },
+    {
+      "id": "UB99-E042",
+      "source_path": "myloader/uefi/utils.c",
+      "definition": "LoadFile",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 24,
+      "line_end": 27
+    },
+    {
+      "id": "UB99-E043",
+      "source_path": "myloader/uefi/ElfLib/ElfLib.c",
+      "definition": "ParseElfImage",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 297,
+      "line_end": 301
+    },
+    {
+      "id": "UB99-E044",
+      "source_path": "myloader/uefi/ElfLib/ElfLib.c",
+      "definition": "ParseElfImage",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 302,
+      "line_end": 302
+    },
+    {
+      "id": "UB99-E045",
+      "source_path": "myloader/uefi/ElfLib/ElfLib.c",
+      "definition": "ParseElfImage",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 315,
+      "line_end": 316
+    },
+    {
+      "id": "UB99-E046",
+      "source_path": "myloader/uefi/ElfLib/ElfLib.c",
+      "definition": "ParseElfImage",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 319,
+      "line_end": 320
+    },
+    {
+      "id": "UB99-E047",
+      "source_path": "mykernel/scripts/options_flags.cmake",
+      "definition": "set(CMAKE_C_FLAGS)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND_BLOCK",
+      "topic": "B",
+      "line_start": 39,
+      "line_end": 41
+    },
+    {
+      "id": "UB99-E048",
+      "source_path": "mykernel/scripts/options_flags.cmake",
+      "definition": "set(CMAKE_C_FLAGS)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND_BLOCK",
+      "topic": "B",
+      "line_start": 48,
+      "line_end": 50
+    },
+    {
+      "id": "UB99-E049",
+      "source_path": "make_install.sh",
+      "definition": "PROJ_ROOT",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_ASSIGNMENT",
+      "topic": "C",
+      "line_start": 3,
+      "line_end": 3
+    },
+    {
+      "id": "UB99-E050",
+      "source_path": "make_install.sh",
+      "definition": "DEBUG_FLAG",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_ASSIGNMENT",
+      "topic": "C",
+      "line_start": 4,
+      "line_end": 4
+    },
+    {
+      "id": "UB99-E051",
+      "source_path": "make_install.sh",
+      "definition": "TARGET_ARCH",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_ASSIGNMENT",
+      "topic": "C",
+      "line_start": 5,
+      "line_end": 5
+    },
+    {
+      "id": "UB99-E052",
+      "source_path": "make_install.sh",
+      "definition": "LINK_TYPE",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_ASSIGNMENT",
+      "topic": "C",
+      "line_start": 6,
+      "line_end": 6
+    },
+    {
+      "id": "UB99-E053",
+      "source_path": "make_install.sh",
+      "definition": "source(make_install_kernel.sh)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 11,
+      "line_end": 11
+    },
+    {
+      "id": "UB99-E054",
+      "source_path": "make_install.sh",
+      "definition": "source(make_install_initranfs.sh)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 12,
+      "line_end": 12
+    },
+    {
+      "id": "UB99-E055",
+      "source_path": "make_install.sh",
+      "definition": "source(make_install_bootloader.sh)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 13,
+      "line_end": 13
+    },
+    {
+      "id": "UB99-E056",
+      "source_path": "make_install.sh",
+      "definition": "source(phys_nvme_install.sh)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 14,
+      "line_end": 14
+    },
+    {
+      "id": "UB99-E057",
+      "source_path": "make_install.sh",
+      "definition": "rm(build_star)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 19,
+      "line_end": 19
+    },
+    {
+      "id": "UB99-E058",
+      "source_path": "make_install.sh",
+      "definition": "make_install_kernel",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 24,
+      "line_end": 24
+    },
+    {
+      "id": "UB99-E059",
+      "source_path": "make_install.sh",
+      "definition": "make_install_initranfs",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 25,
+      "line_end": 25
+    },
+    {
+      "id": "UB99-E060",
+      "source_path": "make_install.sh",
+      "definition": "make_install_bootloader",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 26,
+      "line_end": 26
+    },
+    {
+      "id": "UB99-E061",
+      "source_path": "scripts/make_install_bootloader.sh",
+      "definition": "make_install_bootloader",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 3,
+      "line_end": 5
+    },
+    {
+      "id": "UB99-E062",
+      "source_path": "scripts/make_install_bootloader.sh",
+      "definition": "make_install_bootloader",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 6,
+      "line_end": 8
+    },
+    {
+      "id": "UB99-E063",
+      "source_path": "scripts/make_install_bootloader.sh",
+      "definition": "make_install_bootloader",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 10,
+      "line_end": 11
+    },
+    {
+      "id": "UB99-E064",
+      "source_path": "scripts/make_install_bootloader.sh",
+      "definition": "make_install_bootloader",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 12,
+      "line_end": 14
+    },
+    {
+      "id": "UB99-E065",
+      "source_path": "scripts/make_install_kernel.sh",
+      "definition": "make_install_kernel",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 3,
+      "line_end": 5
+    },
+    {
+      "id": "UB99-E066",
+      "source_path": "scripts/make_install_kernel.sh",
+      "definition": "make_install_kernel",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 6,
+      "line_end": 8
+    },
+    {
+      "id": "UB99-E067",
+      "source_path": "scripts/make_install_kernel.sh",
+      "definition": "make_install_kernel",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 10,
+      "line_end": 12
+    },
+    {
+      "id": "UB99-E068",
+      "source_path": "scripts/make_install_kernel.sh",
+      "definition": "make_install_kernel",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 13,
+      "line_end": 14
+    },
+    {
+      "id": "UB99-E069",
+      "source_path": "scripts/make_install_kernel.sh",
+      "definition": "make_install_kernel",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 16,
+      "line_end": 18
+    },
+    {
+      "id": "UB99-E070",
+      "source_path": "scripts/make_install_initranfs.sh",
+      "definition": "make_install_initranfs",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 18,
+      "line_end": 21
+    },
+    {
+      "id": "UB99-E071",
+      "source_path": "scripts/make_install_initranfs.sh",
+      "definition": "make_install_initranfs",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 23,
+      "line_end": 25
+    },
+    {
+      "id": "UB99-E072",
+      "source_path": "scripts/make_install_initranfs.sh",
+      "definition": "make_install_initranfs",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 27,
+      "line_end": 29
+    },
+    {
+      "id": "UB99-E073",
+      "source_path": "scripts/make_install_initranfs.sh",
+      "definition": "make_install_initranfs",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 37,
+      "line_end": 41
+    },
+    {
+      "id": "UB99-E074",
+      "source_path": "myloader/uefi/install_loader.sh",
+      "definition": "mount(/dev/dm-0)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 3,
+      "line_end": 3
+    },
+    {
+      "id": "UB99-E075",
+      "source_path": "myloader/uefi/install_loader.sh",
+      "definition": "cp(Build-to-BOOTX64.EFI)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 4,
+      "line_end": 4
+    },
+    {
+      "id": "UB99-E076",
+      "source_path": "myloader/uefi/install_loader.sh",
+      "definition": "cp(Build-to-elfbinary_loader.efi)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 5,
+      "line_end": 5
+    },
+    {
+      "id": "UB99-E077",
+      "source_path": "myloader/uefi/install_loader.sh",
+      "definition": "sync",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 6,
+      "line_end": 6
+    },
+    {
+      "id": "UB99-E078",
+      "source_path": "myloader/uefi/install_loader.sh",
+      "definition": "umount(/mnt)",
+      "language": "bash",
+      "claim_class": "SHELL_TOP_LEVEL_CALL",
+      "topic": "C",
+      "line_start": 7,
+      "line_end": 7
+    },
+    {
+      "id": "UB99-E079",
+      "source_path": "myloader/CMakeLists.txt",
+      "definition": "cmake_minimum_required",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "C",
+      "line_start": 1,
+      "line_end": 1
+    },
+    {
+      "id": "UB99-E080",
+      "source_path": "mykernel/scripts/target_kernel.cmake",
+      "definition": "install(TARGETS kernel)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "C",
+      "line_start": 32,
+      "line_end": 32
+    },
+    {
+      "id": "UB99-E081",
+      "source_path": "mykernel/CMakeLists.txt",
+      "definition": "add_executable(kernel)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "C",
+      "line_start": 13,
+      "line_end": 13
+    },
+    {
+      "id": "UB99-E082",
+      "source_path": "mykernel/CMakeLists.txt",
+      "definition": "include(target_kernel.cmake)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "C",
+      "line_start": 35,
+      "line_end": 35
+    },
+    {
+      "id": "UB99-E083",
+      "source_path": "scripts/phys_nvme_install.sh",
+      "definition": "install_to_physdisk",
+      "language": "bash",
+      "claim_class": "SHELL_FUNCTION",
+      "topic": "C",
+      "line_start": 4,
+      "line_end": 6
+    },
+    {
+      "id": "UB99-E084",
+      "source_path": "myloader/uefi/utils.c",
+      "definition": "LoadFile",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 29,
+      "line_end": 31
+    },
+    {
+      "id": "UB99-E085",
+      "source_path": "myloader/uefi/utils.c",
+      "definition": "LoadFile",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 37,
+      "line_end": 40
+    },
+    {
+      "id": "UB99-E086",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 38,
+      "line_end": 39
+    },
+    {
+      "id": "UB99-E087",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "load_elf_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "C",
+      "line_start": 335,
+      "line_end": 339
+    }
+  ],
+  "source_quote_recheck": {
+    "literal_scope": "FIXED_TIME_SINGLE_DEFINITION_OR_DECLARATIVE_NAMED_SECTION",
+    "first_extract": 87,
+    "independent_recheck": "PENDING_FINAL_BEFORE_REF",
+    "all_quotes_one_to_five_physical_lines": true,
+    "source_identifier_category_tracked": true,
+    "full_local_P9": "NOT_RUN",
+    "independent_fixed_source_literal_1_to_5_lines": "PASS_87_OF_87_A18_B30_C39; per_source_reopened_fixed_time",
+    "raw_verified_prefixes_all_six_expected_at_build_stage": 87,
+    "source_quote_index_id_lookup_all_matched": true,
+    "p2_lexical_boundary_check": "all single C definition/macro/typedef or one INF named section/field, unique CMake command, shell function/top-level call; actual tools not run"
+  },
+  "source_paths_with_new_quotes": [
+    "myloader/uefi/bootloader.inf",
+    "myloader/uefi/bootloader.c",
+    "myloader/CMakeLists.txt",
+    "myloader/uefi/utils.h",
+    "myloader/uefi/bootloader.h",
+    "myloader/uefi/ElfLib.h",
+    "myloader/uefi/ElfLib/ElfLibInternal.h",
+    "myloader/uefi/ElfLib/Elf64.h",
+    "myloader/uefi/multiboot2.h",
+    "myloader/uefi/utils.c",
+    "myloader/uefi/ElfLib/ElfLib.c",
+    "mykernel/scripts/options_flags.cmake",
+    "make_install.sh",
+    "scripts/make_install_bootloader.sh",
+    "scripts/make_install_kernel.sh",
+    "scripts/make_install_initranfs.sh",
+    "myloader/uefi/install_loader.sh",
+    "mykernel/scripts/target_kernel.cmake",
+    "mykernel/CMakeLists.txt",
+    "scripts/phys_nvme_install.sh"
+  ],
+  "source_paths_count": 20,
+  "source_directory_metadata": {
+    "snapshot": "time@a039d9803ade",
+    "myloader_bootx64efi": {
+      "path": "myloader/BOOTX64.EFI",
+      "kind": "GitHub contents file metadata, not source anchor",
+      "size_bytes": 19200,
+      "git_blob_short12": "6596c0462579",
+      "binary_bytes_read": false,
+      "disassembly_run": false
+    },
+    "myloader_uefi": {
+      "file_names": [
+        "ElfLib.h",
+        "bootloader.c",
+        "bootloader.h",
+        "bootloader.inf",
+        "install_loader.sh",
+        "multiboot2.h",
+        "multiboot2_utils.c",
+        "utils.c",
+        "utils.h"
+      ],
+      "ElfLib_subdirectory": true
+    },
+    "ElfLib_file_names": [
+      "Elf32.h",
+      "Elf32Lib.c",
+      "Elf64.h",
+      "Elf64Lib.c",
+      "ElfCommon.h",
+      "ElfLib.c",
+      "ElfLibInternal.h"
+    ]
+  },
+  "INF_summary": {
+    "module_type": "UEFI_APPLICATION",
+    "base_name": "bootloader",
+    "entry_point": "UefiMain",
+    "sources_rows": 15,
+    "distinct_source_paths": 14,
+    "duplicate_path": "ElfLib/ElfLibInternal.h",
+    "package_rows": 4,
+    "library_class_rows": 10,
+    "protocol_rows": 5,
+    "ppi_rows": 1,
+    "pcd_rows": 2,
+    "guid_rows": 2,
+    "all_source_file_paths_checked_locally_by_directory_metadata": true,
+    "external_pkg_implementation_not_read": true,
+    "ds_platform_mapping": "NOT_READ",
+    "compiler_process": "NOT_RUN"
+  },
+  "external_reference_docs": [
+    {
+      "label": "CMake v3.16.9 install official",
+      "url": "https://cmake.org/cmake/help/v3.16/command/install.html",
+      "verified_subsection": "Installing Files and Common DESTINATION; relative input in current source directory, relative output under CMAKE_INSTALL_PREFIX",
+      "applicability": "conditional external semantics; actual host version unverified"
+    },
+    {
+      "label": "GNU Bash manual",
+      "url": "https://www.gnu.org/software/bash/manual/bash.html",
+      "verified_subsection": "Lists of Commands: AND list runs command2 only if command1 succeeds; source/function/cd used as conditional shell premise",
+      "applicability": "bash shebang text, real shell environment not run"
+    }
+  ],
+  "fact_to_evidence_id_index": {
+    "module_source_and_entry_matrix": [
+      "UB99-E001",
+      "UB99-E002",
+      "UB99-E003",
+      "UB99-E004",
+      "UB99-E005",
+      "UB99-E006",
+      "UB99-E007",
+      "UB99-E008",
+      "UB99-E009",
+      "UB99-E010",
+      "UB99-E011",
+      "UB99-E012",
+      "UB99-E013",
+      "UB99-E014",
+      "UB99-E015",
+      "UB99-E016",
+      "UB99-E017",
+      "UB99-E018"
+    ],
+    "recipe_to_artifact_matrix": [
+      "UB99-E005",
+      "UB99-E006",
+      "UB99-E007",
+      "UB99-E008",
+      "UB99-E009",
+      "UB99-E010",
+      "UB99-E017",
+      "UB99-E018",
+      "UB99-E075",
+      "UB99-E076",
+      "UB99-E063",
+      "UB99-E080",
+      "UB99-E081",
+      "UB99-E082",
+      "UB99-E003"
+    ],
+    "type_macro_and_library_provenance_matrix": [
+      "UB99-E019",
+      "UB99-E024",
+      "UB99-E028",
+      "UB99-E033",
+      "UB99-E034",
+      "UB99-E035",
+      "UB99-E036",
+      "UB99-E043",
+      "UB99-E044",
+      "UB99-E037",
+      "UB99-E038",
+      "UB99-E027",
+      "UB99-E039",
+      "UB99-E040",
+      "UB99-E045",
+      "UB99-E046",
+      "UB99-E030",
+      "UB99-E002",
+      "UB99-E009",
+      "UB99-E015",
+      "UB99-E010",
+      "UB99-E021",
+      "UB99-E031",
+      "UB99-E020",
+      "UB99-E022",
+      "UB99-E023",
+      "UB99-E025",
+      "UB99-E026",
+      "UB99-E041",
+      "UB99-E042",
+      "UB99-E029",
+      "UB99-E032",
+      "UB99-E008",
+      "UB99-E011"
+    ],
+    "configuration_and_abi_separation_matrix": [
+      "UB99-E047",
+      "UB99-E048",
+      "UB99-E001",
+      "UB99-E017",
+      "UB99-E075",
+      "UB99-E043",
+      "UB99-E045",
+      "UB99-E046",
+      "UB99-E018",
+      "UB99-E079",
+      "UB99-E081",
+      "UB99-E002",
+      "UB99-E009",
+      "UB99-E015",
+      "UB99-E036",
+      "UB99-E037",
+      "UB99-E038",
+      "UB99-E030",
+      "UB99-E044"
+    ],
+    "installation_command_and_failure_prefix_matrix": [
+      "UB99-E049",
+      "UB99-E050",
+      "UB99-E051",
+      "UB99-E052",
+      "UB99-E053",
+      "UB99-E054",
+      "UB99-E055",
+      "UB99-E056",
+      "UB99-E057",
+      "UB99-E058",
+      "UB99-E059",
+      "UB99-E060",
+      "UB99-E065",
+      "UB99-E066",
+      "UB99-E067",
+      "UB99-E068",
+      "UB99-E069",
+      "UB99-E070",
+      "UB99-E071",
+      "UB99-E072",
+      "UB99-E073",
+      "UB99-E061",
+      "UB99-E062",
+      "UB99-E063",
+      "UB99-E064",
+      "UB99-E074",
+      "UB99-E075",
+      "UB99-E076",
+      "UB99-E077",
+      "UB99-E078",
+      "UB99-E083"
+    ],
+    "artifact_identity_and_boot_path_matrix": [
+      "UB99-E018",
+      "UB99-E063",
+      "UB99-E079",
+      "UB99-E075",
+      "UB99-E076",
+      "UB99-E067",
+      "UB99-E080",
+      "UB99-E081",
+      "UB99-E082",
+      "UB99-E086",
+      "UB99-E087",
+      "UB99-E064",
+      "UB99-E068",
+      "UB99-E071",
+      "UB99-E073",
+      "UB99-E058",
+      "UB99-E059",
+      "UB99-E060",
+      "UB99-E074",
+      "UB99-E084",
+      "UB99-E085",
+      "UB99-E048"
+    ],
+    "ABC_join_matrix": [
+      "UB99-E002",
+      "UB99-E005",
+      "UB99-E007",
+      "UB99-E009",
+      "UB99-E018",
+      "UB99-E075",
+      "UB99-E067",
+      "UB99-E080",
+      "UB99-E086",
+      "UB99-E087",
+      "UB99-E047",
+      "UB99-E063",
+      "UB99-E064",
+      "UB99-E084",
+      "UB99-E085",
+      "UB99-E015"
+    ]
+  },
+  "matrices": {
+    "module_source_and_entry_matrix": [
+      {
+        "id": "A-M01",
+        "node": "inf",
+        "scenario": "INF模块与入口声明",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "[Defines]写MODULE_TYPE=UEFI_APPLICATION，ENTRY_POINT=UefiMain，BASE_NAME=bootloader及独立FILE_GUID",
+        "conditional_result": "这是EDK模块构建意图，不证明最终PE入口或目标已编译",
+        "first_stop_gate": "实际DSC/库绑定/工具链及生成器不可从INF字面推出",
+        "evidence_ids": [
+          "UB99-E001",
+          "UB99-E002",
+          "UB99-E003",
+          "UB99-E004"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M02",
+        "node": "sources",
+        "scenario": "Sources条目总数及重复",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "[Sources]有15条源码/头文件清单，其中ElfLib/ElfLibInternal.h出现两次",
+        "conditional_result": "去重后14个独立相对路径，重复只是清单事实，不能认定构建器是否去重或二次编译",
+        "first_stop_gate": "具体INF解析器、模块调度和编译命令未知",
+        "evidence_ids": [
+          "UB99-E005",
+          "UB99-E006",
+          "UB99-E007"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M03",
+        "node": "sources",
+        "scenario": "C源与头文件的角色",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "列出bootloader.c、multiboot2_utils.c、utils.c、ElfLib.c、Elf32Lib.c、Elf64Lib.c等C文件，同时将多个.h列入Sources",
+        "conditional_result": "头文件入表不等于生成单独目标对象；全部本地路径已由有限目录文件名核对",
+        "first_stop_gate": "本包未运行C编译，不证明每个源实际被选择或链接",
+        "evidence_ids": [
+          "UB99-E005",
+          "UB99-E006",
+          "UB99-E007"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M04",
+        "node": "pkg",
+        "scenario": "外部Packages边界",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "[Packages]列出MdePkg/MdeModulePkg/PcAtChipsetPkg/UefiPayloadPkg的.dec路径",
+        "conditional_result": "只是声明所需外部包的名称；固定time局部未取得对应包源码或解析后DSC选定图",
+        "first_stop_gate": "外部包版本与实际工作区不在本仓固定对象中",
+        "evidence_ids": [
+          "UB99-E008"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M05",
+        "node": "libclass",
+        "scenario": "库类清单与选择实例",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "[LibraryClasses]列10个名字，包含UefiApplicationEntryPoint、UefiLib、DebugLib、BaseMemoryLib等",
+        "conditional_result": "10个库类并不等于对应的10个特定实现已静态链接；必须由外部平台映射选出",
+        "first_stop_gate": "外部DSC/库映射和PE符号布局未证",
+        "evidence_ids": [
+          "UB99-E009",
+          "UB99-E010"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M06",
+        "node": "inf",
+        "scenario": "协议、PPI、PCD和GUID类别",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "独立[Protocols]/[Ppis]/[Pcd]/[Guids]节列标识符，注释有ALWAYS_CONSUMED/PRODUCES",
+        "conditional_result": "声明分类与具体UefiMain动态调用不同，不可由声明断言固件实际执行某协议或PPI",
+        "first_stop_gate": "外部DEC/DSC、符号解析和运行服务未知",
+        "evidence_ids": [
+          "UB99-E011",
+          "UB99-E012",
+          "UB99-E013",
+          "UB99-E014"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M07",
+        "node": "efi_entry",
+        "scenario": "实际C入口与协议调用",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "bootloader.c存在EFI_STATUS EFIAPI UefiMain签名；其体内调用gBS->HandleProtocol",
+        "conditional_result": "源码C函数符号UefiMain存在，仍不能从同名推断PE实际入口地址、包装调用约定或固件执行",
+        "first_stop_gate": "EFIAPI宏与EntryPoint库类具体实现/链接未证",
+        "evidence_ids": [
+          "UB99-E015",
+          "UB99-E016",
+          "UB99-E002",
+          "UB99-E009"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M08",
+        "node": "cmake_loader",
+        "scenario": "另一条本地CMake目标声明",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "myloader/CMakeLists.txt具有project(MyOS2_BootLoader ASM C)和install(PROGRAMS BOOTX64.EFI DESTINATION EFI/BOOT)",
+        "conditional_result": "所读此CMake全文只显式描述安装已有程序文件，不以该命令编译INF列出的C源",
+        "first_stop_gate": "仅限这一个文件；不扩大为仓库/外部目录无构建入口的全称声明",
+        "evidence_ids": [
+          "UB99-E017",
+          "UB99-E018"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-M09",
+        "node": "entry_lib",
+        "scenario": "INF入口与库类不是同一实物",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "ENTRY_POINT=UefiMain、UefiApplicationEntryPoint库类、真实EFIAPI UefiMain三层名称存在",
+        "conditional_result": "模块声明及源函数与真正PE入口包装生成之间的步骤依赖外部平台库绑定",
+        "first_stop_gate": "无已生成映像符号/机器码检查，不能认证入口架构",
+        "evidence_ids": [
+          "UB99-E002",
+          "UB99-E009",
+          "UB99-E015"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "recipe_to_artifact_matrix": [
+      {
+        "id": "A-R01",
+        "node": "cmake_loader",
+        "scenario": "INF构建意图和CMake安装配方分流",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "INF指向Sources/Packages/LibraryClasses；myloader/CMake只读install(PROGRAMS BOOTX64.EFI...)",
+        "conditional_result": "已声明的CMake安装源为现有EFI文件，未见同一CMake文件把INF源直接加入一个构建target",
+        "first_stop_gate": "有效范围仅myloader/CMakeLists.txt，不假定外部EDK从未调用过INF",
+        "evidence_ids": [
+          "UB99-E005",
+          "UB99-E006",
+          "UB99-E007",
+          "UB99-E008",
+          "UB99-E009",
+          "UB99-E010",
+          "UB99-E017",
+          "UB99-E018"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R02",
+        "node": "tracked_efi",
+        "scenario": "仓库跟踪现有EFI",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "固定time目录元数据给出myloader/BOOTX64.EFI普通Git blob，大小19200字节、短blob=6596c0462579",
+        "conditional_result": "有一个仓库跟踪文件对象；没有读取其二进制内容或机器码，也无源码编译对应关系",
+        "first_stop_gate": "Git文件blob身份仅标识该快照记录；不证明ESP上目标字节相同",
+        "evidence_ids": [
+          "UB99-E018"
+        ],
+        "evidence_class": "GITHUB_DIRECTORY_METADATA",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R03",
+        "node": "edk_output",
+        "scenario": "独立外部EDK输出路径",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "install_loader.sh以Build/Shell/DEBUG_GCC5/X64/BootLoader/bootloader/DEBUG/bootloader.efi为两次cp输入",
+        "conditional_result": "仅是shell字面来源，不等于本仓myloader/BOOTX64.EFI、也不认证该路径当时实际存在",
+        "first_stop_gate": "路径相对实际工作目录，外部EDK输出及内容不在本批核证",
+        "evidence_ids": [
+          "UB99-E075",
+          "UB99-E076"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R04",
+        "node": "target_efi",
+        "scenario": "两个入口潜在目标同名",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "myloader CMake安装EFI/BOOT下BOOTX64.EFI；独立脚本cp目标为/mnt/EFI/BOOT/BOOTX64.EFI",
+        "conditional_result": "目标路径在前缀/mnt的条件模型下可对应，但两个输入对象来源不同",
+        "first_stop_gate": "是否使用同一挂载、是否运行两种入口及先后覆盖均未证",
+        "evidence_ids": [
+          "UB99-E018",
+          "UB99-E063",
+          "UB99-E075"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R05",
+        "node": "target_kernel",
+        "scenario": "内核目标独立存在",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "mykernel CMake有add_executable(kernel)、include(target_kernel.cmake)，后者install(TARGETS kernel DESTINATION boot)",
+        "conditional_result": "内核的CMake目标声明与UEFI INF的模块制品生成是两条路径，不因都在磁盘/boot下而自动相同",
+        "first_stop_gate": "内核实际构建/链接与目标设备使用沿BB85-U08保留",
+        "evidence_ids": [
+          "UB99-E080",
+          "UB99-E081",
+          "UB99-E082"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R06",
+        "node": "libclass",
+        "scenario": "INF重复头文件的含义上限",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "ElfLibInternal.h在同一[Sources]节出现两次，源码头路径也实际存在",
+        "conditional_result": "不能由重复本身断言编译两遍、构建失败、输出字节重复或链接错误",
+        "first_stop_gate": "具体EDK工具版本、源过滤和生成日志待证",
+        "evidence_ids": [
+          "UB99-E006",
+          "UB99-E007"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R07",
+        "node": "inf",
+        "scenario": "模块声明vs镜像生成身份缺环",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "BASE_NAME=bootloader与独立脚本的bootloader.efi路径有字面命名关联",
+        "conditional_result": "既没有实际EDK构建日志，也没有该输出到仓库跟踪EFI的哈希/字节比较",
+        "first_stop_gate": "不把名称推断当成真实二进制来源认证",
+        "evidence_ids": [
+          "UB99-E003",
+          "UB99-E005",
+          "UB99-E075"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "type_macro_and_library_provenance_matrix": [
+      {
+        "id": "B-T01",
+        "node": "uefi_types",
+        "scenario": "UEFI基础类型来源",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "utils.h包含Uefi.h、ElfLib.h包含PiPei.h；ELF_IMAGE_CONTEXT使用RETURN_STATUS、UINT8*、UINTN等",
+        "conditional_result": "仓内存在这些外部头文件的include请求与类型使用，但具体UINTN/EFI_STATUS/RETURN_STATUS定义本包未读取到实现",
+        "first_stop_gate": "特定外部SDK头的版本/目标平台ABI先门",
+        "evidence_ids": [
+          "UB99-E019",
+          "UB99-E024",
+          "UB99-E028",
+          "UB99-E033",
+          "UB99-E034",
+          "UB99-E035"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T02",
+        "node": "elf_types",
+        "scenario": "Elf64_Half和ELF内部乘积",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "Elf64_Half在本仓别名为UINT16；Parser计算依赖MAX_UINT32和外部宏，段/节计数运算按表达式阶段判断",
+        "conditional_result": "在UINT16确为16位无符号、int32的条件模型下，两UINT16可先提升int，65535×65535越过int32；不宣称真机已溢出",
+        "first_stop_gate": "R98-S02先门：外部类型、实际e_shnum与对象、编译器及有定义运算",
+        "evidence_ids": [
+          "UB99-E036",
+          "UB99-E043",
+          "UB99-E044"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T03",
+        "node": "multiboot_alias",
+        "scenario": "MBI条件类型别名",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "multiboot2.h两分支分别typedef UINT32或uint32_t为multiboot_uint32_t",
+        "conditional_result": "结构源码共享但UEFI与非UEFI预处理分支是否选择须由__PI_UEFI_H__实际定义决定",
+        "first_stop_gate": "未运行UEFI实际预处理；不由文件名自动选择分支",
+        "evidence_ids": [
+          "UB99-E037",
+          "UB99-E038",
+          "UB99-E027"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T04",
+        "node": "efi_page",
+        "scenario": "本地页宏与外部EFI页宏",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "utils.h分别定义PAGE_SHIFT=12、PAGE_SIZE=(1<<PAGE_SHIFT)，ParseElfImage使用EFI_PAGE_SIZE及ALIGN_VALUE",
+        "conditional_result": "两个命名空间不能互代；只认识外部宏调用名，不可凭4096数值认证~(EFI_PAGE_SIZE-1)的高位类型",
+        "first_stop_gate": "R98-S02约束：所选外部宏真实类型与运算提升仍未证",
+        "evidence_ids": [
+          "UB99-E039",
+          "UB99-E040",
+          "UB99-E045",
+          "UB99-E046"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T05",
+        "node": "assert_api",
+        "scenario": "断言接口声明与使用",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "ElfLibInternal.h包含DebugLib.h，ParseElfImage有ASSERT_EFI_ERROR(Status)",
+        "conditional_result": "在固定本仓看到的是外部库声明要求/调用，不是目标DEBUG宏或ASSERT结果行为",
+        "first_stop_gate": "真实DebugLib实例、构建宏与断言控制流未知",
+        "evidence_ids": [
+          "UB99-E030",
+          "UB99-E044"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T06",
+        "node": "entry_lib",
+        "scenario": "EFIAPI与应用入口库",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "INF列UefiApplicationEntryPoint库类；bootloader.c签名含EFIAPI、ENTRY_POINT是UefiMain",
+        "conditional_result": "三者同时存在不自动确定最终PE机器入口和调用约定",
+        "first_stop_gate": "外部EFIAPI宏与库实例/平台DSC及真实构建参数未知",
+        "evidence_ids": [
+          "UB99-E002",
+          "UB99-E009",
+          "UB99-E015"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T07",
+        "node": "include_chain",
+        "scenario": "BaseMemory库与接口来源",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "utils.h/ElfLibInternal.h分别#include BaseMemoryLib.h，INF请求BaseMemoryLib类",
+        "conditional_result": "只证明请求该库类/头，CopyMem/ZeroMem实际版本/汇编语义仍未证",
+        "first_stop_gate": "缺具体实现映射、真实编译命令与运行",
+        "evidence_ids": [
+          "UB99-E010",
+          "UB99-E021",
+          "UB99-E031"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T08",
+        "node": "include_chain",
+        "scenario": "启动服务表与协议对象来源",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "utils.h包含BootServicesTableLib/Protocol/SimpleFileSystem/Protocol/LoadedImage；bootloader.h还包含PiDxeCis和MpService",
+        "conditional_result": "源级gBS和EFI_LOADED_IMAGE使用有声明入口，并非外部服务调用的成功凭据",
+        "first_stop_gate": "具体接口返回、EFI版本和服务阶段沿BT97/BE98限定",
+        "evidence_ids": [
+          "UB99-E020",
+          "UB99-E022",
+          "UB99-E023",
+          "UB99-E025",
+          "UB99-E026",
+          "UB99-E041",
+          "UB99-E042"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T09",
+        "node": "include_chain",
+        "scenario": "本地ELF_NEXT_ENTRY与外部类型",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "ElfLibInternal.h自己定义ELF_NEXT_ENTRY宏，且包含BaseLib、DebugLib、BaseMemoryLib；ElfLib.h声明context",
+        "conditional_result": "本地宏算式可逐字判断，UINTN/对齐/库的实际实现仍属另外层次",
+        "first_stop_gate": "只读源级，未做C预处理/构建",
+        "evidence_ids": [
+          "UB99-E029",
+          "UB99-E030",
+          "UB99-E031",
+          "UB99-E032",
+          "UB99-E033"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-T10",
+        "node": "pkg",
+        "scenario": "INF库类与包声明非解析结果",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "Packages/LibraryClasses/Protocols各节真实可读，但缺平台具体库实例与真实编译时宏选项",
+        "conditional_result": "一个LibraryClasses名字不构成其物理版本、执行代码或正确调用ABI的证明",
+        "first_stop_gate": "DSC/DEC、实际生成器输出不在本次对象内",
+        "evidence_ids": [
+          "UB99-E008",
+          "UB99-E009",
+          "UB99-E010",
+          "UB99-E011"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "configuration_and_abi_separation_matrix": [
+      {
+        "id": "B-C01",
+        "node": "kernel_flags",
+        "scenario": "内核编译选项独立",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "固定time mykernel/scripts/options_flags.cmake的CMAKE_C_FLAGS字符串含-m64 -mcmodel=kernel -fno-pie -fno-pic与-mabi=sysv",
+        "conditional_result": "这是内核源码中的CMake字符串；UEFI INF与myloader/CMake不能继承为真实EFI编译参数",
+        "first_stop_gate": "不运行配置、编译命令或外部EDK工具链",
+        "evidence_ids": [
+          "UB99-E047",
+          "UB99-E048",
+          "UB99-E001",
+          "UB99-E017"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C02",
+        "node": "uefi_flags",
+        "scenario": "DEBUG_GCC5仅为外部路径片段",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "install_loader.sh的输入路径含DEBUG_GCC5，INF不包含实际toolchain/DSC已选文件",
+        "conditional_result": "路径命名不能签真实gcc版本、flags或PE ABI；CMake项目声明也不直接选择EFI编译器",
+        "first_stop_gate": "真实构建系统/工具链/产物同一性待证",
+        "evidence_ids": [
+          "UB99-E075",
+          "UB99-E001",
+          "UB99-E017"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C03",
+        "node": "efi_page",
+        "scenario": "外部整数宏的位宽",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "源码只展示EFI_PAGE_SIZE/ALIGN_VALUE/MAX_UINT32的使用语句，未给本包目标SDK宏定义",
+        "conditional_result": "不同UINTN宽度、无符号/有符号提升、掩码中间类型必须作为条件模型而非一律固定",
+        "first_stop_gate": "R98-S02和本次四组依赖缺口需要具体SDK/编译前提",
+        "evidence_ids": [
+          "UB99-E043",
+          "UB99-E045",
+          "UB99-E046"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C04",
+        "node": "cmake_loader",
+        "scenario": "CMake3.16版本约束与配置结果分离",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "myloader项目声明cmake_minimum_required(VERSION 3.16)，安装命令PROGRAMS BOOTX64.EFI",
+        "conditional_result": "CMake3.16.9官方安装文档支持相对文件以当前源目录解释，DESTINATION相对install prefix；未执行实际CMake，不能称已安装",
+        "first_stop_gate": "CMake文档版本不等于本机版本，读取外部一手文档但不运行命令",
+        "evidence_ids": [
+          "UB99-E017",
+          "UB99-E018",
+          "UB99-E079"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C05",
+        "node": "uefi_flags",
+        "scenario": "两种实际编译配方不等同",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "mykernel/CMake含add_executable(kernel)，myloader/CMake则仅有project及install(PROGRAMS...)",
+        "conditional_result": "在两份指定CMake全文范围内UEFI的源编译目标未显示；不得扩成整个外部工作区不存在UEFI编译入口",
+        "first_stop_gate": "INF/外部DSC可能提供另外路线，但未核实际产生制品",
+        "evidence_ids": [
+          "UB99-E017",
+          "UB99-E018",
+          "UB99-E081"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C06",
+        "node": "entry_lib",
+        "scenario": "外部应用入口适配缺口",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "ENTRY_POINT=UefiMain与源EFIAPI UefiMain可对照，同时LibraryClasses列UefiApplicationEntryPoint",
+        "conditional_result": "实际UefiApplicationEntryPoint包装、PE入口与最终EFIAPI calling convention必须由所选EDK实例/链接制品证明",
+        "first_stop_gate": "不把Linux x86-64 SysV参数当UEFI已编译ABI",
+        "evidence_ids": [
+          "UB99-E002",
+          "UB99-E009",
+          "UB99-E015",
+          "UB99-E047",
+          "UB99-E048"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C07",
+        "node": "multiboot_alias",
+        "scenario": "条件编译和类型目标宽度分开",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "MBI两个typedef分支与Loader/Kernel不同头文件前提；Elf64_Half别名UINT16",
+        "conditional_result": "不自动由仓库文件命名决定__PI_UEFI_H__及对齐宏，实际编译选择未证明",
+        "first_stop_gate": "没有执行预处理或编译器类型布局查验",
+        "evidence_ids": [
+          "UB99-E036",
+          "UB99-E037",
+          "UB99-E038"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C08",
+        "node": "assert_api",
+        "scenario": "源码编译条件与断言实现",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "DebugLib.h包含请求+ASSERT_EFI_ERROR调用，INF存在DebugLib类，工具链DEBUG路径只有字面",
+        "conditional_result": "不能据DEBUG字样推断ASSERT必启用/必退出或执行错误分支",
+        "first_stop_gate": "真实DSC库映射、宏和模块编译命令都未核实",
+        "evidence_ids": [
+          "UB99-E009",
+          "UB99-E030",
+          "UB99-E044",
+          "UB99-E075"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "installation_command_and_failure_prefix_matrix": [
+      {
+        "id": "C-I01",
+        "node": "runner",
+        "scenario": "主安装脚本初始路径及参数",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "PROJ_ROOT=$(pwd)，DEBUG_FLAG、TARGET_ARCH=x86_64、LINK_TYPE=static设置在顶层",
+        "conditional_result": "以后函数以$1接收项目根；如果首次运行目录非项目根，路径字符串不保证正确",
+        "first_stop_gate": "shell被真正调用的工作目录与参数未证",
+        "evidence_ids": [
+          "UB99-E049",
+          "UB99-E050",
+          "UB99-E051",
+          "UB99-E052"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I02",
+        "node": "runner",
+        "scenario": "函数加载与调用次序",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "先source kernel/initranfs/bootloader/phys函数脚本，再清理build目录，然后依次调用三个make_install函数",
+        "conditional_result": "source不是独立证明已成功执行相关安装；三个函数调用是独立顶层语句而非一个&&链",
+        "first_stop_gate": "实际shell环境/函数定义/异常状态和后续可达性须另证",
+        "evidence_ids": [
+          "UB99-E053",
+          "UB99-E054",
+          "UB99-E055",
+          "UB99-E056",
+          "UB99-E057",
+          "UB99-E058",
+          "UB99-E059",
+          "UB99-E060"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I03",
+        "node": "runner",
+        "scenario": "构建目录清理",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "在首次调用kernel函数之前有rm -rf ./build/*",
+        "conditional_result": "它是具破坏性潜力的脚本命令文本，绝不运行；真实目标取决于初始cwd与shell参数/权限",
+        "first_stop_gate": "已读文本不等于运行过删除，用户未授权清理",
+        "evidence_ids": [
+          "UB99-E049",
+          "UB99-E057"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I04",
+        "node": "kernel_fn",
+        "scenario": "内核独立构建/安装",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "make_install_kernel设置$1/build/mykernel，cd进入，mount /dev/dm-0，rm /mnt/boot/kernel后做cmake&&make&&make install",
+        "conditional_result": "仅后面三命令之间有&&门，mount/rm结果没有与此链串成成功前提",
+        "first_stop_gate": "在失败条件下不能给出真实磁盘结果，且第85批真实链接仍未证",
+        "evidence_ids": [
+          "UB99-E065",
+          "UB99-E066",
+          "UB99-E067"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I05",
+        "node": "kernel_fn",
+        "scenario": "内核失败后的后缀",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "kernel脚本在&&链之后仍含sync、umount、objdump、cp kernel",
+        "conditional_result": "即使cmake/make失败也可能到达后缀调用；不表示各命令已成功或存在kernel可复制",
+        "first_stop_gate": "具体bash退出状态、文件存在和设备挂载未知",
+        "evidence_ids": [
+          "UB99-E067",
+          "UB99-E068",
+          "UB99-E069"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I06",
+        "node": "initranfs_fn",
+        "scenario": "中间阶段的目录和失败门",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "initranfs函数也重新设置CMAKE_GEN_DIR并cd，执行mount、rm、cmake&&make，后面另独立make install与umount",
+        "conditional_result": "作为三阶段中的第二阶段存在，可能改变shell工作目录/共享变量；并非UEFI源码构建器",
+        "first_stop_gate": "是否真正运行该阶段、安装init文件成功不属本批核证",
+        "evidence_ids": [
+          "UB99-E070",
+          "UB99-E071",
+          "UB99-E072",
+          "UB99-E073"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I07",
+        "node": "loader_fn",
+        "scenario": "bootloader安装函数",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "函数以$1/build/bootloader赋CMAKE_GEN_DIR并cd，随后mount与cmake $1/myloader -DCMAKE_INSTALL_PREFIX=/mnt && make && make install",
+        "conditional_result": "只有cmake/make/install构成&&链；mount单独先行，不能将三命令返回与挂载结果合并成一个总成功布尔",
+        "first_stop_gate": "用户未授权运行任何mount/cmake/make/install；Bash实际执行未知",
+        "evidence_ids": [
+          "UB99-E061",
+          "UB99-E062",
+          "UB99-E063"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I08",
+        "node": "loader_fn",
+        "scenario": "bootloader后缀",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "上述链后无独立错误分支，紧随sync、umount",
+        "conditional_result": "成功或失败时后续命令能否执行须依实际shell及先行状态，不能因名称断言安全卸载完成",
+        "first_stop_gate": "外部mount/umount/sync实际返回与设备身份未知",
+        "evidence_ids": [
+          "UB99-E063",
+          "UB99-E064"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I09",
+        "node": "standalone_fn",
+        "scenario": "独立EDK脚本入口",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "install_loader.sh单独mount、两次cp相同外部Build输入至不同目标，然后sync与umount",
+        "conditional_result": "源码无条件依序陈述两个cp，不能以第一个成功与否等价第二个成功；不是主make_install.sh中所见调用",
+        "first_stop_gate": "原始cwd、外部Build目录与目标磁盘可访问性未知",
+        "evidence_ids": [
+          "UB99-E074",
+          "UB99-E075",
+          "UB99-E076",
+          "UB99-E077",
+          "UB99-E078"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I10",
+        "node": "failure_gate",
+        "scenario": "mount失败与后续命令分账",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "make_install_kernel/bootloader都将mount独立放在cmake&&make&&install前；kernel还在mount后rm目标",
+        "conditional_result": "在假设mount失败而shell继续的条件下，后续命令可能作用于普通/mnt路径，而不是已挂设备；没有实机断言",
+        "first_stop_gate": "shell异常处理、当前/mnt状态、设备身份必须单独核实；只作风险候选",
+        "evidence_ids": [
+          "UB99-E063",
+          "UB99-E064",
+          "UB99-E067",
+          "UB99-E068"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I11",
+        "node": "runner",
+        "scenario": "函数内cd的工作目录副作用",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "三个make_install函数均cd到各自CMAKE_GEN_DIR，源脚本由顶层source加载",
+        "conditional_result": "在Bash正常shell函数调用中cd可改变后续相对路径解释，各函数用$1根重建自己的路径；不能混同脚本文件目录与当前cwd",
+        "first_stop_gate": "PROJ_ROOT最初由pwd得到的目录必须是预期源码根",
+        "evidence_ids": [
+          "UB99-E049",
+          "UB99-E053",
+          "UB99-E054",
+          "UB99-E055",
+          "UB99-E061",
+          "UB99-E062",
+          "UB99-E065",
+          "UB99-E066",
+          "UB99-E070",
+          "UB99-E071"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I12",
+        "node": "failure_gate",
+        "scenario": "外部shell命令状态与只读证明界限",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "脚本中的rm、mount、cp、objdump、sync是源码字面；&&只连接明确列出的命令；源码未见将整体流程封装为一份成功证明",
+        "conditional_result": "条件地可推导失败前缀，但不签实际安装成功或造成数据损坏",
+        "first_stop_gate": "仅使用明确Bash官方手册的&&规则，未执行shell",
+        "evidence_ids": [
+          "UB99-E057",
+          "UB99-E063",
+          "UB99-E064",
+          "UB99-E067",
+          "UB99-E068",
+          "UB99-E069",
+          "UB99-E074",
+          "UB99-E075",
+          "UB99-E076"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-I13",
+        "node": "runner",
+        "scenario": "物理磁盘函数未被调用的限定",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "make_install.sh以source引入phys_nvme_install.sh，该文件定义install_to_physdisk函数；在所读make_install.sh实际调用列表只有kernel/initranfs/bootloader",
+        "conditional_result": "所读主脚本正文没有有效调用install_to_physdisk；不推断其他脚本/人工命令从未调用",
+        "first_stop_gate": "注释非活跃命令，不作为真实磁盘擦除证据",
+        "evidence_ids": [
+          "UB99-E056",
+          "UB99-E058",
+          "UB99-E059",
+          "UB99-E060",
+          "UB99-E083"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "artifact_identity_and_boot_path_matrix": [
+      {
+        "id": "C-A01",
+        "node": "tracked_efi",
+        "scenario": "跟踪文件身份",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "固定time myloader目录元数据：BOOTX64.EFI file，19200 bytes，Git Blob短12为6596c0462579；CMake声明安装名BOOTX64.EFI",
+        "conditional_result": "只证明Git对象元数据及CMake输入名称；未读取、反汇编或运行二进制",
+        "first_stop_gate": "实际机器/ESP上的BOOTX64.EFI字节身份、PE格式及源码构建来源都未证",
+        "evidence_ids": [
+          "UB99-E018"
+        ],
+        "evidence_class": "GITHUB_DIRECTORY_METADATA",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A02",
+        "node": "target_efi",
+        "scenario": "CMake安装源与目标",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "myloader/CMake的install(PROGRAMS BOOTX64.EFI DESTINATION EFI/BOOT)，bootloader函数以/mnt为CMAKE_INSTALL_PREFIX",
+        "conditional_result": "按CMake3.16.9公开语义，相对输入来自myloader源目录、目标在所配置prefix/EFI/BOOT；该文本不证明任何一次命令已完成",
+        "first_stop_gate": "当前宿主CMake版本、配置结果及挂载状态仍未证",
+        "evidence_ids": [
+          "UB99-E018",
+          "UB99-E063",
+          "UB99-E079"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A03",
+        "node": "edk_output",
+        "scenario": "外部Build输出文件与目标",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "独立脚本以Build/Shell/DEBUG_GCC5/X64/BootLoader/bootloader/DEBUG/bootloader.efi复制到/mnt/EFI/BOOT/BOOTX64.EFI",
+        "conditional_result": "外部EDK输入与跟踪myloader/BOOTX64.EFI没有字节身份比较；相同目标文本不说明是否发生覆盖",
+        "first_stop_gate": "Build目录相对脚本调用cwd，源文件真实存在和内容未知",
+        "evidence_ids": [
+          "UB99-E075"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A04",
+        "node": "aux_efi",
+        "scenario": "同一外部源的另存副本",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "同一install_loader.sh将相同EDK相对路径复制到~/projs/MyOS2/elfbinary_loader.efi",
+        "conditional_result": "副本目标独立于ESP，未见哈希比较或执行cp成功记录；名字不是EFI有效性证明",
+        "first_stop_gate": "主机家目录、源文件和cp返回未认证",
+        "evidence_ids": [
+          "UB99-E075",
+          "UB99-E076"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A05",
+        "node": "target_kernel",
+        "scenario": "内核目标文件交付",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "mykernel/CMake声明kernel可执行目标并include(target_kernel)，target_kernel声明install(TARGETS kernel DESTINATION boot)；kernel shell指定prefix=/mnt",
+        "conditional_result": "在正确配置与安装成功条件下有/mnt/boot/kernel目标，与EFIBootloader的文件请求形成字面配对",
+        "first_stop_gate": "链接、kernel文件大小/字节、同一磁盘挂载与实际目标都属旧BB85-U08和本批缺口",
+        "evidence_ids": [
+          "UB99-E067",
+          "UB99-E080",
+          "UB99-E081",
+          "UB99-E082"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A06",
+        "node": "boot_request",
+        "scenario": "UEFI代码的kernel文件路径",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "UefiMain调用load_elf_kernel(LoadedImage,L\"\\\\boot\\\\kernel\",&k_load_addr)；load_elf_kernel把路径交给LoadFile",
+        "conditional_result": "UEFI请求路径与内核脚本rm/安装目标boot/kernel字面对应，但跨EFI卷/宿主挂载的文件身份未证",
+        "first_stop_gate": "实际LoadedImage->DeviceHandle和文件系统卷是外部状态，沿BE98-U02/U09停止",
+        "evidence_ids": [
+          "UB99-E067",
+          "UB99-E080",
+          "UB99-E086",
+          "UB99-E087"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A07",
+        "node": "artifact_link",
+        "scenario": "主脚本三阶段目标可能共用/mnt",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "内核、initranfs、bootloader函数均访问/mnt，分别执行mount与umount",
+        "conditional_result": "路径同名不保证各次挂的是同一物理分区或各阶段状态成功；不能把路径变为同一字节证明",
+        "first_stop_gate": "真实设备、卷身份、失败恢复和重新挂载状态未知",
+        "evidence_ids": [
+          "UB99-E063",
+          "UB99-E064",
+          "UB99-E067",
+          "UB99-E068",
+          "UB99-E071",
+          "UB99-E073"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A08",
+        "node": "standalone_fn",
+        "scenario": "独立EFI脚本不在主调用链",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "主make_install.sh的顶层调用是kernel/initranfs/bootloader三个函数，另一个install_loader.sh独立包含mount/cp语句",
+        "conditional_result": "本批所读主脚本未调用install_loader.sh；不能据此否定人工或外部工作流运行它",
+        "first_stop_gate": "限定仅这组文件和固定time源码范围，非全仓穷尽",
+        "evidence_ids": [
+          "UB99-E058",
+          "UB99-E059",
+          "UB99-E060",
+          "UB99-E074",
+          "UB99-E075",
+          "UB99-E076"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A09",
+        "node": "failure_gate",
+        "scenario": "实际安装结果与内核读取完全不同",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "脚本含命令、目标文件名，UEFI源码经LoadedImage打开文件并LoadFile按FileInfo.Size读入请求",
+        "conditional_result": "命令行与源代码均不是外部完成证据，缺文件实际字节/时间和Read返回，无法闭合实际部署→加载链",
+        "first_stop_gate": "保留BE98-U01/U02/U06/U09和BT97服务阶段缺口，不因99制品存在就关闭",
+        "evidence_ids": [
+          "UB99-E067",
+          "UB99-E075",
+          "UB99-E080",
+          "UB99-E084",
+          "UB99-E085",
+          "UB99-E086",
+          "UB99-E087"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-A10",
+        "node": "uefi_flags",
+        "scenario": "EDK DEBUG_GCC5命名不足以证明实际工具链",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "独立脚本cp路径含DEBUG_GCC5，另一条CMake使用已跟踪BOOTX64.EFI并没有具体EDK输出指针",
+        "conditional_result": "一个路径字符串不能证明实际EDK构建对应本固定源码或PE机器码与宿主内核-mabi=sysv一致",
+        "first_stop_gate": "外部DSC、Build日志与二进制哈希均未证",
+        "evidence_ids": [
+          "UB99-E018",
+          "UB99-E048",
+          "UB99-E075"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "node": "artifact_link",
+        "scenario": "声明→对象→安装三类实体",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "INF source/entry库类、Git跟踪EFI元数据、CMake install(PROGRAMS)与EDK独立cp来源有不同证据类别",
+        "conditional_result": "无法由名称相似推断同一次源码构建、同字节镜像与真实安装",
+        "first_stop_gate": "要证明完整链需DSC/编译记录及各制品hash和部署元数据",
+        "evidence_ids": [
+          "UB99-E002",
+          "UB99-E005",
+          "UB99-E007",
+          "UB99-E009",
+          "UB99-E018",
+          "UB99-E075"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-02",
+        "node": "boot_request",
+        "scenario": "内核安装→UEFI文件读取的跨阶段关系",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "kernel target install to boot, kernel函数make install, UefiMain请求\\\\boot\\\\kernel并LoadFile",
+        "conditional_result": "跨shell/CMake/UEFI阶段是文件路径与数据依赖，不是C直接函数调用或一次已成功执行",
+        "first_stop_gate": "实际同一ESP/磁盘及Read长度先门，旧BB85-U08、BE98-U02仍在",
+        "evidence_ids": [
+          "UB99-E067",
+          "UB99-E080",
+          "UB99-E086",
+          "UB99-E087"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-03",
+        "node": "failure_gate",
+        "scenario": "配置/构建/复制/装入各自有条件停止点",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "CMake和shell只记声明命令；外部库/EFI状态未证；主安装连续调用、mount风险、Read未返回实测字节",
+        "conditional_result": "不能将任何一个中间步骤的成功等同最终内核入口可执行",
+        "first_stop_gate": "遵照R98-S01/S02/S03与R85-S01/S02/S03，不重开旧问题",
+        "evidence_ids": [
+          "UB99-E047",
+          "UB99-E063",
+          "UB99-E064",
+          "UB99-E067",
+          "UB99-E075",
+          "UB99-E084",
+          "UB99-E085",
+          "UB99-E086"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-04",
+        "node": "entry_lib",
+        "scenario": "入口类与机器码二进制未直接衔接",
+        "preconditions": "固定time源、相应文件对象/状态合法且到达所述步骤；未执行配置、编译、脚本或安装",
+        "source_trace": "ENTRY_POINT=UefiMain、UefiApplicationEntryPoint类、真实EFIAPI UefiMain存在，脚本/安装源未与源码编译身份相连",
+        "conditional_result": "所有文档分析仍只证明模块意图、源码定义和制品路径，不签已构建/安装/启动",
+        "first_stop_gate": "无需真实构建许可，本任务不安装不运行",
+        "evidence_ids": [
+          "UB99-E002",
+          "UB99-E009",
+          "UB99-E015",
+          "UB99-E018",
+          "UB99-E075"
+        ],
+        "evidence_class": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows": 61,
+  "matrix_rows_by_group": {
+    "module_source_and_entry_matrix": 9,
+    "recipe_to_artifact_matrix": 7,
+    "type_macro_and_library_provenance_matrix": 10,
+    "configuration_and_abi_separation_matrix": 8,
+    "installation_command_and_failure_prefix_matrix": 13,
+    "artifact_identity_and_boot_path_matrix": 10,
+    "ABC_join_matrix": 4
+  },
+  "finite_models": [
+    {
+      "id": "UB99-M01",
+      "topic": "A",
+      "inputs": "INF来源节共15行，其中ElfLibInternal.h在17和21两次",
+      "operations": "15 entries, unique path strings 14",
+      "conditional_result": "重复不自动说明EDK编译两次或错误",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E005",
+        "UB99-E006",
+        "UB99-E007"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M02",
+      "topic": "A",
+      "inputs": "固定time目录元数据BOOTX64.EFI 19200字节、Git blob短头6596c0462579",
+      "operations": "CMake install(PROGRAMS)源名与文件名一致",
+      "conditional_result": "这里只验证路径与元数据，非内容或PE语义",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E018"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M03",
+      "topic": "A",
+      "inputs": "已给INF ENTRY_POINT=UefiMain及外部LibraryClasses UefiApplicationEntryPoint",
+      "operations": "存在两种声明与一个C函数同名入口",
+      "conditional_result": "不构成具体生成的PE入口/ABI证明",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E002",
+        "UB99-E009",
+        "UB99-E015"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M04",
+      "topic": "B",
+      "inputs": "假定EFI外部UINT16确为16位无符号，int为32位有符号，两个输入65535",
+      "operations": "65535*65535=4294836225，超过2147483647",
+      "conditional_result": "强制转UINTN若发生在乘积之后不能修复先行有符号溢出；真实宏/输入另证",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E036",
+        "UB99-E043",
+        "UB99-E044"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M05",
+      "topic": "B",
+      "inputs": "外部EFI_PAGE_SIZE数值4096，但编译表达式的整数类型未知",
+      "operations": "数学掩码~(4096-1)取决于运算宽度和usual arithmetic conversions",
+      "conditional_result": "不能断定高地址位保留/丢失，必须先确立宏类型",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E045",
+        "UB99-E046"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M06",
+      "topic": "B",
+      "inputs": "本仓loader的PAGE_SHIFT=12、PAGE_SIZE=(1<<PAGE_SHIFT)",
+      "operations": "数学值在相应C模型下是4096",
+      "conditional_result": "不能代替EFI_PAGE_SIZE/ALIGN_VALUE在实际SDK中的类型",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E039",
+        "UB99-E040",
+        "UB99-E045",
+        "UB99-E046"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M07",
+      "topic": "B",
+      "inputs": "外部DSC选定信息未读，仅INF四包十库类",
+      "operations": "包名/库类集合不产生编译命令、具体UefiApplicationEntryPoint实现",
+      "conditional_result": "这一模型是证据断层，非外部解析器运行结论",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E008",
+        "UB99-E009",
+        "UB99-E010"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M08",
+      "topic": "C",
+      "inputs": "假设bash正常执行且PROJ_ROOT初始为项目根，构建函数先后正常回返",
+      "operations": "kernel → initranfs → bootloader调用顺序，函数cd到各自$1/build子目录",
+      "conditional_result": "其中任一命令成功仍不保证下一个安装函数成功",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E049",
+        "UB99-E058",
+        "UB99-E059",
+        "UB99-E060",
+        "UB99-E065",
+        "UB99-E066",
+        "UB99-E070",
+        "UB99-E071",
+        "UB99-E061",
+        "UB99-E062"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M09",
+      "topic": "C",
+      "inputs": "假设kernel函数mount返回非零，未启用set -e且后续Shell仍运行",
+      "operations": "rm /mnt/boot/kernel是下一语句，随后cmake&&make&&make install",
+      "conditional_result": "不证明实际/mnt指向磁盘或发生删除；这是首个未证门",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E067"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M10",
+      "topic": "C",
+      "inputs": "假设bootloader函数cmake返回非零且Bash &&语义可用",
+      "operations": "make与make install由&&跳过；随后sync和umount是独立命令",
+      "conditional_result": "不把sync/umount调用当作安装成功或构建恢复",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E063",
+        "UB99-E064"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M11",
+      "topic": "C",
+      "inputs": "假设bootloader函数cmake成功但make失败",
+      "operations": "make install由&&不执行，后缀sync/umount仍在脚本文本之后",
+      "conditional_result": "实际文件和mount结果未证",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E063",
+        "UB99-E064"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M12",
+      "topic": "C",
+      "inputs": "假设脚本cwd正确，外部Build/Shell/.../bootloader.efi存在且第一cp成功、第二cp失败",
+      "operations": "目标BOOTX64.EFI尝试更新，另存elfbinary_loader.efi未成功；sync/umount仍依次出现",
+      "conditional_result": "两目标字节不能自动一致；无需运行假设分支",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E074",
+        "UB99-E075",
+        "UB99-E076",
+        "UB99-E077",
+        "UB99-E078"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M13",
+      "topic": "C",
+      "inputs": "假设按CMake3.16.9语义执行myloader源目录安装，prefix=/mnt",
+      "operations": "PROGRAMS相对源myloader/BOOTX64.EFI → /mnt/EFI/BOOT/BOOTX64.EFI",
+      "conditional_result": "文件内容只有跟踪blob身份；真实安装与磁盘/挂载未证",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E018",
+        "UB99-E063"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M14",
+      "topic": "C",
+      "inputs": "假设kernel构建和install TARGETS kernel成功，prefix=/mnt",
+      "operations": "安装目的相对boot，目标字面为/mnt/boot/kernel",
+      "conditional_result": "UefiMain的\\\\boot\\\\kernel仅可关联命名，无法证明同一文件系统卷",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E067",
+        "UB99-E080",
+        "UB99-E081",
+        "UB99-E082",
+        "UB99-E086"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M15",
+      "topic": "C",
+      "inputs": "假设独立install_loader.sh两次cp都成功且同一源在两次间不变",
+      "operations": "ESP目标与elfbinary_loader.efi是两次复制请求的候选同字节结果",
+      "conditional_result": "未知真实文件、复制状态与变化；无sha比对不能认证",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E075",
+        "UB99-E076"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M16",
+      "topic": "C",
+      "inputs": "假设make_install.sh最初不在项目根cwd",
+      "operations": "PROJ_ROOT=$(pwd)与source ./scripts/...的相对路径可能不指向期望文件",
+      "conditional_result": "只能作为条件路径失败前缀；不能宣称Owner实际从错误目录运行",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E049",
+        "UB99-E053",
+        "UB99-E054",
+        "UB99-E055"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M17",
+      "topic": "ABC",
+      "inputs": "同一路径/mnt/EFI/BOOT/BOOTX64.EFI两次可能由不同入口写入",
+      "operations": "CMake PROGRAMS使用跟踪源，独立cp使用外部EDK输出",
+      "conditional_result": "必须区分来源与目标；没有证据支持两来源相等或哪个实际部署",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E018",
+        "UB99-E063",
+        "UB99-E075"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "UB99-M18",
+      "topic": "ABC",
+      "inputs": "任何已见EFI文件存在及安装脚本文本条件，真实Read长度未知",
+      "operations": "BE98 FileInfo、Read长度、目标页/入口链依然独立未证",
+      "conditional_result": "99不关闭98源码/运行缺口，仅补制品来源导航",
+      "first_stop_gate": "隔离纯文本/数学及假设shell/CMake语义；实际源对象、版本、工作目录、命令状态、设备或文件字节先门",
+      "evidence_ids": [
+        "UB99-E084",
+        "UB99-E085",
+        "UB99-E086",
+        "UB99-E087"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 18,
+  "historical_links": {
+    "R98_S01": "unconsumed auxiliary status vs demonstrably reachable failure distinct",
+    "R98_S02": "UINT16 multiplication int promotion and EFI_PAGE_SIZE mask type remain conditional",
+    "R98_S03": "actual callable ownership and no assumed reload success; do not broaden ELF loader audit",
+    "R85_S01": "two-space parser string not empty, irrelevant to this new builder",
+    "R85_S02": "kernel options_flags are not EFI compiler flags; CMake generator/platform evidence remains conditional",
+    "R85_S03": "prior metadata inconsistency not inherited; Git object/source identity distinguished",
+    "R80_S01": "legal one-past pointer creation distinct from member invalid access",
+    "source_priors": [
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-F01",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-F02",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-F05",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-F07",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-F09",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-U01",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-U02",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-U05",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-U06",
+      "CORE-USER-BOOT-ELF-LOAD-98::BE98-U09",
+      "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U01",
+      "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U03",
+      "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U05",
+      "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U08",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F05",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F08",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09"
+    ]
+  },
+  "read_account": {
+    "new_this_batch": [
+      "141_CONTRACT_EOF",
+      "98_REVIEW_EOF",
+      "99_CHECKPOINT_EOF",
+      "110_124_EOF",
+      "63_79_PROTOCOL_V2_EOF",
+      "85_REVIEW_EOF",
+      "85_MANIFEST_DEFERRED_FIXED_2489_EOF",
+      "85_facts_and_evidence_targeted_U08_and_E108",
+      "PR17_comments_6952332078_6951092059_full",
+      "time_options_flags_full_and_master_time_canaries",
+      "source_quotation_files_exact_and_directory_metadata",
+      "all_87_fixed_time_quote_content_reopened_by_source_in_four_groups",
+      "scoped_GitHub_directory_BLOB_metadata_and_CMake3.16.9_plus_GNU_Bash_official_doc"
+    ],
+    "same_EXEC14_prior_own_read_reused": [
+      "nine_MyOS2_rules_other_than_this_turn_reloaded_63_79_protocol_checked_same_Git_objects",
+      "task_local_Mnemosyne_previous_refresh",
+      "98_six_files_full_previous_turn_and_six_blob_sha_checked_identical_now"
+    ],
+    "not_read_or_not_executed": [
+      "real_DSC_and_EDK_build_log",
+      "EFI_PE_binary_bytes_or_disassembly",
+      "configured_generated_CMake_build",
+      "real_shell_execution_mount_cp_make_install_rm_objdump",
+      "UEFI_SDK_header_implementation_and_running_firmware",
+      "ELF32_or_reload_algorithm",
+      "actual_boot_device_or_credentials",
+      "complete_Local_P9_or_graphviz"
+    ]
+  },
+  "graph_alignment": {
+    "file": "uefi-build-provenance-paths.dot",
+    "nodes": 46,
+    "edges": 61,
+    "dangling_edges": 0,
+    "Graphviz": "NOT_RUN",
+    "full_CFG": false,
+    "all_matrix_node_names_present": true,
+    "edge_types_not_direct_calls": true,
+    "declared_install_and_copy_requests_not_runtime_evidence": true
+  },
+  "full_local_P9": "NOT_RUN",
+  "configured_compiled_linked": "NOT_RUN",
+  "repository_programs_scripts": "NOT_RUN",
+  "install_mount_copy_objdump": "NOT_RUN",
+  "binary_disassembled": "NOT_RUN",
+  "Graphviz_QEMU_hardware": "NOT_RUN",
+  "patch_authorized": false,
+  "owner_decisions_requested_now": []
+}

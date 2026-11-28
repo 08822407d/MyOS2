@@ -1,0 +1,1665 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57",
+  "record_type": "bounded_fat_directory_mutation_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "9b7239b29b0d",
+  "read_channel": "GitHub_connector",
+  "phase": 2,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "authority": "Owner command + work order + 86 contract; handoff only evidence",
+  "source_ledger": [
+    {
+      "path": "mykernel/fs/fat/namei_vfat.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ab8f748f3b82",
+      "ranges": "1-323",
+      "read_kind": "full_new_read",
+      "symbols": [
+        "vfat_striptail_len",
+        "myos_vfat_create_shortname",
+        "ascii_to16",
+        "vfat_build_slots",
+        "vfat_add_entry",
+        "vfat_dir_inode_operations_legacy_B"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_dir.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "a6ef65d326d2",
+      "ranges": "1-207",
+      "read_kind": "full_new_read",
+      "symbols": [
+        "FAT32_dir_empty",
+        "FAT32_alloc_new_dir",
+        "fat_add_entries"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32_namei.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "9b834043d7c7",
+      "ranges": "1-209",
+      "read_kind": "full_new_read",
+      "symbols": [
+        "FAT32_lookup",
+        "FAT32_create",
+        "FAT32_mkdir",
+        "FAT32_release_clusters",
+        "FAT32_mark_entry_romoved",
+        "FAT32_rmdir",
+        "FAT32_unlink",
+        "vfat_dir_inode_operations"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32_iobuf.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "f577b7f657",
+      "ranges": "1-269",
+      "read_kind": "full_new_read",
+      "symbols": [
+        "get_cluster_chain",
+        "iter_init",
+        "readent",
+        "write",
+        "iter_next",
+        "expand",
+        "init",
+        "release"
+      ]
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "447307aaa4b1",
+      "ranges": "28-106; 311-351; 383-418; 420-510",
+      "read_kind": "bounded_direct_new_read",
+      "symbols": [
+        "FAT32_ent_empty",
+        "get_full_ent",
+        "FAT getter/finder/setter",
+        "FAT32_getdents64",
+        "write_inode",
+        "FAT32_sb_ops"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/fat32.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "f03f3c0c1ec7",
+      "ranges": "75-180",
+      "read_kind": "bounded_direct_new_read",
+      "symbols": [
+        "FAT32_inode_info_s",
+        "SBinfo_s",
+        "iobuf_s",
+        "flags",
+        "geometry"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/fat.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "2e27019fd65d",
+      "ranges": "113-139; 234-243; 287-291; 405-412",
+      "read_kind": "bounded_direct_new_read",
+      "symbols": [
+        "msdos_inode_info_s",
+        "fat_slot_info_s",
+        "fat_checksum",
+        "fat_set_start"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/linux/msdos_fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "bab4f2fcbc97",
+      "ranges": "29-80; 171-216",
+      "read_kind": "bounded_direct_new_read",
+      "symbols": [
+        "MSDOS_NAME",
+        "MSDOS_SLOTS",
+        "FAT_LFN_LEN",
+        "DIR_SIZE",
+        "packed entries"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/namei.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "99eb1fabe735",
+      "ranges": "770-850; 899-939; 955-1002; 1021-1082; 1125-1199",
+      "read_kind": "bounded_direct_new_read",
+      "symbols": [
+        "filename_create",
+        "done_path_create",
+        "do_creatat",
+        "vfs_mkdir",
+        "do_mkdirat",
+        "vfs_rmdir",
+        "do_rmdir",
+        "vfs_unlink",
+        "do_unlinkat"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/init.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "29996a104297",
+      "ranges": "113-136",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "init_mkdir",
+        "do_name direct mkdir entry"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "fe527991618b",
+      "ranges": "545-659; 1910-1940",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "inode_s fields and inode operations"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/namei.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "42d98f742755",
+      "ranges": "1-123",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "namei declarations"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/dcache.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "72fdb5b01968",
+      "ranges": "40-95",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "qstr_s",
+        "dentry_s"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ef531baa8317",
+      "ranges": "45-85",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "loff_t",
+        "size_t declarations"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/lib/string.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "b99203323327",
+      "ranges": "60-75",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "strrchr declaration"
+      ]
+    },
+    {
+      "path": "mykernel/lib/string/string.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "cbb2752bc8b2",
+      "ranges": "432-448",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "conditional strrchr fallback"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/lib/errno.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "e58cab61b391",
+      "ranges": "1-36",
+      "read_kind": "extra_file_new_read",
+      "symbols": [
+        "errno context"
+      ]
+    }
+  ],
+  "name_slot_matrix": [
+    {
+      "len_after_striptail": 0,
+      "long_slots": 0,
+      "total_slots": 0,
+      "bytes": 0,
+      "capacity21": null,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 1,
+      "long_slots": 1,
+      "total_slots": 2,
+      "bytes": 64,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 3,
+      "long_slots": 1,
+      "total_slots": 2,
+      "bytes": 64,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 7,
+      "long_slots": 1,
+      "total_slots": 2,
+      "bytes": 64,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 8,
+      "long_slots": 1,
+      "total_slots": 2,
+      "bytes": 64,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 9,
+      "long_slots": 1,
+      "total_slots": 2,
+      "bytes": 64,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 12,
+      "long_slots": 1,
+      "total_slots": 2,
+      "bytes": 64,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 13,
+      "long_slots": 1,
+      "total_slots": 2,
+      "bytes": 64,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 14,
+      "long_slots": 2,
+      "total_slots": 3,
+      "bytes": 96,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 25,
+      "long_slots": 2,
+      "total_slots": 3,
+      "bytes": 96,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 26,
+      "long_slots": 2,
+      "total_slots": 3,
+      "bytes": 96,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 27,
+      "long_slots": 3,
+      "total_slots": 4,
+      "bytes": 128,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 254,
+      "long_slots": 20,
+      "total_slots": 21,
+      "bytes": 672,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 255,
+      "long_slots": 20,
+      "total_slots": 21,
+      "bytes": 672,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 260,
+      "long_slots": 20,
+      "total_slots": 21,
+      "bytes": 672,
+      "capacity21": true,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "len_after_striptail": 261,
+      "long_slots": 21,
+      "total_slots": 22,
+      "bytes": 704,
+      "capacity21": false,
+      "entry": "len=0 is rejected in vfat_add_entry before helper",
+      "scope": "helper_input_only; no verified VFS reachability"
+    }
+  ],
+  "slot_search_traces": [
+    {
+      "nr_slots": 2,
+      "contents": "EEE",
+      "base_off": 0,
+      "bufend_premise": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion",
+      "stopAt": 2097152,
+      "iterations": [
+        {
+          "iteration": 1,
+          "pos": 0,
+          "kind": "E",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": 0,
+          "emtpy_count_after": 0,
+          "cursor_after": 32,
+          "break_on_count": false
+        },
+        {
+          "iteration": 2,
+          "pos": 32,
+          "kind": "E",
+          "empty_off_before": 0,
+          "emtpy_count_before": 0,
+          "empty_off_after": 0,
+          "emtpy_count_after": 1,
+          "cursor_after": 64,
+          "break_on_count": false
+        },
+        {
+          "iteration": 3,
+          "pos": 64,
+          "kind": "E",
+          "empty_off_before": 0,
+          "emtpy_count_before": 1,
+          "empty_off_after": 0,
+          "emtpy_count_after": 2,
+          "cursor_after": 96,
+          "break_on_count": true
+        }
+      ],
+      "observed_break": true,
+      "requested_write_off": 0,
+      "requested_write_size": 64,
+      "local_error_pre_return": "0",
+      "function_return_on_normal_cleanup": 0,
+      "limit": "abstract bounded E/X slots only; no disk or compiled C"
+    },
+    {
+      "nr_slots": 2,
+      "contents": "EXEEE",
+      "base_off": 0,
+      "bufend_premise": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion",
+      "stopAt": 2097152,
+      "iterations": [
+        {
+          "iteration": 1,
+          "pos": 0,
+          "kind": "E",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": 0,
+          "emtpy_count_after": 0,
+          "cursor_after": 32,
+          "break_on_count": false
+        },
+        {
+          "iteration": 2,
+          "pos": 32,
+          "kind": "X",
+          "empty_off_before": 0,
+          "emtpy_count_before": 0,
+          "empty_off_after": -1,
+          "emtpy_count_after": 0,
+          "cursor_after": 64,
+          "break_on_count": false
+        },
+        {
+          "iteration": 3,
+          "pos": 64,
+          "kind": "E",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": 64,
+          "emtpy_count_after": 0,
+          "cursor_after": 96,
+          "break_on_count": false
+        },
+        {
+          "iteration": 4,
+          "pos": 96,
+          "kind": "E",
+          "empty_off_before": 64,
+          "emtpy_count_before": 0,
+          "empty_off_after": 64,
+          "emtpy_count_after": 1,
+          "cursor_after": 128,
+          "break_on_count": false
+        },
+        {
+          "iteration": 5,
+          "pos": 128,
+          "kind": "E",
+          "empty_off_before": 64,
+          "emtpy_count_before": 1,
+          "empty_off_after": 64,
+          "emtpy_count_after": 2,
+          "cursor_after": 160,
+          "break_on_count": true
+        }
+      ],
+      "observed_break": true,
+      "requested_write_off": 64,
+      "requested_write_size": 64,
+      "local_error_pre_return": "0",
+      "function_return_on_normal_cleanup": 0,
+      "limit": "abstract bounded E/X slots only; no disk or compiled C"
+    },
+    {
+      "nr_slots": 2,
+      "contents": "EE",
+      "base_off": 2097088,
+      "bufend_premise": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion",
+      "stopAt": 2097152,
+      "iterations": [
+        {
+          "iteration": 1,
+          "pos": 2097088,
+          "kind": "E",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": 2097088,
+          "emtpy_count_after": 0,
+          "cursor_after": 2097120,
+          "break_on_count": false
+        },
+        {
+          "iteration": 2,
+          "pos": 2097120,
+          "kind": "E",
+          "empty_off_before": 2097088,
+          "emtpy_count_before": 0,
+          "empty_off_after": 2097088,
+          "emtpy_count_after": 1,
+          "cursor_after": 2097152,
+          "break_on_count": false
+        }
+      ],
+      "observed_break": false,
+      "requested_write_off": 2097088,
+      "requested_write_size": 64,
+      "local_error_pre_return": "0",
+      "function_return_on_normal_cleanup": 0,
+      "limit": "abstract bounded E/X slots only; no disk or compiled C"
+    },
+    {
+      "nr_slots": 2,
+      "contents": "E",
+      "base_off": 2097120,
+      "bufend_premise": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion",
+      "stopAt": 2097152,
+      "iterations": [
+        {
+          "iteration": 1,
+          "pos": 2097120,
+          "kind": "E",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": 2097120,
+          "emtpy_count_after": 0,
+          "cursor_after": 2097152,
+          "break_on_count": false
+        }
+      ],
+      "observed_break": false,
+      "requested_write_off": 2097120,
+      "requested_write_size": 64,
+      "local_error_pre_return": "0",
+      "function_return_on_normal_cleanup": 0,
+      "limit": "abstract bounded E/X slots only; no disk or compiled C"
+    },
+    {
+      "nr_slots": 2,
+      "contents": "XX",
+      "base_off": 2097088,
+      "bufend_premise": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion",
+      "stopAt": 2097152,
+      "iterations": [
+        {
+          "iteration": 1,
+          "pos": 2097088,
+          "kind": "X",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": -1,
+          "emtpy_count_after": 0,
+          "cursor_after": 2097120,
+          "break_on_count": false
+        },
+        {
+          "iteration": 2,
+          "pos": 2097120,
+          "kind": "X",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": -1,
+          "emtpy_count_after": 0,
+          "cursor_after": 2097152,
+          "break_on_count": false
+        }
+      ],
+      "observed_break": false,
+      "requested_write_off": null,
+      "requested_write_size": 0,
+      "local_error_pre_return": "-ENOENT",
+      "function_return_on_normal_cleanup": 0,
+      "limit": "abstract bounded E/X slots only; no disk or compiled C"
+    },
+    {
+      "nr_slots": 1,
+      "contents": "EE",
+      "base_off": 0,
+      "bufend_premise": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion",
+      "stopAt": 2097152,
+      "iterations": [
+        {
+          "iteration": 1,
+          "pos": 0,
+          "kind": "E",
+          "empty_off_before": -1,
+          "emtpy_count_before": 0,
+          "empty_off_after": 0,
+          "emtpy_count_after": 0,
+          "cursor_after": 32,
+          "break_on_count": false
+        },
+        {
+          "iteration": 2,
+          "pos": 32,
+          "kind": "E",
+          "empty_off_before": 0,
+          "emtpy_count_before": 0,
+          "empty_off_after": 0,
+          "emtpy_count_after": 1,
+          "cursor_after": 64,
+          "break_on_count": true
+        }
+      ],
+      "observed_break": true,
+      "requested_write_off": 0,
+      "requested_write_size": 32,
+      "local_error_pre_return": "0",
+      "function_return_on_normal_cleanup": 0,
+      "limit": "abstract bounded E/X slots only; no disk or compiled C"
+    }
+  ],
+  "create_mkdir_event_matrix": {
+    "create": [
+      {
+        "ordinal": 1,
+        "event": "vfs create direct callback",
+        "actor": "do_creatat",
+        "kind": "CALL",
+        "fact": "dir->i_op->create(dir,dentry,mode) and use error",
+        "premises": "filename_create returns valid negative/target dentry and callback selected",
+        "anchors": [
+          "B15"
+        ]
+      },
+      {
+        "ordinal": 2,
+        "event": "source shortname and long slots",
+        "actor": "vfat_add_entry->vfat_build_slots",
+        "kind": "LOCAL_REQUEST",
+        "fact": "qstr strip, allocate 21 short slots, build LFN+8.3",
+        "premises": "positive safe len, reachable pointers, allocated slots",
+        "anchors": [
+          "A16",
+          "A10",
+          "A14"
+        ]
+      },
+      {
+        "ordinal": 3,
+        "event": "parent directory scan and iobuf write request",
+        "actor": "fat_add_entries",
+        "kind": "CALL/RESULT_MASK",
+        "fact": "iobuf_write return discarded; function normal return0",
+        "premises": "valid iteration; no prior invalid deref",
+        "anchors": [
+          "A25",
+          "A26"
+        ]
+      },
+      {
+        "ordinal": 4,
+        "event": "file inode/dentry publication",
+        "actor": "FAT32_create and immediate do_creatat/done_path_create",
+        "kind": "ABSENT_IN_INSPECTED_DIRECT_BODY",
+        "fact": "no d_inode assignment in these read bodies; sinfo arg not consumed",
+        "premises": "not a full VFS/dcache audit",
+        "anchors": [
+          "B01",
+          "B02",
+          "B15",
+          "B17",
+          "B18"
+        ]
+      },
+      {
+        "ordinal": 5,
+        "event": "create return",
+        "actor": "FAT32_create",
+        "kind": "RETURN",
+        "fact": "returns err from vfat_add_entry (which can return0 despite iobuf failures)",
+        "premises": "normal cleanup/return",
+        "anchors": [
+          "B02",
+          "A26"
+        ]
+      }
+    ],
+    "mkdir": [
+      {
+        "ordinal": 1,
+        "event": "u32 new cluster candidate",
+        "actor": "FAT32_alloc_new_dir",
+        "kind": "CALL_RESULT",
+        "fact": "FAT32_find_available_cluster u32 stored into cluster; <2 returned directly",
+        "anchors": [
+          "B06"
+        ]
+      },
+      {
+        "ordinal": 2,
+        "event": "dot/dotdot metadata preparation",
+        "actor": "FAT32_alloc_new_dir",
+        "kind": "BUFFER_WRITE",
+        "fact": "buffer of bytes_per_sector; two 32byte entries names, attributes, sizes and starting clusters",
+        "premises": "bytes_per_sector>=64, valid fsbi/finode, buffer allocated",
+        "anchors": [
+          "B05",
+          "B07",
+          "B08"
+        ]
+      },
+      {
+        "ordinal": 3,
+        "event": "directory first sector WRITE",
+        "actor": "FAT32_alloc_new_dir",
+        "kind": "I_O_REQUEST",
+        "fact": "ROOTBLK_TRANSFER(CMD_WRITE,sector,1,buf); nonzero leads u32(-EIO) early return",
+        "premises": "sector valid, device callee normal; result not proof bytes written",
+        "anchors": [
+          "B08",
+          "B09"
+        ]
+      },
+      {
+        "ordinal": 4,
+        "event": "FAT end marker request",
+        "actor": "FAT32_alloc_new_dir",
+        "kind": "I_O_REQUEST",
+        "fact": "FAT32_write_FAT_Entry(fsbi,cluster,FAT_ENT_EOF); return ignored",
+        "premises": "prior block transfer returned0",
+        "anchors": [
+          "B10",
+          "B13"
+        ]
+      },
+      {
+        "ordinal": 5,
+        "event": "u32 to int and negative gate",
+        "actor": "FAT32_mkdir",
+        "kind": "CONVERSION_BRANCH",
+        "fact": "cluster = FAT32_alloc_new_dir; if(cluster < 0)...",
+        "premises": "C conversion if u32 value out of int range is implementation-defined",
+        "anchors": [
+          "B03"
+        ]
+      },
+      {
+        "ordinal": 6,
+        "event": "parent dir slots insertion",
+        "actor": "FAT32_mkdir->vfat_add_entry",
+        "kind": "CALL",
+        "fact": "parent entry name and cluster submitted after gate; insertion could return0 despite failure",
+        "premises": "conversion passed, parent valid",
+        "anchors": [
+          "B04",
+          "A26"
+        ]
+      },
+      {
+        "ordinal": 7,
+        "event": "mkdir inode/dentry publication",
+        "actor": "FAT32_mkdir and direct do_mkdirat/done_path_create",
+        "kind": "ABSENT_IN_INSPECTED_DIRECT_BODY",
+        "fact": "no direct binding of newly created inode to dentry in inspected bodies",
+        "premises": "not a comprehensive dcache claim",
+        "anchors": [
+          "B04",
+          "B16",
+          "B17"
+        ]
+      },
+      {
+        "ordinal": 8,
+        "event": "rollback after parent insertion failure",
+        "actor": "FAT32_mkdir",
+        "kind": "NOT_OBSERVED_IN_BOUND_BODY",
+        "fact": "no corresponding release of earlier cluster/table requests in visible function path",
+        "premises": "actual disk state and write outcomes unproven",
+        "anchors": [
+          "B04",
+          "B10"
+        ]
+      }
+    ]
+  },
+  "delete_lifecycle_matrix": [
+    {
+      "step": 1,
+      "action": "rmdir only: validate emptiness",
+      "producer": "FAT32_dir_empty",
+      "return_type": "int",
+      "local_result": "-ENOTEMPTY for a recognized ordinary entry; ENOERR may survive getter ERR_PTR termination",
+      "early_stop": "unsafe getter attr/invalid iobuf may precede a normal return",
+      "anchors": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C06",
+        "C07"
+      ]
+    },
+    {
+      "step": 2,
+      "action": "collect child cluster chain",
+      "producer": "FAT32_release_clusters->FAT32_iobuf_init",
+      "return_type": "iobuf pointer",
+      "local_result": "no direct IS_ERR guard in helper",
+      "early_stop": "invalid source inode/chain, zero bufsize, ERR_PTR handling",
+      "anchors": [
+        "C08"
+      ]
+    },
+    {
+      "step": 3,
+      "action": "mark every source cluster flag DELETE",
+      "producer": "FAT32_release_clusters",
+      "return_type": "int without return statement",
+      "local_result": "not consumed by rmdir or unlink",
+      "early_stop": "nr_clus/flags array validity and index domain",
+      "anchors": [
+        "C08"
+      ]
+    },
+    {
+      "step": 4,
+      "action": "release per-cluster buffer and send FAT_FREE",
+      "producer": "FAT32_iobuf_release",
+      "return_type": "void",
+      "local_result": "FAT setter result ignored; DELETE does not perform DIRTY buffer WRITE",
+      "early_stop": "bad pointer/normal callee return",
+      "anchors": [
+        "C18",
+        "C19",
+        "C20"
+      ]
+    },
+    {
+      "step": 5,
+      "action": "mark parent entry first byte with 0xe5 for each offset",
+      "producer": "FAT32_mark_entry_romoved",
+      "return_type": "int without return statement",
+      "local_result": "one iobuf_write request per i=0,32,... <length; result discarded",
+      "early_stop": "parent iobuf, off arithmetic, size1 start bounds, invalid buffer",
+      "anchors": [
+        "C09",
+        "C10",
+        "C15",
+        "C16",
+        "C17"
+      ]
+    },
+    {
+      "step": 6,
+      "action": "release parent dirty buffers",
+      "producer": "FAT32_iobuf_release",
+      "return_type": "void",
+      "local_result": "DIRTY flags may issue requested block WRITE; block return discarded",
+      "early_stop": "write availability and buffer flags",
+      "anchors": [
+        "C18",
+        "C19"
+      ]
+    },
+    {
+      "step": 7,
+      "action": "return from directory operation",
+      "producer": "FAT32_rmdir/FAT32_unlink",
+      "return_type": "int",
+      "local_result": "rmdir returns unchanged error (usually 0 after empty check); unlink initial 0",
+      "early_stop": "normal helper completion prerequisite",
+      "anchors": [
+        "C12",
+        "C14"
+      ]
+    },
+    {
+      "step": 8,
+      "action": "VFS post-callback",
+      "producer": "vfs_rmdir/vfs_unlink and do_unlinkat",
+      "return_type": "int/long",
+      "local_result": "vfs_rmdir error=0 sets S_DEAD; do_unlinkat conditionally calls iput; no proof of POSIX full open-file lifecycle",
+      "early_stop": "valid dentry/inode and reference semantics are outside task",
+      "anchors": [
+        "C24",
+        "C25",
+        "C26"
+      ]
+    }
+  ],
+  "error_return_matrix": [
+    {
+      "source": "vfat_add_entry",
+      "condition": "stripped len=0",
+      "local_ret": "-ENOENT",
+      "propagated": "FAT32_create returns err if normal",
+      "notes": "no slots allocated"
+    },
+    {
+      "source": "myos_vfat_create_shortname",
+      "condition": "defined normal path",
+      "local_ret": "0",
+      "propagated": "vfat_build_slots enters LFN path",
+      "notes": "commented return1 not a real producer"
+    },
+    {
+      "source": "fat_add_entries",
+      "condition": "empty_off=-1 and emtpy_count=0 at scan exit",
+      "local_ret": "0",
+      "propagated": "vfat_add_entry may return0",
+      "notes": "local error=-ENOENT assigned then discarded"
+    },
+    {
+      "source": "fat_add_entries",
+      "condition": "iobuf_write returns -ENOENT/-ENOMEM",
+      "local_ret": "0 if cleanup returns",
+      "propagated": "caller sees0 if upstream returns",
+      "notes": "no inspection of write result"
+    },
+    {
+      "source": "FAT32_alloc_new_dir",
+      "condition": "buf==NULL",
+      "local_ret": "u32(-ENOMEM)",
+      "propagated": "FAT32_mkdir int conversion implementation-defined when out-of-range",
+      "notes": "no access to buf"
+    },
+    {
+      "source": "FAT32_alloc_new_dir",
+      "condition": "FAT32_find_available_cluster returns 0 or1",
+      "local_ret": "u32(0 or1)",
+      "propagated": "FAT32_mkdir cluster<0 false; may submit 0/1 to add_entry",
+      "notes": "no statement that first cluster actually reserved"
+    },
+    {
+      "source": "FAT32_alloc_new_dir",
+      "condition": "ROOTBLK_TRANSFER(CMD_WRITE) nonzero",
+      "local_ret": "u32(-EIO)",
+      "propagated": "conversion gate implementation-defined for large u32",
+      "notes": "allocated buf not freed on this return"
+    },
+    {
+      "source": "FAT32_alloc_new_dir",
+      "condition": "WRITE returns0 and FAT setter normally returns",
+      "local_ret": "u32 cluster",
+      "propagated": "int cluster then parent entry add",
+      "notes": "neither FAT setter return nor media persistence checked"
+    },
+    {
+      "source": "FAT32_dir_empty",
+      "condition": "recognized ordinary non-dot entry and earlier gates valid",
+      "local_ret": "-ENOTEMPTY",
+      "propagated": "FAT32_rmdir returns early",
+      "notes": "error not universal"
+    },
+    {
+      "source": "FAT32_dir_empty",
+      "condition": "getter returns ERR_PTR in while predicate without earlier fault and no ordinary entry",
+      "local_ret": "ENOERR (0)",
+      "propagated": "rmdir proceeds",
+      "notes": "R35 getter often reads attr before safe ERR_PTR return; conditional only"
+    },
+    {
+      "source": "FAT32_release_clusters",
+      "condition": "normal end of int helper",
+      "local_ret": "no explicit return",
+      "propagated": "caller does not read value",
+      "notes": "do not claim deterministic random errno"
+    },
+    {
+      "source": "FAT32_mark_entry_romoved",
+      "condition": "normal end of int helper",
+      "local_ret": "no explicit return",
+      "propagated": "caller does not read value",
+      "notes": "iobuf_write return ignored"
+    },
+    {
+      "source": "FAT32_rmdir",
+      "condition": "FAT32_dir_empty returned0 and helpers complete",
+      "local_ret": "0",
+      "propagated": "vfs_rmdir sets S_DEAD",
+      "notes": "not a disk completion certificate"
+    },
+    {
+      "source": "FAT32_unlink",
+      "condition": "helpers complete",
+      "local_ret": "0",
+      "propagated": "vfs_unlink sees0",
+      "notes": "no direct check of FAT/parent write statuses"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "case": "LEN_0",
+      "type": "name_slots",
+      "input": 0,
+      "result": 0,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_1",
+      "type": "name_slots",
+      "input": 1,
+      "result": 2,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_3",
+      "type": "name_slots",
+      "input": 3,
+      "result": 2,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_7",
+      "type": "name_slots",
+      "input": 7,
+      "result": 2,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_8",
+      "type": "name_slots",
+      "input": 8,
+      "result": 2,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_9",
+      "type": "name_slots",
+      "input": 9,
+      "result": 2,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_12",
+      "type": "name_slots",
+      "input": 12,
+      "result": 2,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_13",
+      "type": "name_slots",
+      "input": 13,
+      "result": 2,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_14",
+      "type": "name_slots",
+      "input": 14,
+      "result": 3,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_25",
+      "type": "name_slots",
+      "input": 25,
+      "result": 3,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_26",
+      "type": "name_slots",
+      "input": 26,
+      "result": 3,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_27",
+      "type": "name_slots",
+      "input": 27,
+      "result": 4,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_254",
+      "type": "name_slots",
+      "input": 254,
+      "result": 21,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_255",
+      "type": "name_slots",
+      "input": 255,
+      "result": 21,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_260",
+      "type": "name_slots",
+      "input": 260,
+      "result": 21,
+      "precondition": "conditioned on valid qstr, integer and allocations"
+    },
+    {
+      "case": "LEN_261",
+      "type": "name_slots",
+      "input": 261,
+      "result": 22,
+      "precondition": "helper_input_only; no verified VFS reachability"
+    },
+    {
+      "case": "RUN_1",
+      "type": "free_run",
+      "input": {
+        "seq": "EEE",
+        "n": 2,
+        "base": 0
+      },
+      "result": {
+        "iterations": 3,
+        "break": true,
+        "write": true,
+        "off": 0,
+        "bytes": 64
+      },
+      "precondition": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion"
+    },
+    {
+      "case": "RUN_2",
+      "type": "free_run",
+      "input": {
+        "seq": "EXEEE",
+        "n": 2,
+        "base": 0
+      },
+      "result": {
+        "iterations": 5,
+        "break": true,
+        "write": true,
+        "off": 64,
+        "bytes": 64
+      },
+      "precondition": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion"
+    },
+    {
+      "case": "RUN_3",
+      "type": "free_run",
+      "input": {
+        "seq": "EE",
+        "n": 2,
+        "base": 2097088
+      },
+      "result": {
+        "iterations": 2,
+        "break": false,
+        "write": true,
+        "off": 2097088,
+        "bytes": 64
+      },
+      "precondition": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion"
+    },
+    {
+      "case": "RUN_4",
+      "type": "free_run",
+      "input": {
+        "seq": "E",
+        "n": 2,
+        "base": 2097120
+      },
+      "result": {
+        "iterations": 1,
+        "break": false,
+        "write": true,
+        "off": 2097120,
+        "bytes": 64
+      },
+      "precondition": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion"
+    },
+    {
+      "case": "RUN_5",
+      "type": "free_run",
+      "input": {
+        "seq": "XX",
+        "n": 2,
+        "base": 2097088
+      },
+      "result": {
+        "iterations": 2,
+        "break": false,
+        "write": false,
+        "off": null,
+        "bytes": 0
+      },
+      "precondition": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion"
+    },
+    {
+      "case": "RUN_6",
+      "type": "free_run",
+      "input": {
+        "seq": "EE",
+        "n": 1,
+        "base": 0
+      },
+      "result": {
+        "iterations": 2,
+        "break": true,
+        "write": true,
+        "off": 0,
+        "bytes": 32
+      },
+      "precondition": "bufend > FAT_MAX_DIR_SIZE or > shown cursor; no iobuf end expansion"
+    },
+    {
+      "case": "U32_0",
+      "type": "unsigned_to_signed",
+      "input": 0,
+      "result": 0,
+      "precondition": "in-range: same value"
+    },
+    {
+      "case": "U32_1",
+      "type": "unsigned_to_signed",
+      "input": 1,
+      "result": 1,
+      "precondition": "in-range: same value"
+    },
+    {
+      "case": "U32_2",
+      "type": "unsigned_to_signed",
+      "input": 2,
+      "result": 2,
+      "precondition": "in-range: same value"
+    },
+    {
+      "case": "U32_5",
+      "type": "unsigned_to_signed",
+      "input": 5,
+      "result": 5,
+      "precondition": "in-range: same value"
+    },
+    {
+      "case": "U32_2147483647",
+      "type": "unsigned_to_signed",
+      "input": 2147483647,
+      "result": 2147483647,
+      "precondition": "in-range: same value"
+    },
+    {
+      "case": "U32_2147483648",
+      "type": "unsigned_to_signed",
+      "input": 2147483648,
+      "result": -2147483648,
+      "precondition": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    },
+    {
+      "case": "U32_4294967284",
+      "type": "unsigned_to_signed",
+      "input": 4294967284,
+      "result": -12,
+      "precondition": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    },
+    {
+      "case": "U32_4294967291",
+      "type": "unsigned_to_signed",
+      "input": 4294967291,
+      "result": -5,
+      "precondition": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    },
+    {
+      "case": "U32_4294967295",
+      "type": "unsigned_to_signed",
+      "input": 4294967295,
+      "result": -1,
+      "precondition": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    },
+    {
+      "case": "DEL_LEN_0",
+      "type": "delete_mark_count",
+      "input": 0,
+      "result": 0,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "DEL_LEN_1",
+      "type": "delete_mark_count",
+      "input": 1,
+      "result": 1,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "DEL_LEN_31",
+      "type": "delete_mark_count",
+      "input": 31,
+      "result": 1,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "DEL_LEN_32",
+      "type": "delete_mark_count",
+      "input": 32,
+      "result": 1,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "DEL_LEN_33",
+      "type": "delete_mark_count",
+      "input": 33,
+      "result": 2,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "DEL_LEN_63",
+      "type": "delete_mark_count",
+      "input": 63,
+      "result": 2,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "DEL_LEN_64",
+      "type": "delete_mark_count",
+      "input": 64,
+      "result": 2,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "DEL_LEN_65",
+      "type": "delete_mark_count",
+      "input": 65,
+      "result": 3,
+      "precondition": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "case": "BUF_full_first_slot",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": 0,
+        "len": 32
+      },
+      "result": null,
+      "precondition": "full first slot"
+    },
+    {
+      "case": "BUF_exact_end",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": 480,
+        "len": 32
+      },
+      "result": null,
+      "precondition": "exact end"
+    },
+    {
+      "case": "BUF_cross_single_buffer_index512_first_invalid_under_512_byte_allocation",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": 480,
+        "len": 64
+      },
+      "result": 32,
+      "precondition": "cross single buffer; index512 first invalid under 512-byte allocation"
+    },
+    {
+      "case": "BUF_last_byte_valid_not_necessarily_valid_dirent_",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": 511,
+        "len": 1
+      },
+      "result": null,
+      "precondition": "last byte valid (not necessarily valid dirent)"
+    },
+    {
+      "case": "BUF_second_byte_crosses_buffer",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": 511,
+        "len": 2
+      },
+      "result": 1,
+      "precondition": "second byte crosses buffer"
+    },
+    {
+      "case": "BUF_start_of_next_buffer_if_allocated_and_nr_clus_bufsize_512",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": 512,
+        "len": 32
+      },
+      "result": null,
+      "precondition": "start of next buffer if allocated and nr_clus*bufsize>512"
+    },
+    {
+      "case": "BUF_zero_writes_but_lazy_allocation_read_can_precede_loop",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": 480,
+        "len": 0
+      },
+      "result": null,
+      "precondition": "zero writes, but lazy allocation/read can precede loop"
+    },
+    {
+      "case": "BUF_negative_initial_offset_rejected_ENOENT_before_deref",
+      "type": "buffer_span",
+      "input": {
+        "size": 512,
+        "offset": -1,
+        "len": 32
+      },
+      "result": 0,
+      "precondition": "negative initial offset rejected (-ENOENT) before deref"
+    }
+  ],
+  "integer_cast_matrix": [
+    {
+      "u32_value": 0,
+      "model_signed_int32": 0,
+      "less_than_zero_in_2complement": false,
+      "standard_note": "in-range: same value"
+    },
+    {
+      "u32_value": 1,
+      "model_signed_int32": 1,
+      "less_than_zero_in_2complement": false,
+      "standard_note": "in-range: same value"
+    },
+    {
+      "u32_value": 2,
+      "model_signed_int32": 2,
+      "less_than_zero_in_2complement": false,
+      "standard_note": "in-range: same value"
+    },
+    {
+      "u32_value": 5,
+      "model_signed_int32": 5,
+      "less_than_zero_in_2complement": false,
+      "standard_note": "in-range: same value"
+    },
+    {
+      "u32_value": 2147483647,
+      "model_signed_int32": 2147483647,
+      "less_than_zero_in_2complement": false,
+      "standard_note": "in-range: same value"
+    },
+    {
+      "u32_value": 2147483648,
+      "model_signed_int32": -2147483648,
+      "less_than_zero_in_2complement": true,
+      "standard_note": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    },
+    {
+      "u32_value": 4294967284,
+      "model_signed_int32": -12,
+      "less_than_zero_in_2complement": true,
+      "standard_note": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    },
+    {
+      "u32_value": 4294967291,
+      "model_signed_int32": -5,
+      "less_than_zero_in_2complement": true,
+      "standard_note": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    },
+    {
+      "u32_value": 4294967295,
+      "model_signed_int32": -1,
+      "less_than_zero_in_2complement": true,
+      "standard_note": "out-of-int-range: C result implementation-defined; signed32 model not compiler attestation"
+    }
+  ],
+  "delete_mark_length_matrix": [
+    {
+      "length": 0,
+      "mark_calls": 0,
+      "relative_offsets": [],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "length": 1,
+      "mark_calls": 1,
+      "relative_offsets": [
+        0
+      ],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "length": 31,
+      "mark_calls": 1,
+      "relative_offsets": [
+        0
+      ],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "length": 32,
+      "mark_calls": 1,
+      "relative_offsets": [
+        0
+      ],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "length": 33,
+      "mark_calls": 2,
+      "relative_offsets": [
+        0,
+        32
+      ],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "length": 63,
+      "mark_calls": 2,
+      "relative_offsets": [
+        0,
+        32
+      ],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "length": 64,
+      "mark_calls": 2,
+      "relative_offsets": [
+        0,
+        32
+      ],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    },
+    {
+      "length": 65,
+      "mark_calls": 3,
+      "relative_offsets": [
+        0,
+        32,
+        64
+      ],
+      "context": "valid, nonnegative length and off; assumes size_t/loff_t arithmetic valid"
+    }
+  ],
+  "iobuf_write_single_buffer_matrix": [
+    {
+      "bufsize": 512,
+      "offset": 0,
+      "size": 32,
+      "first_invalid": null,
+      "label": "full first slot"
+    },
+    {
+      "bufsize": 512,
+      "offset": 480,
+      "size": 32,
+      "first_invalid": null,
+      "label": "exact end"
+    },
+    {
+      "bufsize": 512,
+      "offset": 480,
+      "size": 64,
+      "first_invalid": 32,
+      "label": "cross single buffer; index512 first invalid under 512-byte allocation"
+    },
+    {
+      "bufsize": 512,
+      "offset": 511,
+      "size": 1,
+      "first_invalid": null,
+      "label": "last byte valid (not necessarily valid dirent)"
+    },
+    {
+      "bufsize": 512,
+      "offset": 511,
+      "size": 2,
+      "first_invalid": 1,
+      "label": "second byte crosses buffer"
+    },
+    {
+      "bufsize": 512,
+      "offset": 512,
+      "size": 32,
+      "first_invalid": null,
+      "label": "start of next buffer if allocated and nr_clus*bufsize>512"
+    },
+    {
+      "bufsize": 512,
+      "offset": 480,
+      "size": 0,
+      "first_invalid": null,
+      "label": "zero writes, but lazy allocation/read can precede loop"
+    },
+    {
+      "bufsize": 512,
+      "offset": -1,
+      "size": 32,
+      "first_invalid": 0,
+      "label": "negative initial offset rejected (-ENOENT) before deref"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F01",
+      "use": "get_full_ent possible unsafe error-pointer consumption",
+      "canonical_status": "prior_conditional_with_R35-S01/S02"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02",
+      "use": "last valid record may be overwritten by end flag; DM57-F06 is separate consumer",
+      "canonical_status": "prior_conditional_with_R35-S01/S02"
+    },
+    {
+      "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F03",
+      "use": "iobuf lazy read and write width/return ignored; DM57-F03 & F08 add directory consumers",
+      "canonical_status": "source_conditional_prior_with_R55-S01/S02"
+    },
+    {
+      "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F04",
+      "use": "iobuf NEWCLUS/DELETE/DIRTY flags and release result; DM57-F07 new delete consumer",
+      "canonical_status": "source_conditional_prior_with_R55-S01/S02"
+    },
+    {
+      "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F05",
+      "use": "FAT setter fixed return, ignored block results; DM57-F05/7 use not new same finding",
+      "canonical_status": "source_conditional_prior_with_R55-S01/S02"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-ALLOCATION-GEOMETRY-56::AG56-F02",
+      "use": "expand capacity/rollback; consumed rather than re-audited",
+      "canonical_status": "source_conditional_prior_with_R56-S01/S02"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F01",
+      "use": "distinct A/B superblock and inode provenance",
+      "canonical_status": "prior_conditional_with_R38-S01/S02"
+    }
+  ],
+  "provenance_boundaries": {
+    "qstr": "qstr.len is size_t; vfat_add_entry unsigned int length; helper accepts int; negative/out-of-range conversions not certified",
+    "string": "strrchr helper fallback scans to NUL; qstr length not used at call; compile-time alternate definition not audited",
+    "layout": "packed field-byte-sum gives 32B under declared integer sizes; no compiled sizeof tested",
+    "device": "ROOTBLK transfers only source-level requests, not disk/media success or crash consistency",
+    "objects": "FAT32 private_sb_info is not generic vfat s_fs_info; FAT32_inode_info_s not msdos_inode_info_s; prior SB38 gate persists",
+    "deletion": "inode/dentry existence, reference ownership and still-open lifetimes not certified",
+    "memory": "kzalloc returns and object validity are premises for post-allocation effects; cannot reason past earliest invalid access",
+    "model": "all cases finite JS abstract calculations from transcribed expressions; no C/ASM/repo scripts or existing fixtures executed",
+    "control_flow": "per-case normal-return premises and short-circuit order preserved",
+    "acceptance": "candidate facts only; C05 independently reviews; no signature of PASS"
+  }
+}

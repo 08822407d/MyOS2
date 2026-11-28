@@ -1,0 +1,1595 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EARLY-ROOT-HANDOFF-84",
+  "record_type": "static_early_root_handoff_facts",
+  "produced_by": "GPT-6（当前会话标识；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定，实际努力档及后端不可独立认证）",
+  "date": "2026-11-13",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "18047d54b0a2",
+  "mainline_release_short12": "6b5aabc24e2a",
+  "status": "final_static_review_pending_mainline",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "build_evidence": "NOT_RUN",
+  "phase": 2,
+  "open_questions": [
+    "ER84-U01",
+    "ER84-U02",
+    "ER84-U03",
+    "ER84-U04",
+    "ER84-U05",
+    "ER84-U06",
+    "ER84-U07",
+    "ER84-U08"
+  ],
+  "identity_and_authority": {
+    "receiver": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "conversation": "MYOS2-A-C06b 代码分析执行",
+    "from": "MYOS2-A-C06a / CHAT-EXEC-10 STOP_WRITING",
+    "not_mainline_writer": true,
+    "owner_trigger": "119 fixed startup pasted into this new conversation",
+    "canonical_branch": "claude/dazzling-cori-q0dnyt",
+    "canonical_pr": 17,
+    "existing_head_verified": "18047d54b0a2",
+    "contract": "120-user-early-root-handoff-contract.md@6b5aabc24e2a",
+    "allow_only_six_new_files": true,
+    "allowed_extra_action": "one unique PR17 formal delivery comment"
+  },
+  "mnemosyne_receive_report": {
+    "was_formed_in_this_conversation_before_myos_rules": true,
+    "receipt_type": "real_in_conversation_then_embedded_in_84",
+    "record_time": "2026-11-13; no fabricated precise clock timestamp",
+    "package_id": "MYOS2-C06a-EXEC10-TO-C06b-EXEC11-HANDOFF-20261113",
+    "received_package": "119-executor-continuation/00-C06a-to-C06b-handoff-package.md@6b5aabc24e2a",
+    "receiver_identity": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "prior_reader_statements_inherited": false,
+    "old_execution_scratch_available": false,
+    "actual_reads_at_receipt": [
+      "Mnemosyne README, current/human-approved-spec, receive command, AI onboarding/authority/repository map/checklist at 8b58dd7b07c1",
+      "MyOS2 119/120 handoff+contracts,81/82/83 reviews,83 original six,83 formal PR comment, checkpoint and four direct refs"
+    ],
+    "pending_at_receipt": [
+      "nine MyOS2 rules and 110 independent read",
+      "separate Mnemosyne guidance refresh",
+      "G00 identity and canaries"
+    ],
+    "those_steps_now_completed": true,
+    "pre_gate_github_mutations": 0,
+    "execution_source_boundary": "MyOS2 Owner 119/120 + nine MyOS2 constraints; Mnemosyne only behavior guidance, not a new project source",
+    "receiver_tier": "next_tier_declared_GPT-6+Extra",
+    "actual_backend": "not_attestable",
+    "safe_action_on_receipt": "load nine,110,then separate Mnemosyne refresh,then G00",
+    "maintenance_tasks_imported": false
+  },
+  "project_rules_load": {
+    "stage_after_receipt_before_guidance": true,
+    "fully_loaded_nine": [
+      "agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md",
+      "agent-workspace/README.md",
+      "agent-workspace/conventions.md",
+      "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/24-chatgpt-specialist-conversation-separation.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/28-review-and-next-batch-same-turn.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md"
+    ],
+    "owner_supplement_110_independently_fully_read": true,
+    "source_ref": "lead@6b5aabc24e2a",
+    "no_old_read_attestation_reused": true
+  },
+  "mnemosyne_guidance_refresh": {
+    "stage": "after nine project rules + 110, before G00",
+    "genuine_refresh_in_this_conversation": true,
+    "core": [
+      "README.md",
+      "current/human-approved-spec.md",
+      "commands/load-mnemosyne-guidance.md",
+      "current/guard-registry.yaml",
+      "current/user-operation-next-step-capability-and-intent-guard.md"
+    ],
+    "conditional": [
+      "current/github-single-active-pr-lineage-guard.md",
+      "current/model-tier-and-subtask-cost-routing-guard.md",
+      "current/run-context-and-pr-provenance-guard.md",
+      "current/artifact-delivery-and-direct-generation-guard.md",
+      "current/cross-conversation-execution-intent-and-operator-flow-guard.md",
+      "current/external-research-display-name-guard.md",
+      "current/source-artifact-preservation-and-design-rationale-guard.md",
+      "current/next-step-repository-write-visibility-guard.md"
+    ],
+    "navigation": [
+      "notes/registries/project-research-display-name-registry-v0.1.md §7"
+    ],
+    "source_ref": "Mnemosyne@8b58dd7b07c1",
+    "takeover_flag": false,
+    "maintenance_execution_source_not_imported": true,
+    "cost_route": "T1-T2 bounded static source inspection; conditional findings only; independent Pro T3 stage verdict belongs to mainline and is not self-signed",
+    "model_usage": "main chat only; no subagent, external premium API or extra model",
+    "scheduled_consolidation": "registry reminder recorded; no automatic maintenance act"
+  },
+  "g00_receipt": {
+    "result": "PASS",
+    "checked_after_receive_rules_guidance": true,
+    "project_lead_head_short12": "6b5aabc24e2a",
+    "exec_head_short12": "18047d54b0a2",
+    "master_direct_short12": "e8e60cd19540",
+    "time_direct_short12": "a039d9803ade",
+    "pr16": "OPEN_UNMERGED",
+    "pr17": "OPEN_DRAFT_UNMERGED",
+    "open_prs": [
+      16,
+      17
+    ],
+    "new_target_dir": "404_NOT_FOUND_AT_G00",
+    "formal_marker_matches": 0,
+    "exact_convention_1_2": "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。",
+    "canaries": [
+      {
+        "branch": "time",
+        "file": "mykernel/scripts/options_flags.cmake",
+        "value": "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\"
+      },
+      {
+        "branch": "master",
+        "file": "mykernel/scripts/options_flags.cmake",
+        "value": "\t-m64 -mcmodel=large -fPIE \\"
+      },
+      {
+        "branch": "time",
+        "file": "mykernel/debug/panic.c",
+        "value": "\tthis_cpu = smp_processor_id();"
+      },
+      {
+        "branch": "master",
+        "file": "mykernel/debug/panic.c",
+        "value": "\tthis_cpu = raw_smp_processor_id();"
+      }
+    ],
+    "conditions": "all direct reference checks passed, no actual pre-gate write, Owner conditional limited write activated"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/kernel/head_64.S",
+      "read": "full",
+      "role": "static asm/table labels/startup",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/head64.c",
+      "read": "full",
+      "role": "early C fixup/clear/copy",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "read": "full",
+      "role": "section/entry/boundary",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/misc/init-mm.c",
+      "read": "full",
+      "role": "init_top_pgt actual definition",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/fault/memfault_api.h",
+      "read": "full",
+      "role": "swapper alias and externs",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/mm_const_arch.h",
+      "read": "full",
+      "role": "constant include router",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "read": "full",
+      "role": "setup_arch",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "read": "full with line-focused revisit",
+      "role": "early premap/final CR3",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "read": "full",
+      "role": "start_kernel caller",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "read": "full",
+      "role": "page, kernel base",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "read": "full",
+      "role": "PUD PMD, image size, PMDS",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/sections.h",
+      "read": "full",
+      "role": "section declarations",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/include/linux/init/init.h",
+      "read": "full with excerpts refreshed",
+      "role": "section macros and C annotations",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/linkage.h",
+      "read": "full",
+      "role": "SYM labels and PAGE_ALIGN_BSS",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "read": "full",
+      "role": "__va and __pa_symbol",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "read": "full",
+      "role": "index aliases",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/mm.h",
+      "read": "full",
+      "role": "include router",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/asm.h",
+      "read": "full with targeted excerpts",
+      "role": "RIP helper",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/mmzone_const_arch.h",
+      "read": "full",
+      "role": "MAX_PHYSMEM_BITS",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/highmem/highmem_macro.h",
+      "read": "full",
+      "role": "ENT_PER_TABLE",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/fault/pgtable.h",
+      "read": "full with target excerpt",
+      "role": "actual index helper definitions",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_types_arch.h",
+      "read": "full",
+      "role": "p4d_t one-word union",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/mm_type_declaration_arch.h",
+      "read": "full",
+      "role": "pgd_t typedef",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "read": "full (G00 and PIC control)",
+      "role": "time C/ASM model flags",
+      "source": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/debug/panic.c",
+      "read": "target canary excerpt only",
+      "role": "G00 branch canary",
+      "source": "time@a039d9803ade"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "source": "R83-S01",
+      "consumption": "mutually exclusive branch and real caller distinctions; no inflated invoked path; reused as boundary only"
+    },
+    {
+      "source": "R83-S02",
+      "consumption": "present-bit and leaf-flag semantics are distinct; no promotion to hardware proof"
+    },
+    {
+      "source": "R83-S03",
+      "consumption": "same-level index versus parent reachability; request/write/return counts separate"
+    },
+    {
+      "source": "R82-S01",
+      "consumption": "phase must be named before range and mapping join"
+    },
+    {
+      "source": "R82-S02",
+      "consumption": "bytes/physical frame rounding and reverse clamp not conflated"
+    },
+    {
+      "source": "R82-S03",
+      "consumption": "capacities and candidate classes distinguish actual evidence"
+    },
+    {
+      "source": "R81-S01",
+      "consumption": "precise original source locator and verified quote bound"
+    },
+    {
+      "source": "R81-S02",
+      "consumption": "direct page allocation not assumed to pass slab filters"
+    },
+    {
+      "source": "R81-S03",
+      "consumption": "source vaddr/pa conversion assumptions and graph limited"
+    },
+    {
+      "source": "PT81-U03/U06",
+      "consumption": "do not close earlier table buffer/mapped window identities"
+    },
+    {
+      "source": "DM82-U08",
+      "consumption": "do not close prior coverage/provenance gap"
+    },
+    {
+      "source": "TI83-F01..F08/U01..U10",
+      "consumption": "historical findings retained in prior batch, no new independent count for same root"
+    }
+  ],
+  "constants_under_explicit_preconditions": {
+    "PAGE_SHIFT": 12,
+    "PAGE_SIZE_bytes": 4096,
+    "PMD_SHIFT": 21,
+    "PMD_SIZE_bytes": 2097152,
+    "PUD_SHIFT": 30,
+    "PUD_SIZE_bytes": 1073741824,
+    "PGDIR_SHIFT": 39,
+    "PGDIR_SIZE_bytes": 549755813888,
+    "PTRS_PER_PGD": 512,
+    "PTRS_PER_PUD": 512,
+    "PTRS_PER_PMD": 512,
+    "EARLY_DYNAMIC_PAGE_TABLES": 64,
+    "MAX_PHYSMEM_BITS": 46,
+    "KERNEL_IMAGE_SIZE_when_randomize_base_undefined_bytes": 536870912,
+    "KERNEL_IMAGE_SIZE_when_randomize_base_defined_bytes": 1073741824,
+    "PGD_KERN_HIGH_INDEX": 511,
+    "PUD_KERN_HIGH_INDEX": 510,
+    "PUD_FIXMAP_INDEX": 511,
+    "type_precondition": "x86-64 ulong 64bit; p4d_t consists of one p4dval_t and packed structure; sizeof(pgd_t)==8 if normal ABI, not compiled/verified",
+    "config_selection_limitation": "read time options flags full; CONFIG_RANDOMIZE_BASE absent from this CMake file, cannot globally prove not defined elsewhere",
+    "linker_assert_limit": "_end - __START_KERNEL_map <= 1GiB; no matching separate 512MiB assertion seen in fixed linker script",
+    "load_condition": "_text physical link offset >=16MiB and 2MiB-aligned on shown script entry; actual runtime relocation and link-map unknown"
+  },
+  "matrices": {
+    "static_table_inventory": [
+      {
+        "row_id": "ER84-A-ST01",
+        "symbol": "early_top_pgt",
+        "definition": "head_64.S::early_top_pgt",
+        "section_input": ".init.data",
+        "alignment": "4096",
+        "slots_nominal": 512,
+        "bytes_nominal": 4096,
+        "nonzero_initial": [
+          "[511]=level3_kernel_pgt-__START_KERNEL_map+_PAGE_TABLE_NOENC"
+        ],
+        "zero_initial_count": 511,
+        "scope": "startup_pgdir",
+        "evidence": [
+          "ER84-E01",
+          "ER84-E19"
+        ]
+      },
+      {
+        "row_id": "ER84-A-ST02",
+        "symbol": "early_dynamic_pgts",
+        "definition": "head_64.S::early_dynamic_pgts",
+        "section_input": ".init.data",
+        "alignment": "4096",
+        "slots_nominal": 32768,
+        "bytes_nominal": 262144,
+        "nonzero_initial": [],
+        "zero_initial_count": 32768,
+        "scope": "64x4096B",
+        "evidence": [
+          "ER84-E02",
+          "ER84-E10"
+        ]
+      },
+      {
+        "row_id": "ER84-A-ST03",
+        "symbol": "level3_kernel_pgt",
+        "definition": "head_64.S::level3_kernel_pgt",
+        "section_input": ".data",
+        "alignment": "4096",
+        "slots_nominal": 512,
+        "bytes_nominal": 4096,
+        "nonzero_initial": [
+          "[510]=level2_kernel_pgt-__START_KERNEL_map+_KERNPG_TABLE_NOENC",
+          "[511]=level2_fixmap_pgt-__START_KERNEL_map+_PAGE_TABLE_NOENC"
+        ],
+        "zero_initial_count": 510,
+        "evidence": [
+          "ER84-E03"
+        ]
+      },
+      {
+        "row_id": "ER84-A-ST04",
+        "symbol": "level2_kernel_pgt",
+        "definition": "head_64.S::level2_kernel_pgt",
+        "section_input": ".data",
+        "alignment": "4096",
+        "slots_nominal": "256 if !CONFIG_RANDOMIZE_BASE; 512 if defined",
+        "bytes_nominal": "2048 or 4096",
+        "nonzero_initial": "PMDS physical base i*2MiB + __PAGE_KERNEL_LARGE_EXEC per entry",
+        "zero_initial_count": 0,
+        "evidence": [
+          "ER84-E04",
+          "ER84-E11",
+          "ER84-E12"
+        ]
+      },
+      {
+        "row_id": "ER84-A-ST05",
+        "symbol": "level2_fixmap_pgt",
+        "definition": "head_64.S::level2_fixmap_pgt",
+        "section_input": ".data",
+        "alignment": "4096",
+        "slots_nominal": 512,
+        "bytes_nominal": 4096,
+        "nonzero_initial": [],
+        "zero_initial_count": 512,
+        "evidence": [
+          "ER84-E05"
+        ]
+      },
+      {
+        "row_id": "ER84-A-ST06",
+        "symbol": "init_top_pgt",
+        "definition": "init-mm.c::init_top_pgt",
+        "section_input": "uninitialized global; .bss/COMMON candidate under linker wildcard, final compiler/link map unverified",
+        "alignment": "PAGE_SIZE=4096",
+        "slots_nominal": "ENT_PER_TABLE=PAGE_SIZE/sizeof(pgd_t)=512 under x86-64 one-word ABI",
+        "bytes_nominal": "4096 under stated ABI",
+        "nonzero_initial": [],
+        "zero_initial_count": "512 at C clear_page if reached, regardless of prior BSS assumptions",
+        "evidence": [
+          "ER84-E08",
+          "ER84-E21",
+          "ER84-E17",
+          "ER84-E44"
+        ]
+      }
+    ],
+    "link_address_and_storage_matrix": [
+      {
+        "row_id": "ER84-A-LK01",
+        "object": "startup_64",
+        "link_address": "__START_KERNEL_map + linked offset; entry phys_startup_64 = startup_64 - __START_KERNEL_map",
+        "runtime": "identity-mapped physical code assumption",
+        "storage": "(.head.text.startup) under .text PT_LOAD",
+        "source": [
+          "ER84-E14",
+          "ER84-E23"
+        ]
+      },
+      {
+        "row_id": "ER84-A-LK02",
+        "object": "early_top_pgt",
+        "link_address": "link high VA; .quad pointer stores level3 label minus __START_KERNEL_map plus flags",
+        "runtime": "RIP-relative root label can evaluate current mapped VA",
+        "storage": ".init.data not .bss; 1 page, not 8KiB",
+        "source": [
+          "ER84-E01",
+          "ER84-E19"
+        ]
+      },
+      {
+        "row_id": "ER84-A-LK03",
+        "object": "early_dynamic_pgts",
+        "link_address": "link high VA; runtime rip_rel_ptr selects two pages",
+        "runtime": "physical execution alias requires pre-existing accessibility",
+        "storage": ".init.data 64 contiguous pages",
+        "source": [
+          "ER84-E02",
+          "ER84-E31"
+        ]
+      },
+      {
+        "row_id": "ER84-A-LK04",
+        "object": "level3_kernel_pgt",
+        "link_address": "static .quad physical symbolic address",
+        "runtime": "normal C address direct [510]/[511] writes, distinct from rip_rel_ptr; depends codegen/addressability",
+        "storage": ".data, padded/aligned",
+        "source": [
+          "ER84-E03",
+          "ER84-E30",
+          "ER84-E39"
+        ]
+      },
+      {
+        "row_id": "ER84-A-LK05",
+        "object": "level2_kernel_pgt",
+        "link_address": "PMDS leaves encode 0-based physical frame values",
+        "runtime": "no corresponding PMD leaf += load_delta in read __startup_64",
+        "storage": ".data; 256 or512 elements",
+        "source": [
+          "ER84-E04",
+          "ER84-E29",
+          "ER84-E34"
+        ]
+      },
+      {
+        "row_id": "ER84-A-LK06",
+        "object": "init_top_pgt",
+        "link_address": "C global link VA, not same object as early_top",
+        "runtime": "BSS + clear_page + one root entry copy; later load_cr3",
+        "storage": "likely .bss/COMMON, map not produced",
+        "source": [
+          "ER84-E08",
+          "ER84-E43",
+          "ER84-E44",
+          "ER84-E49"
+        ]
+      },
+      {
+        "row_id": "ER84-A-LK07",
+        "object": "initial_code",
+        "link_address": ".quad x86_64_start_kernel",
+        "runtime": "RIP-relative indirect call",
+        "storage": ".ref.data input not explicitly listed by kernel.lds; output placement unproven",
+        "source": [
+          "ER84-E07",
+          "ER84-E41",
+          "ER84-E15"
+        ]
+      }
+    ],
+    "initial_mapping_coverage_matrix": [
+      {
+        "row_id": "ER84-A-CV01",
+        "layer": "PGD",
+        "index": "511",
+        "entry": "level3_kernel_pgt physical+_PAGE_TABLE_NOENC",
+        "meaning": "high kernel root; after fixup load_delta added to this entry",
+        "coverage": "one PUD page, 512*1GiB theoretical; only populated PUD 510/511",
+        "source": [
+          "ER84-E01",
+          "ER84-E30"
+        ]
+      },
+      {
+        "row_id": "ER84-A-CV02",
+        "layer": "PUD",
+        "index": "510",
+        "entry": "level2_kernel_pgt physical+_KERNPG_TABLE_NOENC",
+        "meaning": "static high kernel area starts __START_KERNEL_map",
+        "coverage": "only PMDS COUNT=256 or512 huge leafs",
+        "source": [
+          "ER84-E03",
+          "ER84-E12"
+        ]
+      },
+      {
+        "row_id": "ER84-A-CV03",
+        "layer": "PUD",
+        "index": "511",
+        "entry": "level2_fixmap_pgt physical+_PAGE_TABLE_NOENC",
+        "meaning": "distinct fixmap continuation",
+        "coverage": "all 512 PMD entries zero in read initial definition; no leaf assumed",
+        "source": [
+          "ER84-E03",
+          "ER84-E05"
+        ]
+      },
+      {
+        "row_id": "ER84-A-CV04",
+        "layer": "PMD",
+        "index": "0..255",
+        "entry": "0,2MiB,...510MiB+EXEC flags",
+        "meaning": "non-randomize-size branch",
+        "coverage": "nominal 512MiB, not necessarily all final linked kernel if linker only checks 1GiB",
+        "source": [
+          "ER84-E04",
+          "ER84-E12",
+          "ER84-E18"
+        ]
+      },
+      {
+        "row_id": "ER84-A-CV05",
+        "layer": "PMD",
+        "index": "0..511",
+        "entry": "0,2MiB,...1022MiB+EXEC flags",
+        "meaning": "randomize-size branch",
+        "coverage": "nominal 1GiB",
+        "source": [
+          "ER84-E04",
+          "ER84-E12"
+        ]
+      },
+      {
+        "row_id": "ER84-A-CV06",
+        "layer": "PGD vs PUD",
+        "index": "511 versus 510/511",
+        "entry": "different levels and distinct data tables",
+        "meaning": "do not conflate top-level slot511 with level3 last two",
+        "coverage": "independent indexing",
+        "source": [
+          "ER84-E01",
+          "ER84-E03"
+        ]
+      }
+    ],
+    "startup_argument_and_delta_matrix": [
+      {
+        "row_id": "ER84-B-AR01",
+        "step": "asm_arg",
+        "expression": "p2v_offset=RIP(common_startup_64)-link_time_quad(common_startup_64)",
+        "domain": "64-bit difference under input identity mapping",
+        "condition": "startup_64 setup_gdt_idt and lretq return, no divergent path",
+        "source": [
+          "ER84-E23",
+          "ER84-E24"
+        ]
+      },
+      {
+        "row_id": "ER84-B-AR02",
+        "step": "runtime_physical",
+        "expression": "physaddr=(ulong)rip_rel_ptr(&_text)",
+        "domain": "physical under identity-mapped execution precondition",
+        "condition": "physaddr >>46 ==0; otherwise infinite loop",
+        "source": [
+          "ER84-E27",
+          "ER84-E28",
+          "ER84-E38"
+        ]
+      },
+      {
+        "row_id": "ER84-B-AR03",
+        "step": "delta",
+        "expression": "phys_base=load_delta=__START_KERNEL_map+p2v_offset",
+        "domain": "unsigned ulong arithmetic mod2^64; relocation delta if input model holds",
+        "condition": "load_delta &~PMD_MASK ==0; zero not required",
+        "source": [
+          "ER84-E29"
+        ]
+      },
+      {
+        "row_id": "ER84-B-AR04",
+        "step": "computed_but_not_consumed",
+        "expression": "va_text=physaddr-p2v_offset; va_end=rip_rel_ptr(&_end)-p2v_offset",
+        "domain": "calculated links under same model",
+        "condition": "no later read of these locals in __startup_64 body",
+        "source": [
+          "ER84-E27"
+        ]
+      },
+      {
+        "row_id": "ER84-B-AR05",
+        "step": "return",
+        "expression": "return 0 (after selected memcpy)",
+        "domain": "ulong return register, then ASM adds RIP root address",
+        "condition": "memcpy and all prior callee effects/returns accepted",
+        "source": [
+          "ER84-E35",
+          "ER84-E36",
+          "ER84-E25"
+        ]
+      }
+    ],
+    "temporary_identity_mapping_matrix": [
+      {
+        "row_id": "ER84-B-ID01",
+        "step": "select_pages",
+        "index": "early_pgts[0],[1]",
+        "role": "PUD and PMD",
+        "capacity": "two used out of64, next_early_pgt=2",
+        "condition": "RIP-relative early_dynamic_pgts addresses accessible",
+        "source": [
+          "ER84-E02",
+          "ER84-E31"
+        ]
+      },
+      {
+        "row_id": "ER84-B-ID02",
+        "step": "identity_PGD",
+        "index": "i=(physaddr>>39)%512; i+0 and i+1",
+        "role": "both refer one PUD page",
+        "capacity": "512 PGD slots; no modulo on i+1",
+        "condition": "physaddr<2^46 ensures i in[0,127], i+1<=128",
+        "source": [
+          "ER84-E28",
+          "ER84-E32",
+          "ER84-E38"
+        ]
+      },
+      {
+        "row_id": "ER84-B-ID03",
+        "step": "identity_PUD",
+        "index": "(physaddr>>30+0/1)%512",
+        "role": "both refer one PMD page",
+        "capacity": "512 PUD slots; modulo wraps",
+        "condition": "no evaluation of actual PUD entry collisions with pre-existing non-zero view",
+        "source": [
+          "ER84-E33"
+        ]
+      },
+      {
+        "row_id": "ER84-B-ID04",
+        "step": "identity_PMD",
+        "index": "(floor(physaddr/2MiB)+i)%512",
+        "role": "large page physical frames physaddr+i*2MiB",
+        "capacity": "512 slots x2MiB=1GiB, modulo alias after 512 steps",
+        "condition": "N=DIV_ROUND_UP(_end-_text,PMD_SIZE), alignment and span fit required",
+        "source": [
+          "ER84-E34"
+        ]
+      },
+      {
+        "row_id": "ER84-B-ID05",
+        "step": "flags",
+        "index": "PMD leaf",
+        "role": "(__PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL)+physaddr+i*PMD_SIZE",
+        "capacity": "flags include present/PSE and remove global; arithmetic addition not bitwise OR",
+        "condition": "2MiB aligned physical frame, flags do not collide with frame bits",
+        "source": [
+          "ER84-E34"
+        ]
+      },
+      {
+        "row_id": "ER84-B-ID06",
+        "step": "boundary",
+        "index": "cross 1GiB PUD",
+        "role": "same PMD table reused on two consecutive PUDs",
+        "capacity": "can cover two adjacent windows within at most512 unique PMD slots",
+        "condition": "PUD/PGD reachability and no PMD slot collision",
+        "source": [
+          "ER84-E32",
+          "ER84-E33",
+          "ER84-E34"
+        ]
+      }
+    ],
+    "root_fixup_and_switch_matrix": [
+      {
+        "row_id": "ER84-B-SW01",
+        "step": "early_high_root",
+        "target": "early_top_pgt[pgd_index(__START_KERNEL_map)]=slot511",
+        "change": "+=load_delta; conditional validity of static table frame+flags",
+        "source": [
+          "ER84-E30"
+        ]
+      },
+      {
+        "row_id": "ER84-B-SW02",
+        "step": "lower_high_tables",
+        "target": "level3_kernel_pgt[510/511]",
+        "change": "+=load_delta only on two subordinate pointer entries",
+        "source": [
+          "ER84-E03",
+          "ER84-E30"
+        ]
+      },
+      {
+        "row_id": "ER84-B-SW03",
+        "step": "high_leaf_pmd",
+        "target": "level2_kernel_pgt static leaf slots",
+        "change": "no leaf relocation loop in read __startup_64; nonzero delta remains conditional hole",
+        "source": [
+          "ER84-E04",
+          "ER84-E29",
+          "ER84-E34"
+        ]
+      },
+      {
+        "row_id": "ER84-B-SW04",
+        "step": "identity_root",
+        "target": "early_top_pgt[i],early_top_pgt[i+1]",
+        "change": "=pud physical pointer + pgtable_flags",
+        "source": [
+          "ER84-E32"
+        ]
+      },
+      {
+        "row_id": "ER84-B-SW05",
+        "step": "CR3",
+        "target": "movq %rax,%cr3",
+        "change": "rax=0 + RIP-relative early_top_pgt address under successful function return",
+        "source": [
+          "ER84-E25",
+          "ER84-E26",
+          "ER84-E36"
+        ]
+      },
+      {
+        "row_id": "ER84-B-SW06",
+        "step": "high_jump",
+        "target": "jmp *.Lcommon_startup_64(%rip)",
+        "change": "source selects indirect target; hardware success and mapped target not attested",
+        "source": [
+          "ER84-E26",
+          "ER84-E40"
+        ]
+      }
+    ],
+    "C_entry_root_lifetime_matrix": [
+      {
+        "row_id": "ER84-C-LF01",
+        "stage": "C_entry",
+        "op": "initial_code RIP indirect call",
+        "root": "early_top_pgt intended active",
+        "observed": "ASM indirect call exists; actual runtime success unknown",
+        "source": [
+          "ER84-E07",
+          "ER84-E41"
+        ]
+      },
+      {
+        "row_id": "ER84-C-LF02",
+        "stage": "clear_BSS",
+        "op": "clear_bss()",
+        "root": "early_top_pgt (init.data) distinct from init_top_pgt (BSS candidate)",
+        "observed": "C call order; linker BSS bounds exact but final map unknown",
+        "source": [
+          "ER84-E42",
+          "ER84-E43",
+          "ER84-E17"
+        ]
+      },
+      {
+        "row_id": "ER84-C-LF03",
+        "stage": "clear_init_root",
+        "op": "clear_page(init_top_pgt)",
+        "root": "init_top_pgt",
+        "observed": "additional explicit root clearing, no CR3 write",
+        "source": [
+          "ER84-E44"
+        ]
+      },
+      {
+        "row_id": "ER84-C-LF04",
+        "stage": "early_hooks",
+        "op": "idt_setup_early_handler();myos_early_init_system()",
+        "root": "unknown potential side effects on page tables/CR3",
+        "observed": "only call sites within studied code; no return proof",
+        "source": [
+          "ER84-E44",
+          "ER84-E45"
+        ]
+      },
+      {
+        "row_id": "ER84-C-LF05",
+        "stage": "root_copy",
+        "op": "init_top_pgt[511]=early_top_pgt[511]",
+        "root": "value-copy single PGD entry, shared target PUD tree",
+        "observed": "if pre-calls return; no deep clone",
+        "source": [
+          "ER84-E45"
+        ]
+      },
+      {
+        "row_id": "ER84-C-LF06",
+        "stage": "start_kernel",
+        "op": "start_kernel();setup_arch(NULL)",
+        "root": "init_top not yet guaranteed active",
+        "observed": "source caller order",
+        "source": [
+          "ER84-E46",
+          "ER84-E47"
+        ]
+      },
+      {
+        "row_id": "ER84-C-LF07",
+        "stage": "future_root",
+        "op": "init_mem_mapping tail load_cr3(swapper_pg_dir)",
+        "root": "init_top_pgt alias",
+        "observed": "later source write; no executed hardware evidence",
+        "source": [
+          "ER84-E09",
+          "ER84-E49"
+        ]
+      }
+    ],
+    "root_alias_and_copy_matrix": [
+      {
+        "row_id": "ER84-C-AL01",
+        "view": "early_top_pgt",
+        "own_pages": "one 4KiB root in init.data",
+        "shared_child": "high [511] pointer to level3_kernel_pgt",
+        "note": "init_top_pgt not same array",
+        "source": [
+          "ER84-E01"
+        ]
+      },
+      {
+        "row_id": "ER84-C-AL02",
+        "view": "init_top_pgt before BSS clear",
+        "own_pages": "one 4KiB C global, .bss candidate",
+        "shared_child": "not established; compiled layout not verified",
+        "note": "uninitialized definition and linker wildcard separate layers",
+        "source": [
+          "ER84-E08",
+          "ER84-E17"
+        ]
+      },
+      {
+        "row_id": "ER84-C-AL03",
+        "view": "init_top_pgt after clear_page",
+        "own_pages": "same root, all bytes written zero if executed",
+        "shared_child": "none from this operation",
+        "note": "not a CR3 write",
+        "source": [
+          "ER84-E44"
+        ]
+      },
+      {
+        "row_id": "ER84-C-AL04",
+        "view": "init_top_pgt[511] after copy",
+        "own_pages": "same distinct root object",
+        "shared_child": "same [511] PUD page as early_top_pgt if copy executed",
+        "note": "shallow entry copy, not deep copy; downstream writes may affect both",
+        "source": [
+          "ER84-E45"
+        ]
+      },
+      {
+        "row_id": "ER84-C-AL05",
+        "view": "direct_map index updated",
+        "own_pages": "early and init root entries at given direct-map PGD",
+        "shared_child": "value copied from early to init in myos_early_map_pgt_buf_into_directmap",
+        "note": "may overwrite direct-map slot; does not generally update every slot",
+        "source": [
+          "mykernel/arch/x86_64/mm/init.c::myos_early_map_pgt_buf_into_directmap@220-223"
+        ]
+      },
+      {
+        "row_id": "ER84-C-AL06",
+        "view": "init_mm.pgd",
+        "own_pages": "pointer alias swapper_pg_dir",
+        "shared_child": "init_top_pgt root",
+        "note": "structural alias not active CR3 attestation",
+        "source": [
+          "ER84-E09",
+          "mykernel/mm/misc/init-mm.c::init_mm@29-33"
+        ]
+      }
+    ],
+    "handoff_order_and_unproven_gates_matrix": [
+      {
+        "row_id": "ER84-C-HO01",
+        "order": 1,
+        "source": "head_64.S::startup_64",
+        "action": "p2v_offset, __startup_64 and CR3 early_top",
+        "gate": "prior identity mapping, register inputs, prior GDT/IDT helper returns, valid actual codegen",
+        "source_ref": [
+          "ER84-E23",
+          "ER84-E26"
+        ]
+      },
+      {
+        "row_id": "ER84-C-HO02",
+        "order": 2,
+        "source": "head_64.S::secondary_startup_64",
+        "action": "common_startup_64 indirect initial_code",
+        "gate": "valid perCPU stack/segment/GS/cpuid preconditions, no AP proof",
+        "source_ref": [
+          "ER84-E40",
+          "ER84-E41"
+        ]
+      },
+      {
+        "row_id": "ER84-C-HO03",
+        "order": 3,
+        "source": "head64.c::x86_64_start_kernel",
+        "action": "BSS clear then init_top clear",
+        "gate": "entry reached; sections accessible and non-overlapping needed",
+        "source_ref": [
+          "ER84-E42",
+          "ER84-E44"
+        ]
+      },
+      {
+        "row_id": "ER84-C-HO04",
+        "order": 4,
+        "source": "head64.c::x86_64_start_kernel",
+        "action": "early IDT, myos_early_init_system; high root[511] value copy; start_kernel",
+        "gate": "unknown callee return/CR3 effects; no automatic pass",
+        "source_ref": [
+          "ER84-E45",
+          "ER84-E46"
+        ]
+      },
+      {
+        "row_id": "ER84-C-HO05",
+        "order": 5,
+        "source": "main.c::start_kernel",
+        "action": "setup_arch(NULL)",
+        "gate": "start_kernel actually called and returns from previous callees",
+        "source_ref": [
+          "ER84-E47"
+        ]
+      },
+      {
+        "row_id": "ER84-C-HO06",
+        "order": 6,
+        "source": "setup.c::setup_arch",
+        "action": "early_alloc_pgt_buf => myos_early_map_pgt_buf_into_directmap => init_mem_mapping",
+        "gate": "e820/other early calls and user config branches return; 81/82/83 preserved",
+        "source_ref": [
+          "ER84-E48",
+          "ER84-E49"
+        ]
+      },
+      {
+        "row_id": "ER84-C-HO07",
+        "order": 7,
+        "source": "init.c::init_mem_mapping",
+        "action": "load_cr3(swapper_pg_dir); __flush_tlb_all()",
+        "gate": "init_mem_mapping reached, wrappers/CPU semantics and mapping valid; runtime NOT_RUN",
+        "source_ref": [
+          "ER84-E09",
+          "ER84-E49"
+        ]
+      }
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "case_id": "A01",
+      "phase": "A",
+      "domain": "STATIC_STORAGE",
+      "input_or_assumption": "early_top_pgt .fill511+quad1; 64-bit slots",
+      "calculated_result": "512 slots;4096B; [511] only initial nonzero",
+      "callee_and_preconditions": "no C callee; source assembly definitions",
+      "evidence": [
+        "ER84-E01"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "A02",
+      "phase": "A",
+      "domain": "STATIC_STORAGE",
+      "input_or_assumption": "early_dynamic 512*64 .fill each 8B",
+      "calculated_result": "32768 slots;262144B;64 pages",
+      "callee_and_preconditions": "actual linker count; not kernel run",
+      "evidence": [
+        "ER84-E02"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "A03",
+      "phase": "A",
+      "domain": "STATIC_STORAGE",
+      "input_or_assumption": "level3 510+2 entries",
+      "calculated_result": "4096B; [510]=kernel PMD;[511]=fixmap PMD",
+      "callee_and_preconditions": "two PUD indices not root PGD",
+      "evidence": [
+        "ER84-E03"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "A04",
+      "phase": "A",
+      "domain": "STATIC_STORAGE",
+      "input_or_assumption": "level2_fixmap .fill512,8,0",
+      "calculated_result": "4096B all zero",
+      "callee_and_preconditions": "not a present hardware fixmap leaf",
+      "evidence": [
+        "ER84-E05"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "A05",
+      "phase": "A",
+      "domain": "SIZE_CONFIG",
+      "input_or_assumption": "CONFIG_RANDOMIZE_BASE not defined; PMDS(0,EXEC,512MiB/2MiB)",
+      "calculated_result": "256 slots=2048B; nominal 512MiB",
+      "callee_and_preconditions": "configure is selected hypothetical; no preprocessor",
+      "evidence": [
+        "ER84-E12"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "A06",
+      "phase": "A",
+      "domain": "SIZE_CONFIG",
+      "input_or_assumption": "CONFIG_RANDOMIZE_BASE defined; PMDS(0,EXEC,1GiB/2MiB)",
+      "calculated_result": "512 slots=4096B; nominal 1GiB",
+      "callee_and_preconditions": "configure is selected hypothetical; no preprocessor",
+      "evidence": [
+        "ER84-E12"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "A07",
+      "phase": "A",
+      "domain": "LINK_BOUNDS",
+      "input_or_assumption": "_end-map=768MiB; branch KERNEL_IMAGE_SIZE=512MiB",
+      "calculated_result": "linker max1GiB check alone permits 768MiB but high PMD nominal only512MiB",
+      "callee_and_preconditions": "hypothetical link layout; no actual map",
+      "evidence": [
+        "ER84-E18"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "A08",
+      "phase": "A",
+      "domain": "TYPE_LAYOUT",
+      "input_or_assumption": "pgd_t=p4d_t 64-bit union, PAGE_SIZE4096",
+      "calculated_result": "ENT_PER_TABLE=512; init_top_pgt4096B",
+      "callee_and_preconditions": "ABI 8byte assumed; no compile",
+      "evidence": [
+        "ER84-E08"
+      ],
+      "address_domain": "link/section/static bytes",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B09",
+      "phase": "B",
+      "domain": "PHYSICAL_IDENTITY",
+      "input_or_assumption": "physaddr=16MiB, delta=0, p2v_offset=-__START_KERNEL_map mod2^64; N=2",
+      "calculated_result": "PGD i=0,PUD i=0,PMD slots8/9; maps16/18MiB",
+      "callee_and_preconditions": "prior 1:1 mapping, C helper returns, hypothetical N",
+      "evidence": [
+        "ER84-E32"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B10",
+      "phase": "B",
+      "domain": "PHYSICAL_IDENTITY",
+      "input_or_assumption": "physaddr=18MiB, delta=2MiB, p2v_offset=delta-__START_KERNEL_map; N=2",
+      "calculated_result": "guard passes; identity PMD slots9/10 map 18/20MiB; separately linked high VA for _text occupies PMD slot8, whose static leaf remains 16MiB, not relocated 18MiB",
+      "callee_and_preconditions": "actual codegen/CPU NOT_RUN, high mapping mismatch conditional",
+      "evidence": [
+        "ER84-E29"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B11",
+      "phase": "B",
+      "domain": "ALIGN_FAIL",
+      "input_or_assumption": "physaddr=17MiB, delta=1MiB, p2v_offset=delta-__START_KERNEL_map",
+      "calculated_result": "load_delta &~PMD_MASK !=0; loops forever before root changes",
+      "callee_and_preconditions": "prior return of initial GDT helper; 1:1 mapping",
+      "evidence": [
+        "ER84-E29"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B12",
+      "phase": "B",
+      "domain": "MAX_PHYS_FAIL",
+      "input_or_assumption": "physaddr=2^46 (64TiB); delta arbitrary",
+      "calculated_result": "physaddr>>46 nonzero; enters first infinite loop",
+      "callee_and_preconditions": "not a success path; no later writes",
+      "evidence": [
+        "ER84-E28"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B13",
+      "phase": "B",
+      "domain": "MAXIMUM_ACCEPTED",
+      "input_or_assumption": "physaddr=2^46-2MiB; delta PMD aligned; N=2",
+      "calculated_result": "PGD i=127 and i+1=128 both within512; second mapped frame would exceed 46-bit range, no end check",
+      "callee_and_preconditions": "hypothetical relocated image, possible other prior limit",
+      "evidence": [
+        "ER84-E38"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B14",
+      "phase": "B",
+      "domain": "PUD_CROSS",
+      "input_or_assumption": "physaddr=1GiB-2MiB; delta multiple2MiB; N=2",
+      "calculated_result": "PUD slots0,1 same PMD; PMD slots511,0; no modulo collision for N2",
+      "callee_and_preconditions": "prior 1:1 mapping, both child tables accessible",
+      "evidence": [
+        "ER84-E33"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B15",
+      "phase": "B",
+      "domain": "PGD_CROSS",
+      "input_or_assumption": "physaddr=512GiB-2MiB; delta multiple2MiB; N=2",
+      "calculated_result": "PGD slots0,1 same PUD, PUD slots511,0 same PMD, PMD slots511,0",
+      "callee_and_preconditions": "physaddr <2^46, no prior memory restrictions proved",
+      "evidence": [
+        "ER84-E32"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B16",
+      "phase": "B",
+      "domain": "PUD_START",
+      "input_or_assumption": "physaddr=1GiB; delta aligned;N=1",
+      "calculated_result": "PGD slot0,PUD slot1,PMD slot0",
+      "callee_and_preconditions": "same two scratch pages, C helper returns",
+      "evidence": [
+        "ER84-E33"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B17",
+      "phase": "B",
+      "domain": "PGD_START",
+      "input_or_assumption": "physaddr=1TiB; delta aligned;N=1",
+      "calculated_result": "PGD slot2,PUD slot0,PMD slot0",
+      "callee_and_preconditions": "below2^46; static virtual layout delta mismatch separately",
+      "evidence": [
+        "ER84-E32"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B18",
+      "phase": "B",
+      "domain": "LENGTH_ONE",
+      "input_or_assumption": "physaddr=16MiB; N=1",
+      "calculated_result": "one PMD write to slot8, 2MiB nominal leaf",
+      "callee_and_preconditions": "N chosen; no actual _end map available",
+      "evidence": [
+        "ER84-E34"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B19",
+      "phase": "B",
+      "domain": "LENGTH_512",
+      "input_or_assumption": "physaddr=16MiB; N=512",
+      "calculated_result": "all 512 PMD slots touched exactly once modulo512;1GiB nominal",
+      "callee_and_preconditions": "hypothetical model may violate shown linked max1GiB due _text offset",
+      "evidence": [
+        "ER84-E34"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B20",
+      "phase": "B",
+      "domain": "LENGTH_513",
+      "input_or_assumption": "physaddr=16MiB; N=513",
+      "calculated_result": "513 writes onto512 slots; final repeat overwrites first modulo slot",
+      "callee_and_preconditions": "hypothetical model exceeds source linker bound, not claim reachable in real build",
+      "evidence": [
+        "ER84-E34"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B21",
+      "phase": "B",
+      "domain": "PHYS_MISALIGN",
+      "input_or_assumption": "physaddr=16MiB+4KiB; delta=4KiB;N=2",
+      "calculated_result": "load_delta PMD check fails and spins; no successful misaligned PMD leaf from this hypothetical delta",
+      "callee_and_preconditions": "assumes _text link offset16MiB and direct identity",
+      "evidence": [
+        "ER84-E29"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B22",
+      "phase": "B",
+      "domain": "LEAF_FLAGS",
+      "input_or_assumption": "physaddr=16MiB;delta=0;N=1",
+      "calculated_result": "leaf has PAGE_PRESENT+PSE, not GLOBAL, ADD of aligned frame and flags is non-carrying for low flag bits",
+      "callee_and_preconditions": "2MiB frame aligned, flags per macro; no actual CPU encryption",
+      "evidence": [
+        "ER84-E34"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B23",
+      "phase": "B",
+      "domain": "HIGH_LAYER",
+      "input_or_assumption": "__START_KERNEL_map=0xffffffff80000000",
+      "calculated_result": "PGD index511,PUD index510; PUD511 separately fixmap; different layers",
+      "callee_and_preconditions": "64bit 4-level fold fixed macro values",
+      "evidence": [
+        "ER84-E03"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "B24",
+      "phase": "B",
+      "domain": "RETURN_CR3",
+      "input_or_assumption": "return0 after memcpy, next asm `leaq early_top_pgt; addq %rcx,%rax; movq %rax,%cr3`",
+      "calculated_result": "CR3 candidate = current RIP-relative early_top physical under identity map; source jump high follows",
+      "callee_and_preconditions": "all pre-callees return and CR3 instruction succeeds; no runtime evidence",
+      "evidence": [
+        "ER84-E25"
+      ],
+      "address_domain": "physical/startup identity and link-high VA distinguished",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "C25",
+      "phase": "C",
+      "domain": "CLEAR_ORDER",
+      "input_or_assumption": "clear_bss then clear_page(init_top_pgt)",
+      "calculated_result": "two logically distinct write operations, second explicit zero 4096B root under ABI",
+      "callee_and_preconditions": "x86_64_start_kernel reached and memset/clear_page return",
+      "evidence": [
+        "ER84-E42"
+      ],
+      "address_domain": "kernel VA and root object identity",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "C26",
+      "phase": "C",
+      "domain": "NONRETURN_CALLEE",
+      "input_or_assumption": "myos_early_init_system never returns",
+      "calculated_result": "then no PGD511 copy or start_kernel on this path",
+      "callee_and_preconditions": "hypothetical callee behavior, not observed non-return claim",
+      "evidence": [
+        "ER84-E45"
+      ],
+      "address_domain": "kernel VA and root object identity",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "C27",
+      "phase": "C",
+      "domain": "SHALLOW_COPY",
+      "input_or_assumption": "init_top_pgt[511]=early_top_pgt[511]; all preceding callees return",
+      "calculated_result": "copies one 8byte PGD entry and aliases same PUD subtree, not 512-root clone",
+      "callee_and_preconditions": "valid parent pointer values, later C write does not change active CR3 by itself",
+      "evidence": [
+        "ER84-E45"
+      ],
+      "address_domain": "kernel VA and root object identity",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    },
+    {
+      "case_id": "C28",
+      "phase": "C",
+      "domain": "LATER_HANDOFF",
+      "input_or_assumption": "setup_arch calls early_alloc=>early premap=>init_mem_mapping; init_mem_mapping reaches load_cr3",
+      "calculated_result": "earlier root and later init_top have distinct identities; load_cr3 occurs only at later program point",
+      "callee_and_preconditions": "all earlier callee returns, wrappers correct, no run/CPU proof",
+      "evidence": [
+        "ER84-E49"
+      ],
+      "address_domain": "kernel VA and root object identity",
+      "selected_integer_and_pointer_width": "64-bit ulong/8-byte entries under x86-64 ABI (unless N/A)",
+      "load_delta_p2v_offset": "case explicit when numeric; otherwise N/A",
+      "page_table_capacity": "PGD=512,PUD=512,PMD=512; relevant table in result (else N/A)",
+      "observed_runtime_state": "NOT_RUN; source or finite integer model only",
+      "classification": "static_model_not_hardware"
+    }
+  ],
+  "finite_model_count": 28,
+  "finite_model_counts_by_phase": {
+    "A": 8,
+    "B": 16,
+    "C": 4
+  },
+  "technical_matrix_count": 56,
+  "matrix_row_counts": {
+    "static_table_inventory": 6,
+    "link_address_and_storage_matrix": 7,
+    "initial_mapping_coverage_matrix": 6,
+    "startup_argument_and_delta_matrix": 5,
+    "temporary_identity_mapping_matrix": 6,
+    "root_fixup_and_switch_matrix": 6,
+    "C_entry_root_lifetime_matrix": 7,
+    "root_alias_and_copy_matrix": 6,
+    "handoff_order_and_unproven_gates_matrix": 7
+  },
+  "new_findings": [
+    "ER84-F01",
+    "ER84-F02",
+    "ER84-F03",
+    "ER84-F04",
+    "ER84-F05"
+  ],
+  "new_uncertainties": [
+    "ER84-U01",
+    "ER84-U02",
+    "ER84-U03",
+    "ER84-U04",
+    "ER84-U05",
+    "ER84-U06",
+    "ER84-U07",
+    "ER84-U08"
+  ],
+  "methods": {
+    "evidence_class": "static_source_and_finite_integer_model",
+    "source_files_count": 23,
+    "source_plus_g00_canaries": 25,
+    "related_directory_browses": 4,
+    "fixed_source_ref": "time@a039d9803ade",
+    "no_preprocess": true,
+    "no_assembler": true,
+    "no_build": true,
+    "no_repo_script": true,
+    "no_graphviz": true,
+    "no_runtime": true,
+    "no_external_model": true,
+    "no_api_call": true,
+    "return_gate": "Pro mainline independent acceptance pending"
+  },
+  "audit_counts": {
+    "evidence_marked_claims": 49,
+    "quotes_reconfirmed": 49,
+    "downgraded_to_inferred": 0,
+    "anchor_files": "evidence.md",
+    "source_lines": "verbatim short 1–5 contiguous single-definition",
+    "fortyhex_patterns_expected": 0,
+    "model_cases": 28,
+    "technical_matrix_rows": 56,
+    "old_findings_recounted_as_new": 0,
+    "unique_matrix_row_ids": 56
+  }
+}

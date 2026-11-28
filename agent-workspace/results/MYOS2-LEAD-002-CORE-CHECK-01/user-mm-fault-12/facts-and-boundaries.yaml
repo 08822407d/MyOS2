@@ -1,0 +1,2127 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-MM-FAULT-12
+record_type: bounded_user_address_fault_facts
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+produced_by: "ChatGPT普通对话，Owner选择GPT-6/Extra；backend未独立认证"
+date: "2026-10-31"
+source_pin: "time @ a039d9803ade"
+result_base: "2c410132e42d"
+read_channel: connector
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+language: C
+edge_direction: {call: "caller -> callee with actual call or explicit binding", data: "consumer -> provider", init_order: "later user -> prerequisite"}
+scope: "fixed-time architecture C fault entry, simple_find_vma, myos_handle_mm_fault, representative PTE/anonymous/file/WP branches and nonzero-result consumption"
+not_covered: ["IDT/exception entry assembly", "ISA restart", "all mm/page allocator internals", "full file/block read backend", "full copy_user/alternatives", "external libc", "runtime/QEMU"]
+unknown:
+  - "no runtime confirmation of page-table usability or hardware fault restart"
+  - "mapping concurrency, mmap_lock/ptl enforcement and missed access_error remain unverified"
+  - "file-cache bounds and read errors require separately authorized work"
+  - "other vm_ops bindings/indirect targets beyond inspected generic_file_mmap not enumerated"
+queries:
+  - {id: MF12-Q01, files: "arch/x86_64/mm/fault.c; mm/vm_map/vm_map.h; mm/vm_map/mmap.c", terms: "exc_page_fault,do_user_addr_fault,simple_find_vma,expand_stack,access_error", method: "fixed-file complete read and line-specific evidence; no global negative claim"}
+  - {id: MF12-Q02, files: "mm/fault/fault.c; mm/fault/pgalloc.h; pgalloc.c; pgalloc_macro.h", terms: "myos_handle_mm_fault,handle_pte_fault,pte_alloc,pmd_alloc", method: "fixed function bodies read; no allocator-wide correctness claim"}
+  - {id: MF12-Q03, files: "mm/vm_map/filemap.c; mm/vm_map/mmap.c; mm/vm_map/vm_map_types.h", terms: "generic_file_vm_ops,map_single_page,generic_file_mmap,call_mmap", method: "documented generic-file binding; no global vm_ops target coverage"}
+  - {id: MF12-Q04, files: "mm/fault/fault_const.h; include/uapi/asm-generic/errno-base.h", terms: "vm_fault_t,VM_FAULT_,ENOERR", method: "bitmask constants vs errno literal comparison"}
+nodes:
+  - {id: MF12-N01, label: "exc_page_fault (C entry)"}
+  - {id: MF12-N02, label: "handle_page_fault"}
+  - {id: MF12-N03, label: "fault_in_kernel_space"}
+  - {id: MF12-N04, label: "do_kern_addr_fault (spin)"}
+  - {id: MF12-N05, label: "do_user_addr_fault"}
+  - {id: MF12-N06, label: "simple_find_vma"}
+  - {id: MF12-N07, label: "myos_bad_area (spin)"}
+  - {id: MF12-N08, label: "expand_stack (unreachable stable VMA)"}
+  - {id: MF12-N09, label: "myos_handle_mm_fault"}
+  - {id: MF12-N10, label: "p4d_alloc"}
+  - {id: MF12-N11, label: "pud_alloc"}
+  - {id: MF12-N12, label: "pmd_alloc"}
+  - {id: MF12-N13, label: "pte_alloc"}
+  - {id: MF12-N14, label: "pte_offset_map_nolock"}
+  - {id: MF12-N15, label: "handle_pte_fault"}
+  - {id: MF12-N16, label: "do_pte_missing"}
+  - {id: MF12-N17, label: "do_anonymous_page"}
+  - {id: MF12-N18, label: "do_fault"}
+  - {id: MF12-N19, label: "do_read_fault"}
+  - {id: MF12-N20, label: "do_fault_around"}
+  - {id: MF12-N21, label: "vm_ops.map_single_page dispatch"}
+  - {id: MF12-N22, label: "simple_filemap_map_page"}
+  - {id: MF12-N23, label: "__do_fault"}
+  - {id: MF12-N24, label: "vm_ops.fault dispatch"}
+  - {id: MF12-N25, label: "simple_filemap_fault"}
+  - {id: MF12-N26, label: "finish_fault"}
+  - {id: MF12-N27, label: "do_cow_fault"}
+  - {id: MF12-N28, label: "do_shared_fault (spin)"}
+  - {id: MF12-N29, label: "do_wp_page"}
+  - {id: MF12-N30, label: "wp_page_copy"}
+  - {id: MF12-N31, label: "vm_area_struct"}
+  - {id: MF12-N32, label: "mm and page tables"}
+  - {id: MF12-N33, label: "generic_file_vm_ops"}
+  - {id: MF12-N34, label: "generic_file_mmap"}
+  - {id: MF12-N35, label: "page-cache array"}
+  - {id: MF12-N36, label: "pte_s* / PTE"}
+  - {id: MF12-N37, label: "folio_prealloc"}
+  - {id: MF12-N38, label: "file_fop.read"}
+  - {id: MF12-N39, label: "page table allocation internals"}
+  - {id: MF12-N40, label: "current task mm"}
+  - {id: MF12-N41, label: "alloc_anon_folio (intermediate)"}
+edges:
+  - {id: MF12-E01, from: MF12-N01, to: MF12-N02, kind: call, status: active, condition: "passes CR2 and err_code", anchors: [MF12-A21]}
+  - {id: MF12-E02, from: MF12-N02, to: MF12-N03, kind: call, status: active, condition: "test address vs TASK_SIZE_MAX only", anchors: [MF12-A18b]}
+  - {id: MF12-E03, from: MF12-N02, to: MF12-N04, kind: call, status: conditional, condition: "address>=TASK_SIZE_MAX", anchors: [MF12-A18b, MF12-A18c]}
+  - {id: MF12-E04, from: MF12-N02, to: MF12-N05, kind: call, status: conditional, condition: "address<TASK_SIZE_MAX, kernel or user mode", anchors: [MF12-A18c]}
+  - {id: MF12-E05, from: MF12-N05, to: MF12-N06, kind: call, status: active, condition: "after source flags, assumes mm nonnull", anchors: [MF12-A10]}
+  - {id: MF12-E06, from: MF12-N05, to: MF12-N07, kind: call, status: conditional, condition: "no containing VMA", anchors: [MF12-A10]}
+  - {id: MF12-E07, from: MF12-N05, to: MF12-N07, kind: call, status: conditional, condition: "VMA starts above address and not grow-down (not normal stable vma)", anchors: [MF12-A11]}
+  - {id: MF12-E08, from: MF12-N05, to: MF12-N08, kind: call, status: conditionally_unreachable_stable, condition: "VMA vm_start>address impossible for simple_find_vma stable result", anchors: [MF12-A12]}
+  - {id: MF12-E09, from: MF12-N05, to: MF12-N09, kind: call, status: conditional, condition: "containing VMA and no early bad_area", anchors: [MF12-A14]}
+  - {id: MF12-E10, from: MF12-N09, to: MF12-N10, kind: call, status: active, condition: "p4d_alloc is folded to pgd pointer", anchors: [MF12-A32, MF12-A68]}
+  - {id: MF12-E11, from: MF12-N09, to: MF12-N11, kind: call, status: conditional, condition: "pud_alloc called if p4d pointer nonNULL", anchors: [MF12-A33]}
+  - {id: MF12-E12, from: MF12-N09, to: MF12-N12, kind: call, status: conditional, condition: "pmd_alloc called if pud pointer nonNULL", anchors: [MF12-A33]}
+  - {id: MF12-E13, from: MF12-N09, to: MF12-N13, kind: call, status: conditional, condition: "pte_alloc after pmd allocation", anchors: [MF12-A33b]}
+  - {id: MF12-E14, from: MF12-N09, to: MF12-N14, kind: call, status: conditional, condition: "after pte_alloc and pmd_none spin gate", anchors: [MF12-A35]}
+  - {id: MF12-E15, from: MF12-N09, to: MF12-N15, kind: call, status: conditional, condition: "non-NULL pte pointer", anchors: [MF12-A36]}
+  - {id: MF12-E16, from: MF12-N15, to: MF12-N16, kind: call, status: conditional, condition: "pte_none(orig_pte)", anchors: [MF12-A37, MF12-A37b]}
+  - {id: MF12-E17, from: MF12-N15, to: MF12-N29, kind: call, status: conditional, condition: "existing PTE + FAULT_FLAG_WRITE + !pte_write", anchors: [MF12-A39b]}
+  - {id: MF12-E18, from: MF12-N16, to: MF12-N17, kind: call, status: conditional, condition: "vma_is_anonymous", anchors: [MF12-A41]}
+  - {id: MF12-E19, from: MF12-N16, to: MF12-N18, kind: call, status: conditional, condition: "vm_ops nonNULL", anchors: [MF12-A41, MF12-A41b]}
+  - {id: MF12-E20, from: MF12-N18, to: MF12-N19, kind: call, status: conditional, condition: "!FAULT_FLAG_WRITE and vm_ops->fault nonNULL", anchors: [MF12-A87]}
+  - {id: MF12-E21, from: MF12-N18, to: MF12-N27, kind: call, status: conditional, condition: "FAULT_FLAG_WRITE && !VM_SHARED", anchors: [MF12-A87, MF12-A87b]}
+  - {id: MF12-E22, from: MF12-N18, to: MF12-N28, kind: call, status: conditional, condition: "FAULT_FLAG_WRITE && VM_SHARED; stops at while(1)", anchors: [MF12-A87b]}
+  - {id: MF12-E23, from: MF12-N19, to: MF12-N20, kind: call, status: active, condition: "read fault attempts map_single_page first", anchors: [MF12-A86]}
+  - {id: MF12-E24, from: MF12-N20, to: MF12-N21, kind: call, status: conditional_dynamic, condition: "vm_ops.map_single_page function pointer invoked", anchors: [MF12-A53b]}
+  - {id: MF12-E25, from: MF12-N21, to: MF12-N22, kind: data, status: binding_generic_file, condition: "generic_file_vm_ops.map_single_page -> simple_filemap_map_page", anchors: [MF12-A66]}
+  - {id: MF12-E26, from: MF12-N19, to: MF12-N23, kind: call, status: conditional, condition: "map-around returned nonzero; fallback __do_fault", anchors: [MF12-A52]}
+  - {id: MF12-E27, from: MF12-N23, to: MF12-N24, kind: call, status: conditional_dynamic, condition: "vma->vm_ops->fault(vmf)", anchors: [MF12-A54]}
+  - {id: MF12-E28, from: MF12-N24, to: MF12-N25, kind: data, status: binding_generic_file, condition: "generic_file_vm_ops.fault -> simple_filemap_fault", anchors: [MF12-A66]}
+  - {id: MF12-E29, from: MF12-N19, to: MF12-N26, kind: call, status: conditional, condition: "fallback fault did not short circuit before finish_fault", anchors: [MF12-A52]}
+  - {id: MF12-E30, from: MF12-N27, to: MF12-N23, kind: call, status: conditional, condition: "private write COW branch; __do_fault(vmf)", anchors: [MF12-A57c]}
+  - {id: MF12-E31, from: MF12-N27, to: MF12-N26, kind: call, status: conditional, condition: "private write after copy_user_highpage", anchors: [MF12-A57e]}
+  - {id: MF12-E32, from: MF12-N29, to: MF12-N30, kind: call, status: conditional, condition: "existing PTE, not shared/mayshare", anchors: [MF12-A60]}
+  - {id: MF12-E33, from: MF12-N30, to: MF12-N37, kind: call, status: conditional, condition: "alloc new folio before possible set_pte_at", anchors: [MF12-A61]}
+  - {id: MF12-E34, from: MF12-N17, to: MF12-N41, kind: call, status: conditional, condition: "anon write directly calls alloc_anon_folio; helper separately calls folio_prealloc", anchors: [MF12-A45]}
+  - {id: MF12-E35, from: MF12-N17, to: MF12-N13, kind: call, status: active, condition: "do_anonymous_page invokes pte_alloc", anchors: [MF12-A43]}
+  - {id: MF12-E36, from: MF12-N17, to: MF12-N36, kind: data, status: active, condition: "writes PTE in setpte if pte_ptr", anchors: [MF12-A47]}
+  - {id: MF12-E37, from: MF12-N22, to: MF12-N36, kind: data, status: active, condition: "map existing page cache page into PTE", anchors: [MF12-A84]}
+  - {id: MF12-E38, from: MF12-N25, to: MF12-N35, kind: data, status: active, condition: "read/cache code indexes mapping->page_array", anchors: [MF12-A85]}
+  - {id: MF12-E39, from: MF12-N25, to: MF12-N38, kind: call, status: conditional_dynamic, condition: "file->f_op->read without return-value check", anchors: [MF12-A85b]}
+  - {id: MF12-E40, from: MF12-N26, to: MF12-N36, kind: data, status: conditional, condition: "build/write PTE after file fallback", anchors: [MF12-A56d]}
+  - {id: MF12-E41, from: MF12-N30, to: MF12-N36, kind: data, status: conditional, condition: "private WP set_pte_at if PTE remains same", anchors: [MF12-A62g]}
+  - {id: MF12-E42, from: MF12-N05, to: MF12-N40, kind: data, status: active, condition: "current->mm, no active !mm early check", anchors: [MF12-A06]}
+  - {id: MF12-E43, from: MF12-N06, to: MF12-N31, kind: data, status: active, condition: "scan VMA interval for containment", anchors: [MF12-A22b]}
+  - {id: MF12-E44, from: MF12-N09, to: MF12-N32, kind: data, status: active, condition: "uses vma->vm_mm, pgd_offset, p4d/pud/pmd/PTE", anchors: [MF12-A32]}
+  - {id: MF12-E45, from: MF12-N09, to: MF12-N36, kind: data, status: conditional, condition: "PTE pointer and orig snapshot", anchors: [MF12-A35]}
+  - {id: MF12-E46, from: MF12-N34, to: MF12-N33, kind: data, status: active, condition: "bind VMA vm_ops to generic_file_vm_ops", anchors: [MF12-A67b]}
+  - {id: MF12-E47, from: MF12-N33, to: MF12-N25, kind: data, status: active, condition: "fault pointer binding", anchors: [MF12-A66]}
+  - {id: MF12-E48, from: MF12-N33, to: MF12-N22, kind: data, status: active, condition: "map_single_page pointer binding", anchors: [MF12-A66]}
+  - {id: MF12-E49, from: MF12-N41, to: MF12-N37, kind: call, status: conditional, condition: "alloc_anon_folio delegates to folio_prealloc", anchors: [MF12-A88]}
+effects:
+  - {id: MF12-FX01, actor: "do_user_addr_fault", description: "sets FAULT_FLAG_USER/WRITE/INSTRUCTION per regs+errcode, not VMA permissions", anchors: [MF12-A08, MF12-A09]}
+  - {id: MF12-FX02, actor: "myos_handle_mm_fault", description: "may allocate page-table levels; stores orig_pte; non-NULL pte path calls handle_pte_fault", anchors: [MF12-A32, MF12-A33, MF12-A35, MF12-A36]}
+  - {id: MF12-FX03, actor: "do_anonymous_page", description: "zero-page PTE for read or allocated-folio PTE for write under successful path", anchors: [MF12-A44, MF12-A47]}
+  - {id: MF12-FX04, actor: "simple_filemap_map_page", description: "cached page PTE direct write and return0", anchors: [MF12-A84]}
+  - {id: MF12-FX05, actor: "simple_filemap_fault", description: "allocates page_cache entry and calls f_op->read but ignores return value", anchors: [MF12-A85]}
+  - {id: MF12-FX06, actor: "finish_fault", description: "writes PTE for vmf.page or cow_page before returning0", anchors: [MF12-A56d]}
+  - {id: MF12-FX07, actor: "wp_page_copy", description: "conditional PTE copy replacement and folio release", anchors: [MF12-A62g, MF12-A63]}
+  - {id: MF12-FX08, actor: "handle_pte_fault", description: "dirty/young entry calculated but access-flags update commented", anchors: [MF12-A40, MF12-A83]}
+  - {id: MF12-FX09, actor: "do_user_addr_fault", description: "fault!=ENOERR busy loop; no active signal/OOM/retry dispatch", anchors: [MF12-A14, MF12-A16, MF12-A17]}
+branch_matrix:
+  - id: MF12-M01
+    input: "address >= TASK_SIZE_MAX"
+    conditions: "fault_in_kernel_space true independent of privilege bit"
+    source_result: "do_kern_addr_fault; active while(1)"
+    limits: "no normal return evidenced"
+    anchors: [MF12-A01, MF12-A02, MF12-A18]
+  - id: MF12-M02
+    input: "address < TASK_SIZE_MAX; user_mode(regs)"
+    conditions: "flags |= FAULT_FLAG_USER, local_irq_enable"
+    source_result: "scan current->mm VMA"
+    limits: "not identical to X86_PF_USER bit"
+    anchors: [MF12-A06, MF12-A08, MF12-A10]
+  - id: MF12-M03
+    input: "user range; supervisor regs"
+    conditions: "FAULT_FLAG_USER not set; irq enabled only under regs IF"
+    source_result: "still do_user_addr_fault"
+    limits: "SMAP/other checks commented"
+    anchors: [MF12-A07, MF12-A08]
+  - id: MF12-M04
+    input: "mm is NULL or fault handler disabled"
+    conditions: "guard is commented"
+    source_result: "simple_find_vma(mm,address) still called"
+    limits: "no safe outcome if invalid mm"
+    anchors: [MF12-A05, MF12-A06, MF12-A10]
+  - id: MF12-M05
+    input: "no containing VMA"
+    conditions: "simple_find_vma returns NULL"
+    source_result: "myos_bad_area spin (assuming allocated buffer)"
+    limits: "no active signal delivery"
+    anchors: [MF12-A10, MF12-A04, MF12-A22]
+  - id: MF12-M06
+    input: "address below start of next VM_GROWSDOWN VMA"
+    conditions: "simple_find_vma only returns containing interval"
+    source_result: "NULL -> bad_area; expand_stack not reached under stable VMA"
+    limits: "grow-down check unreachable from this lookup"
+    anchors: [MF12-A11, MF12-A12, MF12-A22]
+  - id: MF12-M07
+    input: "VMA contains address"
+    conditions: "address in [vm_start,vm_end); goto lock_mmap"
+    source_result: "myos_handle_mm_fault called"
+    limits: "VM_READ/WRITE/EXEC access_error check commented"
+    anchors: [MF12-A10, MF12-A11, MF12-A13, MF12-A14]
+  - id: MF12-M08
+    input: "hypothetical inconsistent VMA start >address; VM_GROWSDOWN"
+    conditions: "expand_stack called; minimum address guard"
+    source_result: "returns 0 or negative; caller myos_bad_area on nonzero"
+    limits: "not normal stable lookup"
+    anchors: [MF12-A11, MF12-A12, MF12-A24, MF12-A25]
+  - id: MF12-M09
+    input: "read fault, no PTE, anonymous vm_ops=NULL"
+    conditions: "do_anonymous_page; zero PFN PTE write"
+    source_result: "ret 0 if path succeeds"
+    limits: "!vmf.pte_ptr may goto unlock ret0 without mapping"
+    anchors: [MF12-A41, MF12-A43, MF12-A44, MF12-A47]
+  - id: MF12-M10
+    input: "write fault, no PTE, anonymous"
+    conditions: "alloc_anon_folio, mk_pte, set_pte_at"
+    source_result: "0 after set_pte_at if normal"
+    limits: "IS_ERR(folio) branch returns0 without PTE"
+    anchors: [MF12-A45, MF12-A46, MF12-A47, MF12-A48]
+  - id: MF12-M11
+    input: "anon VMA VM_SHARED but vm_ops NULL"
+    conditions: "do_anonymous_page returns VM_FAULT_SIGBUS"
+    source_result: "arch while(fault!=0)"
+    limits: "no active SIGBUS delivery"
+    anchors: [MF12-A42, MF12-A14]
+  - id: MF12-M12
+    input: "anonymous page table alloc failure"
+    conditions: "pte_alloc !=0 -> VM_FAULT_OOM"
+    source_result: "arch while(nonzero)"
+    limits: "no active OOM handling"
+    anchors: [MF12-A43, MF12-A14]
+  - id: MF12-M13
+    input: "PGD/pud/pmd/pte allocation failure in myos_handle"
+    conditions: "ret initially VM_FAULT_OOM, goto fail"
+    source_result: "nonzero -> arch while"
+    limits: "allocation itself not proof of PTE"
+    anchors: [MF12-A30, MF12-A33, MF12-A36]
+  - id: MF12-M14
+    input: "pmd_none unexpectedly true after alloc"
+    conditions: "pr_err then while(1)"
+    source_result: "no return"
+    limits: "cannot assume allocated table valid"
+    anchors: [MF12-A34]
+  - id: MF12-M15
+    input: "pte_offset_map_nolock returned NULL"
+    conditions: "myos_handle_mm_fault returns 0 immediately"
+    source_result: "arch while false, returns"
+    limits: "0 with no handle_pte_fault or mapping"
+    anchors: [MF12-A35]
+  - id: MF12-M16
+    input: "file-backed PTE missing read/exec, cached page exists"
+    conditions: "vm_ops.map_single_page dispatch may write PTE and return0"
+    source_result: "do_read_fault returns0 immediately"
+    limits: "only for bound/valid vm_ops and pointer"
+    anchors: [MF12-A53b, MF12-A84, MF12-A66]
+  - id: MF12-M17
+    input: "file-backed read cache miss"
+    conditions: "map_single_page returns VM_FAULT_NOPAGE, then __do_fault"
+    source_result: "simple_filemap_fault allocates page + file->f_op->read, finish_fault sets PTE"
+    limits: "read result and cache array bounds not checked"
+    anchors: [MF12-A84, MF12-A85, MF12-A52, MF12-A56d]
+  - id: MF12-M18
+    input: "file-backed private write, PTE missing"
+    conditions: "do_cow_fault preallocates folio, __do_fault, copy_user_highpage, finish_fault"
+    source_result: "0 or VM_FAULT bits conditional"
+    limits: "folio/image preconditions; no full COW correctness guarantee"
+    anchors: [MF12-A57, MF12-A57b, MF12-A56d]
+  - id: MF12-M19
+    input: "file-backed shared write, PTE missing"
+    conditions: "do_shared_fault begins pr_alert then while(1)"
+    source_result: "no return"
+    limits: "remaining code below spin not active"
+    anchors: [MF12-A58]
+  - id: MF12-M20
+    input: "PTE present, write and not writable, shared or mayshare"
+    conditions: "do_wp_page while(1)"
+    source_result: "no return"
+    limits: "not a successful WP recovery"
+    anchors: [MF12-A59]
+  - id: MF12-M21
+    input: "PTE present, write and not writable, private"
+    conditions: "do_wp_page -> wp_page_copy; conditional set_pte_at"
+    source_result: "ret 0 or VM_FAULT_OOM/poison flag"
+    limits: "if PTE changed race branch may ret0 without replacing"
+    anchors: [MF12-A60, MF12-A62g, MF12-A63]
+  - id: MF12-M22
+    input: "PTE present writable, write fault"
+    conditions: "entry=pte_mkdirty then pte_mkyoung, no active ptep_set_access_flags"
+    source_result: "returns 0 without evidenced PTE writeback"
+    limits: "cannot equate0 with HW permission resolved"
+    anchors: [MF12-A39, MF12-A40, MF12-A83]
+  - id: MF12-M23
+    input: "PTE present, read/instruction fault"
+    conditions: "entry=pte_mkyoung, commented access update, returns0"
+    source_result: "no active PTE writeback"
+    limits: "no guarantee fault fixed"
+    anchors: [MF12-A39, MF12-A83]
+  - id: MF12-M24
+    input: "nonzero vm_fault_t or bitflag including VM_FAULT_NOPAGE"
+    conditions: "do_user_addr_fault checks fault != ENOERR=0, while loop unchanged value"
+    source_result: "indefinite loop if no UB/interruption"
+    limits: "retry/signals/OOM handling commented"
+    anchors: [MF12-A14, MF12-A80, MF12-A16, MF12-A17]
+  - id: MF12-M25
+    input: "zero vm_fault_t, including early no-PTE-pointer path"
+    conditions: "while not entered; do_user_addr_fault returns void"
+    source_result: "handle_page_fault disables IRQ; exc returns"
+    limits: "no proof PTE/hardware instruction resume"
+    anchors: [MF12-A14, MF12-A35, MF12-A19, MF12-A21]
+anchors:
+  - id: MF12-A01
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "fault_in_kernel_space"
+    observed_lines: [112, 116]
+    quote: |
+      	// if (IS_ENABLED(CONFIG_X86_64) && is_vsyscall_vaddr(address))
+      	// 	return false;
+      
+      	return address >= TASK_SIZE_MAX;
+      }
+  - id: MF12-A02
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_kern_addr_fault"
+    observed_lines: [151, 154]
+    quote: |
+      	// bad_area_nosemaphore(regs, hw_err_code, address);
+      
+      	while (1);
+      }
+  - id: MF12-A03
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "myos_bad_area"
+    observed_lines: [91, 95]
+    quote: |
+      static noinline void
+      myos_bad_area(pt_regs_s *regs, ulong err_code, ulong address)
+      {
+      	char *buf = kmalloc(500, GFP_KERNEL);
+      	memset(buf, 0, 500);
+  - id: MF12-A03b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "myos_bad_area"
+    observed_lines: [96, 96]
+    quote: |
+      	parse_PF_errcode(regs, address, buf);
+  - id: MF12-A04
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "myos_bad_area"
+    observed_lines: [97, 101]
+    quote: |
+      	// if (!(err_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P)))
+      	// {
+      		color_printk(RED, BLACK, buf);
+      		while (1);
+      	// }	
+  - id: MF12-A05
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [165, 169]
+    quote: |
+      void do_user_addr_fault(pt_regs_s *regs, ulong err_code, ulong address) {
+      	vma_s *vma;
+      	task_s *tsk;
+      	mm_s *mm;
+      	vm_fault_t fault;
+  - id: MF12-A05b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [170, 170]
+    quote: |
+      	uint flags = FAULT_FLAG_DEFAULT;
+  - id: MF12-A06
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [172, 173]
+    quote: |
+      	tsk = current;
+      	mm = tsk->mm;
+  - id: MF12-A07
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [219, 223]
+    quote: |
+      	// /*
+      	//  * If we're in an interrupt, have no user context or are running
+      	//  * in a region with pagefaults disabled then we must not take the fault
+      	//  */
+      	// if (unlikely(faulthandler_disabled() || !mm)) {
+  - id: MF12-A07b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [224, 225]
+    quote: |
+      	// 	bad_area_nosemaphore(regs, error_code, address);
+      	// 	return;
+  - id: MF12-A08
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [235, 239]
+    quote: |
+      	if (user_mode(regs)) {
+      		local_irq_enable();
+      		flags |= FAULT_FLAG_USER;
+      	} else {
+      		if (regs->flags & X86_EFLAGS_IF)
+  - id: MF12-A08b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [240, 241]
+    quote: |
+      			local_irq_enable();
+      	}
+  - id: MF12-A09
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [251, 255]
+    quote: |
+      	if (err_code & X86_PF_SHSTK)
+      		flags |= FAULT_FLAG_WRITE;
+      	if (err_code & X86_PF_WRITE)
+      		flags |= FAULT_FLAG_WRITE;
+      	if (err_code & X86_PF_INSTR)
+  - id: MF12-A09b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [256, 256]
+    quote: |
+      		flags |= FAULT_FLAG_INSTRUCTION;
+  - id: MF12-A10
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [275, 279]
+    quote: |
+      	// vm_fault_s vmf = myos_dump_pagetable(address);
+      	vma = simple_find_vma(mm, address);
+      	if (unlikely(!vma)) {
+      		myos_bad_area(regs, err_code, address);
+      		return;
+  - id: MF12-A10b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [280, 280]
+    quote: |
+      	}
+  - id: MF12-A11
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [281, 285]
+    quote: |
+      	if (likely(vma->vm_start <= address))
+      		goto lock_mmap;
+      	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
+      		myos_bad_area(regs, err_code, address);
+      		return;
+  - id: MF12-A12
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [287, 290]
+    quote: |
+      	if (unlikely(expand_stack(vma, address))) {
+      		myos_bad_area(regs, err_code, address);
+      		return;
+      	}
+  - id: MF12-A13
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [303, 307]
+    quote: |
+      	//  */
+      	// if (unlikely(access_error(error_code, vma))) {
+      	// 	bad_area_access_error(regs, error_code, address, vma);
+      	// 	return;
+      	// }
+  - id: MF12-A14
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [322, 324]
+    quote: |
+      	// fault = handle_mm_fault(vma, address, flags, regs);
+      	fault = myos_handle_mm_fault(vma, address, flags);
+      	while (fault != ENOERR);
+  - id: MF12-A15
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [338, 342]
+    quote: |
+      	// /* The fault is fully completed (including releasing mmap lock) */
+      	// if (fault & VM_FAULT_COMPLETED)
+      	// 	return;
+      
+      	// /*
+  - id: MF12-A15b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [343, 347]
+    quote: |
+      	//  * If we need to retry the mmap_lock has already been released,
+      	//  * and if there is a fatal signal pending there is no guarantee
+      	//  * that we made any progress. Handle this case first.
+      	//  */
+      	// if (unlikely(fault & VM_FAULT_RETRY)) {
+  - id: MF12-A15c
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [348, 350]
+    quote: |
+      	// 	flags |= FAULT_FLAG_TRIED;
+      	// 	goto retry;
+      	// }
+  - id: MF12-A16
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [363, 367]
+    quote: |
+      	// if (fault & VM_FAULT_OOM) {
+      	// 	/* Kernel mode? Handle exceptions or die: */
+      	// 	if (!user_mode(regs)) {
+      	// 		kernelmode_fixup_or_oops(regs, error_code, address,
+      	// 					 SIGSEGV, SEGV_MAPERR,
+  - id: MF12-A17
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [377, 381]
+    quote: |
+      	// 	pagefault_out_of_memory();
+      	// } else {
+      	// 	if (fault & (VM_FAULT_SIGBUS|VM_FAULT_HWPOISON|
+      	// 		     VM_FAULT_HWPOISON_LARGE))
+      	// 		do_sigbus(regs, error_code, address, fault);
+  - id: MF12-A17b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "do_user_addr_fault"
+    observed_lines: [382, 385]
+    quote: |
+      	// 	else if (fault & VM_FAULT_SIGSEGV)
+      	// 		bad_area_nosemaphore(regs, error_code, address);
+      	// 	else
+      	// 		BUG();
+  - id: MF12-A18
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "handle_page_fault"
+    observed_lines: [390, 394]
+    quote: |
+      static __always_inline void
+      handle_page_fault(pt_regs_s *regs, ulong err_code, ulong address) {
+      
+      	// trace_page_fault_entries(regs, error_code, address);
+      
+  - id: MF12-A18b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "handle_page_fault"
+    observed_lines: [395, 399]
+    quote: |
+      	// if (kmmio_fault(regs, address))
+      	// 	return;
+      
+      	/* Was the fault on kernel-controlled part of the address space? */
+      	if (unlikely(fault_in_kernel_space(address))) {
+  - id: MF12-A18c
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "handle_page_fault"
+    observed_lines: [400, 402]
+    quote: |
+      		do_kern_addr_fault(regs, err_code, address);
+      	} else {
+      		do_user_addr_fault(regs, err_code, address);
+  - id: MF12-A19
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "handle_page_fault"
+    observed_lines: [409, 412]
+    quote: |
+      		 */
+      		local_irq_disable();
+      	}
+      }
+  - id: MF12-A20
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "exc_page_fault"
+    observed_lines: [415, 419]
+    quote: |
+      __visible noinstr void
+      exc_page_fault(pt_regs_s *regs, ulong error_code)
+      {
+      	ulong address = read_cr2();
+      	// irqentry_state_t state;
+  - id: MF12-A21
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "exc_page_fault"
+    observed_lines: [457, 461]
+    quote: |
+      	// state = irqentry_enter(regs);
+      
+      	// instrumentation_begin();
+      	handle_page_fault(regs, error_code, address);
+      	// instrumentation_end();
+  - id: MF12-A21b
+    path: "mykernel/arch/x86_64/mm/fault.c"
+    symbol: "exc_page_fault"
+    observed_lines: [462, 464]
+    quote: |
+      
+      	// irqentry_exit(regs, state);
+      }
+  - id: MF12-A22
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "simple_find_vma"
+    observed_lines: [253, 257]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		vma_s
+      		*simple_find_vma(mm_s *mm, ulong addr) {
+      			vma_s *vma = NULL;
+      			for_each_vma(mm, vma) {
+  - id: MF12-A22b
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "simple_find_vma"
+    observed_lines: [258, 261]
+    quote: |
+      				if (addr >= vma->vm_start && addr < vma->vm_end)
+      					return vma;
+      			}
+      			return NULL;
+  - id: MF12-A23
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "vma_is_anonymous"
+    observed_lines: [166, 170]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		bool
+      		vma_is_anonymous(vma_s *vma) {
+      			return !vma->vm_ops;
+      		}
+  - id: MF12-A24
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "expand_stack"
+    observed_lines: [992, 996]
+    quote: |
+      expand_stack(vma_s *vma, ulong address)
+      {
+      	mm_s *mm = vma->vm_mm;
+      	vma_s *prev;
+      	int error = -ENOERR;
+  - id: MF12-A24b
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "expand_stack"
+    observed_lines: [997, 1000]
+    quote: |
+      
+      	address &= PAGE_MASK;
+      	if (address < mmap_min_addr)
+      		return -EPERM;
+  - id: MF12-A25
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "expand_stack"
+    observed_lines: [1023, 1027]
+    quote: |
+      	if (address < vma->vm_start) {
+      		ulong size, grow;
+      
+      		size = vma->vm_end - address;
+      		grow = (vma->vm_start - address) >> PAGE_SHIFT;
+  - id: MF12-A25b
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "expand_stack"
+    observed_lines: [1028, 1030]
+    quote: |
+      
+      		// error = -ENOMEM;
+      		if (grow <= vma->vm_pgoff) {
+  - id: MF12-A26
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "expand_stack"
+    observed_lines: [1044, 1048]
+    quote: |
+      				spin_lock(&mm->page_table_lock);
+      			// 	if (vma->vm_flags & VM_LOCKED)
+      			// 		mm->locked_vm += grow;
+      			// 	vm_stat_account(mm, vma->vm_flags, grow);
+      			// 	anon_vma_interval_tree_pre_update_vma(vma);
+  - id: MF12-A26b
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "expand_stack"
+    observed_lines: [1049, 1053]
+    quote: |
+      				vma->vm_start = address;
+      				vma->vm_pgoff -= grow;
+      			// 	anon_vma_interval_tree_post_update_vma(vma);
+      			// 	vma_gap_update(vma);
+      				spin_unlock(&mm->page_table_lock);
+  - id: MF12-A27
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "expand_stack"
+    observed_lines: [1059, 1061]
+    quote: |
+      	// anon_vma_unlock_write(vma->anon_vma);
+      	// validate_mm(mm);
+      	return error;
+  - id: MF12-A28
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [689, 693]
+    quote: |
+      	vma->vm_pgoff = pgoff;
+      
+      	if (file) {
+      		vma->vm_file = get_file(file);
+      		error = call_mmap(file, vma);
+  - id: MF12-A28b
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [694, 695]
+    quote: |
+      		if (error != -ENOERR)
+      			goto unmap_and_free_vma;
+  - id: MF12-A30
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1309, 1313]
+    quote: |
+      vm_fault_t myos_handle_mm_fault(vma_s *vma,
+      		ulong address, uint flags)
+      {
+      	vm_fault_t ret = VM_FAULT_OOM;
+      	__set_current_state(TASK_RUNNING);
+  - id: MF12-A31
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1315, 1319]
+    quote: |
+      	vm_fault_s vmf = {
+      		.vma		= vma,
+      		.address	= address & PAGE_MASK,
+      		.flags		= flags,
+      		.pgoff		= linear_page_index(vma, address),
+  - id: MF12-A31b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1320, 1321]
+    quote: |
+      		.gfp_mask	= __get_fault_gfp_mask(vma),
+      		.curr_tsk	= current,
+  - id: MF12-A32
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1323, 1327]
+    quote: |
+      	uint dirty = flags & FAULT_FLAG_WRITE;
+      	mm_s *mm = vma->vm_mm;
+      	pgd_t *pgd = pgd_offset(mm, address);
+      
+      	vmf.p4d_entp = p4d_alloc(mm, pgd, address);
+  - id: MF12-A32b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1328, 1329]
+    quote: |
+      	if (!vmf.p4d_entp) {
+      		goto fail;
+  - id: MF12-A33
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1331, 1335]
+    quote: |
+      	vmf.pud_entp = pud_alloc(mm, vmf.p4d_entp, address);
+      	if (!vmf.pud_entp) {
+      		goto fail;
+      	}
+      	vmf.pmd_entp = pmd_alloc(mm, vmf.pud_entp, address);
+  - id: MF12-A33b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1336, 1340]
+    quote: |
+      	if (!vmf.pmd_entp) {
+      		goto fail;
+      	}
+      	if (pte_alloc(mm, vmf.pmd_entp)) {
+      		goto fail;
+  - id: MF12-A33c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1341, 1341]
+    quote: |
+      	}
+  - id: MF12-A34
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1349, 1352]
+    quote: |
+      	if (pmd_none(*(vmf.pmd_entp))) {
+      		pr_err("Current PMD is empty.");
+      		while (1);
+      	}
+  - id: MF12-A35
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1353, 1357]
+    quote: |
+      	vmf.pte_ptr = pte_offset_map_nolock(vmf.vma->vm_mm,
+      					vmf.pmd_entp, vmf.address, &(vmf.ptl));
+      	if (unlikely(vmf.pte_ptr == NULL))
+      		return 0;
+      	vmf.orig_pte = ptep_get_lockless(vmf.pte_ptr);
+  - id: MF12-A35b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1358, 1358]
+    quote: |
+      	vmf.flags |= FAULT_FLAG_ORIG_PTE_VALID;
+  - id: MF12-A36
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1361, 1364]
+    quote: |
+      	ret = handle_pte_fault(&vmf);
+      fail:
+      	return ret;
+      }
+  - id: MF12-A37
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1252, 1256]
+    quote: |
+      static vm_fault_t
+      handle_pte_fault(vm_fault_s *vmf) {
+      	pte_t entry;
+      
+      	if (pte_none(vmf->orig_pte))
+  - id: MF12-A37b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1257, 1257]
+    quote: |
+      		return do_pte_missing(vmf);
+  - id: MF12-A38
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1259, 1263]
+    quote: |
+      	// if (!pte_present(vmf->orig_pte))
+      	// 	return do_swap_page(vmf);
+      
+      	// if (pte_protnone(vmf->orig_pte) && vma_is_accessible(vmf->vma))
+      	// 	return do_numa_page(vmf);
+  - id: MF12-A39
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1266, 1270]
+    quote: |
+      	entry = vmf->orig_pte;
+      	if (unlikely(!pte_same(ptep_get(vmf->pte_ptr), entry))) {
+      		update_mmu_tlb(vmf->vma, vmf->address, vmf->pte_ptr);
+      		goto unlock;
+      	}
+  - id: MF12-A39b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1271, 1273]
+    quote: |
+      	if (vmf->flags & FAULT_FLAG_WRITE) {
+      		if (!pte_write(*vmf->pte_ptr))
+      			return do_wp_page(vmf);
+  - id: MF12-A40
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1274, 1278]
+    quote: |
+      		else if (likely(vmf->flags & FAULT_FLAG_WRITE))
+      			entry = pte_mkdirty(entry);
+      	}
+      	entry = pte_mkyoung(entry);
+      	// if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
+  - id: MF12-A40b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1279, 1283]
+    quote: |
+      	// 			vmf->flags & FAULT_FLAG_WRITE)) {
+      	// 	update_mmu_cache_range(vmf, vmf->vma, vmf->address,
+      	// 			vmf->pte, 1);
+      	// } else {
+      	// 	/* Skip spurious TLB flush for retried page fault */
+  - id: MF12-A40c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1284, 1288]
+    quote: |
+      	// 	if (vmf->flags & FAULT_FLAG_TRIED)
+      	// 		goto unlock;
+      	// 	/*
+      	// 	 * This is needed only for protection faults but the arch code
+      	// 	 * is not yet telling us if this is a protection fault or not.
+  - id: MF12-A40d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1289, 1293]
+    quote: |
+      	// 	 * This still avoids useless tlb flushes for .text page faults
+      	// 	 * with threads.
+      	// 	 */
+      	// 	if (vmf->flags & FAULT_FLAG_WRITE)
+      	// 		flush_tlb_fix_spurious_fault(vmf->vma, vmf->address,
+  - id: MF12-A40e
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1294, 1298]
+    quote: |
+      	// 					     vmf->pte);
+      	// }
+      unlock:
+      	// pte_unmap_unlock(vmf->pte, vmf->ptl);
+      	return 0;
+  - id: MF12-A40f
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1299, 1299]
+    quote: |
+      }
+  - id: MF12-A41
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_pte_missing"
+    observed_lines: [1229, 1233]
+    quote: |
+      static vm_fault_t
+      do_pte_missing(vm_fault_s *vmf) {
+      	if (vma_is_anonymous(vmf->vma))
+      		return do_anonymous_page(vmf);
+      	else
+  - id: MF12-A41b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_pte_missing"
+    observed_lines: [1234, 1235]
+    quote: |
+      		return do_fault(vmf);
+      }
+  - id: MF12-A42
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [777, 781]
+    quote: |
+      static vm_fault_t
+      do_anonymous_page(vm_fault_s *vmf) {
+      	vma_s *vma = vmf->vma;
+      	folio_s *folio;
+      	vm_fault_t ret = 0;
+  - id: MF12-A42b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [782, 786]
+    quote: |
+      	// int nr_pages = 1;
+      	pte_t entry;
+      
+      	/* File mapping without ->vm_ops ? */
+      	if (vma->vm_flags & VM_SHARED)
+  - id: MF12-A42c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [787, 787]
+    quote: |
+      		return VM_FAULT_SIGBUS;
+  - id: MF12-A43
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [793, 797]
+    quote: |
+      	if (pte_alloc(vma->vm_mm, vmf->pmd_entp))
+      		return VM_FAULT_OOM;
+      
+      	/* Use the zero-page for reads */
+      	if (!(vmf->flags & FAULT_FLAG_WRITE)) {
+  - id: MF12-A43b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [798, 799]
+    quote: |
+      		entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
+      					vma->vm_page_prot));
+  - id: MF12-A44
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [801, 805]
+    quote: |
+      		// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+      		// 		vmf->address, &vmf->ptl);
+      		if (!vmf->pte_ptr)
+      			goto unlock;
+      		// if (vmf_pte_changed(vmf)) {
+  - id: MF12-A44b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [806, 810]
+    quote: |
+      		// 	update_mmu_tlb(vma, vmf->address, vmf->pte_ptr);
+      		// 	goto unlock;
+      		// }
+      		// ret = check_stable_address_space(vma->vm_mm);
+      		// if (ret)
+  - id: MF12-A44c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [811, 812]
+    quote: |
+      		// 	goto unlock;
+      		goto setpte;
+  - id: MF12-A45
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [819, 823]
+    quote: |
+      	/* Returns NULL on OOM or ERR_PTR(-EAGAIN) if we must retry the fault */
+      	folio = alloc_anon_folio(vmf);
+      	if (IS_ERR(folio))
+      		return 0;
+      	if (!folio)
+  - id: MF12-A45b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [824, 824]
+    quote: |
+      		goto oom;
+  - id: MF12-A46
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [836, 839]
+    quote: |
+      	entry = mk_pte(&folio->page, vma->vm_page_prot);
+      	if (vma->vm_flags & VM_WRITE)
+      		entry = pte_mkwrite(pte_mkdirty(entry));
+      
+  - id: MF12-A47
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [854, 858]
+    quote: |
+      	// folio_add_new_anon_rmap(folio, vma, vmf->address);
+      	// folio_add_lru_vma(folio, vma);
+      setpte:
+      	set_pte_at(vma->vm_mm, vmf->address, vmf->pte_ptr, entry);
+      
+  - id: MF12-A47b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [859, 863]
+    quote: |
+      	// /* No need to invalidate - it was non-present before */
+      	// update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
+      unlock:
+      	// if (vmf->pte)
+      	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
+  - id: MF12-A47c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [864, 864]
+    quote: |
+      	return ret;
+  - id: MF12-A48
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_anonymous_page"
+    observed_lines: [865, 869]
+    quote: |
+      release:
+      	folio_put(folio);
+      	goto unlock;
+      oom:
+      	return VM_FAULT_OOM;
+  - id: MF12-A49
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1186, 1190]
+    quote: |
+      static vm_fault_t
+      do_fault(vm_fault_s *vmf) {
+      	vma_s *vma = vmf->vma;
+      	mm_s *vm_mm = vma->vm_mm;
+      	vm_fault_t ret;
+  - id: MF12-A49b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1191, 1195]
+    quote: |
+      
+      	/*
+      	 * The VMA was not fully populated on mmap() or missing VM_DONTEXPAND
+      	 */
+      	if (!vma->vm_ops->fault) {
+  - id: MF12-A49c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1196, 1197]
+    quote: |
+      		pr_alert("VMA has no vm_ops->fault\n");
+      		while (1);
+  - id: MF12-A50
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1209, 1213]
+    quote: |
+      		if (unlikely(pte_none(ptep_get(vmf->pte_ptr))))
+      			ret = VM_FAULT_SIGBUS;
+      		else
+      			ret = VM_FAULT_NOPAGE;
+      
+  - id: MF12-A50b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1214, 1218]
+    quote: |
+      		// pte_unmap_unlock(vmf->pte_ptr, vmf->ptl);
+      	} else if (!(vmf->flags & FAULT_FLAG_WRITE))
+      		// Reading or Executing cause fault
+      		ret = do_read_fault(vmf);
+      	else if (!(vma->vm_flags & VM_SHARED))
+  - id: MF12-A50c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1219, 1223]
+    quote: |
+      		// Writing cause fault, but address is not VM_SHARED
+      		ret = do_cow_fault(vmf);
+      	else
+      		// Writing cause fault, and address is VM_SHARED
+      		ret = do_shared_fault(vmf);
+  - id: MF12-A50d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1224, 1226]
+    quote: |
+      
+      	// prealloc_pte not supported, skip check
+      	return ret;
+  - id: MF12-A51
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1077, 1081]
+    quote: |
+      static vm_fault_t
+      do_read_fault(vm_fault_s *vmf) {
+      	vm_fault_t ret = 0;
+      	folio_s *folio;
+      
+  - id: MF12-A51b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1082, 1086]
+    quote: |
+      	/*
+      	 * Let's call ->map_pages() first and use ->fault() as fallback
+      	 * if page by the offset is not ready to be mapped (cold cache or
+      	 * something).
+      	 */
+  - id: MF12-A51c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1087, 1091]
+    quote: |
+      	// if (should_fault_around(vmf)) {
+      		ret = do_fault_around(vmf);
+      		if (ret == 0)
+      			return ret;
+      	// }
+  - id: MF12-A51d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1092, 1092]
+    quote: |
+      
+  - id: MF12-A52
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1093, 1097]
+    quote: |
+      	ret = __do_fault(vmf);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+      		return ret;
+      
+      	ret |= finish_fault(vmf);
+  - id: MF12-A52b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1098, 1102]
+    quote: |
+      	folio = page_folio(vmf->page);
+      	// folio_unlock(folio);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+      		folio_put(folio);
+      	return ret;
+  - id: MF12-A53
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault_around"
+    observed_lines: [1064, 1068]
+    quote: |
+      	while (pmd_none(*vmf->pmd_entp));
+      
+      	// rcu_read_lock();
+      	// ret = vmf->vma->vm_ops->map_pages(vmf,
+      	// 		vmf->pgoff + from_pte - pte_off,
+  - id: MF12-A53b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault_around"
+    observed_lines: [1069, 1073]
+    quote: |
+      	// 		vmf->pgoff + to_pte - pte_off);
+      	ret = vmf->vma->vm_ops->map_single_page(vmf,
+      			vmf->pgoff + from_pte - pte_off);
+      	// rcu_read_unlock();
+      
+  - id: MF12-A53c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault_around"
+    observed_lines: [1074, 1075]
+    quote: |
+      	return ret;
+      }
+  - id: MF12-A54
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "__do_fault"
+    observed_lines: [898, 902]
+    quote: |
+      	while (pmd_none(*vmf->pmd_entp));
+      
+      
+      	ret = vma->vm_ops->fault(vmf);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
+  - id: MF12-A54b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "__do_fault"
+    observed_lines: [903, 907]
+    quote: |
+      			VM_FAULT_RETRY | VM_FAULT_DONE_COW)))
+      		return ret;
+      	
+      	// We skip page-poisoned check
+      
+  - id: MF12-A54c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "__do_fault"
+    observed_lines: [908, 912]
+    quote: |
+      	folio = page_folio(vmf->page);
+      	// if (unlikely(!(ret & VM_FAULT_LOCKED)))
+      	// 	folio_lock(folio);
+      	// else
+      	// 	VM_BUG_ON_PAGE(!folio_test_locked(folio), vmf->page);
+  - id: MF12-A54d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "__do_fault"
+    observed_lines: [913, 915]
+    quote: |
+      
+      	return ret;
+      }
+  - id: MF12-A55
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [933, 937]
+    quote: |
+      vm_fault_t finish_fault(vm_fault_s *vmf)
+      {
+      	vma_s *vma = vmf->vma;
+      	page_s *page;
+      	folio_s *folio;
+  - id: MF12-A55b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [938, 942]
+    quote: |
+      	vm_fault_t ret;
+      	bool is_cow = (vmf->flags & FAULT_FLAG_WRITE) &&
+      					!(vma->vm_flags & VM_SHARED);
+      	int type, nr_pages;
+      	pte_t entry;
+  - id: MF12-A55c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [943, 947]
+    quote: |
+      
+      	/* Did we COW the page? */
+      	if (is_cow)
+      		page = vmf->cow_page;
+      	else
+  - id: MF12-A55d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [948, 948]
+    quote: |
+      		page = vmf->page;
+  - id: MF12-A56
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [996, 1000]
+    quote: |
+      	// vmf->pte = pte_offset_map_lock(vma->vm_mm,
+      	// 				vmf->pmd, vmf->address, &vmf->ptl);
+      	if (!vmf->pte_ptr)
+      		return VM_FAULT_NOPAGE;
+      
+  - id: MF12-A56b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [1001, 1005]
+    quote: |
+      	// /* Re-check under ptl */
+      	// if (nr_pages == 1 && unlikely(vmf_pte_changed(vmf))) {
+      	// 	update_mmu_tlb(vma, addr, vmf->pte);
+      	// 	ret = VM_FAULT_NOPAGE;
+      	// 	goto unlock;
+  - id: MF12-A56c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [1006, 1010]
+    quote: |
+      	// } else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
+      	// 	update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
+      	// 	ret = VM_FAULT_NOPAGE;
+      	// 	goto unlock;
+      	// }
+  - id: MF12-A56d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [1011, 1015]
+    quote: |
+      
+      	// folio_ref_add(folio, nr_pages - 1);
+      	// set_pte_range(vmf, folio, page, nr_pages, addr);
+      	entry = mk_pte(page, vma->vm_page_prot);
+      	set_pte(vmf->pte_ptr, entry);
+  - id: MF12-A56e
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [1016, 1020]
+    quote: |
+      	// type = is_cow ? MM_ANONPAGES : mm_counter_file(folio);
+      	// add_mm_counter(vma->vm_mm, type, nr_pages);
+      	ret = 0;
+      
+      unlock:
+  - id: MF12-A56f
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [1021, 1023]
+    quote: |
+      	// pte_unmap_unlock(vmf->pte, vmf->ptl);
+      	return ret;
+      }
+  - id: MF12-A57
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1105, 1109]
+    quote: |
+      static vm_fault_t
+      do_cow_fault(vm_fault_s *vmf) {
+      	vma_s *vma = vmf->vma;
+      	folio_s *folio;
+      	vm_fault_t ret;
+  - id: MF12-A57b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1110, 1114]
+    quote: |
+      
+      	folio = folio_prealloc(vma->vm_mm, vma, vmf->address, false);
+      	if (!folio)
+      		return VM_FAULT_OOM;
+      	vmf->cow_page = &folio->page;
+  - id: MF12-A57c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1115, 1119]
+    quote: |
+      
+      	ret = __do_fault(vmf);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+      		goto uncharge_out;
+      	if (ret & VM_FAULT_DONE_COW)
+  - id: MF12-A57d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1120, 1124]
+    quote: |
+      		return ret;
+      
+      	copy_user_highpage(vmf->cow_page, vmf->page, vmf->address, vma);
+      	// __folio_mark_uptodate(folio);
+      
+  - id: MF12-A57e
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1125, 1129]
+    quote: |
+      	ret |= finish_fault(vmf);
+      	// unlock_page(vmf->page);
+      	put_page(vmf->page);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+      		goto uncharge_out;
+  - id: MF12-A57f
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1130, 1134]
+    quote: |
+      	return ret;
+      uncharge_out:
+      	folio_put(folio);
+      	// put_page(vmf->cow_page);
+      	return ret;
+  - id: MF12-A57g
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1135, 1135]
+    quote: |
+      }
+  - id: MF12-A58
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_shared_fault"
+    observed_lines: [1137, 1141]
+    quote: |
+      static vm_fault_t
+      do_shared_fault(vm_fault_s *vmf) {
+      	pr_alert("API not implemented - 'do_shared_fault'\n");
+      	while (1);
+      	
+  - id: MF12-A59
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [713, 717]
+    quote: |
+      do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
+      	vma_s *vma = vmf->vma;
+      	folio_s *folio = NULL;
+      	pte_t pte;
+      
+  - id: MF12-A59b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [718, 722]
+    quote: |
+      	vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte_ptr);
+      	if (vmf->page)
+      		folio = page_folio(vmf->page);
+      
+      	/*
+  - id: MF12-A59c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [723, 727]
+    quote: |
+      	 * Shared mapping: we are guaranteed to have VM_WRITE and
+      	 * FAULT_FLAG_WRITE set at this point.
+      	 */
+      	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
+      		// catch this case, handler temporarily not implemented
+  - id: MF12-A59d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [728, 728]
+    quote: |
+      		while (1);
+  - id: MF12-A60
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [763, 767]
+    quote: |
+      	if (folio)
+      		folio_get(folio);
+      
+      	// pte_unmap_unlock(vmf->pte, vmf->ptl);
+      	return wp_page_copy(vmf);
+  - id: MF12-A60b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [768, 768]
+    quote: |
+      }
+  - id: MF12-A61
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [569, 573]
+    quote: |
+      	pfn_is_zero = is_zero_pfn(pte_pfn(vmf->orig_pte));
+      	new_folio = folio_prealloc(mm, vma, vmf->address, pfn_is_zero);
+      	if (!new_folio)
+      		goto oom;
+      
+  - id: MF12-A61b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [574, 578]
+    quote: |
+      	if (!pfn_is_zero) {
+      		int err = __wp_page_copy_user(&new_folio->page, vmf->page, vmf);
+      		if (err) {
+      			/*
+      			 * COW failed, if the fault was solved by other,
+  - id: MF12-A61c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [579, 583]
+    quote: |
+      			 * it's fine. If not, userspace would re-fault on
+      			 * the same address and we will handle the fault
+      			 * from the second attempt.
+      			 */
+      			folio_put(new_folio);
+  - id: MF12-A61d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [584, 588]
+    quote: |
+      			if (old_folio)
+      				folio_put(old_folio);
+      
+      			return err == -EHWPOISON ? VM_FAULT_HWPOISON : 0;
+      		}
+  - id: MF12-A62
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [602, 606]
+    quote: |
+      	if (likely(vmf->pte_ptr != NULL &&
+      			pte_same(ptep_get(vmf->pte_ptr), vmf->orig_pte))) {
+      		// if (old_folio) {
+      		// 	if (!folio_test_anon(old_folio)) {
+      		// 		dec_mm_counter(mm, mm_counter_file(old_folio));
+  - id: MF12-A62b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [607, 611]
+    quote: |
+      		// 		inc_mm_counter(mm, MM_ANONPAGES);
+      		// 	}
+      		// } else {
+      		// 	ksm_might_unmap_zero_page(mm, vmf->orig_pte);
+      		// 	inc_mm_counter(mm, MM_ANONPAGES);
+  - id: MF12-A62c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [612, 616]
+    quote: |
+      		// }
+      		// flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+      		entry = mk_pte(&new_folio->page, vma->vm_page_prot);
+      		// entry = pte_sw_mkyoung(entry);
+      		if (unlikely(unshare)) {
+  - id: MF12-A62d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [617, 621]
+    quote: |
+      			// if (pte_soft_dirty(vmf->orig_pte))
+      			// 	entry = pte_mksoft_dirty(entry);
+      			// if (pte_uffd_wp(vmf->orig_pte))
+      			// 	entry = pte_mkuffd_wp(entry);
+      		} else {
+  - id: MF12-A62e
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [622, 626]
+    quote: |
+      			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+      		}
+      
+      		// /*
+      		//  * Clear the pte entry and flush it first, before updating the
+  - id: MF12-A62f
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [627, 631]
+    quote: |
+      		//  * pte with the new entry, to keep TLBs on different CPUs in
+      		//  * sync. This code used to set the new PTE then flush TLBs, but
+      		//  * that left a window where the new PTE could be loaded into
+      		//  * some TLBs while the old PTE remains in others.
+      		//  */
+  - id: MF12-A62g
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [632, 636]
+    quote: |
+      		// ptep_clear_flush(vma, vmf->address, vmf->pte);
+      		// folio_add_new_anon_rmap(new_folio, vma, vmf->address, RMAP_EXCLUSIVE);
+      		// folio_add_lru_vma(new_folio, vma);
+      		BUG_ON(unshare && pte_write(entry));
+      		set_pte_at(mm, vmf->address, vmf->pte_ptr, entry);
+  - id: MF12-A62h
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [637, 637]
+    quote: |
+      		// update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
+  - id: MF12-A63
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [675, 679]
+    quote: |
+      	if (new_folio)
+      		folio_put(new_folio);
+      	if (old_folio) {
+      		// if (page_copied)
+      		// 	free_swap_cache(old_folio);
+  - id: MF12-A63b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [680, 684]
+    quote: |
+      		folio_put(old_folio);
+      	}
+      
+      	return 0;
+      oom:
+  - id: MF12-A63c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [685, 689]
+    quote: |
+      	ret = VM_FAULT_OOM;
+      out:
+      	if (old_folio)
+      		folio_put(old_folio);
+      
+  - id: MF12-A63d
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "wp_page_copy"
+    observed_lines: [690, 691]
+    quote: |
+      	return VM_FAULT_OOM;
+      }
+  - id: MF12-A64
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [139, 143]
+    quote: |
+      vm_fault_t
+      simple_filemap_map_page(vm_fault_s *vmf, pgoff_t pgoff)
+      {
+      	vma_s *vma = vmf->vma;
+      	file_s *file = vma->vm_file;
+  - id: MF12-A64b
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [144, 148]
+    quote: |
+      	addr_spc_s *mapping = file->f_mapping;
+      	page_s *page;
+      
+      	page = mapping->page_array[pgoff];
+      	if (page != NULL) {
+  - id: MF12-A64c
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [149, 153]
+    quote: |
+      		*vmf->pte_ptr = mk_pte(page,
+      			__pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
+      		return 0;
+      	}
+      	else
+  - id: MF12-A64d
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [154, 155]
+    quote: |
+      		return VM_FAULT_NOPAGE;
+      }
+  - id: MF12-A65
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [116, 120]
+    quote: |
+      vm_fault_t simple_filemap_fault(vm_fault_s *vmf)
+      {
+      	file_s *file = vmf->vma->vm_file;
+      	if (IS_ERR_OR_NULL(file))
+      		return VM_FAULT_ERROR;
+  - id: MF12-A65b
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [121, 125]
+    quote: |
+      	addr_spc_s *mapping = file->f_mapping;
+      	if (IS_ERR_OR_NULL(mapping))
+      		return VM_FAULT_ERROR;
+      
+      	pgoff_t index = vmf->pgoff;
+  - id: MF12-A65c
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [126, 130]
+    quote: |
+      	loff_t pos = index << PAGE_SHIFT;
+      	page_s **pgcache_ptr = &mapping->page_array[index];
+      	BUG_ON(*pgcache_ptr != NULL);
+      	*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
+      	virt_addr_t vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
+  - id: MF12-A65d
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [131, 135]
+    quote: |
+      
+      	file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);
+      	vmf->page = *pgcache_ptr;
+      
+      	return 0;
+  - id: MF12-A66
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_vm_ops"
+    observed_lines: [184, 188]
+    quote: |
+      const vm_ops_s generic_file_vm_ops = {
+      	.fault				= simple_filemap_fault,
+      	.map_single_page	= simple_filemap_map_page,
+      	.page_mkwrite		= filemap_page_mkwrite,
+      };
+  - id: MF12-A67
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_mmap"
+    observed_lines: [411, 415]
+    quote: |
+      int generic_file_mmap(file_s *file, vma_s *vma)
+      {
+      	addr_spc_s *mapping = file->f_mapping;
+      
+      	// if (!mapping->a_ops->read_folio)
+  - id: MF12-A67b
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_mmap"
+    observed_lines: [416, 420]
+    quote: |
+      	// 	return -ENOEXEC;
+      	// file_accessed(file);
+      	vma->vm_ops = &generic_file_vm_ops;
+      	return 0;
+      }
+  - id: MF12-A68
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "p4d_alloc"
+    observed_lines: [75, 79]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		p4d_t
+      		*p4d_alloc(mm_s *mm, pgd_t *pgd_entp, ulong vaddr) {
+      			return ((p4d_t *)pgd_entp);
+      		}
+  - id: MF12-A69
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pud_alloc"
+    observed_lines: [82, 85]
+    quote: |
+      		pud_t
+      		*pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong vaddr) {
+      			return (p4d_ent_is_none(*p4d_entp)) && __pud_alloc(mm, p4d_entp) ?
+      						NULL : pud_entp_from_vaddr_and_p4d_entp(p4d_entp, vaddr);
+  - id: MF12-A70
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pmd_alloc"
+    observed_lines: [88, 92]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		pmd_t
+      		*pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong vaddr) {
+      			return (pud_ent_is_none(*pud_entp)) && __pmd_alloc(mm, pud_entp)?
+      						NULL: pmd_entp_from_vaddr_and_pud_entp(pud_entp, vaddr);
+  - id: MF12-A70b
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pmd_alloc"
+    observed_lines: [93, 93]
+    quote: |
+      		}
+  - id: MF12-A71
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pgtble_alloc"
+    observed_lines: [95, 99]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		int
+      		pgtble_alloc(mm_s *mm, pmd_t *pmd_entp) {
+      			return (unlikely(pmd_none(*(pmd_entp))) && __pte_alloc(mm, pmd_entp));
+      		}
+  - id: MF12-A72
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [10, 14]
+    quote: |
+      int __pud_alloc(mm_s *mm, p4d_t *p4d_entp)
+      {
+      	spinlock_t *ptl = p4d_lock(mm, p4d_entp);
+      	if (p4d_ent_none_or_clear_bad(p4d_entp) ||
+      			!p4d_present(*p4d_entp)) {
+  - id: MF12-A72b
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [15, 19]
+    quote: |
+      
+      		pud_t *new = pud_alloc_one(mm);
+      		if (!new)
+      			return -ENOMEM;
+      
+  - id: MF12-A72c
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [20, 24]
+    quote: |
+      		mm_inc_nr_puds(mm);
+      		smp_wmb();	/* See comment in pmd_install() */
+      		p4d_populate(mm, p4d_entp, new);
+      	}
+      	spin_unlock(ptl);
+  - id: MF12-A72d
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [25, 25]
+    quote: |
+      	return 0;
+  - id: MF12-A73
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [32, 36]
+    quote: |
+      int __pmd_alloc(mm_s *mm, pud_t *pud_entp)
+      {
+      	spinlock_t *ptl = pud_lock(mm, pud_entp);
+      	if (pud_ent_none_or_clear_bad(pud_entp) ||
+      			!pud_present(*pud_entp)) {
+  - id: MF12-A73b
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [37, 41]
+    quote: |
+      
+      		pmd_t *new = pmd_alloc_one(mm);
+      		if (!new)
+      			return -ENOMEM;
+      
+  - id: MF12-A73c
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [42, 46]
+    quote: |
+      		mm_inc_nr_pmds(mm);
+      		smp_wmb();	/* See comment in pmd_install() */
+      		pud_populate(mm, pud_entp, new);
+      	}
+      	spin_unlock(ptl);
+  - id: MF12-A73d
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [47, 47]
+    quote: |
+      	return 0;
+  - id: MF12-A74
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [50, 54]
+    quote: |
+      int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp)
+      {
+      	spinlock_t *ptl = pmd_lock(mm, pmd_entp);
+      	if (pmd_ent_none_or_clear_bad(pmd_entp) ||
+      			!pmd_present(*pmd_entp)) {
+  - id: MF12-A74b
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [55, 59]
+    quote: |
+      
+      		pte_t *new = pte_alloc_one(mm);
+      		if (!new)
+      			return -ENOMEM;
+      
+  - id: MF12-A74c
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [60, 64]
+    quote: |
+      		mm_inc_nr_ptes(mm);
+      		smp_wmb();	/* See comment in pmd_install() */
+      		pmd_populate_kernel(mm, pmd_entp, new);
+      	}
+      	spin_unlock(ptl);
+  - id: MF12-A74d
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [65, 66]
+    quote: |
+      	return 0;
+      }
+  - id: MF12-A75
+    path: "mykernel/mm/fault/pgalloc_macro.h"
+    symbol: "pte_alloc"
+    observed_lines: [5, 9]
+    quote: |
+      	#define pte_alloc				pgtble_alloc
+      	#define pte_alloc_map			pgtble_alloc_map
+      	#define pte_alloc_map_lock		pgtble_alloc_map_lock
+      
+      	#define pte_alloc_one(mmp)		(pte_t *)__myos_pgtable_alloc_one(mmp)
+  - id: MF12-A75b
+    path: "mykernel/mm/fault/pgalloc_macro.h"
+    symbol: "pte_alloc"
+    observed_lines: [10, 11]
+    quote: |
+      	#define pmd_alloc_one(mmp)		(pmd_t *)__myos_pgtable_alloc_one(mmp)
+      	#define pud_alloc_one(mmp)		(pud_t *)__myos_pgtable_alloc_one(mmp)
+  - id: MF12-A76
+    path: "mykernel/mm/fault/fault_const.h"
+    symbol: "VM_FAULT_values"
+    observed_lines: [30, 34]
+    quote: |
+      	enum vm_fault_reason {
+      		VM_FAULT_OOM			= 0x000001,
+      		VM_FAULT_SIGBUS			= 0x000002,
+      		VM_FAULT_MAJOR			= 0x000004,
+      		VM_FAULT_HWPOISON		= 0x000010,
+  - id: MF12-A76b
+    path: "mykernel/mm/fault/fault_const.h"
+    symbol: "VM_FAULT_values"
+    observed_lines: [35, 39]
+    quote: |
+      		VM_FAULT_HWPOISON_LARGE	= 0x000020,
+      		VM_FAULT_SIGSEGV		= 0x000040,
+      		VM_FAULT_NOPAGE			= 0x000100,
+      		VM_FAULT_LOCKED			= 0x000200,
+      		VM_FAULT_RETRY			= 0x000400,
+  - id: MF12-A76c
+    path: "mykernel/mm/fault/fault_const.h"
+    symbol: "VM_FAULT_values"
+    observed_lines: [40, 44]
+    quote: |
+      		VM_FAULT_FALLBACK		= 0x000800,
+      		VM_FAULT_DONE_COW		= 0x001000,
+      		VM_FAULT_NEEDDSYNC		= 0x002000,
+      		VM_FAULT_COMPLETED		= 0x004000,
+      		VM_FAULT_HINDEX_MASK	= 0x0f0000,
+  - id: MF12-A77
+    path: "mykernel/mm/fault/fault_const.h"
+    symbol: "FAULT_FLAG_values"
+    observed_lines: [80, 84]
+    quote: |
+      	enum fault_flag {
+      		FAULT_FLAG_WRITE			= 1 << 0,
+      		FAULT_FLAG_MKWRITE			= 1 << 1,
+      		FAULT_FLAG_ALLOW_RETRY		= 1 << 2,
+      		FAULT_FLAG_RETRY_NOWAIT		= 1 << 3,
+  - id: MF12-A77b
+    path: "mykernel/mm/fault/fault_const.h"
+    symbol: "FAULT_FLAG_values"
+    observed_lines: [85, 89]
+    quote: |
+      		FAULT_FLAG_KILLABLE			= 1 << 4,
+      		FAULT_FLAG_TRIED			= 1 << 5,
+      		FAULT_FLAG_USER				= 1 << 6,
+      		FAULT_FLAG_REMOTE			= 1 << 7,
+      		FAULT_FLAG_INSTRUCTION		= 1 << 8,
+  - id: MF12-A77c
+    path: "mykernel/mm/fault/fault_const.h"
+    symbol: "FAULT_FLAG_values"
+    observed_lines: [90, 93]
+    quote: |
+      		FAULT_FLAG_INTERRUPTIBLE	= 1 << 9,
+      		FAULT_FLAG_UNSHARE			= 1 << 10,
+      		FAULT_FLAG_ORIG_PTE_VALID	= 1 << 11,
+      		FAULT_FLAG_VMA_LOCK			= 1 << 12,
+  - id: MF12-A78
+    path: "mykernel/mm/fault/fault_const.h"
+    symbol: "FAULT_FLAG_DEFAULT"
+    observed_lines: [105, 107]
+    quote: |
+      	#define FAULT_FLAG_DEFAULT  (FAULT_FLAG_ALLOW_RETRY | \
+      					FAULT_FLAG_KILLABLE | \
+      					FAULT_FLAG_INTERRUPTIBLE)
+  - id: MF12-A79
+    path: "mykernel/mm/mm_type_declaration.h"
+    symbol: "vm_fault_t"
+    observed_lines: [32, 36]
+    quote: |
+      	typedef ulong		vm_flags_t;
+      	/**
+      	 * typedef vm_fault_t - Return type for page fault handlers.
+      	 *
+      	 * Page fault handlers return a bitmask of %VM_FAULT values.
+  - id: MF12-A79b
+    path: "mykernel/mm/mm_type_declaration.h"
+    symbol: "vm_fault_t"
+    observed_lines: [37, 38]
+    quote: |
+      	 */
+      	typedef __bitwise	uint vm_fault_t;
+  - id: MF12-A80
+    path: "mykernel/include/uapi/asm-generic/errno-base.h"
+    symbol: "ENOERR"
+    observed_lines: [5, 5]
+    quote: |
+      	#define	ENOERR		0	/*  */
+  - id: MF12-A81
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "simple_find_vma"
+    observed_lines: [255, 259]
+    quote: |
+      		*simple_find_vma(mm_s *mm, ulong addr) {
+      			vma_s *vma = NULL;
+      			for_each_vma(mm, vma) {
+      				if (addr >= vma->vm_start && addr < vma->vm_end)
+      					return vma;
+  - id: MF12-A81b
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "simple_find_vma"
+    observed_lines: [260, 261]
+    quote: |
+      			}
+      			return NULL;
+  - id: MF12-A82
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1316, 1320]
+    quote: |
+      		.vma		= vma,
+      		.address	= address & PAGE_MASK,
+      		.flags		= flags,
+      		.pgoff		= linear_page_index(vma, address),
+      		.gfp_mask	= __get_fault_gfp_mask(vma),
+  - id: MF12-A82b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1321, 1322]
+    quote: |
+      		.curr_tsk	= current,
+      	};
+  - id: MF12-A83
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1295, 1299]
+    quote: |
+      	// }
+      unlock:
+      	// pte_unmap_unlock(vmf->pte, vmf->ptl);
+      	return 0;
+      }
+  - id: MF12-A84
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [147, 151]
+    quote: |
+      	page = mapping->page_array[pgoff];
+      	if (page != NULL) {
+      		*vmf->pte_ptr = mk_pte(page,
+      			__pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
+      		return 0;
+  - id: MF12-A84b
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [152, 155]
+    quote: |
+      	}
+      	else
+      		return VM_FAULT_NOPAGE;
+      }
+  - id: MF12-A85
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [125, 129]
+    quote: |
+      	pgoff_t index = vmf->pgoff;
+      	loff_t pos = index << PAGE_SHIFT;
+      	page_s **pgcache_ptr = &mapping->page_array[index];
+      	BUG_ON(*pgcache_ptr != NULL);
+      	*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
+  - id: MF12-A85b
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [130, 134]
+    quote: |
+      	virt_addr_t vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
+      
+      	file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);
+      	vmf->page = *pgcache_ptr;
+      
+  - id: MF12-A85c
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [135, 135]
+    quote: |
+      	return 0;
+  - id: MF12-A86
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1087, 1091]
+    quote: |
+      	// if (should_fault_around(vmf)) {
+      		ret = do_fault_around(vmf);
+      		if (ret == 0)
+      			return ret;
+      	// }
+  - id: MF12-A86b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1092, 1096]
+    quote: |
+      
+      	ret = __do_fault(vmf);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+      		return ret;
+      
+  - id: MF12-A86c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1097, 1098]
+    quote: |
+      	ret |= finish_fault(vmf);
+      	folio = page_folio(vmf->page);
+  - id: MF12-A87
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1214, 1218]
+    quote: |
+      		// pte_unmap_unlock(vmf->pte_ptr, vmf->ptl);
+      	} else if (!(vmf->flags & FAULT_FLAG_WRITE))
+      		// Reading or Executing cause fault
+      		ret = do_read_fault(vmf);
+      	else if (!(vma->vm_flags & VM_SHARED))
+  - id: MF12-A87b
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1219, 1223]
+    quote: |
+      		// Writing cause fault, but address is not VM_SHARED
+      		ret = do_cow_fault(vmf);
+      	else
+      		// Writing cause fault, and address is VM_SHARED
+      		ret = do_shared_fault(vmf);
+  - id: MF12-A87c
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault"
+    observed_lines: [1224, 1226]
+    quote: |
+      
+      	// prealloc_pte not supported, skip check
+      	return ret;
+  - id: MF12-A88
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "alloc_anon_folio"
+    observed_lines: [204, 206]
+    quote: |
+      *alloc_anon_folio(vm_fault_s *vmf) {
+      	vma_s *vma = vmf->vma;
+      	return folio_prealloc(vma->vm_mm, vma, vmf->address, true);
+self_check:
+  source_quotes_taken_from_pinned_time: true
+  quote_count: 202
+  source_file_count: 11
+  node_count: 41
+  edge_count: 49
+  branch_matrix_count: 25
+  effects_count: 9
+  actual_runtime: NOT_RUN
+  c_asm_preprocess_compile: NOT_RUN

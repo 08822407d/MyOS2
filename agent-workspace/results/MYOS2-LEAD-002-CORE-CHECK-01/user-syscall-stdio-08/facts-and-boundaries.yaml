@@ -1,0 +1,3085 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-SYSCALL-STDIO-08
+record_type: user_syscall_stdio_facts
+produced_by: Claude Code desktop app (Code tab), local session f464c1b9-9b25-4af2-8f2d-d419b3b601fd (MYOS2-A-CC02 内核分析本地执行)
+model: unknown_or_not_attestable
+model_declared_by_runtime: claude-opus-5-5
+date: '2026-10-28'
+base_snapshot: kernel=time a039d9803ade；执行分支起点 ab3b4b86662c；主线 agent/MYOS2-LEAD-002 91753f8155ee；master e8e60cd19540（均为短 SHA）
+inputs_read: 见 evidence.md §2
+status: final_for_user_syscall_stdio_08
+pin_time: a039d9803ade
+config_note: 'mykernel/scripts/options_flags.cmake 文本：内核以 -D__KERNEL__ 与 -DCONFIG_ARCH_HAS_SYSCALL_WRAPPER 编译（AS2-19、AS2-20）；CONFIG_INTEL_X64_GDT_LAYOUT 在其中没有出现（QS-12），所以 syscall_init
+  走 #else 分支写 MSR_LSTAR。只核文本，没有构建产物。'
+edge_direction:
+  call: 调用方 → 被调用方
+  data: 读取/消费方 → 产生/提供方
+  init_order: 后执行或后可用者 → 必须先完成者
+  config: 受影响的代码 → 提供开关的配置
+  build: 被编译的代码 → 构建脚本
+edge_direction_note: 与 CORE-USER-VFS-BASELINE-05、CORE-USER-BOUNDARIES-07 相同；间接调用给出调用点、绑定、接收方三项证据。
+id_convention: 结构化字段（refines、related、边的 from/to、evidence 与 findings 中的外部条目）一律写全名。说明文字中不带前缀的 UV-xx、GAP-Uxx、DRU-xx、A-Cx-xx、Qxx 指 CORE-USER-VFS-BASELINE-05，UB-xx、AB*/QB*/SB*、FP-x、NVB-x
+  指 CORE-USER-BOUNDARIES-07，US-xx 指本批 deferred-findings.yaml，AS*/QS*/SS*/VT-*/FL-*/PU-*/ES-*/NVS-* 指本文件。
+evidence_class: 限定静态源码分析：只读 git 对象与文本；不预判 libc 行为、运行时系统调用序列或内核正确性。
+runtime_evidence: NOT_RUN
+kernel_change_made: false
+owner_decisions_requested_now: []
+open_questions:
+- 构建文本把 init 与 sh 的编译器指定为仓库外 /home/cheyh/projs/musl/build 下的 musl-gcc 并静态链接；这一设置写在 project() 之后，实际生效的编译器只凭文本不能确定。libc 的 freopen、printf、fflush、read、write 实际发出哪些系统调用仍属 GAP-U10，本批不推断。
+- pid 1 的 fd 表由 dup_fd 复制而来，空槽未被写入，各槽在运行时的内容取决于 slab 对象原有数据（CORE-USER-VFS-BASELINE-05::UV-09 的未知项）。
+- 释放后的 file 对象会被 slab 改写哪些字段、何时被重新分配，没有追到分配器内部。
+counts:
+  capabilities: 12
+  edges: 23
+  edges_indirect: 4
+  anchors: 70
+  anchors_by_kind:
+    asm_range: 3
+    build: 8
+    in_body: 45
+    initializer: 3
+    macro: 10
+    type_member: 1
+  anchors_by_theme:
+    C01: 12
+    C02: 21
+    C03: 37
+  queries: 38
+  structure_checks: 23
+  value_tables: 2
+  syscall_table_rows: 41
+  gap_status: 1
+  next_validation_candidates: 3
+  fd_lifecycle: 9
+  prior_unknowns: 4
+capabilities:
+- id: user.initramfs.user_build_boundary
+  id_status: proposed_id
+  theme: C01
+  refines: null
+  purpose: 用户程序的构建边界：构建文本指定的编译器与 libc 都在仓库外，按静态链接构建；仓库内旧 libc 不在构建中。
+  entries:
+  - myinitramfs/CMakeLists.txt
+  - make_install.sh
+  - scripts/make_install_initranfs.sh
+  normal_path: make_install.sh 把 LINK_TYPE 设为 static（AS1-04），make_install_initranfs 把它传给 cmake（AS1-05）；myinitramfs/CMakeLists.txt 在 static 时给 C 编译选项加 -static（AS1-02），把 C 编译器指定为 /home/cheyh/projs/musl/build/exec/bin/musl-gcc（AS1-01；这一行写在启用
+    C 语言的 project() 之后，AS1-12，CMake 实际采用哪个编译器只凭文本不能确定），只加入 musl 头文件目录与 myinit、myshell 两个子目录（AS1-03、QS-05）。构建与安装脚本中没有引用 mylib 的活动行（QS-06）。
+  failure_path: musl 的位置是 Owner 本机的绝对路径，仓库内没有它的版本号或构建配置；documents/useful_cmds.md 中的 configure 命令与 changelog.md 的“已移植 musl”属于历史材料，可引用不可当现状（QS-10）。LINK_TYPE 改为 dynamic 时脚本会复制 libc.so 与
+    ld-musl 并改写程序解释器（QS-09），内核对动态链接器的支持不在本批范围。
+  unknown:
+  - 构建时实际生效的 C 编译器与 libc（文本指定 musl-gcc，但写在 project() 之后）
+  - musl 的版本与构建配置（仓库外）
+  - 镜像中 /boot/init、/boot/sh 是哪一次构建的产物
+  not_covered:
+  - /home/cheyh/projs/musl（仓库外，未读）
+  - 历史主题分支 libc（repo-map §4 标为既往轨迹、无需阅读，未读）
+  - 构建产物与 objdump 输出（build/，仓库外）
+  evidence:
+  - AS1-01
+  - AS1-02
+  - AS1-03
+  - AS1-04
+  - AS1-05
+  - AS1-12
+  - QS-05
+  - QS-06
+  - QS-09
+  - QS-10
+  edges:
+  - ES-01
+  - ES-02
+  findings: []
+  implementation_evidence:
+    value: build_text_only
+    reason: 只有构建文本；产物与仓库外 libc 均未读
+  correctness_evidence:
+    value: not_assessed
+    reason: 构建行为未运行
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_applicable
+    reason: 构建文本
+- id: user.initramfs.init_stdio_calls
+  id_status: proposed_id
+  theme: C01
+  refines: CORE-USER-BOUNDARIES-07::user.initramfs.init_console_reopen
+  purpose: init（pid 1）的标准输入输出与进程调用，只登记用户源码中出现的 libc 调用。
+  entries:
+  - myinitramfs/myinit/initd.c::main
+  - myinitramfs/myinit/initd.c::normal_boot
+  normal_path: main 依次 freopen("/dev/console", "r", stdin)、("w", stdout)、("w", stderr)（AS1-06），再 printf 欢迎信息（AS1-07），然后 normal_boot：fork 后子进程 execve("/boot/sh", …)，父进程循环 sched_yield（AS1-08、QS-01）。源码中没有直接发出系统调用的写法（QS-04），这些调用全部经
+    libc。
+  failure_path: freopen、printf、fork、execve 的返回值都不检查；normal_boot 的末尾没有 return。哪一个 libc 调用发出哪个系统调用、失败时怎样，都在仓库外（GAP-U10）。
+  unknown:
+  - freopen/printf 实际发出的系统调用序列（GAP-U10）
+  - 进入 main 时 fd 0/1/2 的内容（见 PU-01）
+  not_covered:
+  - musl 源码（仓库外，未读）
+  evidence:
+  - AS1-06
+  - AS1-07
+  - AS1-08
+  - QS-01
+  - QS-04
+  edges:
+  - ES-01
+  - ES-03
+  - ES-04
+  findings: []
+  implementation_evidence:
+    value: partial_body
+    reason: 用户调用已定位，中间的 libc 不在仓库
+  correctness_evidence:
+    value: not_assessed
+    reason: 取决于仓库外 libc
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 父子进程并发未分析
+- id: user.initramfs.shell_console_io
+  id_status: proposed_id
+  theme: C01
+  refines: null
+  purpose: /boot/sh 自己以 O_RDWR 打开 /dev/console，逐字节读键并回显；提示符与命令输出走 printf。
+  entries:
+  - myinitramfs/myshell/myshell.c::main
+  - myinitramfs/myshell/myshell.c::read_line
+  normal_path: main 先调用 tests.c 的 test_PrintDateTime（其中有 gettimeofday、localtime、strftime、printf，失败时 perror，QS-36），再 printf 两行，再 console_fd = open("/dev/console", O_RDWR)（AS1-09）；循环中
+    printf 提示符并 fflush(stdout)（AS1-10），read_line 以 read(console_fd, &key, 1) 读键、write(console_fd, …) 回显（AS1-11、QS-02）。cat、touch、mkdir 等命令另用 open、lseek、read、close、creat、mkdir、rmdir、unlink、chdir、getcwd、opendir/readdir（QS-03）。源码中没有直接的系统调用写法（QS-04），也没有
+    writev（QS-37）。
+  failure_path: open 的返回值不检查；read 返回不是 1 时 read_line 退出循环且没有 return，调用者也不用返回值。若 libc 的 write() 发出 write(2)，内核侧每次都在 vfs_write 返回 -EINVAL，并在返回前对该 file 做一次不配对的 fput（US-01，CORE-USER-BOUNDARIES-07::UB-01）；是否如此取决于
+    GAP-U10。
+  unknown:
+  - open/read/write/printf/fflush 在 libc 中发出的系统调用（GAP-U10）
+  not_covered:
+  - musl 源码（仓库外，未读）
+  - 命令解析与目录命令的内核侧路径
+  evidence:
+  - AS1-09
+  - AS1-10
+  - AS1-11
+  - QS-02
+  - QS-03
+  - QS-04
+  - QS-36
+  - QS-37
+  edges:
+  - ES-02
+  - ES-05
+  findings:
+  - US-01
+  - CORE-USER-BOUNDARIES-07::UB-01
+  implementation_evidence:
+    value: partial_body
+    reason: 用户调用已定位，中间的 libc 不在仓库
+  correctness_evidence:
+    value: not_assessed
+    reason: 取决于仓库外 libc
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析
+- id: user.initramfs.legacy_mylib
+  id_status: proposed_id
+  theme: C01
+  refines: null
+  purpose: 仓库内的旧 libc（myinitramfs/mylib/myglibc）：自带 syscall 包装，但不在当前构建中。
+  entries:
+  - myinitramfs/mylib/myglibc/syscall/syscall.c
+  normal_path: SYSFUNC_DEF(open)、(close)、(read)、(write)…(putstring) 生成把 __NR_* 装入 rax、跳到公共标签执行 syscall 指令的函数（QS-07）；用户态 putstring 包装只在这里（QS-17）。user-guide/User-Application.md（2024-04-16）仍按
+    mylib 描述用户程序构建，Syscall-Table.md 说用户 API 列在 mylib 的 syscall.c，二者都是历史材料（QS-10）。
+  failure_path: 当前构建只加入 myinit 与 myshell，构建文本指定的编译器是仓库外 musl-gcc（AS1-01、AS1-03），构建与安装脚本中没有引用 mylib 的活动行（QS-06），所以不能用它推断 init 与 sh 的系统调用。mylib 中与 freopen、writev、dup2、dup3、fflush 有关的出现情况见
+    QS-08。
+  unknown:
+  - mylib 与 musl 在同名函数上的系统调用选择是否一致（不推断）
+  not_covered:
+  - mylib 的 stdio、malloc、string 实现
+  evidence:
+  - QS-06
+  - QS-07
+  - QS-08
+  - QS-10
+  - QS-17
+  edges: []
+  findings: []
+  implementation_evidence:
+    value: not_in_build
+    reason: 源码存在但不在构建中
+  correctness_evidence:
+    value: not_assessed
+    reason: 不在构建中
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_applicable
+    reason: 不在构建中
+- id: entry.syscall_dispatch
+  id_status: proposed_id
+  theme: C02
+  refines: CORE-USER-BOUNDARIES-07::entry.syscall_frame_return
+  purpose: 从 syscall 指令进入内核、检查号、调用处理函数，到把返回值写进寄存器帧的一段。
+  entries:
+  - mykernel/arch/x86_64/entry/entry_64.S::entry_SYSCALL_64
+  - mykernel/arch/x86_64/entry/common.c::do_syscall_64
+  - mykernel/arch/x86_64/entry/syscall_64.c::x64_sys_call
+  normal_path: syscall_init 把 MSR_LSTAR 设为 entry_SYSCALL_64（AS2-01，#else 分支，QS-11、QS-12）。入口把 rax（系统调用号）压为 orig_ax，PUSH_REGS 又把同一个 rax 压为 ax（AS2-02）；Linux 中把 ax 预置为 -ENOSYS 的写法被注释（AS2-03、QS-18）；随后
+    rdi = 帧地址、rsi = 符号扩展后的 eax（AS2-04）。do_syscall_64 把号转为无符号，小于 __NR_syscalls（453）才 regs->ax = x64_sys_call(regs, unr)（AS2-05、SS-15）。x64_sys_call 是由 syscalls_64.h 展开的 switch（AS2-07、AS2-08）；每个
+    case 调 __x64_sys_X(regs)，它转调 __se_sys_X，再按 di、si、dx、r10、r8、r9 取参数调用 __do_sys_X（AS2-09、AS2-10、AS2-11）。之后 syscall_exit_to_user_mode，并落入 syscall_return_via_sysret（CORE-USER-BOUNDARIES-07
+    的 FP-3）。
+  failure_path: 号不小于 453（包括转成无符号后的负号）时 ax 不被写，用户拿回原 rax，也就是系统调用号；号小于 453 但表中没有时进 __x64_sys_ni_syscall，打印后 while (1)（AS2-06）；452 号是 sys_no_syscall，返回 -ENOSYS（AS2-13）；处理函数没有活动 return 时（dup、dup2、wait4；exit
+    在 do_exit 之后同样没有 return，VT-SYSTAB），若函数返回，写入 ax 的值没有定义。
+  unknown:
+  - sysretq 与 swapgs 的硬件语义（CORE-USER-VFS-BASELINE-05::GAP-U04 经 07 收窄后的剩余部分，07 NVB-4）
+  - 运行时的实际号与参数（NOT_RUN）
+  not_covered:
+  - syscall_exit_to_user_mode 与信号处理内部（07 已登记为端点）
+  evidence:
+  - AS2-01
+  - AS2-02
+  - AS2-03
+  - AS2-04
+  - AS2-05
+  - AS2-06
+  - AS2-07
+  - AS2-08
+  - AS2-09
+  - AS2-10
+  - AS2-11
+  - AS2-13
+  - QS-11
+  - QS-12
+  - QS-15
+  - QS-18
+  - SS-15
+  - VT-SYSTAB
+  edges:
+  - ES-06
+  - ES-07
+  - ES-08
+  - ES-09
+  - ES-10
+  - ES-11
+  - ES-12
+  findings:
+  - CORE-USER-BOUNDARIES-07::UB-09
+  implementation_evidence:
+    value: connected_body
+    reason: 入口、检查、分派、包装与写回都有活动代码
+  correctness_evidence:
+    value: static_concern
+    reason: 越界号返回原值、缺项原地循环（UB-09）
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 入口 sti 之后的中断窗口未分析
+- id: entry.syscall_table
+  id_status: proposed_id
+  theme: C02
+  refines: null
+  purpose: 实际生效的系统调用号与处理函数对应表，以及只登记不分派的 sys_call_table。
+  entries:
+  - mykernel/arch/x86_64/include/asm/syscalls_64.h
+  - mykernel/arch/x86_64/include/asm/unistd_64.h
+  - mykernel/arch/x86_64/entry/syscall_64.c::sys_call_table
+  normal_path: syscalls_64.h 有 41 个活动表项、12 个被注释的表项；号全部唯一且小于 453，每个处理函数恰有一处活动的 MYOS_SYSCALL_DEFINEn 定义（VT-SYSTAB）。__NR_syscalls = 453 只在 __KERNEL__ 下定义（AS2-12），内核以 -D__KERNEL__ 与 -DCONFIG_ARCH_HAS_SYSCALL_WRAPPER
+    编译（AS2-20、AS2-19、QS-13）。sys_call_table[] 由同一个头文件以指定初始化器展开，但除定义外没有活动的分派使用（QS-14）。
+  failure_path: 部分处理函数含 ALERT_DUMMY_SYSCALL（提示开关为 0，AS2-17、AS2-18、QS-16）：dup、dup2 只有这个宏而没有 return；ioctl、mprotect 只有这个宏加 return 0；exit、exit_group、kill 在宏之后还有实际处理。wait4 的函数体为空（CORE-USER-VFS-BASELINE-05::UV-15）。
+  unknown:
+  - 表外号（例如 openat、dup3）是否会被用户程序使用（GAP-U10）
+  not_covered:
+  - 各处理函数的内部（C03 所列之外）
+  evidence:
+  - AS2-07
+  - AS2-12
+  - AS2-17
+  - AS2-18
+  - AS2-19
+  - AS2-20
+  - QS-13
+  - QS-14
+  - QS-16
+  - QS-32
+  - QS-33
+  - VT-SYSTAB
+  edges:
+  - ES-07
+  findings:
+  - CORE-USER-BOUNDARIES-07::UB-10
+  implementation_evidence:
+    value: connected_body
+    reason: 表项与定义逐项对上
+  correctness_evidence:
+    value: static_concern
+    reason: 部分处理函数是空实现
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_applicable
+    reason: 静态表
+- id: entry.myos_special_syscalls
+  id_status: proposed_id
+  theme: C02
+  refines: null
+  purpose: 与错误返回和控制台输出有关的几个特殊处理：缺项默认处理、452 号 no_syscall、451 号 putstring、ioctl。
+  entries:
+  - mykernel/arch/x86_64/entry/common.c::__x64_sys_ni_syscall
+  - mykernel/arch/x86_64/myos/syscall.c::sys_no_syscall
+  - mykernel/arch/x86_64/myos/syscall.c::sys_myos_putstring
+  - mykernel/arch/x86_64/myos/syscall.c::sys_ioctl
+  normal_path: putstring 把用户传入的指针直接交给 color_printk 作格式串（AS2-14、SS-14），color_printk 是变参函数，把 fmt 原样交给 vsnprintf（AS2-21）；ioctl 只有提示宏，总返回 0，不取 fd 也不处理命令（AS2-15、AS2-16、SS-12、SS-13）；no_syscall
+    打印后返回 -ENOSYS（AS2-13）；缺项默认处理打印 orig_ax 后 while (1)（AS2-06）。
+  failure_path: putstring 让用户控制内核格式串，且不检查用户指针（US-05）；ioctl 对任何 fd、任何命令都报告成功，输出参数不被填写（US-04）。
+  unknown:
+  - 用户程序是否使用 putstring 或 ioctl：init 与 sh 源码中没有 putstring（QS-17），ioctl 取决于 libc（GAP-U10）
+  not_covered:
+  - vsnprintf 的实现（klib 内部）
+  evidence:
+  - AS2-06
+  - AS2-13
+  - AS2-14
+  - AS2-15
+  - AS2-16
+  - AS2-21
+  - QS-17
+  - SS-12
+  - SS-13
+  - SS-14
+  edges:
+  - ES-11
+  - ES-13
+  findings:
+  - US-04
+  - US-05
+  implementation_evidence:
+    value: connected_body
+    reason: 四个处理函数正文都已读到
+  correctness_evidence:
+    value: static_concern
+    reason: 格式串与空实现
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析
+- id: fs.vfs.open_syscall
+  id_status: proposed_id
+  theme: C03
+  refines: CORE-USER-VFS-BASELINE-05::fs.vfs.path_open
+  purpose: open(2) 从系统调用到取得 fd 的一段。
+  entries:
+  - mykernel/fs/syscall.c::sys_open
+  - mykernel/fs/vfs/open.c::do_sys_open
+  - mykernel/fs/vfs/open.c::do_sys_openat2
+  normal_path: sys_open 以 dfd=0（不是 AT_FDCWD）调用 do_sys_open（AS3-30），但 path_init 只看路径首字符选 root 或 pwd，不读 dfd（AS3-31、SS-20、QS-29），所以 dfd 不影响结果。do_sys_openat2 先取最低空槽号再 do_filp_open（AS3-32），成功则
+    fd_install（AS3-33）。新 file 的 f_count 从 1 开始，f_mode 由 OPEN_FMODE(flags) 得出（AS3-09、AS3-10）。打开 /dev/console 时 chrdev_open 把 f_op 换成 console_fops（CORE-USER-BOUNDARIES-07 §4.2）。
+  failure_path: do_filp_open 返回错误指针时把它转成负值返回（AS3-33）；打开结果取决于缺 return 的 do_open/myos_do_dentry_open（UV-04，UB-05）；表满时 alloc_fd 返回未赋值的 fd（UV-11）；O_CREAT 从不新建文件（UB-14）。
+  unknown:
+  - libc 打开 /dev/console 时传的标志（GAP-U10）
+  not_covered:
+  - 路径解析内部（05 C4）
+  evidence:
+  - AS3-09
+  - AS3-10
+  - AS3-30
+  - AS3-31
+  - AS3-32
+  - AS3-33
+  - SS-20
+  - QS-29
+  edges:
+  - ES-08
+  - ES-14
+  - ES-15
+  findings:
+  - CORE-USER-VFS-BASELINE-05::UV-04
+  - CORE-USER-VFS-BASELINE-05::UV-11
+  - CORE-USER-BOUNDARIES-07::UB-05
+  - CORE-USER-BOUNDARIES-07::UB-14
+  implementation_evidence:
+    value: connected_body
+    reason: 从入口到 fd_install 的活动代码已读
+  correctness_evidence:
+    value: static_concern
+    reason: 继承 05/07 已登记的问题
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: alloc_fd 与 fd_install 之间释放锁（DRU-06）
+- id: fs.vfs.rw_syscalls
+  id_status: proposed_id
+  theme: C03
+  refines: CORE-USER-BOUNDARIES-07::fs.vfs.write_dispatch
+  purpose: read、write、writev 三个系统调用从 fd 到 f_op 的一段。
+  entries:
+  - mykernel/fs/syscall.c::sys_read
+  - mykernel/fs/syscall.c::sys_write
+  - mykernel/fs/syscall.c::sys_writev
+  - mykernel/fs/vfs/read_write.c::ksys_read
+  - mykernel/fs/vfs/read_write.c::ksys_write
+  - mykernel/fs/vfs/read_write.c::do_writev
+  normal_path: read：ksys_read 用 myos_fdget_pos 取 file（flags=0，AS3-19、AS3-18、SS-01、SS-02），vfs_read 只检查 FMODE_READ（FMODE_CAN_READ 的检查被注释，AS3-24），console 走 ->read = myos_tty_read。write：ksys_write
+    用 fdget_pos（AS3-20、SS-03），vfs_write 因 FMODE_CAN_WRITE 不成立返回 -EINVAL（UB-01），之后 fdput_pos（AS3-21、SS-04）。writev：do_writev 也用 fdget_pos（AS3-22、SS-05），vfs_writev 对每段调 ->write 并把返回值相加（SS-23），之后
+    fdput_pos（AS3-23、SS-06）。
+  failure_path: write 与 writev 每次调用都以一次不配对的 fput 结束：fdget_pos 不取引用却带 FDPUT_FPUT（US-01、VT-FDLIMITS）；read 不受影响。三者都不检查 fd 上界（UV-11）；writev 把错误码与成功字节数相加（追加到 UB-01）。
+  unknown:
+  - libc 写 stdout 用 write 还是 writev（GAP-U10）
+  not_covered:
+  - rw_verify_area 与普通文件读写（05 C4）
+  evidence:
+  - AS3-18
+  - AS3-19
+  - AS3-20
+  - AS3-21
+  - AS3-22
+  - AS3-23
+  - AS3-24
+  - SS-01
+  - SS-02
+  - SS-03
+  - SS-04
+  - SS-05
+  - SS-06
+  - SS-23
+  - QS-20
+  - QS-21
+  - QS-22
+  edges:
+  - ES-09
+  - ES-16
+  - ES-17
+  - ES-18
+  findings:
+  - US-01
+  - CORE-USER-BOUNDARIES-07::UB-01
+  - CORE-USER-BOUNDARIES-07::UB-07
+  - CORE-USER-VFS-BASELINE-05::UV-11
+  implementation_evidence:
+    value: connected_body
+    reason: 三条路径的活动代码已读
+  correctness_evidence:
+    value: static_concern
+    reason: 引用计数不配对；write 被拦截
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析
+- id: fs.vfs.fd_lookup_ref
+  id_status: proposed_id
+  theme: C03
+  refines: null
+  purpose: 按 fd 取 file 与归还引用的几种写法，以及 close、lseek 的直接下标访问。
+  entries:
+  - mykernel/include/linux/fs/file.h::__to_fd
+  - mykernel/include/linux/fs/file.h::fdput
+  - mykernel/fs/vfs/file.c::myos_fdget_pos
+  - mykernel/fs/vfs/file_table.c::fput
+  - mykernel/fs/syscall.c::sys_close
+  - mykernel/fs/syscall.c::sys_lseek
+  normal_path: __to_fd 直接按下标取 fd_array，不取引用，返回 flags=3（AS3-15、SS-07）；fdget、fdget_raw、fdget_pos 都是它（AS3-16、QS-20）。fdput 在 flags 含 FDPUT_FPUT（=1）时调 fput（AS3-13、AS3-14），fdput_pos 转调 fdput（AS3-17、QS-21）。读路径用的
+    myos_fdget_pos 同样按下标取，但 flags=0（AS3-18、SS-08、QS-22）。fput 把 f_count 减一，归零时调 kmem_cache_free(filp_cachep, …)（AS3-11、CORE-USER-VFS-BASELINE-05::A-C4-28、SS-11、QS-30）；对 dup_fd 复制出的 file，这块内存其实来自
+    kzalloc（UV-09）。close 直接 kfree 并清槽（CORE-USER-VFS-BASELINE-05::A-C4-25）；lseek 检查上界后直接读 fp->f_op（AS3-29、SS-19、QS-28）。
+  failure_path: VT-FDLIMITS 重算得 to_fd_implies_fput 为真：每对 fdget*/fdput* 都会去掉一个从未取得的引用（US-01）。lseek 对上界以内的空槽读 NULL->f_op（追加到 UV-11）。
+  unknown:
+  - 释放后的 file 对象会被 slab 改写哪些字段（未追）
+  not_covered:
+  - mmap 中的 fget/fput（MM 范围）
+  evidence:
+  - AS3-11
+  - CORE-USER-VFS-BASELINE-05::A-C4-28
+  - AS3-13
+  - AS3-14
+  - AS3-15
+  - AS3-16
+  - AS3-17
+  - AS3-18
+  - AS3-29
+  - CORE-USER-VFS-BASELINE-05::A-C4-25
+  - SS-07
+  - SS-08
+  - SS-11
+  - SS-19
+  - QS-20
+  - QS-21
+  - QS-22
+  - QS-28
+  - QS-30
+  - VT-FDLIMITS
+  edges:
+  - ES-16
+  - ES-19
+  - ES-20
+  findings:
+  - US-01
+  - CORE-USER-VFS-BASELINE-05::UV-09
+  - CORE-USER-VFS-BASELINE-05::UV-10
+  - CORE-USER-VFS-BASELINE-05::UV-11
+  implementation_evidence:
+    value: connected_body
+    reason: 各写法的活动代码已读
+  correctness_evidence:
+    value: static_concern
+    reason: 引用不配对；缺空槽检查
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析
+- id: fs.vfs.fd_dup_fcntl
+  id_status: proposed_id
+  theme: C03
+  refines: null
+  purpose: 复制 fd 的入口：dup、dup2、dup3 与 fcntl(F_DUPFD)，以及 fcntl 的其他分支。
+  entries:
+  - mykernel/fs/syscall.c::sys_dup
+  - mykernel/fs/syscall.c::sys_dup2
+  - mykernel/fs/syscall.c::sys_fcntl
+  - mykernel/fs/vfs/fcntl.c::do_fcntl
+  - mykernel/fs/vfs/file.c::f_dupfd
+  normal_path: dup、dup2 只有提示宏，没有 return（UB-10、VT-SYSTAB）；dup3 不在表中，会进缺项循环（UB-09）。fcntl 用 fdget_raw 取 file（AS3-25、SS-09），F_DUPFD 与 F_DUPFD_CLOEXEC 交给 f_dupfd（AS3-27、SS-18、QS-23）：上界取 rlimit(RLIMIT_NOFILE)（初值
+    INR_OPEN_CUR=1024：init_task.signal 指向 init_signals，其 rlim 为 INIT_RLIMITS，AS3-38、AS3-07、AS3-06、QS-24；fork 时按值复制，AS3-08）再 alloc_fd（AS3-28），找到后 get_file 并 fd_install，新旧两个槽指向同一个 file（AS3-37）；返回前
+    fdput（AS3-26、SS-10）。成功的 F_DUPFD 中 get_file 与 fdput 相抵，f_count 不变而两槽共享；F_GETFL、失败的 F_DUPFD 与不支持的命令（default 分支只打印，err 保持 -EINVAL，AS3-39）只剩 fdput 的一次 fput。F_GETFL 返回 f_flags；F_GETFD、F_SETFD、F_SETFL
+    分支被注释，落到 err 的初值 -EINVAL（SS-17、QS-26、QS-31）。
+  failure_path: f_dupfd 的上界 1024 大于 fd 表的 256 项（US-02、VT-FDLIMITS、SS-21）；close-on-exec 无法设置或查询（US-03）；除成功的 F_DUPFD 外，fcntl 也以一次不配对的 fput 结束（US-01）。复制出的两个槽共享一个 file，表内（fd < 256）任一槽 close
+    都直接 kfree（CORE-USER-VFS-BASELINE-05::UV-10）；得到的 fd ≥ 256 时 close、lseek 返回 -EBADF（QS-38）。
+  unknown:
+  - libc 是否用 dup2、dup3 或 fcntl 重定向标准流（GAP-U10）
+  not_covered:
+  - replace_fd、ksys_dup3（被注释）
+  evidence:
+  - AS3-06
+  - AS3-07
+  - AS3-08
+  - AS3-25
+  - AS3-26
+  - AS3-27
+  - AS3-28
+  - AS3-37
+  - AS3-38
+  - AS3-39
+  - QS-38
+  - SS-09
+  - SS-10
+  - SS-17
+  - SS-18
+  - SS-21
+  - QS-23
+  - QS-24
+  - QS-26
+  - QS-31
+  - VT-FDLIMITS
+  - VT-SYSTAB
+  edges:
+  - ES-10
+  - ES-19
+  - ES-21
+  - ES-22
+  findings:
+  - US-01
+  - US-02
+  - US-03
+  - CORE-USER-BOUNDARIES-07::UB-09
+  - CORE-USER-BOUNDARIES-07::UB-10
+  - CORE-USER-VFS-BASELINE-05::UV-10
+  implementation_evidence:
+    value: partial_body
+    reason: fcntl 有活动路径，dup/dup2 是空壳
+  correctness_evidence:
+    value: static_concern
+    reason: 上界与引用问题
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析
+- id: sched.forkexec.fd_inherit_exec
+  id_status: proposed_id
+  theme: C03
+  refines: null
+  purpose: pid 1 的初始 fd 表，以及 fork、exec 对 fd 表的处理。
+  entries:
+  - mykernel/init/main.c::rest_init
+  - mykernel/sched/forkexec/fork.c::copy_files
+  - mykernel/sched/forkexec/fork.c::unshare_fd
+  - mykernel/sched/forkexec/exec.c::begin_new_exec
+  - mykernel/fs/vfs/file.c::dup_fd
+  normal_path: kernel_init 由 kernel_thread 以 CLONE_FS 调用建立（kernel_thread 另加 CLONE_VM 与 CLONE_UNTRACED），不带 CLONE_FILES（AS3-01），copy_files 因而以 dup_fd(init_files, NR_OPEN_MAX) 复制出它自己的表（AS3-03）；init_files
+    的 fd_count 为 0（AS3-02），所有槽为空，dup_fd 把新表的 fd_count 设为 256（VT-FDLIMITS）但只写父表非空的槽（CORE-USER-VFS-BASELINE-05::UV-09）。console_on_rootfs 只出现在注释中（QS-19），内核不为 pid 1 打开任何 fd。exec 的 begin_new_exec
+    只调用 unshare_files（AS3-35），后者只在表被共享时复制（AS3-34）；do_close_on_exec 被注释（QS-25、SS-16），所以 exec 保留全部 fd。fork 不带 CLONE_FILES 时同样经 dup_fd 按值复制（UV-09）。
+  failure_path: pid 1 新表中的槽没有被写入，内容取决于 slab 对象原有数据（UV-09 的未知项）；close-on-exec 没有实现（US-03）。
+  unknown:
+  - pid 1 文件表各槽在运行时的实际内容
+  not_covered:
+  - 退出时的回收（CORE-USER-VFS-BASELINE-05::UV-15）
+  evidence:
+  - AS3-01
+  - AS3-02
+  - AS3-03
+  - AS3-34
+  - AS3-35
+  - QS-19
+  - QS-25
+  - SS-16
+  - VT-FDLIMITS
+  edges:
+  - ES-04
+  - ES-22
+  - ES-23
+  findings:
+  - US-03
+  - CORE-USER-VFS-BASELINE-05::UV-09
+  implementation_evidence:
+    value: connected_body
+    reason: 建立、复制与 exec 段已读
+  correctness_evidence:
+    value: static_concern
+    reason: 初始槽内容不确定；不处理 close-on-exec
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析
+edges:
+- id: ES-01
+  from: user.initramfs.init_stdio_calls
+  to: user.initramfs.user_build_boundary
+  kind: build
+  status: connected
+  evidence:
+  - AS1-03
+  - QS-05
+  note: myinit 子目录由 initramfs 顶层构建加入
+- id: ES-02
+  from: user.initramfs.shell_console_io
+  to: user.initramfs.user_build_boundary
+  kind: build
+  status: connected
+  evidence:
+  - AS1-03
+  - QS-05
+  note: myshell 子目录由 initramfs 顶层构建加入
+- id: ES-03
+  from: user.initramfs.init_stdio_calls
+  to: external:libc(outside repo, build text names musl)::freopen/printf/fork/execve
+  kind: call
+  status: unknown
+  evidence:
+  - AS1-06
+  - AS1-07
+  - AS1-08
+  - AS1-01
+  note: libc 不在仓库（GAP-U10）
+- id: ES-04
+  from: user.initramfs.init_stdio_calls
+  to: sched.forkexec.fd_inherit_exec
+  kind: data
+  status: conditional
+  evidence:
+  - AS3-01
+  - AS3-03
+  - QS-19
+  note: init 进入 main 时的 fd 0/1/2 来自 pid 1 的初始表；内核没有为它打开任何 fd
+- id: ES-05
+  from: user.initramfs.shell_console_io
+  to: external:libc(outside repo, build text names musl)::open/read/write/printf/fflush
+  kind: call
+  status: unknown
+  evidence:
+  - AS1-09
+  - AS1-10
+  - AS1-11
+  - AS1-01
+  note: libc 不在仓库（GAP-U10）
+- id: ES-06
+  from: external:libc(outside repo, build text names musl)::syscall instruction
+  to: entry.syscall_dispatch
+  kind: call
+  status: unknown
+  evidence:
+  - AS2-01
+  - QS-11
+  - QS-12
+  note: 绑定在 MSR_LSTAR；libc 发出哪些系统调用不在仓库
+- id: ES-07
+  from: entry.syscall_dispatch
+  to: entry.syscall_table
+  kind: data
+  status: connected
+  evidence:
+  - AS2-07
+  - AS2-08
+  - VT-SYSTAB
+  note: x64_sys_call 的 case 由 syscalls_64.h 展开
+- id: ES-08
+  from: entry.syscall_dispatch
+  to: fs.vfs.open_syscall
+  kind: call
+  status: connected
+  indirect:
+    call_site:
+    - AS2-08
+    binding:
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 6
+    - AS2-07
+    receiver:
+    - query: QS-33
+      path: mykernel/fs/syscall.c
+      line: 38
+    - AS2-09
+    - AS2-10
+  note: case __NR_open → __x64_sys_open → __se_sys_open → __do_sys_open
+- id: ES-09
+  from: entry.syscall_dispatch
+  to: fs.vfs.rw_syscalls
+  kind: call
+  status: connected
+  indirect:
+    call_site:
+    - AS2-08
+    binding:
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 4
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 5
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 22
+    - AS2-07
+    receiver:
+    - query: QS-33
+      path: mykernel/fs/syscall.c
+      line: 11
+    - query: QS-33
+      path: mykernel/fs/syscall.c
+      line: 17
+    - query: QS-33
+      path: mykernel/fs/syscall.c
+      line: 95
+  note: read 0、write 1、writev 20
+- id: ES-10
+  from: entry.syscall_dispatch
+  to: fs.vfs.fd_dup_fcntl
+  kind: call
+  status: connected_with_concern
+  indirect:
+    call_site:
+    - AS2-08
+    binding:
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 26
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 27
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 38
+    receiver:
+    - query: QS-33
+      path: mykernel/fs/syscall.c
+      line: 103
+    - query: QS-33
+      path: mykernel/fs/syscall.c
+      line: 121
+    - query: QS-33
+      path: mykernel/fs/syscall.c
+      line: 140
+  note: dup 32、dup2 33 是空壳；fcntl 72 有活动路径
+- id: ES-11
+  from: entry.syscall_dispatch
+  to: entry.myos_special_syscalls
+  kind: call
+  status: connected_with_concern
+  indirect:
+    call_site:
+    - AS2-08
+    binding:
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 20
+    - query: QS-32
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 80
+    - AS2-07
+    receiver:
+    - query: QS-33
+      path: mykernel/arch/x86_64/myos/syscall.c
+      line: 30
+    - query: QS-33
+      path: mykernel/arch/x86_64/myos/syscall.c
+      line: 131
+    - AS2-06
+  note: ioctl 16、putstring 451；default 分支到 __x64_sys_ni_syscall
+- id: ES-12
+  from: entry.syscall_dispatch
+  to: CORE-USER-BOUNDARIES-07::entry.syscall_frame_return
+  kind: call
+  status: connected
+  evidence:
+  - AS2-05
+  - CORE-USER-BOUNDARIES-07::SB-01
+  note: 写回 regs->ax 后经 syscall_exit_to_user_mode，再落入 syscall_return_via_sysret
+- id: ES-13
+  from: entry.myos_special_syscalls
+  to: external:mykernel/printk::color_printk
+  kind: call
+  status: endpoint
+  evidence:
+  - AS2-06
+  - AS2-13
+  - AS2-14
+  note: 格式化实现未追
+- id: ES-14
+  from: fs.vfs.open_syscall
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.path_open
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-31
+  - AS3-32
+  note: do_filp_open 之后的路径解析与打开由 05 C4 描述（UV-04）
+- id: ES-15
+  from: fs.vfs.open_syscall
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.fd_table
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-32
+  - AS3-33
+  note: get_unused_fd_flags 与 fd_install
+- id: ES-16
+  from: fs.vfs.rw_syscalls
+  to: fs.vfs.fd_lookup_ref
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-19
+  - AS3-20
+  - AS3-21
+  - AS3-22
+  - AS3-23
+  note: read 用 myos_fdget_pos；write、writev 用 fdget_pos/fdput_pos
+- id: ES-17
+  from: fs.vfs.rw_syscalls
+  to: CORE-USER-BOUNDARIES-07::fs.vfs.write_dispatch
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-21
+  - AS3-23
+  note: vfs_write 与 vfs_writev 的分派与拦截由 07 描述
+- id: ES-18
+  from: fs.vfs.rw_syscalls
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.read_syscall
+  kind: call
+  status: connected
+  evidence:
+  - AS3-19
+  - AS3-24
+  note: vfs_read；console 的 ->read 落到 myos_tty_read（07）
+- id: ES-19
+  from: fs.vfs.fd_dup_fcntl
+  to: fs.vfs.fd_lookup_ref
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-25
+  - AS3-26
+  note: fdget_raw 与 fdput
+- id: ES-20
+  from: fs.vfs.fd_lookup_ref
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.file_lifecycle
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-11
+  - AS3-14
+  - CORE-USER-VFS-BASELINE-05::A-C4-28
+  - CORE-USER-VFS-BASELINE-05::A-C4-25
+  note: fput 归零释放；close 直接 kfree
+- id: ES-21
+  from: fs.vfs.fd_dup_fcntl
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.fd_table
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-28
+  - AS3-37
+  note: f_dupfd 调 alloc_fd 与 fd_install
+- id: ES-22
+  from: sched.forkexec.fd_inherit_exec
+  to: fs.vfs.fd_dup_fcntl
+  kind: data
+  status: blocked
+  evidence:
+  - SS-16
+  - SS-17
+  - SS-22
+  - QS-25
+  - QS-26
+  - CORE-USER-VFS-BASELINE-05::Q14
+  note: exec 应读的 close-on-exec 标记无处存放：alloc_fd 不用 flags，F_SETFD 被注释，do_close_on_exec 被注释
+- id: ES-23
+  from: sched.forkexec.fd_inherit_exec
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.fd_table
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AS3-03
+  - AS3-34
+  note: copy_files 与 unshare_fd 都经 dup_fd 复制（UV-09）
+fd_lifecycle:
+- id: FL-01
+  stage: pid 1 的初始表
+  code_path: rest_init → kernel_thread(kernel_init, …, CLONE_FS) → copy_files → dup_fd(init_files, NR_OPEN_MAX)
+  slot_effect: init_files 的槽全为空、fd_count 为 0；dup_fd 把新表 fd_count 设为 256，只写父表非空的槽，所以 pid 1 的 256 个槽都没有被写入；console_on_rootfs 被注释，内核不打开 console
+  refcount_effect: 没有 file 被建立
+  evidence:
+  - AS3-01
+  - AS3-02
+  - AS3-03
+  - QS-19
+  - VT-FDLIMITS
+  concerns:
+  - CORE-USER-VFS-BASELINE-05::UV-09
+- id: FL-02
+  stage: open
+  code_path: sys_open → do_sys_open(0, …) → do_sys_openat2 → get_unused_fd_flags → do_filp_open → fd_install
+  slot_effect: 取 [0, fd_count) 中最低的空槽（alloc_fd 不做标记），成功后写入该槽；/dev/console 打开时 f_op 换成 console_fops
+  refcount_effect: 新 file 的 f_count = 1；f_mode = OPEN_FMODE(flags)
+  evidence:
+  - AS3-09
+  - AS3-10
+  - AS3-30
+  - AS3-32
+  - AS3-33
+  concerns:
+  - CORE-USER-VFS-BASELINE-05::UV-04
+  - CORE-USER-VFS-BASELINE-05::UV-11
+  - CORE-USER-BOUNDARIES-07::UB-05
+- id: FL-03
+  stage: read
+  code_path: sys_read → ksys_read → myos_fdget_pos → vfs_read → ->read
+  slot_effect: 直接按下标读槽，不检查上界
+  refcount_effect: 不变（flags=0，fdput_pos 不 fput）
+  evidence:
+  - AS3-18
+  - AS3-19
+  - AS3-24
+  - SS-01
+  concerns:
+  - CORE-USER-VFS-BASELINE-05::UV-11
+- id: FL-04
+  stage: write / writev
+  code_path: sys_write → ksys_write，sys_writev → do_writev；都经 fdget_pos … fdput_pos
+  slot_effect: 直接按下标读槽，不检查上界；槽本身不变
+  refcount_effect: 每次调用 f_count 减一而不先加一；从 1 到 0 时 file 被交给 kmem_cache_free(filp_cachep, …)，槽仍指向它（fork 继承来的 file 来自 kzalloc，走 UV-09 的跨缓存路径）
+  evidence:
+  - AS3-15
+  - AS3-20
+  - AS3-21
+  - AS3-22
+  - AS3-23
+  - SS-03
+  - SS-04
+  - SS-05
+  - SS-06
+  - VT-FDLIMITS
+  concerns:
+  - US-01
+  - CORE-USER-BOUNDARIES-07::UB-01
+  - CORE-USER-VFS-BASELINE-05::UV-09
+- id: FL-05
+  stage: fcntl / dup / dup2 / dup3
+  code_path: sys_fcntl → fdget_raw → do_fcntl(F_DUPFD) → f_dupfd → fdput；dup、dup2 空壳；dup3 不在表中
+  slot_effect: F_DUPFD 在 [arg, 1024) 中找空槽并写入同一个 file；fd 表只有 256 项，得到的 fd ≥ 256 时 close、lseek 返回 -EBADF，read、write、writev、fcntl 越界访问
+  refcount_effect: 成功时 get_file 加一、fdput 减一，净值不变，两槽共享一个 file；F_GETFL、失败的 F_DUPFD 与不支持的命令只有 fdput 的一次减一
+  evidence:
+  - AS3-25
+  - AS3-26
+  - AS3-27
+  - AS3-28
+  - AS3-37
+  - AS3-39
+  - QS-38
+  - VT-FDLIMITS
+  - VT-SYSTAB
+  concerns:
+  - US-01
+  - US-02
+  - CORE-USER-BOUNDARIES-07::UB-10
+  - CORE-USER-BOUNDARIES-07::UB-09
+- id: FL-06
+  stage: lseek / close
+  code_path: sys_lseek、sys_close 直接下标访问 fd_array
+  slot_effect: 两者都检查 fd < fd_count；lseek 不检查空槽；close 把槽置空
+  refcount_effect: close 不看 f_count，直接 kfree
+  evidence:
+  - AS3-29
+  - CORE-USER-VFS-BASELINE-05::A-C4-25
+  - SS-19
+  concerns:
+  - CORE-USER-VFS-BASELINE-05::UV-10
+  - CORE-USER-VFS-BASELINE-05::UV-11
+- id: FL-07
+  stage: fork
+  code_path: copy_process → copy_files → dup_fd（不带 CLONE_FILES）
+  slot_effect: 父表非空槽各复制出一个新 file（按值复制），空槽不写
+  refcount_effect: 副本的 f_count 按值抄自父表，不另加引用
+  evidence:
+  - AS3-03
+  - CORE-USER-VFS-BASELINE-05::A-C2-14
+  - CORE-USER-VFS-BASELINE-05::A-C2-15
+  concerns:
+  - CORE-USER-VFS-BASELINE-05::UV-09
+- id: FL-08
+  stage: exec
+  code_path: begin_new_exec → unshare_files → unshare_fd；do_close_on_exec 被注释
+  slot_effect: 表未共享时原样保留全部槽；不关闭任何 fd
+  refcount_effect: 不变
+  evidence:
+  - AS3-34
+  - AS3-35
+  - QS-25
+  - SS-16
+  - CORE-USER-VFS-BASELINE-05::Q14
+  concerns:
+  - US-03
+- id: FL-09
+  stage: exit
+  code_path: exit_files → put_files_struct → filp_close → fput（对 [0, fd_count) 中非空的槽）
+  slot_effect: 整表释放
+  refcount_effect: 每个非空槽 fput 一次
+  evidence:
+  - CORE-USER-VFS-BASELINE-05::A-C4-31
+  - CORE-USER-VFS-BASELINE-05::A-C4-28
+  concerns:
+  - CORE-USER-VFS-BASELINE-05::UV-09
+  - CORE-USER-VFS-BASELINE-05::UV-15
+prior_unknowns:
+- id: PU-01
+  source: CORE-USER-BOUNDARIES-07::user.initramfs.init_console_reopen
+  unknown: 初始 fd 0/1/2 的状态
+  status_to: narrowed
+  now: 内核不为 pid 1 打开任何 fd（console_on_rootfs 被注释）；pid 1 的表由 dup_fd 从全空的 init_files 复制而来，fd_count 为 256，各槽没有被写入，运行时内容取决于 slab 对象原有数据。
+  evidence:
+  - AS3-01
+  - AS3-02
+  - AS3-03
+  - QS-19
+  - VT-FDLIMITS
+- id: PU-02
+  source: CORE-USER-BOUNDARIES-07::user.initramfs.init_console_reopen
+  unknown: freopen 实际发出的系统调用序列（GAP-U10）
+  status_to: open
+  now: 仍未知：仓库里只有对 libc 符号的调用。内核侧对每个候选系统调用的结果已列出（VT-SYSTAB 与 user-syscall-stdio.md §4）。
+  evidence:
+  - AS1-01
+  - AS1-06
+  - QS-04
+  - VT-SYSTAB
+- id: PU-03
+  source: CORE-USER-VFS-BASELINE-05::UV-11
+  unknown: fd_count 在各路径上的实际值
+  status_to: closed_static
+  now: 只有 init_task 自己的 init_files 为 0；经 copy_files 或 unshare_fd 由 dup_fd 建立的表都是 NR_OPEN_DEFAULT（256），与 fd_array 的长度相同。
+  evidence:
+  - AS3-02
+  - AS3-04
+  - AS3-05
+  - VT-FDLIMITS
+- id: PU-04
+  source: CORE-USER-VFS-BASELINE-05::UV-10
+  unknown: f_dupfd 与 fget 的实际调用者
+  status_to: closed_static
+  now: f_dupfd 只被 do_fcntl 的 F_DUPFD 与 F_DUPFD_CLOEXEC 调用（来自 72 号 fcntl）；fget 的活动调用者只有 mmap（mm/vm_map/mmap.c）。
+  evidence:
+  - AS3-27
+  - QS-23
+  - QS-34
+gap_status:
+- id: GAP-U10
+  qualified_id: CORE-USER-VFS-BASELINE-05::GAP-U10
+  original: 用户程序所用 musl 的系统调用选择（fork、exit_group、open 等）只按常识推断，未读 musl 源码
+  coverage: 检查了仓库里实际存在的用户程序、构建清单与安装脚本：init 与 sh 只调用 libc 符号，没有直接的系统调用写法；构建文本把编译器指定为仓库外的 musl-gcc（写在 project() 之后）并静态链接；仓库内旧 libc（mylib）不在构建中；内核侧每个可能被调用的系统调用的结果已逐项列出。
+  evidence:
+  - AS1-01
+  - AS1-02
+  - AS1-03
+  - AS1-04
+  - AS1-05
+  - AS1-06
+  - AS1-09
+  - AS1-11
+  - AS1-12
+  - QS-04
+  - QS-37
+  - QS-05
+  - QS-06
+  - QS-07
+  - QS-09
+  - QS-10
+  - VT-SYSTAB
+  closed_static_parts: []
+  remaining_unknown:
+  - 构建时实际生效的编译器与 libc（文本只能确定指定的是 musl-gcc，AS1-12）
+  - freopen、printf、fflush、read、write 在 init 与 sh 实际链接的 musl 中发出的系统调用与参数（仓库外：/home/cheyh/projs/musl/build，版本未记录）
+  - 镜像中 /boot/init、/boot/sh 的实际二进制（构建产物与 objdump 输出在仓库外 build/）
+  - 历史主题分支 libc 的内容（repo-map §4 标为无需阅读，未读；它不是当前构建引用的路径）
+  status_from: open
+  status_to: open
+  runtime: NOT_RUN
+  related:
+  - CORE-USER-BOUNDARIES-07::user.initramfs.init_console_reopen
+  - CORE-USER-VFS-BASELINE-05::GAP-U05
+next_validation_candidates:
+- id: NVS-1
+  purpose: 在授权构建并运行的内核中记录 init 与 sh 的实际系统调用（号、参数、返回值）与 fd 表状态，观察 write/writev/fcntl 前后的 f_count、F_DUPFD 的上界和 putstring 的输出
+  covers:
+  - GAP-U10（运行面）
+  - US-01
+  - US-02
+  - US-05
+  status: NOT_RUN
+  authorization_needed:
+  - 完整内核构建授权（full_kernel_build_authorized）
+  - QEMU 运行授权
+  - 可修改的测试镜像
+- id: NVS-2
+  purpose: 静态读取 init 与 sh 实际链接的 musl 源码（仓库外，固定版本与 configure 选项），确定 freopen、stdio 写出、O_CLOEXEC/FD_CLOEXEC 与 ioctl 的使用；接续 CORE-USER-BOUNDARIES-07 的 NVB-2
+  covers:
+  - GAP-U10
+  - US-03
+  - US-04
+  status: NOT_RUN
+  authorization_needed:
+  - 读取仓库外目录的许可，并固定其版本标识
+- id: NVS-3
+  purpose: 反汇编镜像中实际安装的 /boot/init 与 /boot/sh（或其构建产物），列出其中的 syscall 号与调用点
+  covers:
+  - GAP-U10
+  status: NOT_RUN
+  authorization_needed:
+  - 读取仓库外构建产物或镜像的许可（不运行构建与挂盘脚本）
+anchors:
+- id: AS1-01
+  theme: C01
+  path: myinitramfs/CMakeLists.txt
+  symbol: CMAKE_C_COMPILER
+  kind: build
+  lines:
+  - 40
+  - 41
+  quote: 'set(MUSL_PATH /home/cheyh/projs/musl/build)
+
+    set(CMAKE_C_COMPILER ${MUSL_PATH}/exec/bin/musl-gcc)'
+  cpp_conditions: []
+  role: 用户程序的 C 编译器设为仓库外 /home/cheyh/projs/musl/build 下的 musl-gcc
+- id: AS1-02
+  theme: C01
+  path: myinitramfs/CMakeLists.txt
+  symbol: LINK_TYPE
+  kind: build
+  lines:
+  - 31
+  - 33
+  quote: "if (${LINK_TYPE} STREQUAL \"static\")\n\tset(CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} -static\")\nendif()"
+  cpp_conditions: []
+  role: LINK_TYPE 为 static 时给用户程序加 -static
+- id: AS1-03
+  theme: C01
+  path: myinitramfs/CMakeLists.txt
+  symbol: add_subdirectory
+  kind: build
+  lines:
+  - 46
+  - 48
+  quote: 'include_directories("${MUSL_INC_PATH}")
+
+    add_subdirectory(myinit)
+
+    add_subdirectory(myshell)'
+  cpp_conditions: []
+  role: 只加入 musl 头文件目录与 myinit、myshell 两个子目录；mylib 不在构建中
+- id: AS1-04
+  theme: C01
+  path: make_install.sh
+  symbol: LINK_TYPE
+  kind: build
+  lines:
+  - 6
+  - 7
+  quote: 'LINK_TYPE=static
+
+    # LINK_TYPE=dynamic'
+  cpp_conditions: []
+  role: 总装脚本把 LINK_TYPE 设为 static（dynamic 一行被注释）
+- id: AS1-05
+  theme: C01
+  path: scripts/make_install_initranfs.sh
+  symbol: LINK_TYPE
+  kind: build
+  lines:
+  - 29
+  - 29
+  quote: "\tcmake $1/myinitramfs $2 -DLINK_TYPE=$3 -DCMAKE_INSTALL_PREFIX=/mnt && make"
+  cpp_conditions: []
+  role: initramfs 构建把 LINK_TYPE 传给 cmake
+- id: AS1-06
+  theme: C01
+  path: myinitramfs/myinit/initd.c
+  symbol: main
+  kind: in_body
+  lines:
+  - 11
+  - 13
+  quote: "\tfreopen(\"/dev/console\", \"r\", stdin);\n\tfreopen(\"/dev/console\", \"w\", stdout);\n\tfreopen(\"/dev/console\", \"w\", stderr);"
+  cpp_conditions: []
+  role: init 用 libc 的 freopen 把 stdin/stdout/stderr 指向 /dev/console
+- id: AS1-07
+  theme: C01
+  path: myinitramfs/myinit/initd.c
+  symbol: main
+  kind: in_body
+  lines:
+  - 16
+  - 16
+  quote: "\tprintf(\"Welcome to MyOS2\\n\\n\");"
+  cpp_conditions: []
+  role: init 随后用 printf 输出欢迎信息
+- id: AS1-08
+  theme: C01
+  path: myinitramfs/myinit/initd.c
+  symbol: normal_boot
+  kind: in_body
+  lines:
+  - 32
+  - 35
+  quote: "\tif (rv == 0) {\n\t\tpid_t pid = getpid();\n\t\t// printf(\"child task, %d\\n\", rv);\n\t\texecve(prog_name, args, envs);"
+  cpp_conditions: []
+  role: fork 的子进程 execve("/boot/sh")，父进程循环 sched_yield
+- id: AS1-09
+  theme: C01
+  path: myinitramfs/myshell/myshell.c
+  symbol: main
+  kind: in_body
+  lines:
+  - 73
+  - 73
+  quote: "\tconsole_fd = open(\"/dev/console\", O_RDWR);"
+  cpp_conditions: []
+  role: shell 另外以 O_RDWR 打开 /dev/console，得到 console_fd
+- id: AS1-10
+  theme: C01
+  path: myinitramfs/myshell/myshell.c
+  symbol: main
+  kind: in_body
+  lines:
+  - 85
+  - 87
+  quote: "\t\tprintf(\"\\n\");\n\t\tprintf(\"MyOS2:%s # _\", current_dir);\n\t\tfflush(stdout);"
+  cpp_conditions: []
+  role: shell 的提示符经 printf 输出，并 fflush(stdout)
+- id: AS1-11
+  theme: C01
+  path: myinitramfs/myshell/myshell.c
+  symbol: read_line
+  kind: in_body
+  lines:
+  - 111
+  - 113
+  quote: "\twhile(read(console_fd, &key, 1) == 1 && key != 4)\n\t{\n\t\twrite(console_fd, \"\\b\", 1);"
+  cpp_conditions: []
+  role: shell 逐字节 read(console_fd) 读键，并 write(console_fd) 回显
+- id: AS1-12
+  theme: C01
+  path: myinitramfs/CMakeLists.txt
+  symbol: project
+  kind: build
+  lines:
+  - 3
+  - 3
+  quote: project(MyOS2_Initramfs ASM C)
+  cpp_conditions: []
+  role: project() 在第 3 行先启用 ASM 与 C；CMAKE_C_COMPILER 直到第 41 行才设置
+- id: AS2-01
+  theme: C02
+  path: mykernel/arch/x86_64/kernel/cpu/common.c
+  symbol: syscall_init
+  kind: in_body
+  lines:
+  - 542
+  - 543
+  quote: "\t\twrmsr(MSR_STAR, 0, (__USER32_CS << 16) | __KERNEL_CS);\n\t\twrmsrl(MSR_LSTAR, (unsigned long)entry_SYSCALL_64);"
+  cpp_conditions:
+  - '#else  (after #if defined(CONFIG_INTEL_X64_GDT_LAYOUT))'
+  role: MSR_STAR 与 MSR_LSTAR：syscall 指令的入口绑定到 entry_SYSCALL_64
+- id: AS2-02
+  theme: C02
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: entry_SYSCALL_64
+  kind: asm_range
+  lines:
+  - 160
+  - 162
+  quote: "\tpushq\t\t%rax\t\t\t\t\t/* pt_regs->orig_ax */\n\tpushq\t\t$0x80\t\t\t\t\t/* pt_regs->irq_nr */\n\tPUSH_REGS"
+  cpp_conditions: []
+  role: 入口把 rax（系统调用号）压为 orig_ax，再 PUSH_REGS 把同一个 rax 压为 ax
+- id: AS2-03
+  theme: C02
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: entry_SYSCALL_64
+  kind: asm_range
+  lines:
+  - 163
+  - 165
+  quote: "\tsti\n\n\t// PUSH_AND_CLEAR_REGS rax=$-ENOSYS"
+  cpp_conditions: []
+  role: 开中断；Linux 中把 ax 预置为 -ENOSYS 的 PUSH_AND_CLEAR_REGS 一行被注释
+- id: AS2-04
+  theme: C02
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: entry_SYSCALL_64
+  kind: asm_range
+  lines:
+  - 168
+  - 170
+  quote: "\tmovq\t\t%rsp,\t\t%rdi\n\t/* Sign extend the lower 32bit as syscall numbers are treated as int */\n\tmovslq\t\t%eax,\t\t%rsi"
+  cpp_conditions: []
+  role: rdi = 帧地址，rsi = 符号扩展后的 eax（系统调用号）
+- id: AS2-05
+  theme: C02
+  path: mykernel/arch/x86_64/entry/common.c
+  symbol: do_syscall_64
+  kind: in_body
+  lines:
+  - 41
+  - 44
+  quote: "\tuint unr = nr;\n\tif (unr < __NR_syscalls) {\n\t\t// unr = array_index_nospec(unr, NR_syscalls);\n\t\tregs->ax = x64_sys_call(regs, unr);"
+  cpp_conditions: []
+  role: 号转成无符号后与 __NR_syscalls 比较，范围内才调 x64_sys_call 并把返回值写入 regs->ax
+- id: AS2-06
+  theme: C02
+  path: mykernel/arch/x86_64/entry/common.c
+  symbol: __x64_sys_ni_syscall
+  kind: in_body
+  lines:
+  - 20
+  - 21
+  quote: "\tcolor_printk(RED, BLACK, \"Syscall not implemented: %d\\n\", regs->orig_ax);\n\twhile (1);"
+  cpp_conditions: []
+  role: 表内缺项的默认处理：打印 orig_ax 后 while (1)
+- id: AS2-07
+  theme: C02
+  path: mykernel/arch/x86_64/entry/syscall_64.c
+  symbol: __SYSCALL
+  kind: macro
+  lines:
+  - 26
+  - 26
+  quote: '#define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);'
+  cpp_conditions: []
+  role: '第三次展开 syscalls_64.h 时每一项变成 case nr: return __x64_sym(regs);'
+- id: AS2-08
+  theme: C02
+  path: mykernel/arch/x86_64/entry/syscall_64.c
+  symbol: x64_sys_call
+  kind: in_body
+  lines:
+  - 29
+  - 31
+  quote: "\tswitch (nr) {\n\t#include <asm/syscalls_64.h>\n\tdefault: return __x64_sys_ni_syscall(regs);"
+  cpp_conditions: []
+  role: 活动分发是 switch：case 来自 syscalls_64.h，default 落到 __x64_sys_ni_syscall
+- id: AS2-09
+  theme: C02
+  path: mykernel/arch/x86_64/include/asm/syscall_wrapper.h
+  symbol: __SYS_STUBx
+  kind: macro
+  lines:
+  - 104
+  - 108
+  quote: "\t#define __SYS_STUBx(abi, name, ...)\t\t\t\t\t\t\t\\\n\t\t\t\tlong __##abi##_##name(const pt_regs_s *regs);\t\\\n\t\t\t\tlong __##abi##_##name(const pt_regs_s *regs)\t\\\n\
+    \t\t\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\\\n\t\t\t\t\treturn __se_##name(regs);\t\t\t\t\t\\"
+  cpp_conditions: []
+  role: __x64_sys_name(regs) 只转调 __se_sys_name(regs)
+- id: AS2-10
+  theme: C02
+  path: mykernel/arch/x86_64/include/asm/syscall_wrapper.h
+  symbol: __MYOS_SYSCALL_DEFINEx
+  kind: macro
+  lines:
+  - 241
+  - 245
+  quote: "\t#define __MYOS_SYSCALL_DEFINEx(x, name, ...)\t\t\t\t\t\t\\\n\t\t\t\tlong __se_sys##name(const pt_regs_s *regs);\t\t\t\t\\\n\t\t\t\tlong __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\t\
+    \\\n\t\t\t\t__SYS_STUBx(x64, sys##name)\t\t\t\t\t\t\t\t\\\n\t\t\t\tlong __se_sys##name(const pt_regs_s *regs)\t\t\t\t\\"
+  cpp_conditions: []
+  role: MYOS_SYSCALL_DEFINEx 生成 __se_sys_name：从寄存器帧取参数并调用 __do_sys_name
+- id: AS2-11
+  theme: C02
+  path: mykernel/arch/x86_64/include/asm/syscall_wrapper.h
+  symbol: __X86_64_MAP4
+  kind: macro
+  lines:
+  - 21
+  - 23
+  quote: "\t#define __X86_64_MAP4(m, t1, a1, t2, a2, t3, a3, t4, a4)\t\t\t\t\t\\\n\t\t\t\tm(t1, regs->di), m(t2, regs->si), m(t3, regs->dx),\t\t\t\t\\\n\t\t\t\tm(t4, regs->r10)"
+  cpp_conditions: []
+  role: 第 1–4 个参数依次取 regs->di、si、dx、r10
+- id: AS2-12
+  theme: C02
+  path: mykernel/arch/x86_64/include/asm/unistd_64.h
+  symbol: __NR_syscalls
+  kind: macro
+  lines:
+  - 443
+  - 443
+  quote: "\t#\tdefine\t__NR_syscalls\t453"
+  cpp_conditions:
+  - '#ifdef __KERNEL__'
+  role: __NR_syscalls = 453，只在 __KERNEL__ 下定义
+- id: AS2-13
+  theme: C02
+  path: mykernel/arch/x86_64/myos/syscall.c
+  symbol: sys_no_syscall
+  kind: in_body
+  lines:
+  - 26
+  - 27
+  quote: "\tcolor_printk(RED, BLACK, \"no_system_call is calling\\n\");\n\treturn -ENOSYS;"
+  cpp_conditions: []
+  role: 表中第 452 号（__NR_syscalls - 1）打印后返回 -ENOSYS
+- id: AS2-14
+  theme: C02
+  path: mykernel/arch/x86_64/myos/syscall.c
+  symbol: sys_myos_putstring
+  kind: in_body
+  lines:
+  - 32
+  - 33
+  quote: "\tcolor_printk(WHITE, BLACK, string);\n\treturn 0;"
+  cpp_conditions: []
+  role: 451 号 putstring 把用户传入的指针直接作为 color_printk 的格式串
+- id: AS2-15
+  theme: C02
+  path: mykernel/arch/x86_64/myos/syscall.c
+  symbol: sys_ioctl
+  kind: in_body
+  lines:
+  - 133
+  - 133
+  quote: "\tALERT_DUMMY_SYSCALL(ioctl, IF_ALERT_DUMMY_SYSCALL);"
+  cpp_conditions: []
+  role: ioctl 只有一个提示开关为 0 的 ALERT_DUMMY_SYSCALL
+- id: AS2-16
+  theme: C02
+  path: mykernel/arch/x86_64/myos/syscall.c
+  symbol: sys_ioctl
+  kind: in_body
+  lines:
+  - 153
+  - 153
+  quote: "\treturn 0;"
+  cpp_conditions: []
+  role: ioctl 总返回 0
+- id: AS2-17
+  theme: C02
+  path: mykernel/include/linux/kernel/syscalls.h
+  symbol: ALERT_DUMMY_SYSCALL
+  kind: macro
+  lines:
+  - 1393
+  - 1397
+  quote: "\t#define ALERT_DUMMY_SYSCALL(syscall_name, show_alert)\t\t\\\n\t\t\tif (show_alert) {\t\t\t\t\t\t\t\t\t\\\n\t\t\t\tpr_alert(\"\\t!!! Dummy Syscall --- %s ---\\n\",\t\\\n\t\
+    \t\t\t\t#syscall_name);\t\t\t\t\t\t\t\t\\\n\t\t\t}"
+  cpp_conditions: []
+  role: 空实现的提示宏：show_alert 为真时才打印，本身不返回
+- id: AS2-18
+  theme: C02
+  path: mykernel/include/linux/kernel/syscalls.h
+  symbol: IF_ALERT_DUMMY_SYSCALL
+  kind: macro
+  lines:
+  - 1392
+  - 1392
+  quote: "\t#define IF_ALERT_DUMMY_SYSCALL 0"
+  cpp_conditions: []
+  role: 提示开关固定为 0
+- id: AS2-19
+  theme: C02
+  path: mykernel/scripts/options_flags.cmake
+  symbol: CONFIG_ARCH_HAS_SYSCALL_WRAPPER
+  kind: build
+  lines:
+  - 65
+  - 65
+  quote: "\t-DCONFIG_ARCH_HAS_SYSCALL_WRAPPER \\"
+  cpp_conditions: []
+  role: 配置面：内核以 -DCONFIG_ARCH_HAS_SYSCALL_WRAPPER 编译
+- id: AS2-20
+  theme: C02
+  path: mykernel/scripts/options_flags.cmake
+  symbol: __KERNEL__
+  kind: build
+  lines:
+  - 59
+  - 59
+  quote: "\t-D__KERNEL__ \\"
+  cpp_conditions: []
+  role: 配置面：内核以 -D__KERNEL__ 编译，__NR_syscalls 因而有定义
+- id: AS2-21
+  theme: C02
+  path: mykernel/klib/printk.c
+  symbol: color_printk
+  kind: in_body
+  lines:
+  - 35
+  - 37
+  quote: "\tva_start(args, fmt);\n\n\ti = vsnprintf(buf, PAGE_SIZE, fmt, args);"
+  cpp_conditions: []
+  role: color_printk 是变参函数，把 fmt 原样交给 vsnprintf
+- id: AS3-01
+  theme: C03
+  path: mykernel/init/main.c
+  symbol: rest_init
+  kind: in_body
+  lines:
+  - 93
+  - 93
+  quote: "\tpid = kernel_thread(kernel_init, NULL, \"kthd: kernel_init\", CLONE_FS);"
+  cpp_conditions: []
+  role: kernel_init 由 kernel_thread 以 CLONE_FS 建立，不带 CLONE_FILES
+- id: AS3-02
+  theme: C03
+  path: mykernel/fs/vfs/file.c
+  symbol: init_files
+  kind: initializer
+  lines:
+  - 121
+  - 122
+  quote: "\t.file_lock\t\t= __SPIN_LOCK_UNLOCKED(init_files.file_lock),\n\t.fd_count\t\t= 0,"
+  cpp_conditions: []
+  role: init_task 的文件表 init_files 的 fd_count 为 0
+- id: AS3-03
+  theme: C03
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_files
+  kind: in_body
+  lines:
+  - 739
+  - 743
+  quote: "\tnewf = dup_fd(oldf, NR_OPEN_MAX, &error);\n\tif (!newf)\n\t\tgoto out;\n\n\ttsk->files = newf;"
+  cpp_conditions: []
+  role: 不带 CLONE_FILES 时以 dup_fd(oldf, NR_OPEN_MAX) 复制出新文件表
+- id: AS3-04
+  theme: C03
+  path: mykernel/include/linux/kernel/fdtable.h
+  symbol: NR_OPEN_DEFAULT
+  kind: macro
+  lines:
+  - 22
+  - 22
+  quote: "\t#define NR_OPEN_DEFAULT\t256"
+  cpp_conditions: []
+  role: fd 表固定 256 项
+- id: AS3-05
+  theme: C03
+  path: mykernel/include/linux/kernel/fdtable.h
+  symbol: struct files_struct
+  kind: type_member
+  lines:
+  - 67
+  - 68
+  quote: "\t\tunsigned long\tfd_count;\n\t\tfile_s __rcu\t*fd_array[NR_OPEN_DEFAULT];"
+  cpp_conditions: []
+  role: files_struct 中 fd_count 与定长数组 fd_array[NR_OPEN_DEFAULT]
+- id: AS3-06
+  theme: C03
+  path: mykernel/include/uapi/linux/fs.h
+  symbol: INR_OPEN_CUR
+  kind: macro
+  lines:
+  - 37
+  - 37
+  quote: "\t#define INR_OPEN_CUR\t\t1024\t\t/* Initial setting for nfile rlimits */"
+  cpp_conditions: []
+  role: INR_OPEN_CUR = 1024；INIT_RLIMITS 以它作 RLIMIT_NOFILE 的初值（resource.h 第 76 行，QS-24）
+- id: AS3-07
+  theme: C03
+  path: mykernel/init/init_task.c
+  symbol: init_signals
+  kind: initializer
+  lines:
+  - 37
+  - 37
+  quote: "\t.rlim\t\t\t\t= INIT_RLIMITS,"
+  cpp_conditions: []
+  role: init_task 的 rlimit 取 INIT_RLIMITS
+- id: AS3-08
+  theme: C03
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_signal
+  kind: in_body
+  lines:
+  - 823
+  - 823
+  quote: "\tmemcpy(sig->rlim, current->signal->rlim, sizeof sig->rlim);"
+  cpp_conditions: []
+  role: fork 时按值复制父任务的 rlimit
+- id: AS3-09
+  theme: C03
+  path: mykernel/fs/vfs/file_table.c
+  symbol: __alloc_file
+  kind: in_body
+  lines:
+  - 55
+  - 55
+  quote: "\tatomic_long_set(&f->f_count, 1);"
+  cpp_conditions: []
+  role: 新 file 的引用计数从 1 开始
+- id: AS3-10
+  theme: C03
+  path: mykernel/fs/vfs/file_table.c
+  symbol: __alloc_file
+  kind: in_body
+  lines:
+  - 59
+  - 60
+  quote: "\tf->f_flags = flags;\n\tf->f_mode = OPEN_FMODE(flags);"
+  cpp_conditions: []
+  role: f_flags 照存，f_mode 由 OPEN_FMODE(flags) 得出
+- id: AS3-11
+  theme: C03
+  path: mykernel/fs/vfs/file_table.c
+  symbol: fput
+  kind: in_body
+  lines:
+  - 110
+  - 110
+  quote: "\tif (atomic_long_dec_and_test(&file->f_count)) {"
+  cpp_conditions: []
+  role: fput 先把 f_count 减一并测试是否为 0
+- id: AS3-13
+  theme: C03
+  path: mykernel/include/linux/fs/file.h
+  symbol: FDPUT_FPUT
+  kind: macro
+  lines:
+  - 33
+  - 33
+  quote: "\t#define FDPUT_FPUT\t\t\t1"
+  cpp_conditions: []
+  role: fd_s.flags 中 FDPUT_FPUT=1（fdput 据此决定是否 fput）
+- id: AS3-14
+  theme: C03
+  path: mykernel/include/linux/fs/file.h
+  symbol: fdput
+  kind: in_body
+  lines:
+  - 38
+  - 39
+  quote: "\t\tif (fd.flags & FDPUT_FPUT)\n\t\t\tfput(fd.file);"
+  cpp_conditions: []
+  role: fdput 在 flags 含 FDPUT_FPUT 时调用 fput
+- id: AS3-15
+  theme: C03
+  path: mykernel/include/linux/fs/file.h
+  symbol: __to_fd
+  kind: in_body
+  lines:
+  - 53
+  - 56
+  quote: "\t\tfiles_struct_s *files = current->files;\n\t\tfile_s *file = files->fd_array[v];\n\t\t// return (fd_s){(file_s *)(v & ~3),v & 3};\n\t\treturn (fd_s){file, 3};"
+  cpp_conditions: []
+  role: __to_fd 直接按下标取 fd_array，不取引用，却返回 flags=3
+- id: AS3-16
+  theme: C03
+  path: mykernel/include/linux/fs/file.h
+  symbol: fdget_pos
+  kind: in_body
+  lines:
+  - 74
+  - 74
+  quote: "\t\treturn __to_fd(fd);"
+  cpp_conditions: []
+  role: fdget_pos 就是 __to_fd
+- id: AS3-17
+  theme: C03
+  path: mykernel/include/linux/fs/file.h
+  symbol: fdput_pos
+  kind: in_body
+  lines:
+  - 81
+  - 81
+  quote: "\t\tfdput(f);"
+  cpp_conditions: []
+  role: fdput_pos 转调 fdput
+- id: AS3-18
+  theme: C03
+  path: mykernel/fs/vfs/file.c
+  symbol: myos_fdget_pos
+  kind: in_body
+  lines:
+  - 200
+  - 202
+  quote: "\tfile_s *fp = curr->files->fd_array[fd];\n\t\n\treturn (fd_s){.file = fp, .flags = 0};"
+  cpp_conditions: []
+  role: 读路径用的 myos_fdget_pos 同样按下标取，但 flags=0
+- id: AS3-19
+  theme: C03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_read
+  kind: in_body
+  lines:
+  - 182
+  - 183
+  quote: "\tfd_s f = myos_fdget_pos(fd);\n\tssize_t ret = -EBADF;"
+  cpp_conditions: []
+  role: read 用 myos_fdget_pos
+- id: AS3-20
+  theme: C03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_write
+  kind: in_body
+  lines:
+  - 321
+  - 323
+  quote: "\tfd_s f = fdget_pos(fd);\n\tssize_t ret = -EBADF;\n\tfile_s *filp = f.file;"
+  cpp_conditions: []
+  role: write 用 fdget_pos
+- id: AS3-21
+  theme: C03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_write
+  kind: in_body
+  lines:
+  - 331
+  - 334
+  quote: "\t\tret = vfs_write(filp, buf, count, ppos);\n\t\tif (ret >= 0 && ppos)\n\t\t\tfilp->f_pos = pos;\n\t\tfdput_pos(f);"
+  cpp_conditions: []
+  role: vfs_write 返回后（包括 -EINVAL）无条件 fdput_pos
+- id: AS3-22
+  theme: C03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: do_writev
+  kind: in_body
+  lines:
+  - 388
+  - 389
+  quote: "\tfd_s f = fdget_pos(fd);\n\tssize_t ret = -EBADF;"
+  cpp_conditions: []
+  role: writev 也用 fdget_pos
+- id: AS3-23
+  theme: C03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: do_writev
+  kind: in_body
+  lines:
+  - 397
+  - 400
+  quote: "\t\tret = vfs_writev(f.file, vec, vlen, ppos, flags);\n\t\tif (ret >= 0 && ppos)\n\t\t\tf.file->f_pos = pos;\n\t\tfdput_pos(f);"
+  cpp_conditions: []
+  role: vfs_writev 返回后无条件 fdput_pos
+- id: AS3-24
+  theme: C03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_read
+  kind: in_body
+  lines:
+  - 147
+  - 150
+  quote: "\tif (!(file->f_mode & FMODE_READ))\n\t\treturn -EBADF;\n\t// if (!(file->f_mode & FMODE_CAN_READ))\n\t// \treturn -EINVAL;"
+  cpp_conditions: []
+  role: 读只检查 FMODE_READ；FMODE_CAN_READ 的检查被注释
+- id: AS3-25
+  theme: C03
+  path: mykernel/fs/syscall.c
+  symbol: sys_fcntl
+  kind: in_body
+  lines:
+  - 143
+  - 147
+  quote: "\tfd_s f = fdget_raw(fd);\n\tlong err = -EBADF;\n\n\tif (!f.file)\n\t\tgoto out;"
+  cpp_conditions: []
+  role: fcntl 用 fdget_raw 取 file
+- id: AS3-26
+  theme: C03
+  path: mykernel/fs/syscall.c
+  symbol: sys_fcntl
+  kind: in_body
+  lines:
+  - 158
+  - 159
+  quote: "out1:\n \tfdput(f);"
+  cpp_conditions: []
+  role: fcntl 返回前 fdput
+- id: AS3-27
+  theme: C03
+  path: mykernel/fs/vfs/fcntl.c
+  symbol: do_fcntl
+  kind: in_body
+  lines:
+  - 15
+  - 19
+  quote: "\tcase F_DUPFD:\n\t\terr = f_dupfd(argi, filp, 0);\n\t\tbreak;\n\tcase F_DUPFD_CLOEXEC:\n\t\terr = f_dupfd(argi, filp, O_CLOEXEC);"
+  cpp_conditions: []
+  role: F_DUPFD 与 F_DUPFD_CLOEXEC 交给 f_dupfd
+- id: AS3-28
+  theme: C03
+  path: mykernel/fs/vfs/file.c
+  symbol: f_dupfd
+  kind: in_body
+  lines:
+  - 231
+  - 235
+  quote: "\tulong nofile = rlimit(RLIMIT_NOFILE);\n\tint err;\n\tif (from >= nofile)\n\t\treturn -EINVAL;\n\terr = alloc_fd(from, nofile, flags);"
+  cpp_conditions: []
+  role: f_dupfd 以 RLIMIT_NOFILE 为上界调用 alloc_fd
+- id: AS3-29
+  theme: C03
+  path: mykernel/fs/syscall.c
+  symbol: sys_lseek
+  kind: in_body
+  lines:
+  - 87
+  - 89
+  quote: "\tfp = current->files->fd_array[fd];\n\tif(fp->f_op && fp->f_op->llseek)\n\t\tret = fp->f_op->llseek(fp, offset, whence);"
+  cpp_conditions: []
+  role: lseek 取槽位后直接读 fp->f_op，不检查空槽
+- id: AS3-30
+  theme: C03
+  path: mykernel/fs/syscall.c
+  symbol: sys_open
+  kind: in_body
+  lines:
+  - 41
+  - 41
+  quote: "\treturn do_sys_open(0, filename, flags, mode);"
+  cpp_conditions: []
+  role: open 以 dfd=0（不是 AT_FDCWD）调用 do_sys_open
+- id: AS3-31
+  theme: C03
+  path: mykernel/fs/vfs/namei.c
+  symbol: path_init
+  kind: in_body
+  lines:
+  - 553
+  - 557
+  quote: "\tnd->root = current->fs->root;\n\tif (s[0] == '/')\n\t\tnd->path = nd->root;\n\telse\n\t\tnd->path = current->fs->pwd;"
+  cpp_conditions: []
+  role: path_init 只看路径首字符选 root 或 pwd，不读 dfd
+- id: AS3-32
+  theme: C03
+  path: mykernel/fs/vfs/open.c
+  symbol: do_sys_openat2
+  kind: in_body
+  lines:
+  - 251
+  - 255
+  quote: "\tfd = get_unused_fd_flags(how->flags);\n\tif (fd >=0)\n\t{\n\t\tfile_s * f = do_filp_open(dfd, tmp, &op);\n\t\tif (IS_ERR(f))"
+  cpp_conditions: []
+  role: 先取最低空槽号，再 do_filp_open
+- id: AS3-33
+  theme: C03
+  path: mykernel/fs/vfs/open.c
+  symbol: do_sys_openat2
+  kind: in_body
+  lines:
+  - 256
+  - 258
+  quote: "\t\t\tfd = PTR_ERR(f);\n\t\telse\n\t\t\tfd_install(fd, f);"
+  cpp_conditions: []
+  role: 错误指针转成负 fd，否则 fd_install
+- id: AS3-34
+  theme: C03
+  path: mykernel/sched/forkexec/fork.c
+  symbol: unshare_fd
+  kind: in_body
+  lines:
+  - 1586
+  - 1588
+  quote: "\tif ((unshare_flags & CLONE_FILES) &&\n\t\t(fd && atomic_read(&fd->refcount) > 1)) {\n\t\t*new_fdp = dup_fd(fd, max_fds, &error);"
+  cpp_conditions: []
+  role: 只有文件表被共享（refcount > 1）时才复制
+- id: AS3-35
+  theme: C03
+  path: mykernel/sched/forkexec/exec.c
+  symbol: begin_new_exec
+  kind: in_body
+  lines:
+  - 886
+  - 889
+  quote: "\t/* Ensure the files table is not shared. */\n\tretval = unshare_files();\n\tif (retval)\n\t\tgoto out;"
+  cpp_conditions: []
+  role: exec 只确保文件表不共享
+- id: AS3-37
+  theme: C03
+  path: mykernel/fs/vfs/file.c
+  symbol: f_dupfd
+  kind: in_body
+  lines:
+  - 236
+  - 239
+  quote: "\tif (err >= 0) {\n\t\tget_file(file);\n\t\tfd_install(err, file);\n\t}"
+  cpp_conditions: []
+  role: 找到槽位后 get_file 并 fd_install，新旧两个槽指向同一个 file
+- id: AS3-38
+  theme: C03
+  path: mykernel/init/init_task.c
+  symbol: init_task
+  kind: initializer
+  lines:
+  - 123
+  - 123
+  quote: "\t.signal\t\t\t\t= &init_signals,"
+  cpp_conditions: []
+  role: init_task 的 signal 指向 init_signals（其 rlim 为 INIT_RLIMITS）
+- id: AS3-39
+  theme: C03
+  path: mykernel/fs/vfs/fcntl.c
+  symbol: do_fcntl
+  kind: in_body
+  lines:
+  - 108
+  - 110
+  quote: "\tdefault:\n\t\tpr_alert(\"  Syscall \\'fcntl\\' unsupported flag: %d\\n\", cmd);\n\t\tbreak;"
+  cpp_conditions: []
+  role: 不支持的命令走 default：只打印，err 保持初值 -EINVAL
+queries:
+- id: QS-01
+  purpose: init 源码中的 libc 调用（标准流与进程）
+  args:
+  - -n
+  - -w
+  - -E
+  - freopen|printf|fork|execve|sched_yield|getpid
+  paths:
+  - myinitramfs/myinit/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 11
+  expected_hits_active: 9
+- id: QS-02
+  purpose: shell 中经 console_fd 的打开与读写
+  args:
+  - -n
+  - -w
+  - console_fd
+  paths:
+  - myinitramfs/myshell/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 7
+  expected_hits_active: 7
+- id: QS-03
+  purpose: shell 使用的文件类 libc 调用
+  args:
+  - -n
+  - -E
+  - \b(open|read|write|close|lseek|creat|mkdir|rmdir|unlink|chdir|getcwd|opendir|readdir|closedir|fflush|reboot)\s*\(
+  paths:
+  - myinitramfs/myshell/myshell.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 26
+  expected_hits_active: 26
+- id: QS-04
+  purpose: 用户程序源码中直接发出系统调用的写法
+  args:
+  - -n
+  - -w
+  - -E
+  - syscall|__syscall|SYS_[a-z_0-9]+
+  paths:
+  - myinitramfs/myinit/
+  - myinitramfs/myshell/
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QS-05
+  purpose: initramfs 顶层构建：子目录、编译器与 musl 路径
+  args:
+  - -n
+  - -E
+  - add_subdirectory|include_directories|CMAKE_C_COMPILER|MUSL_
+  paths:
+  - myinitramfs/CMakeLists.txt
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 7
+  expected_hits_active: 7
+- id: QS-06
+  purpose: 构建与安装脚本对 mylib 的引用
+  args:
+  - -n
+  - -w
+  - mylib
+  paths:
+  - myinitramfs/CMakeLists.txt
+  - myinitramfs/myinit/CMakeLists.txt
+  - myinitramfs/myshell/CMakeLists.txt
+  - make_install.sh
+  - scripts/
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QS-07
+  purpose: 仓库内旧 libc 的系统调用包装与 syscall 指令
+  args:
+  - -n
+  - -E
+  - ^SYSFUNC_DEF\((open|close|read|write|putstring)\)|"syscall[[:space:]]
+  paths:
+  - myinitramfs/mylib/myglibc/syscall/syscall.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 6
+  expected_hits_active: 6
+- id: QS-08
+  purpose: 旧 libc 中 freopen、writev、dup2、dup3、fflush 只出现在注释中
+  args:
+  - -n
+  - -w
+  - -E
+  - freopen|writev|dup2|dup3|fflush
+  paths:
+  - myinitramfs/mylib/
+  expect: comment_only
+  expected_rc: 0
+  expected_hits_total: 11
+  expected_hits_active: 0
+- id: QS-09
+  purpose: 安装脚本中的 musl 路径、链接方式与解释器改写
+  args:
+  - -n
+  - -E
+  - MUSL_|LINK_TYPE|patchelf
+  paths:
+  - scripts/make_install_initranfs.sh
+  - make_install.sh
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 12
+  expected_hits_active: 11
+- id: QS-10
+  purpose: 历史材料中的 musl 移植与系统调用说明（不作现状依据）
+  args:
+  - -n
+  - -E
+  - Ported musl|Currently support syscalls|io -- read, write, writev|syscall/syscall.c|configure --prefix=/home/cheyh/projs/musl|llibmylibc
+  paths:
+  - changelog.md
+  - user-guide/
+  - documents/useful_cmds.md
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 7
+  expected_hits_active: 7
+- id: QS-11
+  purpose: syscall 指令入口的 MSR 绑定与调用者
+  args:
+  - -n
+  - -E
+  - wrmsrl\(MSR_LSTAR|syscall_init\(\);
+  paths:
+  - mykernel/arch/x86_64/kernel/cpu/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QS-12
+  purpose: 配置面中的 CONFIG_INTEL_X64_GDT_LAYOUT
+  args:
+  - -n
+  - -w
+  - CONFIG_INTEL_X64_GDT_LAYOUT
+  paths:
+  - mykernel/scripts/options_flags.cmake
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QS-13
+  purpose: __NR_syscalls 的定义与使用
+  args:
+  - -n
+  - -w
+  - __NR_syscalls
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 3
+- id: QS-14
+  purpose: sys_call_table 的出现（定义与声明，没有分派使用）
+  args:
+  - -n
+  - -w
+  - sys_call_table
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 2
+- id: QS-15
+  purpose: x64_sys_call 的出现
+  args:
+  - -n
+  - -w
+  - x64_sys_call
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QS-16
+  purpose: ALERT_DUMMY_SYSCALL 的定义（1 处）与使用（7 处）
+  args:
+  - -n
+  - -E
+  - ALERT_DUMMY_SYSCALL\s*\(\s*\w+\s*,
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 8
+- id: QS-17
+  purpose: putstring 在用户树中的出现
+  args:
+  - -n
+  - -w
+  - putstring
+  paths:
+  - myinitramfs/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QS-18
+  purpose: 入口中把 ax 预置为 -ENOSYS 的写法
+  args:
+  - -n
+  - -F
+  - PUSH_AND_CLEAR_REGS rax=$-ENOSYS
+  paths:
+  - mykernel/arch/x86_64/entry/entry_64.S
+  expect: comment_only
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 0
+- id: QS-19
+  purpose: console_on_rootfs 的出现
+  args:
+  - -n
+  - -w
+  - console_on_rootfs
+  paths:
+  - mykernel/
+  expect: comment_only
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 0
+- id: QS-20
+  purpose: fdget、fdget_pos、fdget_raw 的出现
+  args:
+  - -n
+  - -E
+  - \bfdget(_pos|_raw)?\s*\(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 7
+  expected_hits_active: 6
+- id: QS-21
+  purpose: fdput、fdput_pos 的出现
+  args:
+  - -n
+  - -E
+  - \bfdput(_pos)?\s*\(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 9
+  expected_hits_active: 8
+- id: QS-22
+  purpose: myos_fdget_pos 的出现
+  args:
+  - -n
+  - -F
+  - myos_fdget_pos(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: QS-23
+  purpose: f_dupfd 的出现
+  args:
+  - -n
+  - -F
+  - f_dupfd(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: QS-24
+  purpose: RLIMIT_NOFILE 的初值与复制
+  args:
+  - -n
+  - -E
+  - \[RLIMIT_NOFILE\]|\.rlim[[:space:]]+= INIT_RLIMITS|memcpy\(sig->rlim
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QS-25
+  purpose: exec 中的 close-on-exec 与文件表处理
+  args:
+  - -n
+  - -E
+  - do_close_on_exec|unshare_files\(\)
+  paths:
+  - mykernel/sched/forkexec/exec.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 1
+- id: QS-26
+  purpose: F_GETFD、F_SETFD、F_SETFL 的 case：do_fcntl 中只在注释里，check_fcntl_cmd 的白名单中有活动 case
+  args:
+  - -n
+  - -E
+  - 'case F_(GETFD|SETFD|SETFL):'
+  paths:
+  - mykernel/fs/vfs/fcntl.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 2
+- id: QS-27
+  purpose: set_close_on_exec、get_close_on_exec 只有声明，没有定义与活动调用
+  args:
+  - -n
+  - -E
+  - \b(set|get)_close_on_exec\s*\(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 2
+- id: QS-28
+  purpose: fs/syscall.c 中对空槽的检查
+  args:
+  - -n
+  - -E
+  - fp[[:space:]]*==[[:space:]]*NULL|!fp\b|fp[[:space:]]*!=[[:space:]]*NULL
+  paths:
+  - mykernel/fs/syscall.c
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QS-29
+  purpose: nameidata 的 dfd 字段只被写入（set_nameidata），没有读取
+  args:
+  - -n
+  - -E
+  - -e
+  - '[a-z]->dfd\b'
+  paths:
+  - mykernel/fs/vfs/namei.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QS-30
+  purpose: file 对象回到 filp 缓存的位置
+  args:
+  - -n
+  - -F
+  - kmem_cache_free(filp_cachep
+  paths:
+  - mykernel/fs/vfs/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QS-31
+  purpose: do_fcntl 中 err 的初值
+  args:
+  - -n
+  - -F
+  - long err = -EINVAL;
+  paths:
+  - mykernel/fs/vfs/fcntl.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QS-32
+  purpose: 与文件、标准流有关的表项
+  args:
+  - -n
+  - -E
+  - __SYSCALL\(__NR_(read|write|open|close|lseek|ioctl|writev|dup|dup2|fcntl|putstring),
+  paths:
+  - mykernel/arch/x86_64/include/asm/syscalls_64.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 11
+  expected_hits_active: 11
+- id: QS-33
+  purpose: 这些表项的处理函数定义行
+  args:
+  - -n
+  - -E
+  - MYOS_SYSCALL_DEFINE[0-9]\((read|write|open|close|lseek|writev|dup|dup2|fcntl|ioctl|myos_putstring|no_syscall)[,)]
+  paths:
+  - mykernel/fs/syscall.c
+  - mykernel/arch/x86_64/myos/syscall.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 12
+  expected_hits_active: 12
+- id: QS-34
+  purpose: fget 的出现
+  args:
+  - -n
+  - -E
+  - \bfget\s*\(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QS-36
+  purpose: sh 启动时先调用的 tests.c 函数及其中的 libc 调用
+  args:
+  - -n
+  - -E
+  - \b(test_PrintDateTime|test_all|gettimeofday|perror|localtime|strftime)[[:space:]]*\(
+  paths:
+  - myinitramfs/myshell/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 10
+  expected_hits_active: 9
+- id: QS-37
+  purpose: 用户程序源码中的 writev
+  args:
+  - -n
+  - -w
+  - writev
+  paths:
+  - myinitramfs/myinit/
+  - myinitramfs/myshell/
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QS-38
+  purpose: fd 上界检查所在位置（close、lseek、退出扫描、fget）
+  args:
+  - -n
+  - -E
+  - fd >= curr->files->fd_count|i < files->fd_count|fd < files->fd_count
+  paths:
+  - mykernel/fs/syscall.c
+  - mykernel/fs/vfs/file.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 4
+- id: QS-35
+  purpose: 不在表中的几个号在 unistd_64.h 中的值
+  args:
+  - -n
+  - -E
+  - define[[:space:]]+__NR_(fstat|readv|openat|dup3)[[:space:]]
+  paths:
+  - mykernel/arch/x86_64/include/asm/unistd_64.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+structure_checks:
+- id: SS-01
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_read
+  regex: \bmyos_fdget_pos\s*\(
+  expected_count: 1
+  purpose: read 用 myos_fdget_pos
+- id: SS-02
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_read
+  regex: \bfdget_pos\s*\(
+  expected_count: 0
+  purpose: read 不用 fdget_pos
+- id: SS-03
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_write
+  regex: \bfdget_pos\s*\(
+  expected_count: 1
+  purpose: write 用 fdget_pos
+- id: SS-04
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_write
+  regex: \bfdput_pos\s*\(
+  expected_count: 1
+  purpose: write 返回前 fdput_pos
+- id: SS-05
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: do_writev
+  regex: \bfdget_pos\s*\(
+  expected_count: 1
+  purpose: writev 用 fdget_pos
+- id: SS-06
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: do_writev
+  regex: \bfdput_pos\s*\(
+  expected_count: 1
+  purpose: writev 返回前 fdput_pos
+- id: SS-07
+  kind: body_regex
+  path: mykernel/include/linux/fs/file.h
+  symbol: __to_fd
+  regex: \b(?:get_file|atomic_long_inc|fget)\s*\(
+  expected_count: 0
+  purpose: __to_fd 不取引用
+- id: SS-08
+  kind: body_regex
+  path: mykernel/fs/vfs/file.c
+  symbol: myos_fdget_pos
+  regex: \b(?:get_file|atomic_long_inc|fget)\s*\(
+  expected_count: 0
+  purpose: myos_fdget_pos 不取引用
+- id: SS-09
+  kind: body_regex
+  path: mykernel/fs/syscall.c
+  symbol: sys_fcntl
+  regex: \bfdget_raw\s*\(
+  expected_count: 1
+  purpose: fcntl 用 fdget_raw
+- id: SS-10
+  kind: body_regex
+  path: mykernel/fs/syscall.c
+  symbol: sys_fcntl
+  regex: \bfdput\s*\(
+  expected_count: 1
+  purpose: fcntl 返回前 fdput
+- id: SS-11
+  kind: body_regex
+  path: mykernel/fs/vfs/file_table.c
+  symbol: fput
+  regex: kmem_cache_free\s*\(\s*filp_cachep
+  expected_count: 1
+  purpose: fput 归零时释放回 filp 缓存
+- id: SS-12
+  kind: body_regex
+  path: mykernel/arch/x86_64/myos/syscall.c
+  symbol: sys_ioctl
+  regex: \breturn\b
+  expected_count: 1
+  purpose: ioctl 只有一个 return
+- id: SS-13
+  kind: body_regex
+  path: mykernel/arch/x86_64/myos/syscall.c
+  symbol: sys_ioctl
+  regex: \bfdget\w*\s*\(|\bf_op\b|\bcmd\b
+  expected_count: 0
+  purpose: ioctl 不取 fd、不看 f_op、不看 cmd
+- id: SS-14
+  kind: body_regex
+  path: mykernel/arch/x86_64/myos/syscall.c
+  symbol: sys_myos_putstring
+  regex: \b(?:copy_from_user|strncpy_from_user|strndup_user|access_ok)\s*\(
+  expected_count: 0
+  purpose: putstring 不复制、不检查用户字符串
+- id: SS-15
+  kind: body_regex
+  path: mykernel/arch/x86_64/entry/common.c
+  symbol: do_syscall_64
+  regex: regs->ax\s*=
+  expected_count: 1
+  purpose: do_syscall_64 只在号小于 __NR_syscalls 时写一次 ax
+- id: SS-16
+  kind: body_regex
+  path: mykernel/sched/forkexec/exec.c
+  symbol: begin_new_exec
+  regex: \bdo_close_on_exec\s*\(
+  expected_count: 0
+  purpose: exec 没有活动的 do_close_on_exec 调用
+- id: SS-17
+  kind: body_regex
+  path: mykernel/fs/vfs/fcntl.c
+  symbol: do_fcntl
+  regex: \bcase\s+F_(?:GETFD|SETFD|SETFL)\b
+  expected_count: 0
+  purpose: do_fcntl 没有 F_GETFD、F_SETFD、F_SETFL 的活动分支
+- id: SS-18
+  kind: body_regex
+  path: mykernel/fs/vfs/fcntl.c
+  symbol: do_fcntl
+  regex: '\bcase\s+F_DUPFD(?:_CLOEXEC)?\s*:'
+  expected_count: 2
+  purpose: do_fcntl 有 F_DUPFD 与 F_DUPFD_CLOEXEC 两个活动分支
+- id: SS-19
+  kind: body_regex
+  path: mykernel/fs/syscall.c
+  symbol: sys_lseek
+  regex: fp\s*==\s*NULL|!\s*fp\b|fp\s*!=\s*NULL
+  expected_count: 0
+  purpose: lseek 不检查空槽
+- id: SS-20
+  kind: body_regex
+  path: mykernel/fs/vfs/namei.c
+  symbol: path_init
+  regex: \bdfd\b
+  expected_count: 0
+  purpose: path_init 不读 dfd
+- id: SS-21
+  kind: body_regex
+  path: mykernel/fs/vfs/file.c
+  symbol: f_dupfd
+  regex: \bNR_OPEN_DEFAULT\b|\bfd_count\b
+  expected_count: 0
+  purpose: f_dupfd 不按 fd 表长度收紧上界
+- id: SS-22
+  kind: body_regex
+  path: mykernel/fs/vfs/file.c
+  symbol: alloc_fd
+  regex: \bflags\b
+  expected_count: 0
+  purpose: alloc_fd 的函数体不使用 flags（O_CLOEXEC 无处存放）
+- id: SS-23
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_writev
+  regex: \bret\s*\+=
+  expected_count: 1
+  purpose: vfs_writev 把每段 ->write 的返回值直接相加
+value_tables:
+- id: VT-SYSTAB
+  type: syscall_table
+  purpose: 由 syscalls_64.h 的活动表项、unistd_64.h 的号与 MYOS_SYSCALL_DEFINEn 定义行重算的分派表；dummy 表示函数体含活动的 ALERT_DUMMY_SYSCALL（不等于空实现），returns 为函数体中活动 return 的个数
+  sources:
+  - mykernel/arch/x86_64/include/asm/syscalls_64.h
+  - mykernel/arch/x86_64/include/asm/unistd_64.h
+  - git grep MYOS_SYSCALL_DEFINE[0-6] -- mykernel
+  assumptions:
+  - '号按 unistd_64.h 中活动的 #define __NR_x N 求值；__NR_syscalls 在 #ifdef __KERNEL__ 内，内核编译选项含 -D__KERNEL__（AS2-20）'
+  - 定义行以 MYOS_SYSCALL_DEFINEn(name 识别，跳过注释与宏定义本身；函数体范围来自 scan_index 的大括号匹配
+  rows:
+  - table_line: 1
+    nr_expr: __NR_syscalls - 1
+    sym: sys_no_syscall
+    nr: 452
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 24
+    argc: 0
+    dummy: false
+    returns: 1
+  - table_line: 4
+    nr_expr: __NR_read
+    sym: sys_read
+    nr: 0
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 11
+    argc: 3
+    dummy: false
+    returns: 1
+  - table_line: 5
+    nr_expr: __NR_write
+    sym: sys_write
+    nr: 1
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 17
+    argc: 3
+    dummy: false
+    returns: 1
+  - table_line: 6
+    nr_expr: __NR_open
+    sym: sys_open
+    nr: 2
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 38
+    argc: 3
+    dummy: false
+    returns: 1
+  - table_line: 7
+    nr_expr: __NR_close
+    sym: sys_close
+    nr: 3
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 45
+    argc: 1
+    dummy: false
+    returns: 2
+  - table_line: 11
+    nr_expr: __NR_lseek
+    sym: sys_lseek
+    nr: 8
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 75
+    argc: 3
+    dummy: false
+    returns: 3
+  - table_line: 12
+    nr_expr: __NR_mmap
+    sym: sys_mmap
+    nr: 9
+    definitions: 1
+    def_path: mykernel/mm/vm_map/mmap.c
+    def_line: 1312
+    argc: 6
+    dummy: false
+    returns: 3
+  - table_line: 13
+    nr_expr: __NR_mprotect
+    sym: sys_mprotect
+    nr: 10
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 185
+    argc: 3
+    dummy: true
+    returns: 1
+  - table_line: 14
+    nr_expr: __NR_munmap
+    sym: sys_munmap
+    nr: 11
+    definitions: 1
+    def_path: mykernel/mm/vm_map/mmap.c
+    def_line: 1342
+    argc: 2
+    dummy: false
+    returns: 1
+  - table_line: 15
+    nr_expr: __NR_brk
+    sym: sys_brk
+    nr: 12
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 39
+    argc: 1
+    dummy: false
+    returns: 2
+  - table_line: 16
+    nr_expr: __NR_rt_sigaction
+    sym: sys_rt_sigaction
+    nr: 13
+    definitions: 1
+    def_path: mykernel/lock_IPC/syscall.c
+    def_line: 22
+    argc: 4
+    dummy: false
+    returns: 5
+  - table_line: 17
+    nr_expr: __NR_rt_sigprocmask
+    sym: sys_rt_sigprocmask
+    nr: 14
+    definitions: 1
+    def_path: mykernel/lock_IPC/syscall.c
+    def_line: 55
+    argc: 4
+    dummy: false
+    returns: 5
+  - table_line: 18
+    nr_expr: __NR_rt_sigreturn
+    sym: sys_rt_sigreturn
+    nr: 15
+    definitions: 1
+    def_path: mykernel/arch/x86_64/lock_IPC/signal/signal_64.c
+    def_line: 244
+    argc: 0
+    dummy: false
+    returns: 2
+  - table_line: 20
+    nr_expr: __NR_ioctl
+    sym: sys_ioctl
+    nr: 16
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 131
+    argc: 3
+    dummy: true
+    returns: 1
+  - table_line: 22
+    nr_expr: __NR_writev
+    sym: sys_writev
+    nr: 20
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 95
+    argc: 3
+    dummy: false
+    returns: 1
+  - table_line: 24
+    nr_expr: __NR_sched_yield
+    sym: sys_sched_yield
+    nr: 24
+    definitions: 1
+    def_path: mykernel/sched/syscall.c
+    def_line: 22
+    argc: 0
+    dummy: false
+    returns: 1
+  - table_line: 26
+    nr_expr: __NR_dup
+    sym: sys_dup
+    nr: 32
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 103
+    argc: 1
+    dummy: true
+    returns: 0
+  - table_line: 27
+    nr_expr: __NR_dup2
+    sym: sys_dup2
+    nr: 33
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 121
+    argc: 2
+    dummy: true
+    returns: 0
+  - table_line: 29
+    nr_expr: __NR_getpid
+    sym: sys_getpid
+    nr: 39
+    definitions: 1
+    def_path: mykernel/sched/syscall.c
+    def_line: 45
+    argc: 0
+    dummy: false
+    returns: 1
+  - table_line: 31
+    nr_expr: __NR_fork
+    sym: sys_fork
+    nr: 57
+    definitions: 1
+    def_path: mykernel/sched/syscall.c
+    def_line: 51
+    argc: 0
+    dummy: false
+    returns: 1
+  - table_line: 33
+    nr_expr: __NR_execve
+    sym: sys_execve
+    nr: 59
+    definitions: 1
+    def_path: mykernel/sched/forkexec/exec.c
+    def_line: 1460
+    argc: 3
+    dummy: false
+    returns: 1
+  - table_line: 34
+    nr_expr: __NR_exit
+    sym: sys_exit
+    nr: 60
+    definitions: 1
+    def_path: mykernel/sched/syscall.c
+    def_line: 68
+    argc: 1
+    dummy: true
+    returns: 0
+  - table_line: 35
+    nr_expr: __NR_wait4
+    sym: sys_wait4
+    nr: 61
+    definitions: 1
+    def_path: mykernel/sched/syscall.c
+    def_line: 76
+    argc: 4
+    dummy: false
+    returns: 0
+  - table_line: 36
+    nr_expr: __NR_kill
+    sym: sys_kill
+    nr: 62
+    definitions: 1
+    def_path: mykernel/lock_IPC/syscall.c
+    def_line: 91
+    argc: 2
+    dummy: true
+    returns: 1
+  - table_line: 38
+    nr_expr: __NR_fcntl
+    sym: sys_fcntl
+    nr: 72
+    definitions: 1
+    def_path: mykernel/fs/syscall.c
+    def_line: 140
+    argc: 3
+    dummy: false
+    returns: 1
+  - table_line: 41
+    nr_expr: __NR_getcwd
+    sym: sys_getcwd
+    nr: 79
+    definitions: 1
+    def_path: mykernel/fs/vfs/d_path.c
+    def_line: 196
+    argc: 2
+    dummy: false
+    returns: 1
+  - table_line: 42
+    nr_expr: __NR_chdir
+    sym: sys_chdir
+    nr: 80
+    definitions: 1
+    def_path: mykernel/fs/vfs/open.c
+    def_line: 272
+    argc: 1
+    dummy: false
+    returns: 1
+  - table_line: 44
+    nr_expr: __NR_mkdir
+    sym: sys_mkdir
+    nr: 83
+    definitions: 1
+    def_path: mykernel/fs/vfs/namei.c
+    def_line: 999
+    argc: 2
+    dummy: false
+    returns: 1
+  - table_line: 45
+    nr_expr: __NR_rmdir
+    sym: sys_rmdir
+    nr: 84
+    definitions: 1
+    def_path: mykernel/fs/vfs/namei.c
+    def_line: 1092
+    argc: 1
+    dummy: false
+    returns: 1
+  - table_line: 46
+    nr_expr: __NR_creat
+    sym: sys_creat
+    nr: 85
+    definitions: 1
+    def_path: mykernel/fs/vfs/namei.c
+    def_line: 932
+    argc: 2
+    dummy: false
+    returns: 1
+  - table_line: 48
+    nr_expr: __NR_unlink
+    sym: sys_unlink
+    nr: 87
+    definitions: 1
+    def_path: mykernel/fs/vfs/namei.c
+    def_line: 1197
+    argc: 1
+    dummy: false
+    returns: 1
+  - table_line: 50
+    nr_expr: __NR_gettimeofday
+    sym: sys_gettimeofday
+    nr: 96
+    definitions: 1
+    def_path: mykernel/time/syscall.c
+    def_line: 12
+    argc: 2
+    dummy: false
+    returns: 2
+  - table_line: 57
+    nr_expr: __NR_getppid
+    sym: sys_getppid
+    nr: 110
+    definitions: 1
+    def_path: mykernel/sched/syscall.c
+    def_line: 115
+    argc: 0
+    dummy: false
+    returns: 1
+  - table_line: 59
+    nr_expr: __NR_arch_prctl
+    sym: sys_arch_prctl
+    nr: 158
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 192
+    argc: 2
+    dummy: false
+    returns: 1
+  - table_line: 60
+    nr_expr: __NR_reboot
+    sym: sys_reboot
+    nr: 169
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 160
+    argc: 2
+    dummy: false
+    returns: 1
+  - table_line: 65
+    nr_expr: __NR_futex
+    sym: sys_futex
+    nr: 202
+    definitions: 1
+    def_path: mykernel/lock_IPC/syscall.c
+    def_line: 104
+    argc: 6
+    dummy: false
+    returns: 3
+  - table_line: 67
+    nr_expr: __NR_getdents64
+    sym: sys_getdents64
+    nr: 217
+    definitions: 1
+    def_path: mykernel/fs/vfs/readdir.c
+    def_line: 132
+    argc: 3
+    dummy: false
+    returns: 2
+  - table_line: 69
+    nr_expr: __NR_set_tid_address
+    sym: sys_set_tid_address
+    nr: 218
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 203
+    argc: 1
+    dummy: false
+    returns: 1
+  - table_line: 71
+    nr_expr: __NR_clock_gettime
+    sym: sys_clock_gettime
+    nr: 228
+    definitions: 1
+    def_path: mykernel/time/syscall.c
+    def_line: 33
+    argc: 2
+    dummy: false
+    returns: 2
+  - table_line: 73
+    nr_expr: __NR_exit_group
+    sym: sys_exit_group
+    nr: 231
+    definitions: 1
+    def_path: mykernel/sched/syscall.c
+    def_line: 133
+    argc: 1
+    dummy: true
+    returns: 1
+  - table_line: 80
+    nr_expr: __NR_putstring
+    sym: sys_myos_putstring
+    nr: 451
+    definitions: 1
+    def_path: mykernel/arch/x86_64/myos/syscall.c
+    def_line: 30
+    argc: 1
+    dummy: false
+    returns: 1
+  commented_entries:
+  - table_line: 9
+    nr_expr: __NR_newfstat
+    sym: sys_newfstat
+  - table_line: 32
+    nr_expr: __NR_vfork
+    sym: sys_vfork
+  - table_line: 40
+    nr_expr: __NR_getdents
+    sym: sys_getdents
+  - table_line: 47
+    nr_expr: __NR_link
+    sym: sys_link
+  - table_line: 52
+    nr_expr: __NR_getuid
+    sym: sys_getuid
+  - table_line: 53
+    nr_expr: __NR_getgid
+    sym: sys_getuid
+  - table_line: 54
+    nr_expr: __NR_geteuid
+    sym: sys_geteuid
+  - table_line: 55
+    nr_expr: __NR_getegid
+    sym: sys_geteuid
+  - table_line: 62
+    nr_expr: __NR_init_module
+    sym: sys_init_module
+  - table_line: 63
+    nr_expr: __NR_delete_module
+    sym: sys_delete_module
+  - table_line: 76
+    nr_expr: __NR_set_robust_list
+    sym: sys_set_robust_list
+  - table_line: 78
+    nr_expr: __NR_rseq
+    sym: sys_rseq
+  summary:
+    entries: 41
+    nr_syscalls: 453
+    unique_numbers: true
+    all_resolved: true
+    all_below_nr_syscalls: true
+    all_defined_once: true
+    without_active_return:
+    - sys_dup
+    - sys_dup2
+    - sys_exit
+    - sys_wait4
+    dummy:
+    - sys_dup
+    - sys_dup2
+    - sys_exit
+    - sys_exit_group
+    - sys_ioctl
+    - sys_kill
+    - sys_mprotect
+- id: VT-FDLIMITS
+  type: fd_limits
+  purpose: fd 表长度、RLIMIT_NOFILE 初值、fdput 的标志位与两种 fdget 写法返回的 flags，并由此得出三项推论
+  sources:
+  - mykernel/include/linux/kernel/fdtable.h
+  - mykernel/include/uapi/linux/fs.h
+  - mykernel/include/uapi/asm-generic/resource.h
+  - mykernel/include/linux/fs/file.h
+  - mykernel/fs/vfs/file.c
+  assumptions:
+  - RLIMIT_NOFILE 的初值经 init_signals.rlim = INIT_RLIMITS（AS3-07）给 init_task，fork 时由 copy_signal 按值复制（AS3-08）；运行中是否被改写未追（没有 setrlimit 表项，VT-SYSTAB）
+  values:
+    NR_OPEN_DEFAULT: 256
+    NR_OPEN_MAX: NR_OPEN_DEFAULT
+    fd_array_size: NR_OPEN_DEFAULT
+    INR_OPEN_CUR: 1024
+    RLIMIT_NOFILE_initial: INR_OPEN_CUR
+    FDPUT_FPUT: 1
+    to_fd_flags: 3
+    myos_fdget_pos_flags: 0
+    init_files_fd_count: 0
+    dup_fd_sets_fd_count: NR_OPEN_DEFAULT
+    f_dupfd_bound: RLIMIT_NOFILE
+    f_dupfd_alloc_end: nofile
+    to_fd_implies_fput: true
+    myos_fdget_pos_implies_fput: false
+    nofile_exceeds_table: true

@@ -1,0 +1,3614 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83",
+  "record_type": "fixed_source_semantic_facts_and_boundaries",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "date": "2026-11-13",
+  "produced_by": "GPT-6 (self-report, backend unknown)",
+  "model_per_owner": "GPT-6 + Extra (Owner selected)",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "b129d706e350",
+  "execution_parent_short12": "3f41eb242040",
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/mm/fault/memfault_api.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/mm/fault/pgtable.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    },
+    {
+      "path": "mykernel/mm/misc/init-mm.c",
+      "ref": "time@a039d9803ade",
+      "use": "source symbol and body evidence"
+    }
+  ],
+  "source_fact_index": {
+    "mapping_macro_init_true": {
+      "id": "A01",
+      "key": "mapping_macro_init_true",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "kernel_physical_mapping_init",
+      "quote": "#define kernel_physical_mapping_init(paddr_start,\t\t\t\\\n\t\t\t\tpaddr_end, page_size_mask, prot)\t\t\t\\\n\t\t\t__kernel_physical_mapping_init(paddr_start,\t\t\\\n\t\t\t\t\tpaddr_end, page_size_mask, prot, true)",
+      "first": 27,
+      "last": 30,
+      "scope_first": 27,
+      "scope_last": 30
+    },
+    "change_macro_init_false": {
+      "id": "A02",
+      "key": "change_macro_init_false",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "kernel_physical_mapping_change",
+      "quote": "#define kernel_physical_mapping_change(paddr_start,\t\t\t\\\n\t\t\t\tpaddr_end, page_size_mask)\t\t\t\t\t\\\n\t\t\t__kernel_physical_mapping_init(paddr_start,\t\t\\\n\t\t\t\t\tpaddr_end, page_size_mask,\t\t\t\t\\\n\t\t\t\t\t\tPAGE_KERNEL, false)",
+      "first": 38,
+      "last": 42,
+      "scope_first": 38,
+      "scope_last": 42
+    },
+    "root_signature": {
+      "id": "A03",
+      "key": "root_signature",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "static ulong __meminit\n__kernel_physical_mapping_init(ulong paddr_start,\n\t\tulong paddr_end, ulong page_size_mask,\n\t\tpgprot_t prot, bool init) {",
+      "first": 823,
+      "last": 826,
+      "scope_first": 823,
+      "scope_last": 864
+    },
+    "root_initial_addr_conversion": {
+      "id": "A04",
+      "key": "root_initial_addr_conversion",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\tulong vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;\n\n\tpaddr_last = paddr_end;\n\tvaddr = (ulong)__va(paddr_start);\n\tvaddr_end = (ulong)__va(paddr_end);",
+      "first": 829,
+      "last": 833,
+      "scope_first": 823,
+      "scope_last": 864
+    },
+    "root_loop_and_boundary": {
+      "id": "A05",
+      "key": "root_loop_and_boundary",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\tfor (; vaddr < vaddr_end; vaddr = vaddr_next) {\n\t\tpgd_t *pgd = pgd_offset_k(vaddr);\n\t\tp4d_t *p4d;\n\n\t\tvaddr_next = (vaddr & PGDIR_MASK) + PGDIR_SIZE;",
+      "first": 836,
+      "last": 840,
+      "scope_first": 823,
+      "scope_last": 864
+    },
+    "root_reuse_existing_nonzero": {
+      "id": "A06",
+      "key": "root_reuse_existing_nonzero",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\t\tif (pgd_val(*pgd)) {\n\t\t\tp4d = (p4d_t *)pgd_page_vaddr(*pgd);\n\t\t\tpaddr_last = phys_p4d_init(p4d,\n\t\t\t\t\t__pa(vaddr), __pa(vaddr_end),\n\t\t\t\t\tpage_size_mask, prot, init);",
+      "first": 842,
+      "last": 846,
+      "scope_first": 823,
+      "scope_last": 864
+    },
+    "root_alloc_before_child": {
+      "id": "A07",
+      "key": "root_alloc_before_child",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\t\tp4d = alloc_low_page();\n\t\tpaddr_last = phys_p4d_init(p4d, __pa(vaddr),\n\t\t\t__pa(vaddr_end), page_size_mask, prot, init);\n",
+      "first": 850,
+      "last": 853,
+      "scope_first": 823,
+      "scope_last": 864
+    },
+    "root_publish_after_recursion": {
+      "id": "A08",
+      "key": "root_publish_after_recursion",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\t\tspin_lock(&init_mm.page_table_lock);\n\t\tp4d_populate_init(&init_mm, p4d_offset(pgd, vaddr),\n\t\t\t\t(pud_t *) p4d, init);\n\t\tspin_unlock(&init_mm.page_table_lock);",
+      "first": 854,
+      "last": 857,
+      "scope_first": 823,
+      "scope_last": 864
+    },
+    "root_return_and_sync_comment": {
+      "id": "A09",
+      "key": "root_return_and_sync_comment",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\t\tpgd_changed = true;\n\t}\n\t// if (pgd_changed)\n\t// \tsync_global_pgds(vaddr_start, vaddr_end - 1);\n\treturn paddr_last;",
+      "first": 859,
+      "last": 863,
+      "scope_first": 823,
+      "scope_last": 864
+    },
+    "folded_p4d_macro": {
+      "id": "A10",
+      "key": "folded_p4d_macro",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_p4d_init",
+      "quote": "#define phys_p4d_init(p4d_page, paddr, paddr_end,\t\t\t\t\t\\\n\t\t\t\tpage_size_mask, prot, init)\t\t\t\t\t\t\t\\\n\t\t\tphys_pud_init((pud_t *)(p4d_page), (paddr),\t\t\t\t\\\n\t\t\t\t\t(paddr_end), (page_size_mask), (prot), (init))",
+      "first": 818,
+      "last": 821,
+      "scope_first": 818,
+      "scope_last": 821
+    },
+    "pgd_in_mm_pointer": {
+      "id": "A11",
+      "key": "pgd_in_mm_pointer",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "pgd_entp_in_mm",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tpgd_t\n\t\t*pgd_entp_in_mm(mm_s *mmp, ulong vaddr) {\n\t\t\treturn (mmp->pgd + pgd_index(vaddr));\n\t\t};",
+      "first": 168,
+      "last": 172,
+      "scope_first": 168,
+      "scope_last": 172
+    },
+    "pgd_offset_k_alias": {
+      "id": "A12",
+      "key": "pgd_offset_k_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pgd_offset_k",
+      "quote": "\t#define pgd_offset_k(address)\tpgd_offset(&init_mm, (address))",
+      "first": 82,
+      "last": 82,
+      "scope_first": 82,
+      "scope_last": 82
+    },
+    "pgd_index_alias": {
+      "id": "A13",
+      "key": "pgd_index_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pgd_index",
+      "quote": "\t#define pgd_index\t\t\t\tent_index_in_p4d",
+      "first": 94,
+      "last": 94,
+      "scope_first": 94,
+      "scope_last": 94
+    },
+    "root_index_mask": {
+      "id": "A14",
+      "key": "root_index_mask",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "ent_index_in_p4d",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tulong\n\t\tent_index_in_p4d(ulong vaddr) {\n\t\t\treturn (vaddr >> P4D_SHIFT) & (PTRS_PER_P4D - 1);\n\t\t}",
+      "first": 191,
+      "last": 195,
+      "scope_first": 191,
+      "scope_last": 195
+    },
+    "folded_p4d_cast": {
+      "id": "A15",
+      "key": "folded_p4d_cast",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "p4d_entp_from_vaddr_and_pgd_entp",
+      "quote": "\t\tp4d_t\n\t\t*p4d_entp_from_vaddr_and_pgd_entp(\n\t\t\t\tpgd_t *pgd_entp, ulong vaddr) {\n\t\t\treturn ((p4d_t *)pgd_entp);\n\t\t};",
+      "first": 197,
+      "last": 201,
+      "scope_first": 196,
+      "scope_last": 201
+    },
+    "folded_p4d_offset_alias": {
+      "id": "A16",
+      "key": "folded_p4d_offset_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "p4d_offset",
+      "quote": "\t#define p4d_offset\t\tp4d_entp_from_vaddr_and_pgd_entp",
+      "first": 77,
+      "last": 77,
+      "scope_first": 77,
+      "scope_last": 77
+    },
+    "pud_index_alias": {
+      "id": "A17",
+      "key": "pud_index_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pud_index",
+      "quote": "\t#define pud_index\t\tent_index_in_pud",
+      "first": 72,
+      "last": 72,
+      "scope_first": 72,
+      "scope_last": 72
+    },
+    "pmd_index_alias": {
+      "id": "A18",
+      "key": "pmd_index_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pmd_index",
+      "quote": "\t#define pmd_index\t\tent_index_in_pmd",
+      "first": 73,
+      "last": 73,
+      "scope_first": 73,
+      "scope_last": 73
+    },
+    "pud_index_formula": {
+      "id": "A19",
+      "key": "pud_index_formula",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "ent_index_in_pud",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tulong\n\t\tent_index_in_pud(ulong vaddr) {\n\t\t\treturn (vaddr >> PUD_SHIFT) & (PTRS_PER_PUD - 1);\n\t\t}",
+      "first": 232,
+      "last": 236,
+      "scope_first": 232,
+      "scope_last": 236
+    },
+    "pmd_index_formula": {
+      "id": "A20",
+      "key": "pmd_index_formula",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "ent_index_in_pmd",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tulong\n\t\tent_index_in_pmd(ulong vaddr) {\n\t\t\treturn (vaddr >> PMD_SHIFT) & (PTRS_PER_PMD - 1);\n\t\t}",
+      "first": 273,
+      "last": 277,
+      "scope_first": 273,
+      "scope_last": 277
+    },
+    "pmd_offset_real": {
+      "id": "A21",
+      "key": "pmd_offset_real",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "pmd_entp_from_vaddr_and_pud_entp",
+      "quote": "\t\tpmd_t\n\t\t*pmd_entp_from_vaddr_and_pud_entp(pud_t *pud_entp, ulong vaddr) {\n\t\t\treturn (pmd_t *)pude_pointed_page_vaddr(*pud_entp) +\n\t\t\t\t\t\tent_index_in_pmd(vaddr);\n\t\t}",
+      "first": 280,
+      "last": 284,
+      "scope_first": 279,
+      "scope_last": 284
+    },
+    "pmd_offset_alias": {
+      "id": "A22",
+      "key": "pmd_offset_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pmd_offset",
+      "quote": "\t#define pmd_offset\t\tpmd_entp_from_vaddr_and_pud_entp",
+      "first": 79,
+      "last": 79,
+      "scope_first": 79,
+      "scope_last": 79
+    },
+    "pgd_nonzero_alias": {
+      "id": "A23",
+      "key": "pgd_nonzero_alias",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "symbol": "pgd_val",
+      "quote": "\t#define pgd_val\t\t\t\tp4d_val",
+      "first": 97,
+      "last": 97,
+      "scope_first": 97,
+      "scope_last": 97
+    },
+    "root_existing_vaddr_alias": {
+      "id": "A24",
+      "key": "root_existing_vaddr_alias",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "symbol": "pgd_page_vaddr",
+      "quote": "\t#define pgd_page_vaddr\t\tp4d_page_vaddr",
+      "first": 95,
+      "last": 95,
+      "scope_first": 95,
+      "scope_last": 95
+    },
+    "p4d_pointed_page_virtual": {
+      "id": "A25",
+      "key": "p4d_pointed_page_virtual",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "p4de_pointed_page_vaddr",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tulong\n\t\tp4de_pointed_page_vaddr(p4d_t p4d_ent) {\n\t\t\treturn (ulong)__va(p4de_pointed_page_paddr(p4d_ent));\n\t\t}",
+      "first": 312,
+      "last": 316,
+      "scope_first": 312,
+      "scope_last": 316
+    },
+    "init_mm_root_pointer": {
+      "id": "A26",
+      "key": "init_mm_root_pointer",
+      "path": "mykernel/mm/misc/init-mm.c",
+      "symbol": "init_mm",
+      "quote": "mm_s init_mm = {\n\t// .mm_mt\t\t\t\t= MTREE_INIT_EXT(mm_mt, MM_MT_FLAGS, init_mm.mmap_lock),\n\t.pgd\t\t\t\t= swapper_pg_dir,\n\t.mm_users\t\t\t= ATOMIC_INIT(2),",
+      "first": 29,
+      "last": 32,
+      "scope_first": 29,
+      "scope_last": 60
+    },
+    "swapper_root_alias": {
+      "id": "A27",
+      "key": "swapper_root_alias",
+      "path": "mykernel/mm/fault/memfault_api.h",
+      "symbol": "swapper_pg_dir",
+      "quote": "\t#define swapper_pg_dir init_top_pgt",
+      "first": 18,
+      "last": 18,
+      "scope_first": 18,
+      "scope_last": 18
+    },
+    "init_root_array": {
+      "id": "A28",
+      "key": "init_root_array",
+      "path": "mykernel/mm/misc/init-mm.c",
+      "symbol": "init_top_pgt",
+      "quote": "pgd_t\tinit_top_pgt[ENT_PER_TABLE]__aligned(PAGE_SIZE);",
+      "first": 14,
+      "last": 14,
+      "scope_first": 14,
+      "scope_last": 14
+    },
+    "directmap_va_offset": {
+      "id": "A29",
+      "key": "directmap_va_offset",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_OFFSET",
+      "quote": "\t#define PAGE_OFFSET\t\t\t\t((ulong)__PAGE_OFFSET)",
+      "first": 39,
+      "last": 39,
+      "scope_first": 39,
+      "scope_last": 39
+    },
+    "page_offset_base_constant": {
+      "id": "A30",
+      "key": "page_offset_base_constant",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "__PAGE_OFFSET_BASE_L4",
+      "quote": "\t#define __PAGE_OFFSET_BASE_L4\t_AC(0xffff800000000000, UL)",
+      "first": 75,
+      "last": 75,
+      "scope_first": 75,
+      "scope_last": 75
+    },
+    "physical_to_virtual_macro": {
+      "id": "A31",
+      "key": "physical_to_virtual_macro",
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "symbol": "__va",
+      "quote": "\t#  define __va(x)\t((void *)(ulong)(x) + PAGE_OFFSET)",
+      "first": 25,
+      "last": 25,
+      "scope_first": 25,
+      "scope_last": 25
+    },
+    "virtual_to_physical_macro": {
+      "id": "A32",
+      "key": "virtual_to_physical_macro",
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "symbol": "__pa",
+      "quote": "\t#  define __pa(x)\t__phys_addr((ulong)(x))",
+      "first": 6,
+      "last": 6,
+      "scope_first": 6,
+      "scope_last": 6
+    },
+    "physical_retranslation_arithmetic": {
+      "id": "A33",
+      "key": "physical_retranslation_arithmetic",
+      "path": "mykernel/arch/x86_64/mm/page/page_arch.h",
+      "symbol": "__phys_addr_nodebug",
+      "quote": "\t\t__phys_addr_nodebug(ulong x) {\n\t\t\tulong y = x - __START_KERNEL_map;\n\n\t\t\t/* use the carry flag to determine if x was < __START_KERNEL_map */\n\t\t\tx = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));",
+      "first": 40,
+      "last": 44,
+      "scope_first": 38,
+      "scope_last": 47
+    },
+    "root_shift": {
+      "id": "A34",
+      "key": "root_shift",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PGDIR_SHIFT",
+      "quote": "\t#define PGDIR_SHIFT\t\t\tP4D_SHIFT",
+      "first": 270,
+      "last": 270,
+      "scope_first": 270,
+      "scope_last": 270
+    },
+    "root_size": {
+      "id": "A35",
+      "key": "root_size",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PGDIR_SIZE",
+      "quote": "\t#define PGDIR_SIZE\t\t\t(_AC(1, UL) << PGDIR_SHIFT)",
+      "first": 280,
+      "last": 280,
+      "scope_first": 280,
+      "scope_last": 280
+    },
+    "pud_shift": {
+      "id": "A36",
+      "key": "pud_shift",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PUD_SHIFT",
+      "quote": "\t#define PUD_SHIFT\t\t\t30",
+      "first": 254,
+      "last": 254,
+      "scope_first": 254,
+      "scope_last": 254
+    },
+    "pmd_shift": {
+      "id": "A37",
+      "key": "pmd_shift",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PMD_SHIFT",
+      "quote": "\t#define PMD_SHIFT\t\t\t21",
+      "first": 260,
+      "last": 260,
+      "scope_first": 260,
+      "scope_last": 260
+    },
+    "one_page_alloc_wrapper": {
+      "id": "A38",
+      "key": "one_page_alloc_wrapper",
+      "path": "mykernel/arch/x86_64/mm/page/page_arch.h",
+      "symbol": "alloc_low_page",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tvoid\n\t\t*alloc_low_page(void) {\n\t\t\treturn alloc_low_pages(1);\n\t\t}",
+      "first": 89,
+      "last": 93,
+      "scope_first": 89,
+      "scope_last": 93
+    },
+    "pud_signature_initial_index": {
+      "id": "B01",
+      "key": "pud_signature_initial_index",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\n\tulong pages = 0, paddr_next;\n\tulong paddr_last = paddr_end;\n\tulong vaddr = (ulong)__va(paddr);\n\tint i = pud_index(vaddr);",
+      "first": 747,
+      "last": 751,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_slot_va_and_next": {
+      "id": "B02",
+      "key": "pud_slot_va_and_next",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\tpgprot_t prot = _prot;\n\n\t\tvaddr = (ulong)__va(paddr);\n\t\tpud = pud_page + pud_index(vaddr);\n\t\tpaddr_next = (paddr & PUD_MASK) + PUD_SIZE;",
+      "first": 756,
+      "last": 760,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_limit_nonleaf_decision": {
+      "id": "B03",
+      "key": "pud_limit_nonleaf_decision",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\t\tcontinue;\n\n\t\tif (!pud_none(*pud)) {\n\t\t\tif (!pud_leaf(*pud)) {\n\t\t\t\tpmd = pmd_offset(pud, 0);",
+      "first": 764,
+      "last": 768,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_existing_child_recursion": {
+      "id": "B04",
+      "key": "pud_existing_child_recursion",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\t\t\tpmd = pmd_offset(pud, 0);\n\t\t\t\tpaddr_last =\n\t\t\t\t\tphys_pmd_init(pmd, paddr, paddr_end,\n\t\t\t\t\t\tpage_size_mask, prot, init);\n\t\t\t\tcontinue;",
+      "first": 768,
+      "last": 772,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_large_reuse_or_old_prot": {
+      "id": "B05",
+      "key": "pud_large_reuse_or_old_prot",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\t\t\tpaddr_last = paddr_next;\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tprot = pte_pgprot(pte_clrhuge(*(pte_t *)pud));\n\t\t}",
+      "first": 789,
+      "last": 793,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_new_large_leaf_choice": {
+      "id": "B06",
+      "key": "pud_new_large_leaf_choice",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\tif (page_size_mask & (1<<PG_LEVEL_1G)) {\n\t\t\tpages++;\n\t\t\tspin_lock(&init_mm.page_table_lock);\n\t\t\tset_pud_init(pud,\n\t\t\t\tpfn_pud(paddr >> PAGE_SHIFT, prot_sethuge(prot)),",
+      "first": 795,
+      "last": 799,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_large_write_return": {
+      "id": "B07",
+      "key": "pud_large_write_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\t\t\tpfn_pud(paddr >> PAGE_SHIFT, prot_sethuge(prot)),\n\t\t\t\t\tinit);\n\t\t\tspin_unlock(&init_mm.page_table_lock);\n\t\t\tpaddr_last = paddr_next;\n\t\t\tcontinue;",
+      "first": 799,
+      "last": 803,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_alloc_child_and_recursion": {
+      "id": "B08",
+      "key": "pud_alloc_child_and_recursion",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\tpmd = alloc_low_page();\n\t\tpaddr_last = phys_pmd_init(pmd, paddr, paddr_end,\n\t\t\t\t\t   page_size_mask, prot, init);",
+      "first": 806,
+      "last": 808,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_publish_and_count": {
+      "id": "B09",
+      "key": "pud_publish_and_count",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\tpud_populate_init(&init_mm, pud, pmd, init);\n\t\tspin_unlock(&init_mm.page_table_lock);\n\t}\n\tupdate_page_count(PG_LEVEL_1G, pages);\n\treturn paddr_last;",
+      "first": 811,
+      "last": 815,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pmd_signature_initial_slot": {
+      "id": "B10",
+      "key": "pmd_signature_initial_slot",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\n\tulong pages = 0, paddr_next;\n\tulong paddr_last = paddr_end;\n\n\tint i = pmd_index(paddr);",
+      "first": 670,
+      "last": 674,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_iteration_next_guard": {
+      "id": "B11",
+      "key": "pmd_iteration_next_guard",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\tpgprot_t new_prot = prot;\n\n\t\tpaddr_next = (paddr & PMD_MASK) + PMD_SIZE;\n\t\tif (paddr >= paddr_end)\n\t\t\tcontinue;",
+      "first": 679,
+      "last": 683,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_existing_nonleaf": {
+      "id": "B12",
+      "key": "pmd_existing_nonleaf",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\tif (!pmd_none(*pmd)) {\n\t\t\tif (!pmd_leaf(*pmd)) {\n\t\t\t\tspin_lock(&init_mm.page_table_lock);\n\t\t\t\tpte = (pte_t *)pmd_page_vaddr(*pmd);\n\t\t\t\tpaddr_last = phys_pte_init(pte, paddr,",
+      "first": 685,
+      "last": 689,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_existing_child_call": {
+      "id": "B13",
+      "key": "pmd_existing_child_call",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\t\t\tpaddr_last = phys_pte_init(pte, paddr,\n\t\t\t\t\t\t\t   paddr_end, prot,\n\t\t\t\t\t\t\t   init);\n\t\t\t\tspin_unlock(&init_mm.page_table_lock);\n\t\t\t\tcontinue;",
+      "first": 689,
+      "last": 693,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_large_reuse_vs_downgrade": {
+      "id": "B14",
+      "key": "pmd_large_reuse_vs_downgrade",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\t\t\t\tpages++;\n\t\t\t\tpaddr_last = paddr_next;\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tnew_prot = pte_pgprot(pte_clrhuge(*(pte_t *)pmd));",
+      "first": 709,
+      "last": 713,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_new_large_choice": {
+      "id": "B15",
+      "key": "pmd_new_large_choice",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\tif (page_size_mask & (1<<PG_LEVEL_2M)) {\n\t\t\tpages++;\n\t\t\tspin_lock(&init_mm.page_table_lock);\n\t\t\tset_pmd_init(pmd,\n\t\t\t\tpfn_pmd(paddr >> PAGE_SHIFT, prot_sethuge(prot)),",
+      "first": 716,
+      "last": 720,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_new_large_write_return": {
+      "id": "B16",
+      "key": "pmd_new_large_write_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\t\t\tpfn_pmd(paddr >> PAGE_SHIFT, prot_sethuge(prot)),\n\t\t\t\t\tinit);\n\t\t\tspin_unlock(&init_mm.page_table_lock);\n\t\t\tpaddr_last = paddr_next;\n\t\t\tcontinue;",
+      "first": 720,
+      "last": 724,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_alloc_child_after_oldleaf": {
+      "id": "B17",
+      "key": "pmd_alloc_child_after_oldleaf",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\tpaddr_last = phys_pte_init(pte, paddr, paddr_end, new_prot, init);\n\n\t\tspin_lock(&init_mm.page_table_lock);\n\t\tpmd_populate_kernel_init(&init_mm, pmd, pte, init);\n\t\tspin_unlock(&init_mm.page_table_lock);",
+      "first": 728,
+      "last": 732,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_count_return": {
+      "id": "B18",
+      "key": "pmd_count_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t}\n\tupdate_page_count(PG_LEVEL_2M, pages);\n\treturn paddr_last;",
+      "first": 733,
+      "last": 735,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "prot_add_pse_warning": {
+      "id": "B19",
+      "key": "prot_add_pse_warning",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "prot_sethuge",
+      "quote": "static inline pgprot_t\nprot_sethuge(pgprot_t prot) {\n\tWARN_ON_ONCE(pgprot_val(prot) & _PAGE_PAT);\n\treturn __pgprot(pgprot_val(prot) | _PAGE_PSE);",
+      "first": 552,
+      "last": 555,
+      "scope_first": 552,
+      "scope_last": 556
+    },
+    "pud_none_alias": {
+      "id": "B20",
+      "key": "pud_none_alias",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "symbol": "pud_none",
+      "quote": "\t#define pud_none\t\t\tpud_ent_is_none",
+      "first": 53,
+      "last": 53,
+      "scope_first": 53,
+      "scope_last": 53
+    },
+    "pmd_none_alias": {
+      "id": "B21",
+      "key": "pmd_none_alias",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "symbol": "pmd_none",
+      "quote": "\t#define pmd_none\t\t\tpmd_ent_is_none",
+      "first": 54,
+      "last": 54,
+      "scope_first": 54,
+      "scope_last": 54
+    },
+    "pud_leaf_alias": {
+      "id": "B22",
+      "key": "pud_leaf_alias",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "symbol": "pud_leaf",
+      "quote": "\t#define pud_leaf\t\t\tpud_ent_is_leaf",
+      "first": 57,
+      "last": 57,
+      "scope_first": 57,
+      "scope_last": 57
+    },
+    "pmd_leaf_alias": {
+      "id": "B23",
+      "key": "pmd_leaf_alias",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "symbol": "pmd_leaf",
+      "quote": "\t#define pmd_leaf\t\t\tpmd_ent_is_leaf",
+      "first": 58,
+      "last": 58,
+      "scope_first": 58,
+      "scope_last": 58
+    },
+    "pud_none_ignores_erratum": {
+      "id": "B24",
+      "key": "pud_none_ignores_erratum",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pud_ent_is_none",
+      "quote": "\t\tint\n\t\tpud_ent_is_none(pud_t pud_ent) {\n\t\t\treturn (arch_pude_val(pud_ent) &\n\t\t\t\t\t\t~(_PAGE_KNL_ERRATUM_MASK)) == 0;\n\t\t}",
+      "first": 320,
+      "last": 324,
+      "scope_first": 319,
+      "scope_last": 324
+    },
+    "pmd_none_ignores_erratum": {
+      "id": "B25",
+      "key": "pmd_none_ignores_erratum",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pmd_ent_is_none",
+      "quote": "\t\t\t * Only check low word on 32-bit platforms,\n\t\t\t * since it might be out of sync with upper half.\n\t\t\t */\n\t\t\treturn (arch_pmde_val(pmd_ent) &\n\t\t\t\t\t\t~_PAGE_KNL_ERRATUM_MASK) == 0;",
+      "first": 364,
+      "last": 368,
+      "scope_first": 361,
+      "scope_last": 369
+    },
+    "pud_leaf_tests_pse": {
+      "id": "B26",
+      "key": "pud_leaf_tests_pse",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pud_ent_is_leaf",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tbool\n\t\tpud_ent_is_leaf(pud_t pud_ent) {\n\t\t\treturn arch_pude_val(pud_ent) & _PAGE_PSE;\n\t\t}",
+      "first": 325,
+      "last": 329,
+      "scope_first": 325,
+      "scope_last": 329
+    },
+    "pmd_leaf_tests_pse": {
+      "id": "B27",
+      "key": "pmd_leaf_tests_pse",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pmd_ent_is_leaf",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tbool\n\t\tpmd_ent_is_leaf(pmd_t pmd_ent) {\n\t\t\treturn arch_pmde_val(pmd_ent) & _PAGE_PSE;\n\t\t}",
+      "first": 370,
+      "last": 374,
+      "scope_first": 370,
+      "scope_last": 374
+    },
+    "remove_pse_from_pte_cast": {
+      "id": "B28",
+      "key": "remove_pse_from_pte_cast",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pte_clrhuge",
+      "quote": "\tstatic inline pte_t pte_clrhuge(pte_t pte)\n\t{\n\t\treturn pte_clear_flags(pte, _PAGE_PSE);\n\t}",
+      "first": 925,
+      "last": 928,
+      "scope_first": 925,
+      "scope_last": 928
+    },
+    "clear_pte_protection_bits": {
+      "id": "B29",
+      "key": "clear_pte_protection_bits",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pte_clear_flags",
+      "quote": "\t\tpte_t\n\t\tpte_clear_flags(pte_t pte, pteval_t clear) {\n\t\t\tpteval_t v = arch_pte_val(pte);\n\t\t\treturn arch_make_pte(v & ~clear);\n\t\t}",
+      "first": 230,
+      "last": 234,
+      "scope_first": 229,
+      "scope_last": 234
+    },
+    "pte_to_pgprot_macro": {
+      "id": "B30",
+      "key": "pte_to_pgprot_macro",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pte_pgprot",
+      "quote": "\t#define pte_pgprot(x) __pgprot(arch_pte_flags(x))",
+      "first": 1168,
+      "last": 1168,
+      "scope_first": 1168,
+      "scope_last": 1168
+    },
+    "pud_leaf_frame_mask_and_flags": {
+      "id": "B31",
+      "key": "pud_leaf_frame_mask_and_flags",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pfn_pude",
+      "quote": "\t\tpfn_pude(ulong page_nr, pgprot_t pgprot) {\n\t\t\tphys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;\n\t\t\tpfn ^= protnone_mask(pgprot_val(pgprot));\n\t\t\tpfn &= PHYSICAL_PUD_PAGE_MASK;\n\t\t\treturn __pud(pfn | check_pgprot(pgprot));",
+      "first": 537,
+      "last": 541,
+      "scope_first": 535,
+      "scope_last": 542
+    },
+    "pmd_leaf_frame_mask_and_flags": {
+      "id": "B32",
+      "key": "pmd_leaf_frame_mask_and_flags",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pfn_pmde",
+      "quote": "\t\tpfn_pmde(ulong page_nr, pgprot_t pgprot) {\n\t\t\tphys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;\n\t\t\tpfn ^= protnone_mask(pgprot_val(pgprot));\n\t\t\tpfn &= PHYSICAL_PMD_PAGE_MASK;\n\t\t\treturn __pmd(pfn | check_pgprot(pgprot));",
+      "first": 591,
+      "last": 595,
+      "scope_first": 589,
+      "scope_last": 596
+    },
+    "large_leaf_bit_macro": {
+      "id": "B33",
+      "key": "large_leaf_bit_macro",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "_PAGE_PSE",
+      "quote": "\t#define _PAGE_PSE\t\t\t\t\t(_AT(pteval_t, 1) << _PAGE_BIT_PSE)",
+      "first": 57,
+      "last": 57,
+      "scope_first": 57,
+      "scope_last": 57
+    },
+    "physical_2m_frame_mask": {
+      "id": "B34",
+      "key": "physical_2m_frame_mask",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PHYSICAL_PMD_PAGE_MASK",
+      "quote": "\t#define PHYSICAL_PMD_PAGE_MASK\t\t(((signed long)PMD_MASK) & __PHYSICAL_MASK)",
+      "first": 27,
+      "last": 27,
+      "scope_first": 27,
+      "scope_last": 27
+    },
+    "physical_1g_frame_mask": {
+      "id": "B35",
+      "key": "physical_1g_frame_mask",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PHYSICAL_PUD_PAGE_MASK",
+      "quote": "\t#define PHYSICAL_PUD_PAGE_MASK\t\t(((signed long)PUD_MASK) & __PHYSICAL_MASK)",
+      "first": 28,
+      "last": 28,
+      "scope_first": 28,
+      "scope_last": 28
+    },
+    "page_protection_supported_bits": {
+      "id": "B36",
+      "key": "page_protection_supported_bits",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "check_pgprot",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tpgprotval_t\n\t\tcheck_pgprot(pgprot_t pgprot) {\n\t\t\tpgprotval_t massaged_val = massage_pgprot(pgprot);\n",
+      "first": 695,
+      "last": 699,
+      "scope_first": 695,
+      "scope_last": 711
+    },
+    "pte_signature_and_last_default": {
+      "id": "C01",
+      "key": "pte_signature_and_last_default",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pte_init",
+      "quote": "\n\tulong pages = 0, paddr_next;\n\tulong paddr_last = paddr_end;\n\tpte_t *pte;\n\tint i;",
+      "first": 625,
+      "last": 629,
+      "scope_first": 622,
+      "scope_last": 660
+    },
+    "pte_start_slot_and_next": {
+      "id": "C02",
+      "key": "pte_start_slot_and_next",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pte_init",
+      "quote": "\ti = pte_index(paddr);\n\n\tfor (; i < PTRS_PER_PTE; i++, paddr = paddr_next, pte++) {\n\t\tpaddr_next = (paddr & PAGE_MASK) + PAGE_SIZE;\n\t\tif (paddr >= paddr_end)",
+      "first": 632,
+      "last": 636,
+      "scope_first": 622,
+      "scope_last": 660
+    },
+    "pte_existing_count_or_skip": {
+      "id": "C03",
+      "key": "pte_existing_count_or_skip",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pte_init",
+      "quote": "\t\tif (!pte_none(*pte)) {\n\t\t\tif (!after_bootmem)\n\t\t\t\tpages++;\n\t\t\tcontinue;\n\t\t}",
+      "first": 645,
+      "last": 649,
+      "scope_first": 622,
+      "scope_last": 660
+    },
+    "pte_new_leaf_write": {
+      "id": "C04",
+      "key": "pte_new_leaf_write",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pte_init",
+      "quote": "\t\tif (0)\n\t\t\tpr_info(\"   pte=%p addr=%lx pte=%016lx\\n\", pte, paddr,\n\t\t\t\tpfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL).val);\n\t\tpages++;\n\t\tset_pte_init(pte, pfn_pte(paddr >> PAGE_SHIFT, prot), init);",
+      "first": 651,
+      "last": 655,
+      "scope_first": 622,
+      "scope_last": 660
+    },
+    "pte_new_last_count_return": {
+      "id": "C05",
+      "key": "pte_new_last_count_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pte_init",
+      "quote": "\t\tset_pte_init(pte, pfn_pte(paddr >> PAGE_SHIFT, prot), init);\n\t\tpaddr_last = (paddr & PAGE_MASK) + PAGE_SIZE;\n\t}\n\tupdate_page_count(PG_LEVEL_4K, pages);\n\treturn paddr_last;",
+      "first": 655,
+      "last": 659,
+      "scope_first": 622,
+      "scope_last": 660
+    },
+    "per_level_count_array": {
+      "id": "C06",
+      "key": "per_level_count_array",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "direct_pages_count",
+      "quote": "static ulong direct_pages_count[PG_LEVEL_NUM];",
+      "first": 540,
+      "last": 540,
+      "scope_first": 540,
+      "scope_last": 540
+    },
+    "counter_lock_and_add": {
+      "id": "C07",
+      "key": "counter_lock_and_add",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "update_page_count",
+      "quote": "void update_page_count(int level, ulong pages) {\n\t/* Protect against CPA */\n\tspin_lock(&pgd_lock);\n\tdirect_pages_count[level] += pages;\n\tspin_unlock(&pgd_lock);",
+      "first": 541,
+      "last": 545,
+      "scope_first": 541,
+      "scope_last": 546
+    },
+    "pmd_existing_leaf_count_early": {
+      "id": "C08",
+      "key": "pmd_existing_leaf_count_early",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\t\tif (page_size_mask & (1 << PG_LEVEL_2M)) {\n\t\t\t\tif (!after_bootmem)\n\t\t\t\t\tpages++;\n\t\t\t\tpaddr_last = paddr_next;",
+      "first": 707,
+      "last": 710,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_new_leaf_counter": {
+      "id": "C09",
+      "key": "pmd_new_leaf_counter",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t\tif (page_size_mask & (1<<PG_LEVEL_2M)) {\n\t\t\tpages++;\n\t\t\tspin_lock(&init_mm.page_table_lock);",
+      "first": 716,
+      "last": 718,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pmd_counter_call": {
+      "id": "C10",
+      "key": "pmd_counter_call",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pmd_init",
+      "quote": "\t}\n\tupdate_page_count(PG_LEVEL_2M, pages);\n\treturn paddr_last;",
+      "first": 733,
+      "last": 735,
+      "scope_first": 667,
+      "scope_last": 735
+    },
+    "pud_existing_leaf_count_early": {
+      "id": "C11",
+      "key": "pud_existing_leaf_count_early",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\t\tif (page_size_mask & (1 << PG_LEVEL_1G)) {\n\t\t\t\tif (!after_bootmem)\n\t\t\t\t\tpages++;\n\t\t\t\tpaddr_last = paddr_next;",
+      "first": 786,
+      "last": 789,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_new_leaf_counter": {
+      "id": "C12",
+      "key": "pud_new_leaf_counter",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t\tif (page_size_mask & (1<<PG_LEVEL_1G)) {\n\t\t\tpages++;\n\t\t\tspin_lock(&init_mm.page_table_lock);",
+      "first": 795,
+      "last": 797,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pud_counter_call": {
+      "id": "C13",
+      "key": "pud_counter_call",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "phys_pud_init",
+      "quote": "\t}\n\tupdate_page_count(PG_LEVEL_1G, pages);\n\treturn paddr_last;",
+      "first": 813,
+      "last": 815,
+      "scope_first": 744,
+      "scope_last": 815
+    },
+    "pte_init_bool_wrapper": {
+      "id": "C14",
+      "key": "pte_init_bool_wrapper",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pte_init",
+      "quote": "\t\t\tif (init)\n\t\t\t\tset_pte_safe(pte_ptr, pte_ent);\n\t\t\telse\n\t\t\t\tset_pte(pte_ptr, pte_ent);\n\t\t}",
+      "first": 740,
+      "last": 744,
+      "scope_first": 737,
+      "scope_last": 744
+    },
+    "pmd_init_bool_wrapper": {
+      "id": "C15",
+      "key": "pmd_init_bool_wrapper",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pmd_init",
+      "quote": "\t\tset_pmd_init(pmd_t *pmd_ptr, pmd_t pmd_ent, bool init) {\n\t\t\tif (init)\n\t\t\t\tset_pmd_safe(pmd_ptr, pmd_ent);\n\t\t\telse\n\t\t\t\tset_pmd(pmd_ptr, pmd_ent);",
+      "first": 731,
+      "last": 735,
+      "scope_first": 729,
+      "scope_last": 735
+    },
+    "pud_init_bool_wrapper": {
+      "id": "C16",
+      "key": "pud_init_bool_wrapper",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pud_init",
+      "quote": "\t\tset_pud_init(pud_t *pude_ptr, pud_t pud_ent, bool init) {\n\t\t\tif (init)\n\t\t\t\tset_pud_safe(pude_ptr, pud_ent);\n\t\t\telse\n\t\t\t\tset_pud(pude_ptr, pud_ent);",
+      "first": 723,
+      "last": 727,
+      "scope_first": 721,
+      "scope_last": 728
+    },
+    "p4d_populate_bool_wrapper": {
+      "id": "C17",
+      "key": "p4d_populate_bool_wrapper",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "p4d_populate_init",
+      "quote": "\t\t\tif (init)\n\t\t\t\tp4d_populate_safe(mm, p4d_entp, pud_p);\n\t\t\telse\n\t\t\t\tp4d_populate(mm, p4d_entp, pud_p);\n\t\t}",
+      "first": 494,
+      "last": 498,
+      "scope_first": 491,
+      "scope_last": 498
+    },
+    "pud_populate_bool_wrapper": {
+      "id": "C18",
+      "key": "pud_populate_bool_wrapper",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "pud_populate_init",
+      "quote": "\t\t\tif (init)\n\t\t\t\tpud_populate_safe(mm, pud_entp, pmd_p);\n\t\t\telse\n\t\t\t\tpud_populate(mm, pud_entp, pmd_p);\n\t\t}",
+      "first": 502,
+      "last": 506,
+      "scope_first": 499,
+      "scope_last": 506
+    },
+    "pmd_populate_kernel_bool_wrapper": {
+      "id": "C19",
+      "key": "pmd_populate_kernel_bool_wrapper",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "pmd_populate_kernel_init",
+      "quote": "\t\t\tif (init)\n\t\t\t\tpmd_populate_kernel_safe(mm, pmd_entp, pte_p);\n\t\t\telse\n\t\t\t\tpmd_populate_kernel(mm, pmd_entp, pte_p);\n\t\t}",
+      "first": 510,
+      "last": 514,
+      "scope_first": 507,
+      "scope_last": 515
+    },
+    "pte_warn_then_write": {
+      "id": "C20",
+      "key": "pte_warn_then_write",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pte_safe",
+      "quote": "\t\tset_pte_safe(pte_t *pte_ptr, pte_t pte) {\n\t\t\tWARN_ON_ONCE(pte_present(*pte_ptr) &&\n\t\t\t\t\t!pte_same(*pte_ptr, pte));\\\n\t\t\tset_pte(pte_ptr, pte);\n\t\t}",
+      "first": 611,
+      "last": 615,
+      "scope_first": 609,
+      "scope_last": 615
+    },
+    "pmd_warn_then_write": {
+      "id": "C21",
+      "key": "pmd_warn_then_write",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pmd_ent_safe",
+      "quote": "\t\tvoid\n\t\tset_pmd_ent_safe(pmd_t *pmde_ptr, pmd_t pmd_ent) {\n\t\t\tWARN_ON_ONCE(pmd_present(*pmde_ptr) &&\n\t\t\t\t\t!pmd_same(*pmde_ptr, pmd_ent));\n\t\t\tset_pmd(pmde_ptr, pmd_ent);",
+      "first": 556,
+      "last": 560,
+      "scope_first": 555,
+      "scope_last": 561
+    },
+    "pud_warn_then_write": {
+      "id": "C22",
+      "key": "pud_warn_then_write",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pud_ent_safe",
+      "quote": "\t\tvoid\n\t\tset_pud_ent_safe(pud_t *pude_ptr, pud_t pud_ent) {\n\t\t\tWARN_ON_ONCE(pud_present(*pude_ptr) &&\n\t\t\t\t\t!pud_same(*pude_ptr, pud_ent));\n\t\t\tset_pud(pude_ptr, pud_ent);",
+      "first": 502,
+      "last": 506,
+      "scope_first": 501,
+      "scope_last": 507
+    },
+    "p4d_warn_then_write": {
+      "id": "C23",
+      "key": "p4d_warn_then_write",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_p4d_ent_safe",
+      "quote": "\t\tvoid\n\t\tset_p4d_ent_safe(p4d_t *p4de_ptr, p4d_t p4d_ent) {\n\t\t\tWARN_ON_ONCE(p4d_present(*p4de_ptr) &&\n\t\t\t\t\t!p4d_same(*p4de_ptr, p4d_ent));\n\t\t\tset_p4d(p4de_ptr, p4d_ent);",
+      "first": 447,
+      "last": 451,
+      "scope_first": 446,
+      "scope_last": 452
+    },
+    "pte_write_once": {
+      "id": "C24",
+      "key": "pte_write_once",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pte",
+      "quote": "\t\tvoid\n\t\tset_pte(pte_t *pte_ptr, pte_t pte) {\n\t\t\tWRITE_ONCE(*(pte_ptr), (pte));\n\t\t}",
+      "first": 605,
+      "last": 608,
+      "scope_first": 604,
+      "scope_last": 608
+    },
+    "pmd_write_once": {
+      "id": "C25",
+      "key": "pmd_write_once",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pmd_ent",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tvoid\n\t\tset_pmd_ent(pmd_t *pmde_ptr, pmd_t pmd_ent) {\n\t\t\tWRITE_ONCE(*(pmde_ptr), (pmd_ent));\n\t\t}",
+      "first": 550,
+      "last": 554,
+      "scope_first": 550,
+      "scope_last": 555
+    },
+    "pud_write_once": {
+      "id": "C26",
+      "key": "pud_write_once",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_pud_ent",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tvoid\n\t\tset_pud_ent(pud_t *pude_ptr, pud_t pud_ent) {\n\t\t\tWRITE_ONCE(*(pude_ptr), (pud_ent));\n\t\t}",
+      "first": 496,
+      "last": 500,
+      "scope_first": 496,
+      "scope_last": 501
+    },
+    "p4d_write_once": {
+      "id": "C27",
+      "key": "p4d_write_once",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "set_p4d_ent",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\tvoid\n\t\tset_p4d_ent(p4d_t *p4de_ptr, p4d_t p4d_ent) {\n\t\t\tWRITE_ONCE(*(p4de_ptr), (p4d_ent));\n\t\t}",
+      "first": 441,
+      "last": 445,
+      "scope_first": 441,
+      "scope_last": 446
+    },
+    "pte_pfn_frame_mask_and_flags": {
+      "id": "C28",
+      "key": "pte_pfn_frame_mask_and_flags",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "symbol": "pfn_pte",
+      "quote": "\t\tpfn_pte(ulong page_nr, pgprot_t pgprot) {\n\t\t\tphys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;\n\t\t\tpfn ^= protnone_mask(pgprot_val(pgprot));\n\t\t\tpfn &= PTE_PFN_MASK;\n\t\t\treturn __pte(pfn | check_pgprot(pgprot));",
+      "first": 650,
+      "last": 654,
+      "scope_first": 648,
+      "scope_last": 655
+    },
+    "p4d_safe_parent_writer": {
+      "id": "C29",
+      "key": "p4d_safe_parent_writer",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "fill_pud_to_p4d_ent_safe",
+      "quote": "\t\tvoid\n\t\tfill_pud_to_p4d_ent_safe(mm_s *mm, p4d_t *p4d_entp, pud_t *pud_p) {\n\t\t\t// paravirt_alloc_pud(mm, __pa(pud_p) >> PAGE_SHIFT);\n\t\t\tset_p4d_ent_safe(p4d_entp, __p4d(__pa(pud_p) | _PAGE_TABLE));\n\t\t}",
+      "first": 209,
+      "last": 213,
+      "scope_first": 208,
+      "scope_last": 213
+    },
+    "pud_safe_parent_writer": {
+      "id": "C30",
+      "key": "pud_safe_parent_writer",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "fill_pmd_to_pud_ent_safe",
+      "quote": "\t\tvoid\n\t\tfill_pmd_to_pud_ent_safe(mm_s *mm, pud_t *pud_entp, pmd_t *pmd_p) {\n\t\t\t// paravirt_alloc_pmd(mm, __pa(pmd_p) >> PAGE_SHIFT);\n\t\t\tset_pud_ent_safe(pud_entp, __pud(__pa(pmd_p) | _PAGE_TABLE));\n\t\t}",
+      "first": 250,
+      "last": 254,
+      "scope_first": 249,
+      "scope_last": 255
+    },
+    "pmd_safe_parent_writer": {
+      "id": "C31",
+      "key": "pmd_safe_parent_writer",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "fill_pgtbl_to_pmd_ent_kernel_safe",
+      "quote": "\t\tvoid\n\t\tfill_pgtbl_to_pmd_ent_kernel_safe(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p) {\n\t\t\t// paravirt_alloc_pte(mm, __pa(pgtbl_p) >> PAGE_SHIFT);\n\t\t\tset_pmd_safe(pmd_entp, __pmd(__pa(pgtbl_p) | _PAGE_TABLE));\n\t\t}",
+      "first": 292,
+      "last": 296,
+      "scope_first": 291,
+      "scope_last": 296
+    },
+    "p4d_populate_safe_alias": {
+      "id": "C32",
+      "key": "p4d_populate_safe_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "p4d_populate_safe",
+      "quote": "\t#define p4d_populate_safe\tfill_pud_to_p4d_ent_safe",
+      "first": 90,
+      "last": 90,
+      "scope_first": 90,
+      "scope_last": 90
+    },
+    "pud_populate_safe_alias": {
+      "id": "C33",
+      "key": "pud_populate_safe_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pud_populate_safe",
+      "quote": "\t#define pud_populate_safe\tfill_pmd_to_pud_ent_safe",
+      "first": 91,
+      "last": 91,
+      "scope_first": 91,
+      "scope_last": 91
+    },
+    "pmd_populate_safe_alias": {
+      "id": "C34",
+      "key": "pmd_populate_safe_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pmd_populate_kernel_safe",
+      "quote": "\t#define pmd_populate_kernel_safe\tfill_pgtbl_to_pmd_ent_kernel_safe",
+      "first": 92,
+      "last": 92,
+      "scope_first": 92,
+      "scope_last": 92
+    },
+    "p4d_populate_normal_alias": {
+      "id": "C35",
+      "key": "p4d_populate_normal_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "p4d_populate",
+      "quote": "\t#define p4d_populate\tfill_pud_to_p4d_ent",
+      "first": 85,
+      "last": 85,
+      "scope_first": 85,
+      "scope_last": 85
+    },
+    "pud_populate_normal_alias": {
+      "id": "C36",
+      "key": "pud_populate_normal_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pud_populate",
+      "quote": "\t#define pud_populate\tfill_pmd_to_pud_ent",
+      "first": 86,
+      "last": 86,
+      "scope_first": 86,
+      "scope_last": 86
+    },
+    "pmd_populate_normal_alias": {
+      "id": "C37",
+      "key": "pmd_populate_normal_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pmd_populate_kernel",
+      "quote": "\t#define pmd_populate_kernel\tfill_pgtbl_to_pmd_ent_kernel",
+      "first": 88,
+      "last": 88,
+      "scope_first": 88,
+      "scope_last": 88
+    },
+    "counter_level_4k_enum": {
+      "id": "C38",
+      "key": "counter_level_4k_enum",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PG_LEVEL_4K",
+      "quote": "\t\t\tPG_LEVEL_4K,",
+      "first": 9,
+      "last": 9,
+      "scope_first": 7,
+      "scope_last": 14
+    },
+    "counter_level_2m_enum": {
+      "id": "C39",
+      "key": "counter_level_2m_enum",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PG_LEVEL_2M",
+      "quote": "\t\t\tPG_LEVEL_2M,",
+      "first": 10,
+      "last": 10,
+      "scope_first": 7,
+      "scope_last": 14
+    },
+    "counter_level_1g_enum": {
+      "id": "C40",
+      "key": "counter_level_1g_enum",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PG_LEVEL_1G",
+      "quote": "\t\t\tPG_LEVEL_1G,",
+      "first": 11,
+      "last": 11,
+      "scope_first": 7,
+      "scope_last": 14
+    },
+    "pte_table_512_slots": {
+      "id": "C41",
+      "key": "pte_table_512_slots",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PTRS_PER_PTE",
+      "quote": "\t#define PTRS_PER_PTE\t\t512",
+      "first": 266,
+      "last": 266,
+      "scope_first": 266,
+      "scope_last": 266
+    },
+    "pte_page_4096_bytes": {
+      "id": "C42",
+      "key": "pte_page_4096_bytes",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_SIZE",
+      "quote": "\t#define PAGE_SIZE\t\t\t\t(_AC(1,UL) << PAGE_SHIFT)",
+      "first": 10,
+      "last": 10,
+      "scope_first": 10,
+      "scope_last": 10
+    },
+    "pte_index_alias": {
+      "id": "C43",
+      "key": "pte_index_alias",
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "symbol": "pte_index",
+      "quote": "\t#define pte_index\t\tent_index_in_pgtbl",
+      "first": 74,
+      "last": 74,
+      "scope_first": 74,
+      "scope_last": 74
+    },
+    "pte_index_formula": {
+      "id": "C44",
+      "key": "pte_index_formula",
+      "path": "mykernel/mm/fault/pgtable.h",
+      "symbol": "ent_index_in_pgtbl",
+      "quote": "\t\tulong\n\t\tent_index_in_pgtbl(ulong vaddr) {\n\t\t\treturn (vaddr >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);\n\t\t}",
+      "first": 316,
+      "last": 319,
+      "scope_first": 315,
+      "scope_last": 319
+    },
+    "upper_return_consumption": {
+      "id": "C45",
+      "key": "upper_return_consumption",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_memory_mapping",
+      "quote": "\t\t\t\tmr[i].end, mr[i].page_size_mask, prot);\n\n\t// add_pfn_range_mapped(start >> PAGE_SHIFT, ret >> PAGE_SHIFT);\n\n\treturn ret >> PAGE_SHIFT;",
+      "first": 447,
+      "last": 451,
+      "scope_first": 433,
+      "scope_last": 452
+    }
+  },
+  "prior_findings_links": {
+    "batch82": "PASS_PENDING_LOCAL_WITH_R82_S01_S02_S03",
+    "R82_S01": "区分拆分、可能提升及合并后的阶段；任何mask或区间样本声明本83直接助手输入，不冒充真实82已提升的结果",
+    "R82_S02": "区分物理字节和PFN，byte roundup可回绕但split PFN round与其不同；反向clamp能跳过，不等于实际停止",
+    "R82_S03": "正常82五段最多容量5，panic调用不自动保证不返回；单记录memory和free不同，Graph调用者不拼接",
+    "batch81": "PASS_PENDING_LOCAL_WITH_R81_S01_S02_S03",
+    "R81_S01": "旧81证据ID经C06实际事实定位表消费，本83新证据另账",
+    "R81_S02": "直接页分配不采用slab prepare_alloc_flags过滤路径，晚期ZERO请求/清零真实时序仍受原限制",
+    "R81_S03": "旧buffer镜像别名与__pa/phys_base实际地址需证，非法条件后的路径不当实际运行",
+    "batch80": "PASS_PENDING_LOCAL_WITH_R80_S01_S02_S03",
+    "batch79": "PASS_PENDING_LOCAL_WITH_R79_S01_S02_S03_AND_DOC_CLOSED",
+    "prior_qualified_ids": [
+      "DM82-F01..F08/U01..U10",
+      "PT81-F01..F08/U01..U10",
+      "BM80-F/U",
+      "MR79-F/U",
+      "PB78-F/U",
+      "PA77-F/U",
+      "AE75-U07",
+      "SL76-U09",
+      "MC-01..05/LB-01/LB-08/GAP-M08",
+      "05/MR-02 closed by explicit narrowing",
+      "58/63 historical withdrawals"
+    ],
+    "old_findings_reopened": false,
+    "D00": "NOT_REQUIRED"
+  },
+  "G01": {
+    "table_identity_and_address_matrix": [
+      {
+        "id": "AT01",
+        "claim": "根输入paddr_start/end为物理字节，__va生成虚拟vaddr/vaddr_end",
+        "source_fact_keys": [
+          "root_signature",
+          "root_initial_addr_conversion",
+          "physical_to_virtual_macro"
+        ],
+        "source_anchor_ids": [
+          "A03",
+          "A04",
+          "A31"
+        ],
+        "preconditions": "输入无回绕并且direct-map表达有效",
+        "earliest_stop": "虚拟地址表达不等于实际可访问",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AT02",
+        "claim": "init_mm.pgd通过swapper_pg_dir指向init_top_pgt，根槽从mm->pgd加索引取得",
+        "source_fact_keys": [
+          "init_mm_root_pointer",
+          "swapper_root_alias",
+          "init_root_array",
+          "pgd_in_mm_pointer"
+        ],
+        "source_anchor_ids": [
+          "A26",
+          "A27",
+          "A28",
+          "A11"
+        ],
+        "preconditions": "实际init_mm及数组内存有效",
+        "earliest_stop": "不等于当前CR3必指该表",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AT03",
+        "claim": "pgd_offset_k经init_mm取得按P4D_SHIFT=39索引的根槽",
+        "source_fact_keys": [
+          "pgd_offset_k_alias",
+          "pgd_index_alias",
+          "root_index_mask",
+          "root_shift"
+        ],
+        "source_anchor_ids": [
+          "A12",
+          "A13",
+          "A14",
+          "A34"
+        ],
+        "preconditions": "选中页表层级为所读四级表达",
+        "earliest_stop": "指针求值前需有效mm.pgd",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AT04",
+        "claim": "phys_p4d_init只是宏转发到phys_pud_init，p4d_offset仅把根槽转为p4d_t指针",
+        "source_fact_keys": [
+          "folded_p4d_macro",
+          "folded_p4d_cast",
+          "folded_p4d_offset_alias"
+        ],
+        "source_anchor_ids": [
+          "A10",
+          "A15",
+          "A16"
+        ],
+        "preconditions": "所选折叠定义成立",
+        "earliest_stop": "不能当额外分配的p4d页",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AT05",
+        "claim": "PGD循环next边界按PGDIR_SIZE计算；跨度512GiB",
+        "source_fact_keys": [
+          "root_loop_and_boundary",
+          "root_size"
+        ],
+        "source_anchor_ids": [
+          "A05",
+          "A35"
+        ],
+        "preconditions": "合法ulong并且下次vaddr单调前进",
+        "earliest_stop": "回绕或无推进需停止",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AT06",
+        "claim": "PAGE_OFFSET下低39位为零时PUD虚拟索引及PMD物理索引低位可一致",
+        "source_fact_keys": [
+          "pud_index_formula",
+          "pmd_index_formula",
+          "page_offset_base_constant",
+          "physical_to_virtual_macro"
+        ],
+        "source_anchor_ids": [
+          "A19",
+          "A20",
+          "A30",
+          "A31"
+        ],
+        "preconditions": "在64位算术无回绕且索引只读取30/21位时",
+        "earliest_stop": "不把完整虚拟与物理地址混为一物",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AT07",
+        "claim": "根路径将__va形成的VA再__pa回译，非简单恒等赋值",
+        "source_fact_keys": [
+          "physical_retranslation_arithmetic",
+          "virtual_to_physical_macro",
+          "root_existing_vaddr_alias"
+        ],
+        "source_anchor_ids": [
+          "A33",
+          "A32",
+          "A24"
+        ],
+        "preconditions": "phys_base/所选__phys_addr路径满足direct-map前提",
+        "earliest_stop": "未证页框可能不相等",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "root_and_child_selection_matrix": [
+      {
+        "id": "AR01",
+        "claim": "已有根分支用pgd_val非零作为选择而非调用present或none谓词",
+        "source_fact_keys": [
+          "root_reuse_existing_nonzero",
+          "pgd_nonzero_alias"
+        ],
+        "source_anchor_ids": [
+          "A06",
+          "A23"
+        ],
+        "preconditions": "根项的值与页面有效性另证",
+        "earliest_stop": "非零可能仍非可解引用子表",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AR02",
+        "claim": "非零根项经PGD页物理掩码和__va得到子表指针",
+        "source_fact_keys": [
+          "root_reuse_existing_nonzero",
+          "root_existing_vaddr_alias",
+          "p4d_pointed_page_virtual"
+        ],
+        "source_anchor_ids": [
+          "A06",
+          "A24",
+          "A25"
+        ],
+        "preconditions": "根项指向有效非叶表页且映射可写",
+        "earliest_stop": "指针非零不是验证成功",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AR03",
+        "claim": "新根路径由alloc_low_page取得一页后递归构造子表",
+        "source_fact_keys": [
+          "root_alloc_before_child",
+          "one_page_alloc_wrapper"
+        ],
+        "source_anchor_ids": [
+          "A07",
+          "A38"
+        ],
+        "preconditions": "81分配源合法、返回指针非零且可读写",
+        "earliest_stop": "不替代PT81分配与清零前提",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AR04",
+        "claim": "PUD循环使用__va(paddr)后取pud_index构造槽位",
+        "source_fact_keys": [
+          "pud_slot_va_and_next",
+          "pud_index_formula"
+        ],
+        "source_anchor_ids": [
+          "B02",
+          "A19"
+        ],
+        "preconditions": "合法虚拟别名和数组内存",
+        "earliest_stop": "不把物理paddr索引当PUD的源码输入",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AR05",
+        "claim": "已有PUD非叶项从pmd_offset(pud,0)得到下一表基址并递归",
+        "source_fact_keys": [
+          "pud_existing_child_recursion",
+          "pmd_offset_real"
+        ],
+        "source_anchor_ids": [
+          "B04",
+          "A21"
+        ],
+        "preconditions": "已有项真为表页且指针合法",
+        "earliest_stop": "不同于新建PUD页",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AR06",
+        "claim": "已有PMD非叶项经pmd_page_vaddr指针递归PTE；根非零也复用已有页",
+        "source_fact_keys": [
+          "pmd_existing_child_call",
+          "root_reuse_existing_nonzero"
+        ],
+        "source_anchor_ids": [
+          "B13",
+          "A06"
+        ],
+        "preconditions": "各层有效父项/物理存储先行",
+        "earliest_stop": "指针合法性必须分别证明",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AR07",
+        "claim": "上层正常映射传init=true，change宏传init=false，两个宏不是同一写模式",
+        "source_fact_keys": [
+          "root_signature",
+          "mapping_macro_init_true",
+          "change_macro_init_false"
+        ],
+        "source_anchor_ids": [
+          "A03",
+          "A01",
+          "A02"
+        ],
+        "preconditions": "调用者确实选择对应宏",
+        "earliest_stop": "不把init当after_bootmem",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "publication_order_matrix": [
+      {
+        "id": "AP01",
+        "claim": "新根项先分配和递归，再在锁内p4d_populate_init发布",
+        "source_fact_keys": [
+          "root_alloc_before_child",
+          "root_publish_after_recursion"
+        ],
+        "source_anchor_ids": [
+          "A07",
+          "A08"
+        ],
+        "preconditions": "递归正常返回且新表有效",
+        "earliest_stop": "中途失败不可继续声称发布",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AP02",
+        "claim": "已有根分支递归后continue，局部不重发同一父槽",
+        "source_fact_keys": [
+          "root_reuse_existing_nonzero",
+          "root_return_and_sync_comment"
+        ],
+        "source_anchor_ids": [
+          "A06",
+          "A09"
+        ],
+        "preconditions": "父项指向合法子表",
+        "earliest_stop": "未穷尽全树写者",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AP03",
+        "claim": "新根发布受init选择safe或普通写入包装控制",
+        "source_fact_keys": [
+          "root_publish_after_recursion",
+          "p4d_populate_bool_wrapper",
+          "p4d_safe_parent_writer"
+        ],
+        "source_anchor_ids": [
+          "A08",
+          "C17",
+          "C29"
+        ],
+        "preconditions": "写接口实现及选中宏已读取",
+        "earliest_stop": "safe只有告警检查仍可继续store",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AP04",
+        "claim": "新PUD子表先完成phys_pmd_init然后在锁内发布父PUD项",
+        "source_fact_keys": [
+          "pud_alloc_child_and_recursion",
+          "pud_publish_and_count",
+          "pud_populate_bool_wrapper"
+        ],
+        "source_anchor_ids": [
+          "B08",
+          "B09",
+          "C18"
+        ],
+        "preconditions": "分配与子层返回合法",
+        "earliest_stop": "未见本函数内失败回滚",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AP05",
+        "claim": "PMD降级新表先phys_pte_init再锁内pmd_populate_kernel_init",
+        "source_fact_keys": [
+          "pmd_alloc_child_after_oldleaf",
+          "pmd_populate_kernel_bool_wrapper"
+        ],
+        "source_anchor_ids": [
+          "B17",
+          "C19"
+        ],
+        "preconditions": "旧叶读取/新表地址有效",
+        "earliest_stop": "未证旧映射释放及硬件同步",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AP06",
+        "claim": "根最终返回paddr_last，上层只消费返回端点换算PFN；sync_global_pgds为注释",
+        "source_fact_keys": [
+          "root_return_and_sync_comment",
+          "upper_return_consumption"
+        ],
+        "source_anchor_ids": [
+          "A09",
+          "C45"
+        ],
+        "preconditions": "各递归返回可达",
+        "earliest_stop": "返回不证明全区间被映射",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "AP07",
+        "claim": "新根写入仅在该分支且子层已正常返回后发生，锁只包发布语句",
+        "source_fact_keys": [
+          "root_loop_and_boundary",
+          "root_publish_after_recursion"
+        ],
+        "source_anchor_ids": [
+          "A05",
+          "A08"
+        ],
+        "preconditions": "声明单CPU静态源序",
+        "earliest_stop": "不认证跨CPU锁或TLB生效",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ]
+  },
+  "G02": {
+    "existing_entry_transition_matrix": [
+      {
+        "id": "BE01",
+        "claim": "PUD none谓词掩掉erratum位判断零，leaf谓词看PSE位，二者不是present同义",
+        "source_fact_keys": [
+          "pud_none_alias",
+          "pud_leaf_alias",
+          "pud_none_ignores_erratum",
+          "pud_leaf_tests_pse"
+        ],
+        "source_anchor_ids": [
+          "B20",
+          "B22",
+          "B24",
+          "B26"
+        ],
+        "preconditions": "选中宏及表项数据有效",
+        "earliest_stop": "有非零/未present特殊态另证",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE02",
+        "claim": "PMD none与leaf分别检查去erratum后零和PSE位",
+        "source_fact_keys": [
+          "pmd_none_alias",
+          "pmd_leaf_alias",
+          "pmd_none_ignores_erratum",
+          "pmd_leaf_tests_pse"
+        ],
+        "source_anchor_ids": [
+          "B21",
+          "B23",
+          "B25",
+          "B27"
+        ],
+        "preconditions": "有效pmd表项",
+        "earliest_stop": "不能用none取代present",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE03",
+        "claim": "PUD非空且非leaf优先递归已有PMD表，即使允许1G候选也不直接替换为1G叶",
+        "source_fact_keys": [
+          "pud_limit_nonleaf_decision",
+          "pud_existing_child_recursion"
+        ],
+        "source_anchor_ids": [
+          "B03",
+          "B04"
+        ],
+        "preconditions": "pud指向有效子表",
+        "earliest_stop": "源码优先下钻",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE04",
+        "claim": "PMD非空且非leaf优先递归PTE表，即使允许2M候选也不直接改成2M叶",
+        "source_fact_keys": [
+          "pmd_existing_nonleaf",
+          "pmd_existing_child_call"
+        ],
+        "source_anchor_ids": [
+          "B12",
+          "B13"
+        ],
+        "preconditions": "pmd指向有效子表",
+        "earliest_stop": "已存在表的语义先行",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE05",
+        "claim": "PUD已有1G叶且mask允许1G则复用、不写新项，早期统计pages加一并设置next返回端点",
+        "source_fact_keys": [
+          "pud_large_reuse_or_old_prot",
+          "pud_existing_leaf_count_early"
+        ],
+        "source_anchor_ids": [
+          "B05",
+          "C11"
+        ],
+        "preconditions": "PUD已有真实leaf且mask含1G、after_bootmem为假",
+        "earliest_stop": "后续硬件是否有效另证",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE06",
+        "claim": "PMD已有2M叶且mask允许2M则复用，早期pages加一并将返回置为next",
+        "source_fact_keys": [
+          "pmd_large_reuse_vs_downgrade",
+          "pmd_existing_leaf_count_early"
+        ],
+        "source_anchor_ids": [
+          "B14",
+          "C08"
+        ],
+        "preconditions": "pmd已有真实leaf且mask含2M、after_bootmem为假",
+        "earliest_stop": "跨end可能返回超过实际请求",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE07",
+        "claim": "PUD已有1G叶但mask不含1G时用pte_t强转清PSE并提取旧保护位供后续下钻",
+        "source_fact_keys": [
+          "pud_large_reuse_or_old_prot",
+          "remove_pse_from_pte_cast",
+          "pte_to_pgprot_macro"
+        ],
+        "source_anchor_ids": [
+          "B05",
+          "B28",
+          "B30"
+        ],
+        "preconditions": "旧表项有效且类型布局允许转换",
+        "earliest_stop": "旧物理页框不能凭保护位继承",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE08",
+        "claim": "PMD已有2M叶但mask不含2M时以同样旧保护位构造new_prot",
+        "source_fact_keys": [
+          "pmd_large_reuse_vs_downgrade",
+          "remove_pse_from_pte_cast",
+          "pte_to_pgprot_macro"
+        ],
+        "source_anchor_ids": [
+          "B14",
+          "B28",
+          "B30"
+        ],
+        "preconditions": "需要旧表项与函数类型合法",
+        "earliest_stop": "属性一致性仍需实证",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE09",
+        "claim": "PUD为none或旧leaf未走复用且mask允许1G时可进入新建1G叶写入",
+        "source_fact_keys": [
+          "pud_new_large_leaf_choice",
+          "pud_large_write_return"
+        ],
+        "source_anchor_ids": [
+          "B06",
+          "B07"
+        ],
+        "preconditions": "源序先行状态有效",
+        "earliest_stop": "不要假设降级分支也建1G叶",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BE10",
+        "claim": "PMD为none或旧leaf未复用且mask允许2M时可进入新建2M叶写入",
+        "source_fact_keys": [
+          "pmd_new_large_choice",
+          "pmd_new_large_write_return"
+        ],
+        "source_anchor_ids": [
+          "B15",
+          "B16"
+        ],
+        "preconditions": "物理2M对齐及flags有效",
+        "earliest_stop": "未证旧页释放或整体事务",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "huge_to_child_mapping_matrix": [
+      {
+        "id": "BH01",
+        "claim": "没有允许1G叶时alloc_low_page取PMD页，递归完成才发布PUD父表项",
+        "source_fact_keys": [
+          "pud_alloc_child_and_recursion",
+          "pud_publish_and_count"
+        ],
+        "source_anchor_ids": [
+          "B08",
+          "B09"
+        ],
+        "preconditions": "物理页合法且子层写完",
+        "earliest_stop": "不回收旧huge物理页信息",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BH02",
+        "claim": "没有允许2M叶时alloc_low_page取PTE页，递归完成才发布PMD父表项",
+        "source_fact_keys": [
+          "pmd_alloc_child_after_oldleaf",
+          "pmd_counter_call"
+        ],
+        "source_anchor_ids": [
+          "B17",
+          "C10"
+        ],
+        "preconditions": "分配/清零/指针可写",
+        "earliest_stop": "不把旧2M页框复制到PTE表",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BH03",
+        "claim": "PUD每轮用PUD_MASK+PUD_SIZE求next，PMD用PMD_MASK+PMD_SIZE求next，均早于上界continue",
+        "source_fact_keys": [
+          "pud_slot_va_and_next",
+          "pmd_iteration_next_guard"
+        ],
+        "source_anchor_ids": [
+          "B02",
+          "B11"
+        ],
+        "preconditions": "无算术回绕且端点顺序有效",
+        "earliest_stop": "可能越过请求end",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BH04",
+        "claim": "PUD初始索引用__va(paddr)，PMD初始索引直接用物理paddr",
+        "source_fact_keys": [
+          "pud_signature_initial_index",
+          "pmd_signature_initial_slot"
+        ],
+        "source_anchor_ids": [
+          "B01",
+          "B10"
+        ],
+        "preconditions": "PAGE_OFFSET低30位零及无高位回绕",
+        "earliest_stop": "索引等价只是有条件模型",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BH05",
+        "claim": "新建大页的paddr_last等于本层对齐next边界，不保证恰好等于请求end",
+        "source_fact_keys": [
+          "pud_large_write_return",
+          "pmd_new_large_write_return"
+        ],
+        "source_anchor_ids": [
+          "B07",
+          "B16"
+        ],
+        "preconditions": "请求局部跨边界等样本",
+        "earliest_stop": "上层不能把大页返回当精确覆盖",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BH06",
+        "claim": "已有子表复用分支沿下层返回覆盖本层paddr_last，而不是加总所有分支",
+        "source_fact_keys": [
+          "pud_existing_child_recursion",
+          "pmd_existing_child_call"
+        ],
+        "source_anchor_ids": [
+          "B04",
+          "B13"
+        ],
+        "preconditions": "各callee正常返回",
+        "earliest_stop": "最终端点可能被后来迭代覆盖",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "protection_and_frame_matrix": [
+      {
+        "id": "BP01",
+        "claim": "prot_sethuge对PAGE_PAT条件作WARN并把PSE位OR入pgprot",
+        "source_fact_keys": [
+          "prot_add_pse_warning",
+          "large_leaf_bit_macro"
+        ],
+        "source_anchor_ids": [
+          "B19",
+          "B33"
+        ],
+        "preconditions": "传入prot与类型合法",
+        "earliest_stop": "不能以WARN断言拒绝写入",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BP02",
+        "claim": "pfn_pud用page_nr左移与PHYSICAL_PUD_PAGE_MASK遮罩并合并check_pgprot位",
+        "source_fact_keys": [
+          "pud_leaf_frame_mask_and_flags",
+          "physical_1g_frame_mask"
+        ],
+        "source_anchor_ids": [
+          "B31",
+          "B35"
+        ],
+        "preconditions": "物理页框及对齐合法",
+        "earliest_stop": "原大页的物理基址是否等于请求需另证",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BP03",
+        "claim": "pfn_pmd用PHYSICAL_PMD_PAGE_MASK遮罩并组合prot",
+        "source_fact_keys": [
+          "pmd_leaf_frame_mask_and_flags",
+          "physical_2m_frame_mask"
+        ],
+        "source_anchor_ids": [
+          "B32",
+          "B34"
+        ],
+        "preconditions": "物理2M对齐合法",
+        "earliest_stop": "非对齐输入可丢低位",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BP04",
+        "claim": "降级时旧保护位来自把旧pud/pmd解释为pte_t并清PSE、取arch_pte_flags，不直接继承旧页框",
+        "source_fact_keys": [
+          "pte_to_pgprot_macro",
+          "remove_pse_from_pte_cast",
+          "clear_pte_protection_bits"
+        ],
+        "source_anchor_ids": [
+          "B30",
+          "B28",
+          "B29"
+        ],
+        "preconditions": "旧entry在所选编译下字段布局兼容",
+        "earliest_stop": "PAT/NX等属性等价未证",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BP05",
+        "claim": "生成下一级叶的物理页框来自下钻paddr，不是从旧大页值解出的基址",
+        "source_fact_keys": [
+          "pud_alloc_child_and_recursion",
+          "pmd_alloc_child_after_oldleaf",
+          "pte_pfn_frame_mask_and_flags"
+        ],
+        "source_anchor_ids": [
+          "B08",
+          "B17",
+          "C28"
+        ],
+        "preconditions": "下钻参数与旧映射对应关系合法",
+        "earliest_stop": "当两者基址不同时无法由本函数保证保留物理映射",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "BP06",
+        "claim": "check_pgprot经massage_pgprot过滤现有支持位，最终leaf实际位需要运行时mask",
+        "source_fact_keys": [
+          "page_protection_supported_bits",
+          "pte_pfn_frame_mask_and_flags"
+        ],
+        "source_anchor_ids": [
+          "B36",
+          "C28"
+        ],
+        "preconditions": "条件宏及支持位mask值未知",
+        "earliest_stop": "函数名protection不保证精确属性",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ]
+  },
+  "G03": {
+    "pte_loop_and_store_matrix": [
+      {
+        "id": "CL01",
+        "claim": "PTE层从paddr物理页索引取开始槽且paddr_last默认end",
+        "source_fact_keys": [
+          "pte_signature_and_last_default",
+          "pte_start_slot_and_next",
+          "pte_index_formula"
+        ],
+        "source_anchor_ids": [
+          "C01",
+          "C02",
+          "C44"
+        ],
+        "preconditions": "合法PTE表及物理字节域",
+        "earliest_stop": "起始索引不一定0",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CL02",
+        "claim": "PTE循环从起始索引到511，每轮计算下一4KiB页边界",
+        "source_fact_keys": [
+          "pte_start_slot_and_next",
+          "pte_table_512_slots",
+          "pte_page_4096_bytes"
+        ],
+        "source_anchor_ids": [
+          "C02",
+          "C41",
+          "C42"
+        ],
+        "preconditions": "paddr_next不回绕且数组容量512",
+        "earliest_stop": "末次指针推进可形成尾后一指针，不等于越界访问",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CL03",
+        "claim": "PTE已有非none项时不覆盖，after_bootmem为假才pages++",
+        "source_fact_keys": [
+          "pte_existing_count_or_skip"
+        ],
+        "source_anchor_ids": [
+          "C03"
+        ],
+        "preconditions": "项真实存在且不重叠异常状态",
+        "earliest_stop": "复用不是新store",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CL04",
+        "claim": "PTE为空时pages++，pfn_pte用当前paddr页号构造新值，并set_pte_init写入",
+        "source_fact_keys": [
+          "pte_new_leaf_write",
+          "pte_pfn_frame_mask_and_flags"
+        ],
+        "source_anchor_ids": [
+          "C04",
+          "C28"
+        ],
+        "preconditions": "页内paddr对应的PFN、prot合法",
+        "earliest_stop": "请求返回尚不等于硬件映射完成",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CL05",
+        "claim": "新PTE成功写入后paddr_last置为当前页整界next，最后update_page_count并返回",
+        "source_fact_keys": [
+          "pte_new_last_count_return"
+        ],
+        "source_anchor_ids": [
+          "C05"
+        ],
+        "preconditions": "写入路径完整返回",
+        "earliest_stop": "partial end可能返回大于end",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CL06",
+        "claim": "PTE的paddr>=paddr_end判断发生在pte指针与paddr_next形成之后",
+        "source_fact_keys": [
+          "pte_start_slot_and_next"
+        ],
+        "source_anchor_ids": [
+          "C02"
+        ],
+        "preconditions": "数组指针与算术表达先行合法",
+        "earliest_stop": "后置continue不能替先行防护",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CL07",
+        "claim": "全部已有项可保持paddr_last默认end，仅统计早期重用项",
+        "source_fact_keys": [
+          "pte_existing_count_or_skip",
+          "pte_new_last_count_return"
+        ],
+        "source_anchor_ids": [
+          "C03",
+          "C05"
+        ],
+        "preconditions": "paddr_end合法且无新写",
+        "earliest_stop": "默认end不是全部确认成功",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CL08",
+        "claim": "恰好索引511时循环更新产生尾后一地址，源代码不在随后迭代中解引用该尾后一槽",
+        "source_fact_keys": [
+          "pte_table_512_slots",
+          "pte_index_formula",
+          "pte_start_slot_and_next"
+        ],
+        "source_anchor_ids": [
+          "C41",
+          "C44",
+          "C02"
+        ],
+        "preconditions": "表base合法且指针原位内",
+        "earliest_stop": "地址形成与访问区分",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "init_write_interface_matrix": [
+      {
+        "id": "CW01",
+        "claim": "init真选择set_pte_safe，safe在WARN_ON_ONCE条件后仍调用set_pte，后者WRITE_ONCE",
+        "source_fact_keys": [
+          "pte_init_bool_wrapper",
+          "pte_warn_then_write",
+          "pte_write_once"
+        ],
+        "source_anchor_ids": [
+          "C14",
+          "C20",
+          "C24"
+        ],
+        "preconditions": "指针合法且告警宏正常返回",
+        "earliest_stop": "safe不是拒绝覆盖",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CW02",
+        "claim": "init假选择普通set_pte，无safe告警路径",
+        "source_fact_keys": [
+          "pte_init_bool_wrapper",
+          "pte_write_once"
+        ],
+        "source_anchor_ids": [
+          "C14",
+          "C24"
+        ],
+        "preconditions": "init参数为假",
+        "earliest_stop": "与after_bootmem分别记账",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CW03",
+        "claim": "PMD init真走safe检查，仍写入；init假直接普通store",
+        "source_fact_keys": [
+          "pmd_init_bool_wrapper",
+          "pmd_warn_then_write",
+          "pmd_write_once"
+        ],
+        "source_anchor_ids": [
+          "C15",
+          "C21",
+          "C25"
+        ],
+        "preconditions": "写前pte/pmd指针正确",
+        "earliest_stop": "不能以safe作为事务返回值",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CW04",
+        "claim": "PUD init真走safe检查，仍写入；init假普通store",
+        "source_fact_keys": [
+          "pud_init_bool_wrapper",
+          "pud_warn_then_write",
+          "pud_write_once"
+        ],
+        "source_anchor_ids": [
+          "C16",
+          "C22",
+          "C26"
+        ],
+        "preconditions": "PUD槽有效",
+        "earliest_stop": "警告不意味着停止",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CW05",
+        "claim": "p4d_populate_init按init选safe/普通填表并可经__pa指向子页",
+        "source_fact_keys": [
+          "p4d_populate_bool_wrapper",
+          "p4d_safe_parent_writer",
+          "p4d_warn_then_write",
+          "p4d_write_once"
+        ],
+        "source_anchor_ids": [
+          "C17",
+          "C29",
+          "C23",
+          "C27"
+        ],
+        "preconditions": "父子页与__pa转换有效",
+        "earliest_stop": "新表必须实际可写",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CW06",
+        "claim": "pud_populate_init根据init选对应父槽写入",
+        "source_fact_keys": [
+          "pud_populate_bool_wrapper",
+          "pud_safe_parent_writer",
+          "pud_warn_then_write",
+          "pud_write_once"
+        ],
+        "source_anchor_ids": [
+          "C18",
+          "C30",
+          "C22",
+          "C26"
+        ],
+        "preconditions": "所选安全宏定义真实",
+        "earliest_stop": "不认证旧表项已释放",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CW07",
+        "claim": "pmd_populate_kernel_init选择safe或普通链接PTE页",
+        "source_fact_keys": [
+          "pmd_populate_kernel_bool_wrapper",
+          "pmd_safe_parent_writer",
+          "pmd_warn_then_write",
+          "pmd_write_once"
+        ],
+        "source_anchor_ids": [
+          "C19",
+          "C31",
+          "C21",
+          "C25"
+        ],
+        "preconditions": "新表page已合法填充",
+        "earliest_stop": "仅父槽发布，不证明TLB刷新",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CW08",
+        "claim": "六个真实populate别名分别连接安全及普通fill实现",
+        "source_fact_keys": [
+          "p4d_populate_safe_alias",
+          "pud_populate_safe_alias",
+          "pmd_populate_safe_alias",
+          "p4d_populate_normal_alias",
+          "pud_populate_normal_alias",
+          "pmd_populate_normal_alias"
+        ],
+        "source_anchor_ids": [
+          "C32",
+          "C33",
+          "C34",
+          "C35",
+          "C36",
+          "C37"
+        ],
+        "preconditions": "本树别名与include选择有效",
+        "earliest_stop": "并非同一helper自动成功",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "return_endpoint_matrix": [
+      {
+        "id": "CE01",
+        "claim": "根层paddr_last先设end，后随递归返回覆盖，最后返回单值",
+        "source_fact_keys": [
+          "root_initial_addr_conversion",
+          "root_return_and_sync_comment"
+        ],
+        "source_anchor_ids": [
+          "A04",
+          "A09"
+        ],
+        "preconditions": "根循环/children合法",
+        "earliest_stop": "没有映射也可能直接返回end",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CE02",
+        "claim": "PUD层起初paddr_last=end，复用/新大页可设next，下钻可用子层返回覆盖",
+        "source_fact_keys": [
+          "pud_signature_initial_index",
+          "pud_large_write_return",
+          "pud_existing_child_recursion",
+          "pud_publish_and_count"
+        ],
+        "source_anchor_ids": [
+          "B01",
+          "B07",
+          "B04",
+          "B09"
+        ],
+        "preconditions": "具体分支门成立",
+        "earliest_stop": "非事务性覆盖",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CE03",
+        "claim": "PMD层默认end，命中大页设next，非叶递归用PTE返回覆盖",
+        "source_fact_keys": [
+          "pmd_signature_initial_slot",
+          "pmd_new_large_write_return",
+          "pmd_existing_child_call",
+          "pmd_counter_call"
+        ],
+        "source_anchor_ids": [
+          "B10",
+          "B16",
+          "B13",
+          "C10"
+        ],
+        "preconditions": "条件组合合法",
+        "earliest_stop": "不能推出与end一致",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CE04",
+        "claim": "PTE层默认end，只有新叶写分支置next；仅复用时仍可返回end",
+        "source_fact_keys": [
+          "pte_signature_and_last_default",
+          "pte_new_last_count_return",
+          "pte_existing_count_or_skip"
+        ],
+        "source_anchor_ids": [
+          "C01",
+          "C05",
+          "C03"
+        ],
+        "preconditions": "非空项状态合法",
+        "earliest_stop": "返回与新写数量分离",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CE05",
+        "claim": "上层每MR覆盖ret，最后ret右移PAGE_SHIFT作为PFN；非所有段成功事务",
+        "source_fact_keys": [
+          "upper_return_consumption",
+          "mapping_macro_init_true",
+          "root_return_and_sync_comment"
+        ],
+        "source_anchor_ids": [
+          "C45",
+          "A01",
+          "A09"
+        ],
+        "preconditions": "上层调用完成且后继段结果合法",
+        "earliest_stop": "不能用一段返回证明所有段",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CE06",
+        "claim": "跨PGD/PUD/PMD边界分别用对应next推进；next可能超过end且不自动截断到请求端点",
+        "source_fact_keys": [
+          "root_loop_and_boundary",
+          "pud_slot_va_and_next",
+          "pmd_iteration_next_guard"
+        ],
+        "source_anchor_ids": [
+          "A05",
+          "B02",
+          "B11"
+        ],
+        "preconditions": "正向不回绕物理范围",
+        "earliest_stop": "partial请求端点与返回值不同",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CE07",
+        "claim": "无映射新写或全部复用的情况下，默认end和next值都可能被返回",
+        "source_fact_keys": [
+          "root_return_and_sync_comment",
+          "pmd_new_large_write_return",
+          "pte_new_last_count_return"
+        ],
+        "source_anchor_ids": [
+          "A09",
+          "B16",
+          "C05"
+        ],
+        "preconditions": "每层局部取值分别判断",
+        "earliest_stop": "不能一概视作最后实际映射字节",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "page_count_matrix": [
+      {
+        "id": "CC01",
+        "claim": "direct_pages_count按4K/2M/1G层分槽累加，update_page_count用pgd_lock",
+        "source_fact_keys": [
+          "per_level_count_array",
+          "counter_lock_and_add",
+          "counter_level_4k_enum",
+          "counter_level_2m_enum",
+          "counter_level_1g_enum"
+        ],
+        "source_anchor_ids": [
+          "C06",
+          "C07",
+          "C38",
+          "C39",
+          "C40"
+        ],
+        "preconditions": "数组与锁对象合法",
+        "earliest_stop": "统计非真实映射页去重",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CC02",
+        "claim": "PTE已有项早期复用增加pages，晚期复用不加；新建项任一阶段加一",
+        "source_fact_keys": [
+          "pte_existing_count_or_skip",
+          "pte_new_leaf_write"
+        ],
+        "source_anchor_ids": [
+          "C03",
+          "C04"
+        ],
+        "preconditions": "当前after_bootmem来源有效",
+        "earliest_stop": "两个分支不可混记",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CC03",
+        "claim": "PMD已有大叶早期计入pages，新建大叶无条件计入；每次函数结束都调用update_page_count",
+        "source_fact_keys": [
+          "pmd_existing_leaf_count_early",
+          "pmd_new_leaf_counter",
+          "pmd_counter_call"
+        ],
+        "source_anchor_ids": [
+          "C08",
+          "C09",
+          "C10"
+        ],
+        "preconditions": "该层循环及锁调用正常",
+        "earliest_stop": "已降级旧叶不见自动扣减",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CC04",
+        "claim": "PUD已有1G叶早期计入pages，新建叶无条件计入；统一更新全局层槽",
+        "source_fact_keys": [
+          "pud_existing_leaf_count_early",
+          "pud_new_leaf_counter",
+          "pud_counter_call"
+        ],
+        "source_anchor_ids": [
+          "C11",
+          "C12",
+          "C13"
+        ],
+        "preconditions": "每个分支合法",
+        "earliest_stop": "未统计真实页框数",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CC05",
+        "claim": "已有子表递归时当前层pages不直接因进入子层加一，子层另行累加",
+        "source_fact_keys": [
+          "pud_existing_child_recursion",
+          "pmd_existing_child_call",
+          "per_level_count_array"
+        ],
+        "source_anchor_ids": [
+          "B04",
+          "B13",
+          "C06"
+        ],
+        "preconditions": "递归正常返回",
+        "earliest_stop": "不同层计数不等价",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CC06",
+        "claim": "降级建立子叶后，不在当前函数看到旧大叶对应计数负调整",
+        "source_fact_keys": [
+          "pmd_alloc_child_after_oldleaf",
+          "pud_alloc_child_and_recursion",
+          "counter_lock_and_add"
+        ],
+        "source_anchor_ids": [
+          "B17",
+          "B08",
+          "C07"
+        ],
+        "preconditions": "仅所读函数体的局部观察",
+        "earliest_stop": "不能做全树不存在结论",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CC07",
+        "claim": "三层新建分支pages计数都是局部成功路径增加，不能单凭计数证明硬件生效",
+        "source_fact_keys": [
+          "pte_new_leaf_write",
+          "pmd_new_leaf_counter",
+          "pud_new_leaf_counter"
+        ],
+        "source_anchor_ids": [
+          "C04",
+          "C09",
+          "C12"
+        ],
+        "preconditions": "可写性和存储前置条件成立",
+        "earliest_stop": "无真实性验收",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ],
+    "cross_layer_install_matrix": [
+      {
+        "id": "CX01",
+        "claim": "根与PUD/PMD新分支都采用子表递归先于父槽发布",
+        "source_fact_keys": [
+          "root_publish_after_recursion",
+          "pud_publish_and_count",
+          "pmd_alloc_child_after_oldleaf"
+        ],
+        "source_anchor_ids": [
+          "A08",
+          "B09",
+          "B17"
+        ],
+        "preconditions": "各层分配及write成功返回",
+        "earliest_stop": "不能拼成单一无条件调用流",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CX02",
+        "claim": "init参数决定写包装，after_bootmem独立决定部分统计及分配，二者不应强制绑定",
+        "source_fact_keys": [
+          "root_signature",
+          "change_macro_init_false",
+          "pte_init_bool_wrapper"
+        ],
+        "source_anchor_ids": [
+          "A03",
+          "A02",
+          "C14"
+        ],
+        "preconditions": "两个变量分别由真实来源提供",
+        "earliest_stop": "不要用一个变量替代另一个",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CX03",
+        "claim": "已有大页复用或降级可改变写入数量与返回意义，上层只看到最终单个端点",
+        "source_fact_keys": [
+          "pmd_large_reuse_vs_downgrade",
+          "pud_large_reuse_or_old_prot",
+          "root_return_and_sync_comment"
+        ],
+        "source_anchor_ids": [
+          "B14",
+          "B05",
+          "A09"
+        ],
+        "preconditions": "各层分支有效",
+        "earliest_stop": "不认证所有映射已建",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CX04",
+        "claim": "directmap中PUD虚拟索引与PMD/PTE物理索引对齐等价须有PAGE_OFFSET和无回绕前提",
+        "source_fact_keys": [
+          "physical_retranslation_arithmetic",
+          "pmd_index_formula",
+          "pud_index_formula",
+          "page_offset_base_constant"
+        ],
+        "source_anchor_ids": [
+          "A33",
+          "A20",
+          "A19",
+          "A30"
+        ],
+        "preconditions": "所选四级常量",
+        "earliest_stop": "不从地址名猜同一对象",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      },
+      {
+        "id": "CX05",
+        "claim": "任何子表新分配依PT81的page来源、清零及地址可写前提",
+        "source_fact_keys": [
+          "one_page_alloc_wrapper",
+          "root_alloc_before_child",
+          "pud_alloc_child_and_recursion",
+          "pmd_alloc_child_after_oldleaf"
+        ],
+        "source_anchor_ids": [
+          "A38",
+          "A07",
+          "B08",
+          "B17"
+        ],
+        "preconditions": "分配非零并有实际映射",
+        "earliest_stop": "失败后不画正常表发布",
+        "evidence_class": "FIXED_SOURCE_CONDITIONAL",
+        "execution": "NOT_RUN"
+      }
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "id": "TI83-M01",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PGD none",
+      "physical_range_bytes": "phys [0,0) bytes",
+      "callee_return_assumption": "no callee",
+      "conditional_result": "root loop skipped and return end0",
+      "earliest_stop": "no physical mapping proven",
+      "source_fact_keys": [
+        "root_initial_addr_conversion",
+        "root_loop_and_boundary",
+        "root_return_and_sync_comment"
+      ],
+      "evidence_ids": [
+        "A04",
+        "A05",
+        "A09"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M02",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PGD zero and PUD PMD empty",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "alloc valid; child return4096",
+      "conditional_result": "child built before safe root parent publish",
+      "earliest_stop": "actual new storage and mapping required",
+      "source_fact_keys": [
+        "root_alloc_before_child",
+        "root_publish_after_recursion",
+        "one_page_alloc_wrapper"
+      ],
+      "evidence_ids": [
+        "A07",
+        "A08",
+        "A38"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M03",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PGD nonzero valid nonleaf",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "recursive child return4096",
+      "conditional_result": "existing-root path reuses child without new root publish",
+      "earliest_stop": "nonzero != valid present proof",
+      "source_fact_keys": [
+        "root_reuse_existing_nonzero",
+        "root_existing_vaddr_alias"
+      ],
+      "evidence_ids": [
+        "A06",
+        "A24"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M04",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PGD nonzero but nonpresent possible",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "unknown pointed page",
+      "conditional_result": "stop at conversion and attempted child access",
+      "earliest_stop": "PGD nonzero alone insufficient",
+      "source_fact_keys": [
+        "root_reuse_existing_nonzero",
+        "pgd_nonzero_alias",
+        "p4d_pointed_page_virtual"
+      ],
+      "evidence_ids": [
+        "A06",
+        "A23",
+        "A25"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M05",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 4,
+      "entry_state": "PGD PUD existing; PMD none",
+      "physical_range_bytes": "phys start 1GiB+2MiB and end start+4096 bytes",
+      "callee_return_assumption": "VA=PAGE_OFFSET+phys, nonwrap",
+      "conditional_result": "PGD index256; PUD index1; PMD index1",
+      "earliest_stop": "PAGE_OFFSET lower index bits zero",
+      "source_fact_keys": [
+        "page_offset_base_constant",
+        "root_index_mask",
+        "pud_index_formula",
+        "pmd_index_formula"
+      ],
+      "evidence_ids": [
+        "A30",
+        "A14",
+        "A19",
+        "A20"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M06",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PUD nonleaf valid PMD page",
+      "physical_range_bytes": "phys [2MiB,2MiB+4096) bytes",
+      "callee_return_assumption": "pmd_offset(pud,0) valid",
+      "conditional_result": "child base index0; PMD recursion starts index1",
+      "earliest_stop": "valid pointed table storage",
+      "source_fact_keys": [
+        "pmd_offset_real",
+        "pmd_index_formula",
+        "pud_existing_child_recursion"
+      ],
+      "evidence_ids": [
+        "A21",
+        "A20",
+        "B04"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M07",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 4,
+      "entry_state": "two PGD roots valid",
+      "physical_range_bytes": "phys [512GiB-2MiB,512GiB+2MiB) bytes",
+      "callee_return_assumption": "nonwrapping root next",
+      "conditional_result": "PGD index256 then257 in declared model",
+      "earliest_stop": "both roots and alias valid",
+      "source_fact_keys": [
+        "root_loop_and_boundary",
+        "root_size",
+        "root_index_mask",
+        "page_offset_base_constant"
+      ],
+      "evidence_ids": [
+        "A05",
+        "A35",
+        "A14",
+        "A30"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M08",
+      "topic": "A",
+      "after_bootmem": 1,
+      "init": false,
+      "page_size_mask": 0,
+      "entry_state": "PGD unknown",
+      "physical_range_bytes": "phys near highest ulong input, virtual wrap case",
+      "callee_return_assumption": "N/A",
+      "conditional_result": "stop before certified pointer or root index",
+      "earliest_stop": "unproven directmap arithmetic",
+      "source_fact_keys": [
+        "root_initial_addr_conversion",
+        "physical_to_virtual_macro"
+      ],
+      "evidence_ids": [
+        "A04",
+        "A31"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M09",
+      "topic": "A",
+      "after_bootmem": 1,
+      "init": false,
+      "page_size_mask": 0,
+      "entry_state": "PGD new and children empty",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "alloc+recursion both succeed",
+      "conditional_result": "change macro uses init false and ordinary populate",
+      "earliest_stop": "normal storage valid",
+      "source_fact_keys": [
+        "change_macro_init_false",
+        "root_publish_after_recursion",
+        "p4d_populate_bool_wrapper"
+      ],
+      "evidence_ids": [
+        "A02",
+        "A08",
+        "C17"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M10",
+      "topic": "A",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PGD zero",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "alloc_low_page returns NULL",
+      "conditional_result": "no legitimate child deref or root publish",
+      "earliest_stop": "PT81 allocator failure gate",
+      "source_fact_keys": [
+        "root_alloc_before_child",
+        "one_page_alloc_wrapper"
+      ],
+      "evidence_ids": [
+        "A07",
+        "A38"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M11",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 8,
+      "entry_state": "PUD none",
+      "physical_range_bytes": "phys [0,1GiB) bytes",
+      "callee_return_assumption": "valid leaf write",
+      "conditional_result": "new 1G leaf count1; last next1GiB",
+      "earliest_stop": "aligned & writable",
+      "source_fact_keys": [
+        "pud_new_large_leaf_choice",
+        "pud_large_write_return",
+        "pud_new_leaf_counter"
+      ],
+      "evidence_ids": [
+        "B06",
+        "B07",
+        "C12"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M12",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 8,
+      "entry_state": "PUD existing nonleaf",
+      "physical_range_bytes": "phys [0,1GiB) bytes",
+      "callee_return_assumption": "child PMD returns1GiB",
+      "conditional_result": "descends rather than overwrites with 1G leaf",
+      "earliest_stop": "existing valid child",
+      "source_fact_keys": [
+        "pud_existing_child_recursion",
+        "pud_limit_nonleaf_decision"
+      ],
+      "evidence_ids": [
+        "B04",
+        "B03"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M13",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 8,
+      "entry_state": "PUD existing valid 1G leaf",
+      "physical_range_bytes": "phys [0,1GiB) bytes",
+      "callee_return_assumption": "no child",
+      "conditional_result": "reuse count1 and next1GiB",
+      "earliest_stop": "early phase",
+      "source_fact_keys": [
+        "pud_large_reuse_or_old_prot",
+        "pud_existing_leaf_count_early"
+      ],
+      "evidence_ids": [
+        "B05",
+        "C11"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M14",
+      "topic": "B",
+      "after_bootmem": 1,
+      "init": false,
+      "page_size_mask": 8,
+      "entry_state": "PUD existing valid 1G leaf",
+      "physical_range_bytes": "phys [0,1GiB) bytes",
+      "callee_return_assumption": "no child",
+      "conditional_result": "reuse count0 and next1GiB",
+      "earliest_stop": "late phase",
+      "source_fact_keys": [
+        "pud_large_reuse_or_old_prot",
+        "pud_existing_leaf_count_early"
+      ],
+      "evidence_ids": [
+        "B05",
+        "C11"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M15",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PUD existing huge; PMD new",
+      "physical_range_bytes": "phys [0,1GiB) bytes",
+      "callee_return_assumption": "alloc valid; PMD recursion returns",
+      "conditional_result": "PSE cleared in inherited prot and parent published after child",
+      "earliest_stop": "old huge physical frame not automatically copied",
+      "source_fact_keys": [
+        "pud_large_reuse_or_old_prot",
+        "pud_alloc_child_and_recursion",
+        "remove_pse_from_pte_cast"
+      ],
+      "evidence_ids": [
+        "B05",
+        "B08",
+        "B28"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M16",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 4,
+      "entry_state": "PUD none; PMD none",
+      "physical_range_bytes": "phys [0,2MiB) bytes",
+      "callee_return_assumption": "PMD alloc and recursive mapping succeed",
+      "conditional_result": "no 1G leaf; lower PMD 2M leaf may be created",
+      "earliest_stop": "PUD mask8 not set",
+      "source_fact_keys": [
+        "pud_alloc_child_and_recursion",
+        "pmd_new_large_choice"
+      ],
+      "evidence_ids": [
+        "B08",
+        "B15"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M17",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 4,
+      "entry_state": "PMD none",
+      "physical_range_bytes": "phys [0,2MiB) bytes",
+      "callee_return_assumption": "valid leaf store",
+      "conditional_result": "new 2M leaf; count1 and next2MiB",
+      "earliest_stop": "physical aligned",
+      "source_fact_keys": [
+        "pmd_new_large_choice",
+        "pmd_new_large_write_return",
+        "pmd_new_leaf_counter"
+      ],
+      "evidence_ids": [
+        "B15",
+        "B16",
+        "C09"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M18",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 4,
+      "entry_state": "PMD existing nonleaf PTE table",
+      "physical_range_bytes": "phys [0,2MiB) bytes",
+      "callee_return_assumption": "PTE recursion returns2MiB",
+      "conditional_result": "descends despite 2M candidate",
+      "earliest_stop": "valid existing table",
+      "source_fact_keys": [
+        "pmd_existing_nonleaf",
+        "pmd_existing_child_call"
+      ],
+      "evidence_ids": [
+        "B12",
+        "B13"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M19",
+      "topic": "B",
+      "after_bootmem": 1,
+      "init": false,
+      "page_size_mask": 4,
+      "entry_state": "PMD existing 2M leaf",
+      "physical_range_bytes": "phys [0,2MiB) bytes",
+      "callee_return_assumption": "no child",
+      "conditional_result": "reuse and next2MiB with count0",
+      "earliest_stop": "late phase",
+      "source_fact_keys": [
+        "pmd_large_reuse_vs_downgrade",
+        "pmd_existing_leaf_count_early"
+      ],
+      "evidence_ids": [
+        "B14",
+        "C08"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M20",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PMD existing 2M huge; fresh PTE table",
+      "physical_range_bytes": "phys [0,2MiB) bytes",
+      "callee_return_assumption": "alloc and PTE recursion succeed",
+      "conditional_result": "old prot PSE stripped, then child publish, PMD count0",
+      "earliest_stop": "does not clone old leaf base",
+      "source_fact_keys": [
+        "pmd_large_reuse_vs_downgrade",
+        "pmd_alloc_child_after_oldleaf",
+        "pmd_counter_call"
+      ],
+      "evidence_ids": [
+        "B14",
+        "B17",
+        "C10"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M21",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 8,
+      "entry_state": "PUD none",
+      "physical_range_bytes": "phys [0,4096) bytes direct helper",
+      "callee_return_assumption": "large write succeeds",
+      "conditional_result": "paddr_last may jump to1GiB despite end4096",
+      "earliest_stop": "not from valid 82 split without extra premise",
+      "source_fact_keys": [
+        "pud_large_write_return",
+        "pud_slot_va_and_next"
+      ],
+      "evidence_ids": [
+        "B07",
+        "B02"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M22",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 4,
+      "entry_state": "PMD none",
+      "physical_range_bytes": "phys [4096,8192) bytes direct helper",
+      "callee_return_assumption": "pfn_pmde invoked",
+      "conditional_result": "physical frame rounded to0; next2MiB",
+      "earliest_stop": "isolated misaligned helper input",
+      "source_fact_keys": [
+        "pmd_leaf_frame_mask_and_flags",
+        "physical_2m_frame_mask",
+        "pmd_iteration_next_guard"
+      ],
+      "evidence_ids": [
+        "B32",
+        "B34",
+        "B11"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M23",
+      "topic": "B",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "old PUD 1G leaf frame differs from request; new child",
+      "physical_range_bytes": "phys [0,2MiB) bytes",
+      "callee_return_assumption": "old prot and child write valid",
+      "conditional_result": "new descendant PFN follows requested paddr rather than old frame",
+      "earliest_stop": "old vs requested physical identity unknown",
+      "source_fact_keys": [
+        "pud_large_reuse_or_old_prot",
+        "pud_alloc_child_and_recursion",
+        "pte_pfn_frame_mask_and_flags"
+      ],
+      "evidence_ids": [
+        "B05",
+        "B08",
+        "C28"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M24",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE none; PMD nonleaf",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "set_pte_safe returns",
+      "conditional_result": "one new PTE; 4K count1; last4096",
+      "earliest_stop": "table writable",
+      "source_fact_keys": [
+        "pte_new_leaf_write",
+        "pte_new_last_count_return",
+        "pte_init_bool_wrapper"
+      ],
+      "evidence_ids": [
+        "C04",
+        "C05",
+        "C14"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M25",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE existing nonnone",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "no store",
+      "conditional_result": "reuse count1 early; default ret end4096",
+      "earliest_stop": "existing entry valid",
+      "source_fact_keys": [
+        "pte_existing_count_or_skip",
+        "pte_signature_and_last_default"
+      ],
+      "evidence_ids": [
+        "C03",
+        "C01"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M26",
+      "topic": "C",
+      "after_bootmem": 1,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE existing nonnone",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "no store",
+      "conditional_result": "reuse count0 late; default end4096",
+      "earliest_stop": "after_bootmem distinct from init",
+      "source_fact_keys": [
+        "pte_existing_count_or_skip",
+        "pte_signature_and_last_default"
+      ],
+      "evidence_ids": [
+        "C03",
+        "C01"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M27",
+      "topic": "C",
+      "after_bootmem": 1,
+      "init": false,
+      "page_size_mask": 0,
+      "entry_state": "PTE none",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "normal set_pte store returns",
+      "conditional_result": "new count1 even late; safe not selected",
+      "earliest_stop": "init false independent",
+      "source_fact_keys": [
+        "pte_init_bool_wrapper",
+        "pte_new_leaf_write",
+        "pte_write_once"
+      ],
+      "evidence_ids": [
+        "C14",
+        "C04",
+        "C24"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M28",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE indices0 and1 none",
+      "physical_range_bytes": "phys [0,4097) bytes",
+      "callee_return_assumption": "two valid writes",
+      "conditional_result": "count2 and last8192 > end4097",
+      "earliest_stop": "direct unaligned PTE helper scenario",
+      "source_fact_keys": [
+        "pte_start_slot_and_next",
+        "pte_new_last_count_return"
+      ],
+      "evidence_ids": [
+        "C02",
+        "C05"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M29",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE last index511 none",
+      "physical_range_bytes": "phys [2093056,2097152) bytes",
+      "callee_return_assumption": "one store valid",
+      "conditional_result": "tail-one pointer formed after final loop, not dereferenced",
+      "earliest_stop": "table has512 elements",
+      "source_fact_keys": [
+        "pte_start_slot_and_next",
+        "pte_table_512_slots"
+      ],
+      "evidence_ids": [
+        "C02",
+        "C41"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M30",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE index5 none",
+      "physical_range_bytes": "phys start=end=20480 bytes",
+      "callee_return_assumption": "no leaf",
+      "conditional_result": "paddr_last stays end, pointer and next computed first",
+      "earliest_stop": "valid pointer formation",
+      "source_fact_keys": [
+        "pte_start_slot_and_next",
+        "pte_signature_and_last_default"
+      ],
+      "evidence_ids": [
+        "C02",
+        "C01"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M31",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE present conflicting new value",
+      "physical_range_bytes": "direct set_pte_init call bypasses phys_pte none gate",
+      "callee_return_assumption": "WARN macro returns; store valid",
+      "conditional_result": "warning can occur but WRITE_ONCE still follows",
+      "earliest_stop": "not claimed normal direct-map overwrite",
+      "source_fact_keys": [
+        "pte_warn_then_write",
+        "pte_write_once",
+        "pte_init_bool_wrapper"
+      ],
+      "evidence_ids": [
+        "C20",
+        "C24",
+        "C14"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M32",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PTE slot0 new slot1 existing",
+      "physical_range_bytes": "phys [0,8192) bytes",
+      "callee_return_assumption": "both valid slots",
+      "conditional_result": "early count2 but only one new write",
+      "earliest_stop": "page status per slot assumed",
+      "source_fact_keys": [
+        "pte_existing_count_or_skip",
+        "pte_new_leaf_write",
+        "counter_lock_and_add"
+      ],
+      "evidence_ids": [
+        "C03",
+        "C04",
+        "C07"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M33",
+      "topic": "C",
+      "after_bootmem": 1,
+      "init": false,
+      "page_size_mask": 4,
+      "entry_state": "PMD none",
+      "physical_range_bytes": "phys [0,2MiB) bytes",
+      "callee_return_assumption": "ordinary PMD leaf write succeeds",
+      "conditional_result": "PMD count1 despite late phase, init false raw store",
+      "earliest_stop": "different from reused late leaf",
+      "source_fact_keys": [
+        "pmd_new_leaf_counter",
+        "pmd_init_bool_wrapper",
+        "pmd_write_once"
+      ],
+      "evidence_ids": [
+        "C09",
+        "C15",
+        "C25"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M34",
+      "topic": "C",
+      "after_bootmem": 0,
+      "init": false,
+      "page_size_mask": 0,
+      "entry_state": "PTE all existing nonnone",
+      "physical_range_bytes": "phys [0,8192) bytes",
+      "callee_return_assumption": "no store",
+      "conditional_result": "ret default end; early reuse count2",
+      "earliest_stop": "after_bootmem0 init false",
+      "source_fact_keys": [
+        "pte_signature_and_last_default",
+        "pte_existing_count_or_skip"
+      ],
+      "evidence_ids": [
+        "C01",
+        "C03"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    },
+    {
+      "id": "TI83-M35",
+      "topic": "C",
+      "after_bootmem": 1,
+      "init": true,
+      "page_size_mask": 0,
+      "entry_state": "PGD zero",
+      "physical_range_bytes": "phys [0,4096) bytes",
+      "callee_return_assumption": "page alloc returns NULL",
+      "conditional_result": "stop; no legitimate child fill or parent publish",
+      "earliest_stop": "allocation failure",
+      "source_fact_keys": [
+        "root_alloc_before_child",
+        "root_publish_after_recursion",
+        "one_page_alloc_wrapper"
+      ],
+      "evidence_ids": [
+        "A07",
+        "A08",
+        "A38"
+      ],
+      "execution": "ISOLATED_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 35,
+  "finite_model_counts_by_scope": {
+    "A": 10,
+    "B": 13,
+    "C": 12
+  },
+  "technical_matrix_count": 11,
+  "technical_matrix_rows": 78,
+  "source_short_anchors": 119,
+  "methods": {
+    "source_quote_count": 119,
+    "source_files": 11,
+    "source_exact_reopened": "119_OF_119_TWO_GROUPS",
+    "content_support_anchors": 113,
+    "model_conditions": "each has after_bootmem, init, mask, current entry state, physical byte range, callee return assumption and first stop",
+    "fact_to_evidence": "each claim has fixed fact keys -> path::symbol -> exact snippet -> evidence ID; source references checked by content and source behavior, not number-only",
+    "graph_nodes": "56_SOURCE_KEYED",
+    "graph_edges": "77_TYPED",
+    "graphviz": "NOT_RUN",
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "hardware": "NOT_RUN"
+  },
+  "phase": 2,
+  "mainline_acceptance": "PENDING",
+  "acceptance_ceiling": "PASS_PENDING_LOCAL",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "TI83-U01..U10 in deferred-findings.yaml"
+  ]
+}
